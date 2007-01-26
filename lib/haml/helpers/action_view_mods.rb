@@ -1,6 +1,7 @@
 begin
   require 'rubygems'
   require 'active_support'
+  require 'action_controller'
   require 'action_view'
   action_view_included = true
 rescue LoadError
@@ -31,11 +32,15 @@ if action_view_included
         end
         
         def concat(string, binding = nil) # :nodoc:
-          buffer.buffer.concat(string)
+          if is_haml?
+            buffer.buffer.concat(string)
+          else
+            old_concat(string, binding)
+          end
         end
         
         def form_tag(url_for_options = {}, options = {}, *parameters_for_url, &proc) # :nodoc:
-          if block_given?
+          if block_given? && is_haml?
             oldproc = proc 
             proc = bind_proc do |*args|
               concat "\n"
