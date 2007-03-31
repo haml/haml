@@ -129,13 +129,6 @@ END
         }
       }
 
-      unless @options[:suppress_eval]
-        @options[:filters].merge!({
-          'erb' => ERB,
-          'ruby' => Haml::Filters::Ruby
-        })
-      end
-
       if !NOT_LOADED.include? 'redcloth'
         @options[:filters].merge!({
           'redcloth' => RedCloth,
@@ -148,6 +141,14 @@ END
       end
 
       @options.rec_merge! options
+
+      unless @options[:suppress_eval]
+        @options[:filters].merge!({
+          'erb' => ERB,
+          'ruby' => Haml::Filters::Ruby
+        })
+      end
+      @options[:filters].rec_merge! options[:filters] if options[:filters]
 
       @precompiled = @options[:precompiled]
 
@@ -309,8 +310,9 @@ END
       when SILENT_SCRIPT
         sub_line = line[1..-1]
         unless sub_line[0] == SILENT_COMMENT
-          push_silent(sub_line, true)
-          if @block_opened && !mid_block_keyword?(line)
+          mbk = mid_block_keyword?(line)
+          push_silent(sub_line, !mbk)
+          if (@block_opened && !mbk) || line[1..-1].split(' ', 2)[0] == "case"
             push_and_tabulate([:script])
           end
         end
@@ -589,7 +591,7 @@ END
         warn(FLAT_WARNING) if flattened && !defined?(Test::Unit)
 
         value_exists = !value.empty?
-        attributes_hash = "nil" unless attributes_hash
+        attributes_hash = "nil" if attributes_hash.nil? || @options[:suppress_eval]
         object_ref = "nil" unless object_ref
 
         if @block_opened 
