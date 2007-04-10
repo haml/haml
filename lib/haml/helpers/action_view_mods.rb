@@ -10,6 +10,18 @@ end
 
 if action_view_included
   module ActionView
+    class Base # :nodoc:
+      def render_with_haml(*args)        
+        was_haml = is_haml?
+        @haml_is_haml = false
+        res = render_without_haml(*args)
+        @haml_is_haml = was_haml
+        res
+      end
+      alias_method :render_without_haml, :render
+      alias_method :render, :render_with_haml
+    end
+
     # This overrides various helpers in ActionView
     # to make them work more effectively with Haml.
     module Helpers
@@ -22,7 +34,8 @@ if action_view_included
             concat_without_haml(string, binding)
           end
         end
-        alias_method_chain :concat, :haml
+        alias_method :concat_without_haml, :concat
+        alias_method :concat, :concat_with_haml
       end
       
       module FormTagHelper
@@ -40,7 +53,8 @@ if action_view_included
           concat "\n" if block_given? && is_haml?
           res
         end
-        alias_method_chain :form_tag, :haml
+        alias_method :form_tag_without_haml, :form_tag
+        alias_method :form_tag, :form_tag_with_haml
       end
       
       module FormHelper
@@ -56,7 +70,8 @@ if action_view_included
           form_for_without_haml(object_name, *args, &proc)
           concat "\n" if block_given? && is_haml?
         end
-        alias_method_chain :form_for, :haml
+        alias_method :form_for_without_haml, :form_for
+        alias_method :form_for, :form_for_with_haml
       end
       
       def generate_content_class_names
