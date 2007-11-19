@@ -67,6 +67,7 @@ unless ARGV[0] == 'benchmark'
       It was originally envisioned as a plugin for Ruby on Rails,
       but it can function as a stand-alone templating engine.
     END
+    #'
     
     readmes = FileList.new('*') do |list|
       list.exclude(/[a-z]/)
@@ -74,6 +75,7 @@ unless ARGV[0] == 'benchmark'
     end.to_a
     spec.executables = ['haml', 'html2haml', 'sass']
     spec.files = FileList['lib/**/*', 'bin/*', 'test/**/*', 'Rakefile', 'init.rb'].to_a + readmes
+    spec.autorequire = ['haml', 'sass']
     spec.homepage = 'http://haml.hamptoncatlin.com/'
     spec.has_rdoc = true
     spec.extra_rdoc_files = readmes
@@ -91,6 +93,10 @@ unless ARGV[0] == 'benchmark'
     pkg.need_zip     = true
     pkg.need_tar_gz  = true
     pkg.need_tar_bz2 = true
+  end
+
+  task :install => [:package] do
+    sh %{gem install --no-ri pkg/haml-#{File.read('VERSION').strip}}
   end
 
   # ----- Documentation -----
