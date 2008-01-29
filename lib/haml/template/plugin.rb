@@ -4,16 +4,14 @@
 
 module Haml
   class Template
+    include ActionView::TemplateHandlers::Compilable if defined?(ActionView::TemplateHandlers::Compilable)
+
     def self.line_offset
       1
     end
 
-    def self.compilable?
-      true
-    end
-   
     def compilable?
-      self.class.compilable?
+      true
     end
  
     def line_offset
