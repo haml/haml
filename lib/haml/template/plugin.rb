@@ -41,11 +41,11 @@ module Haml
   # We want to print the same deprecation warning,
   # so we have to compile in a method call to check for it.
   #
-  # I don't like having this in the precompiler pipeline,
+  # I don't like having this in the compilation pipeline,
   # and I'd like to get rid of it once Rails 3.1 is well-established.
   if defined?(ActionView::OutputBuffer) &&
       Haml::Util.has?(:instance_method, ActionView::OutputBuffer, :append_if_string=)
-    module Precompiler
+    module Compiler
       def push_silent_with_haml_block_deprecation(text, can_suppress = false)
         unless can_suppress && block_opened? && !mid_block_keyword?("- #{text}") &&
             text =~ ActionView::Template::Handlers::Erubis::BLOCK_EXPR

@@ -77,13 +77,13 @@ module Haml
     private
 
     # @private
-    class Line < Struct.new(:text, :unstripped, :full, :index, :precompiler, :eod)
+    class Line < Struct.new(:text, :unstripped, :full, :index, :compiler, :eod)
       alias_method :eod?, :eod
 
       # @private
       def tabs
         line = self
-        @tabs ||= precompiler.instance_eval do
+        @tabs ||= compiler.instance_eval do
           break 0 if line.text.empty? || !(whitespace = line.full[/^\s+/])
 
           if @indentation.nil?

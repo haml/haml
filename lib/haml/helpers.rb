@@ -444,9 +444,8 @@ MESSAGE
       flags << rest.shift while rest.first.is_a? Symbol
       name, attrs = merge_name_and_attributes(name.to_s, rest.shift || {})
 
-      attributes = Haml::Precompiler.build_attributes(haml_buffer.html?,
-                                                      haml_buffer.options[:attr_wrapper],
-                                                      attrs)
+      attributes = Haml::Compiler.build_attributes(haml_buffer.html?,
+        haml_buffer.options[:attr_wrapper], attrs)
 
       if text.nil? && block.nil? && (haml_buffer.options[:autoclose].include?(name) || flags.include?(:/))
         haml_concat "<#{name}#{attributes} />"
@@ -551,7 +550,7 @@ MESSAGE
       return name, attributes_hash unless name =~ /^(.+?)?([\.#].*)$/
 
       return $1 || "div", Buffer.merge_attrs(
-        Precompiler.parse_class_and_id($2),
+        Haml::Parser.parse_class_and_id($2),
         Haml::Util.map_keys(attributes_hash) {|key| key.to_s})
     end
 
