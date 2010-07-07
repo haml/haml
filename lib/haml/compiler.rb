@@ -112,7 +112,7 @@ END
       else
         flush_merged_text
         content = t[:parse] ? 'nil' : t[:value].inspect
-        if t[:attributes_hashes].empty?
+        if t[:attributes_hashes].empty? || options[:suppress_eval]
           attributes_hashes = ''
         elsif t[:attributes_hashes].size == 1
           attributes_hashes = ", #{t[:attributes_hashes].first}"
