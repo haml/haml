@@ -39,6 +39,7 @@ END
 
     def compile_root
       @dont_indent_next_line = @dont_tab_up_next_text = false
+      @output_line = 1
       @indentation = nil
       yield
       flush_merged_text
@@ -56,7 +57,6 @@ END
 
     def compile_silent_script
       push_silent(@node.value[:text])
-      newline_now
       keyword = @node.value[:keyword]
       ruby_block = block_given? && !keyword
 
@@ -110,7 +110,6 @@ END
         @dont_indent_next_line = dont_indent_next_line
         return if tag_closed
       else
-        flush_merged_text
         content = t[:parse] ? 'nil' : t[:value].inspect
         if t[:attributes_hashes].empty? || options[:suppress_eval]
           attributes_hashes = ''
@@ -213,7 +212,8 @@ END
     def push_silent(text, can_suppress = false)
       flush_merged_text
       return if can_suppress && options[:suppress_eval]
-      @precompiled << "#{text};"
+      @precompiled << "#{resolve_newlines}#{text};"
+      @output_line += text.count("\n")
     end
 
     # Adds `text` to `@buffer` with appropriate tabulation
@@ -238,7 +238,6 @@ END
 
       str = ""
       mtabs = 0
-      newlines = 0
       @to_merge.each do |type, val, tabs|
         case type
         when :text
@@ -248,11 +247,8 @@ END
           if mtabs != 0 && !@options[:ugly]
             val = "_hamlout.adjust_tabs(#{mtabs}); " + val
           end
-          str << "\#{#{"\n" * newlines}#{val}}"
+          str << "\#{#{val}}"
           mtabs = 0
-          newlines = 0
-        when :newlines
-          newlines += val
         else
           raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
         end
@@ -264,7 +260,6 @@ END
         else
           "_hamlout.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"
         end
-      @precompiled << "\n" * newlines
       @to_merge = []
       @dont_tab_up_next_text = false
     end
@@ -290,16 +285,15 @@ END
       push_merged_text '' unless opts[:in_tag]
 
       unless block_given?
-        @to_merge << [:script, no_format ? "#{text}\n" : "#{static_method}(#{output_expr});"]
+        script = no_format ? "#{text}\n" : "#{static_method}(#{output_expr});"
+        @to_merge << [:script, resolve_newlines + script]
+        @output_line += script.count("\n")
         concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
-        @newlines -= 1
         return
       end
 
       flush_merged_text
-
       push_silent "haml_temp = #{text}"
-      newline_now
       yield
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
       @precompiled << "_hamlout.buffer << #{no_format ? "haml_temp.to_s;" : "#{static_method}(haml_temp);"}"
@@ -356,19 +350,11 @@ END
       "<#{name}#{attributes_string}#{self_close && xhtml? ? ' /' : ''}>"
     end
 
-    def newline
-      @newlines += 1
-    end
-
-    def newline_now
-      @precompiled << "\n"
-      @newlines -= 1
-    end
-
     def resolve_newlines
-      return unless @newlines > 0
-      @to_merge << [:newlines, @newlines]
-      @newlines = 0
+      diff = @node.line - @output_line
+      return "" if diff <= 0
+      @output_line = @node.line
+      "\n" * [diff, 0].max
     end
 
     # Get rid of and whitespace at the end of the buffer
@@ -390,8 +376,6 @@ END
         end
       when :script
         last[1].gsub!(/\(haml_temp, (.*?)\);$/, '(haml_temp.rstrip, \1);')
-        rstrip_buffer! index - 1
-      when :newlines
         rstrip_buffer! index - 1
       else
         raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
