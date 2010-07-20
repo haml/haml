@@ -105,8 +105,14 @@ module Haml
               next s if escapes % 2 == 0
               ("\\" * (escapes - 1)) + "\n"
             end
-            newline if text.gsub!(/\n"\Z/, "\\n\"")
-            push_script <<RUBY.strip, :escape_html => false
+            # We need to add a newline at the beginning to get the
+            # filter lines to line up (since the Haml filter contains
+            # a line that doesn't show up in the source, namely the
+            # filter name). Then we need to escape the trailing
+            # newline so that the whole filter block doesn't take up
+            # too many.
+            text = "\n" + text.sub(/\n"\Z/, "\\n\"")
+            push_script <<RUBY.rstrip, :escape_html => false
 find_and_preserve(#{filter.inspect}.render_with_options(#{text}, _hamlout.options))
 RUBY
             return
@@ -119,10 +125,6 @@ RUBY
           else
             push_text(rendered.rstrip)
           end
-
-          (text.count("\n") - 1).times {newline}
-          resolve_newlines
-          newline
         end
       end
 

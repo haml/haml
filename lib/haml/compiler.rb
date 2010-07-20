@@ -56,6 +56,7 @@ END
     end
 
     def compile_silent_script
+      return if @options[:suppress_eval]
       push_silent(@node.value[:text])
       keyword = @node.value[:keyword]
       ruby_block = block_given? && !keyword
@@ -76,8 +77,8 @@ END
         # Don't restore dont_* for end because it isn't a conditional branch.
       elsif Parser::MID_BLOCK_KEYWORDS.include?(keyword)
         # Restore dont_* for this conditional branch
-        @dont_indent_next_line = @node.value[:dont_indent_next_line]
-        @dont_tab_up_next_text = @node.value[:dont_tab_up_next_text]
+        @dont_indent_next_line = @node.parent.value[:dont_indent_next_line]
+        @dont_tab_up_next_text = @node.parent.value[:dont_tab_up_next_text]
       end
     end
 
@@ -86,19 +87,36 @@ END
     def compile_tag
       t = @node.value
 
+      # Get rid of whitespace outside of the tag if we need to
+      rstrip_buffer! if t[:nuke_outer_whitespace]
+
       dont_indent_next_line =
         (t[:nuke_outer_whitespace] && !block_given?) ||
         (t[:nuke_inner_whitespace] && block_given?)
 
+      if @options[:suppress_eval]
+        object_ref = "nil"
+        parse = false
+        value = t[:parse] ? nil : t[:value]
+        attributes_hashes = {}
+        preserve_script = false
+      else
+        object_ref = t[:object_ref]
+        parse = t[:parse]
+        value = t[:value]
+        attributes_hashes = t[:attributes_hashes]
+        preserve_script = t[:preserve_script]
+      end
+
       # Check if we can render the tag directly to text and not process it in the buffer
-      if t[:object_ref] == "nil" && t[:attributes_hashes].empty? && !t[:preserve_script]
-        tag_closed = !block_given? && !t[:self_closing] && !t[:parse]
+      if object_ref == "nil" && attributes_hashes.empty? && !preserve_script
+        tag_closed = !block_given? && !t[:self_closing] && !parse
 
         open_tag = prerender_tag(t[:name], t[:self_closing], t[:attributes])
         if tag_closed
-          open_tag << "#{t[:value]}</#{t[:name]}>"
+          open_tag << "#{value}</#{t[:name]}>"
           open_tag << "\n" unless t[:nuke_outer_whitespace]
-        elsif !(t[:parse] || t[:nuke_inner_whitespace] ||
+        elsif !(parse || t[:nuke_inner_whitespace] ||
             (t[:self_closing] && t[:nuke_outer_whitespace]))
           open_tag << "\n"
         end
@@ -110,25 +128,25 @@ END
         @dont_indent_next_line = dont_indent_next_line
         return if tag_closed
       else
-        content = t[:parse] ? 'nil' : t[:value].inspect
-        if t[:attributes_hashes].empty? || options[:suppress_eval]
+        content = parse ? 'nil' : value.inspect
+        if attributes_hashes.empty?
           attributes_hashes = ''
-        elsif t[:attributes_hashes].size == 1
-          attributes_hashes = ", #{t[:attributes_hashes].first}"
+        elsif attributes_hashes.size == 1
+          attributes_hashes = ", #{attributes_hashes.first}"
         else
-          attributes_hashes = ", (#{t[:attributes_hashes].join(").merge(")})"
+          attributes_hashes = ", (#{attributes_hashes.join(").merge(")})"
         end
 
         args = [t[:name], t[:self_closing], !block_given?, t[:preserve_tag],
           t[:escape_html], t[:attributes], t[:nuke_outer_whitespace],
           t[:nuke_inner_whitespace]].map {|v| v.inspect}.join(', ')
-        push_silent "_hamlout.open_tag(#{args}, #{t[:object_ref]}, #{content}#{attributes_hashes})"
+        push_silent "_hamlout.open_tag(#{args}, #{object_ref}, #{content}#{attributes_hashes})"
         @dont_tab_up_next_text = @dont_indent_next_line = dont_indent_next_line
       end
 
       return if t[:self_closing]
 
-      if t[:value].nil?
+      if value.nil?
         @output_tabs += 1 unless t[:nuke_inner_whitespace]
         yield if block_given?
         @output_tabs -= 1 unless t[:nuke_inner_whitespace]
@@ -139,8 +157,8 @@ END
         return
       end
 
-      if t[:parse]
-        push_script(t[:value], t.merge(:in_tag => true))
+      if parse
+        push_script(value, t.merge(:in_tag => true))
         concat_merged_text("</#{t[:name]}>" + (t[:nuke_outer_whitespace] ? "" : "\n"))
       end
     end
@@ -167,15 +185,17 @@ END
     end
 
     def compile_filter
-      raise Error.new("Filter \"#{name}\" is not defined.") unless filter = Filters.defined[name]
-      filter.internal_compile(self, @filter_buffer)
+      unless filter = Filters.defined[@node.value[:name]]
+        raise Error.new("Filter \"#{@node.value[:name]}\" is not defined.", @node.line - 1)
+      end
+      filter.internal_compile(self, @node.value[:text])
     end
 
     def text_for_doctype
       if @node.value[:type] == "xml"
         return nil if html?
         wrapper = @options[:attr_wrapper]
-        return "<?xml version=#{wrapper}1.0#{wrapper} encoding=#{wrapper}#{text.split(' ')[1] || "utf-8"}#{wrapper} ?>"
+        return "<?xml version=#{wrapper}1.0#{wrapper} encoding=#{wrapper}#{@node.value[:encoding] || "utf-8"}#{wrapper} ?>"
       end
 
       if html5?
@@ -212,8 +232,8 @@ END
     def push_silent(text, can_suppress = false)
       flush_merged_text
       return if can_suppress && options[:suppress_eval]
-      @precompiled << "#{resolve_newlines}#{text};"
-      @output_line += text.count("\n")
+      @precompiled << "#{resolve_newlines}#{text}\n"
+      @output_line += text.count("\n") + 1
     end
 
     # Adds `text` to `@buffer` with appropriate tabulation

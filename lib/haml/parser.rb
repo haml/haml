@@ -64,12 +64,14 @@ module Haml
     # of a multiline string.
     MULTILINE_CHAR_VALUE = ?|
 
-    MID_BLOCK_KEYWORDS = %w[else elsif rescue ensure when end]
-    BLOCK_KEYWORDS = %w[if begin case] + MID_BLOCK_KEYWORDS
-    BLOCK_KEYWORD_REGEX = /^-\s*(#{BLOCK_KEYWORDS.join('|')})\b/
+    MID_BLOCK_KEYWORDS = %w[else elsif rescue ensure end when]
+    START_BLOCK_KEYWORDS = %w[if begin case]
+    # Try to parse assignments to block starters as best as possible
+    START_BLOCK_KEYWORD_REGEX = /(?:\w+(?:,\s*\w+)*\s*=\s*)?(#{START_BLOCK_KEYWORDS.join('|')})/
+    BLOCK_KEYWORD_REGEX = /^-\s*(?:(#{MID_BLOCK_KEYWORDS.join('|')})|#{START_BLOCK_KEYWORD_REGEX.source})\b/
 
     # The Regex that matches a Doctype command.
-    DOCTYPE_REGEX = /(\d(?:\.\d)?)?[\s]*([a-z]*)/i
+    DOCTYPE_REGEX = /(\d(?:\.\d)?)?[\s]*([a-z]*)\s*([^ ]+)?/i
 
     # The Regex that matches a literal string or symbol value
     LITERAL_VALUE_REGEX = /:(\w*)|(["'])((?![\\#]|\2).|\\.)*\2/
@@ -93,13 +95,13 @@ module Haml
               raise SyntaxError.new("Indentation can't use both tabs and spaces.", line.index)
             end
 
-            @flat_spaces = @indentation * @template_tabs if flat?
+            @flat_spaces = @indentation * (@template_tabs+1) if flat?
             break 1
           end
 
           tabs = whitespace.length / @indentation.length
           break tabs if whitespace == @indentation * tabs
-          break @template_tabs if flat? && whitespace =~ /^#{@indentation * @template_tabs}/
+          break @template_tabs + 1 if flat? && whitespace =~ /^#{@flat_spaces}/
 
           raise SyntaxError.new(<<END.strip.gsub("\n", ' '), line.index)
 Inconsistent indentation: #{Haml::Shared.human_indentation whitespace, true} used for indentation,
@@ -144,11 +146,9 @@ END
 
         @tab_up = nil
         process_line(@line.text, @line.index) unless @line.text.empty? || @haml_comment
-        node = @parent.children.last
-        if @tab_up != false && (block_opened? || @tab_up == true)
-            (node.type == :silent_script && node.value[:text] =~ /\s*(case|if)\b/)
-          @parent = node
+        if block_opened? || @tab_up
           @template_tabs += 1
+          @parent = @parent.children.last
         end
 
         if !flat? && @next_line.tabs - @line.tabs > 1
@@ -210,7 +210,8 @@ END
     end
 
     def block_keyword(text)
-      text[BLOCK_KEYWORD_REGEX, 1]
+      return unless keyword = text.scan(BLOCK_KEYWORD_REGEX)[0]
+      keyword[0] || keyword[1]
     end
 
     def mid_block_keyword?(text)
@@ -246,13 +247,13 @@ END
 
     def flat_script(text, escape_html = nil)
       raise SyntaxError.new("There's no Ruby code for ~ to evaluate.") if text.empty?
-      push_script(text, escape_html, :preserve)
+      script(text, escape_html, :preserve)
     end
 
     def silent_script(text)
       return haml_comment(text[2..-1]) if text[1] == SILENT_COMMENT
 
-      raise SyntaxError.new(<<END.rstrip, index) if text[1..-1].strip == "end"
+      raise SyntaxError.new(<<END.rstrip, @index - 1) if text[1..-1].strip == "end"
 You don't need to use "- end" in Haml. Un-indent to close a block:
 - if foo?
   %strong Foo!
@@ -264,8 +265,7 @@ END
       text = handle_ruby_multiline(text)
       keyword = block_keyword(text)
 
-      @tab_up = true if %w[case if].include?(keyword)
-      @tab_up = false if keyword == "when"
+      @tab_up = ["if", "case"].include?(keyword)
       ParseNode.new(:silent_script, @index,
         :text => text[1..-1], :keyword => keyword)
     end
@@ -279,8 +279,9 @@ END
       tag_name, attributes, attributes_hashes, object_ref, nuke_outer_whitespace,
         nuke_inner_whitespace, action, value, last_line = parse_tag(line)
 
-      preserve_tag = options[:preserve].include?(tag_name)
+      preserve_tag = @options[:preserve].include?(tag_name)
       nuke_inner_whitespace ||= preserve_tag
+      preserve_tag = false if @options[:ugly]
       escape_html = (action == '&' || (action != '!' && @options[:escape_html]))
 
       case action
@@ -337,6 +338,7 @@ END
 
       self_closing ||= !!(!block_opened? && value.empty? && @options[:autoclose].any? {|t| t === tag_name})
       value = nil if value.empty? && (block_opened? || self_closing)
+      value = handle_ruby_multiline(value) if parse
 
       ParseNode.new(:tag, @index, :name => tag_name, :attributes => attributes,
         :attributes_hashes => attributes_hashes, :self_closing => self_closing,
@@ -368,8 +370,8 @@ END
     # Renders an XHTML doctype or XML shebang.
     def doctype(line)
       raise SyntaxError.new("Illegal nesting: nesting within a header command is illegal.", @next_line.index) if block_opened?
-      version, type = line[3..-1].strip.downcase.scan(DOCTYPE_REGEX)[0]
-      ParseNode.new(:doctype, @index, :version => version, :type => type)
+      version, type, encoding = line[3..-1].strip.downcase.scan(DOCTYPE_REGEX)[0]
+      ParseNode.new(:doctype, @index, :version => version, :type => type, :encoding => encoding)
     end
 
     def filter(name)
@@ -377,7 +379,7 @@ END
 
       @filter_buffer = String.new
 
-      if block_opened?
+      if filter_opened?
         @flat = true
         # If we don't know the indentation by now, it'll be set in Line#tabs
         @flat_spaces = @indentation * (@template_tabs+1) if @indentation
@@ -401,6 +403,19 @@ END
 
     def close_haml_comment(_)
       @haml_comment = false
+    end
+
+    def close_silent_script(node)
+      # Post-process case statements to normalize the nesting of "when" clauses
+      return unless node.value[:keyword] == "case"
+      return unless first = node.children.first
+      return unless first.type == :silent_script && first.value[:keyword] == "when"
+      return if first.children.empty?
+      # If the case node has a "when" child with children, it's the
+      # only child. Then we want to put everything nested beneath it
+      # beneath the case itself (just like "if").
+      node.children = [first, *first.children]
+      first.children = []
     end
 
     # This is a class method so it can be accessed from {Haml::Helpers}.
@@ -460,7 +475,7 @@ END
           new_attributes_hash, rest, last_line = parse_new_attributes(rest)
           attributes_hashes << [:new, new_attributes_hash]
         when ?[
-          break if object_ref
+          break unless object_ref == "nil"
           object_ref, rest = balance(rest, ?[, ?])
         else; break
         end
@@ -677,6 +692,12 @@ END
 
     def block_opened?
       @next_line.tabs > @line.tabs
+    end
+
+    # Same semantics as block_opened?, except that block_opened? uses Line#tabs,
+    # which doesn't interact well with filter lines
+    def filter_opened?
+      @next_line.full =~ (@indentation ? /^#{@indentation * @template_tabs}/ : /^\s/)
     end
 
     def flat?
