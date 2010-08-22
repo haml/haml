@@ -119,11 +119,6 @@ task :submodules do
   if File.exist?(File.dirname(__FILE__) + "/.git")
     sh %{git submodule sync}
     sh %{git submodule update --init}
-  elsif !File.exist?(File.dirname(__FILE__) + "/vendor/fssm/lib")
-    warn <<WARN
-WARNING: vendor/fssm doesn't exist, and this isn't a git repository so
-I can't get it automatically!
-WARN
   end
 end
 
