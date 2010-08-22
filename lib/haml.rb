@@ -33,12 +33,10 @@ module Haml
   #   it's just passed in in case it needs to be used in the future
   def self.init_rails(binding)
     # No &method here for Rails 2.1 compatibility
-    %w[haml/template sass sass/plugin].each {|f| require f}
+    %w[haml/template].each {|f| require f}
   end
 end
 
 require 'haml/util'
-unless $0 =~ /sass(-convert)?$/
-  require 'haml/engine'
-  require 'haml/railtie'
-end
+require 'haml/engine'
+require 'haml/railtie'

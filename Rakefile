@@ -77,52 +77,12 @@ task :install => [:package] do
 end
 
 desc "Release a new Haml package to Rubyforge."
-task :release => [:check_release, :release_elpa, :package] do
+task :release => [:check_release, :package] do
   name = File.read(scope("VERSION_NAME")).strip
   version = File.read(scope("VERSION")).strip
   sh %{rubyforge add_release haml haml "#{name} (v#{version})" pkg/haml-#{version}.gem}
   sh %{rubyforge add_file    haml haml "#{name} (v#{version})" pkg/haml-#{version}.tar.gz}
   sh %{gem push pkg/haml-#{version}.gem}
-end
-
-# Releases haml-mode.el and sass-mode.el to ELPA.
-task :release_elpa do
-  require 'tlsmail'
-  require 'time'
-  require scope('lib/haml')
-
-  next if Haml.version[:prerelease]
-  version = Haml.version[:number]
-
-  haml_unchanged = mode_unchanged?(:haml, version)
-  sass_unchanged = mode_unchanged?(:sass, version)
-  next if haml_unchanged && sass_unchanged
-  raise "haml-mode.el and sass-mode.el are out of sync." if (!!haml_unchanged) ^ (!!sass_unchanged)
-
-  if sass_unchanged && File.read(scope("extra/sass-mode.el")).
-      include?(";; Package-Requires: ((haml-mode #{sass_unchanged.inspect}))")
-    raise "sass-mode.el doesn't require the same version of haml-mode."
-  end
-
-  from = `git config user.email`.strip
-  raise "Don't know how to send emails except via Gmail" unless from =~ /@gmail.com$/
-
-  to = "elpa@tromey.com"
-  Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)
-  Net::SMTP.start('smtp.gmail.com', 587, 'gmail.com', from, read_password("GMail Password"), :login) do |smtp|
-    smtp.send_message(<<CONTENT, from, to)
-From: Nathan Weizenbaum <#{from}>
-To: #{to}
-Subject: Submitting haml-mode and sass-mode #{version}
-Date: #{Time.now.rfc2822}
-
-haml-mode and sass-mode #{version} are packaged and ready to be included in ELPA.
-They can be downloaded from:
-
-  http://github.com/nex3/haml/raw/#{Haml.version[:rev]}/extra/haml-mode.el
-  http://github.com/nex3/haml/raw/#{Haml.version[:rev]}/extra/sass-mode.el
-CONTENT
-  end
 end
 
 # Ensures that the version have been updated for a new release.
@@ -153,20 +113,6 @@ end
 def changed_since?(rev, *files)
   IO.popen("git diff --exit-code #{rev} #{files.join(' ')}") {}
   return !$?.success?
-end
-
-# Returns whether or not the given Emacs mode file (haml or sass)
-# has changed since the given version.
-#
-# @param mode [String, Symbol] The name of the mode
-# @param version [String] The version number
-# @return [String, nil] The version number if the version has changed
-def mode_unchanged?(mode, version)
-  mode_version = File.read(scope("extra/#{mode}-mode.el")).scan(/^;; Version: (.*)$/).first.first
-  return false if mode_version == version
-  return mode_version unless changed_since?(mode_version, "extra/#{mode}-mode.el")
-  raise "#{mode}-mode.el version is #{version.inspect}, but it has changed as of #{version.inspect}"
-  return false
 end
 
 task :submodules do
@@ -240,7 +186,7 @@ begin
 
   namespace :doc do
     task :sass do
-      require scope('lib/sass')
+      require 'sass'
       Dir[scope("yard/default/**/*.sass")].each do |sass|
         File.open(sass.gsub(/sass$/, 'css'), 'w') do |f|
           f.write(Sass::Engine.new(File.read(sass)).render)
@@ -267,9 +213,6 @@ OPTS
       list.exclude('lib/haml/railtie.rb')
       list.exclude('lib/haml/helpers/action_view_mods.rb')
       list.exclude('lib/haml/helpers/xss_mods.rb')
-      list.exclude('lib/sass/plugin/merb.rb')
-      list.exclude('lib/sass/plugin/rails.rb')
-      list.exclude('lib/sass/less.rb')
     end.to_a
     t.options << '--incremental' if Rake.application.top_level_tasks.include?('redoc')
     t.options += FileList.new(scope('yard/*.rb')).to_a.map {|f| ['-e', f]}.flatten
@@ -298,20 +241,19 @@ rescue LoadError
 end
 
 task :pages do
+  puts "#{'=' * 50} Running rake pages"
   ensure_git_cleanup do
-    puts "#{'=' * 50} Running rake pages PROJ=#{ENV["PROJ"].inspect}"
-    raise 'No ENV["PROJ"]!' unless proj = ENV["PROJ"]
-    sh %{git checkout #{proj}-pages}
-    sh %{git reset --hard origin/#{proj}-pages}
+    sh %{git checkout haml-pages}
+    sh %{git reset --hard origin/haml-pages}
 
-    Dir.chdir("/var/www/#{proj}-pages") do
+    Dir.chdir("/var/www/haml-pages") do
       sh %{git fetch origin}
 
       sh %{git checkout stable}
       sh %{git reset --hard origin/stable}
 
-      sh %{git checkout #{proj}-pages}
-      sh %{git reset --hard origin/#{proj}-pages}
+      sh %{git checkout haml-pages}
+      sh %{git reset --hard origin/haml-pages}
       sh %{rake build --trace}
       sh %{mkdir -p tmp}
       sh %{touch tmp/restart.txt}
@@ -341,31 +283,21 @@ begin
 
   desc <<END
 Run a profile of haml.
-  ENGINE=str sets the engine to be profiled. Defaults to Haml.
   TIMES=n sets the number of runs. Defaults to 1000.
-  FILE=str sets the file to profile.
-    Defaults to 'standard' for Haml and 'complex' for Sass.
+  FILE=str sets the file to profile. Defaults to 'standard'
   OUTPUT=str sets the ruby-prof output format.
     Can be Flat, CallInfo, or Graph. Defaults to Flat. Defaults to Flat.
 END
   task :profile do
-    engine = (ENV['ENGINE'] || 'haml').downcase
     times  = (ENV['TIMES'] || '1000').to_i
     file   = ENV['FILE']
 
-    if engine == 'sass'
-      require 'lib/sass'
+    require 'lib/haml'
 
-      file = File.read(scope("test/sass/templates/#{file || 'complex'}.sass"))
-      result = RubyProf.profile { times.times { Sass::Engine.new(file).render } }
-    else
-      require 'lib/haml'
-
-      file = File.read(scope("test/haml/templates/#{file || 'standard'}.haml"))
-      obj = Object.new
-      Haml::Engine.new(file).def_method(obj, :render)
-      result = RubyProf.profile { times.times { obj.render } }
-    end
+    file = File.read(scope("test/haml/templates/#{file || 'standard'}.haml"))
+    obj = Object.new
+    Haml::Engine.new(file).def_method(obj, :render)
+    result = RubyProf.profile { times.times { obj.render } }
 
     RubyProf.const_get("#{(ENV['OUTPUT'] || 'Flat').capitalize}Printer").new(result).print 
   end
@@ -434,7 +366,7 @@ end
 
 task :handle_update do
   email_on_error do
-    unless ENV["REF"] =~ %r{^refs/heads/(master|stable|(?:haml|sass)-pages)$}
+    unless ENV["REF"] =~ %r{^refs/heads/(master|stable|haml-pages)$}
       puts "#{'=' * 20} Ignoring rake handle_update REF=#{ENV["REF"].inspect}"
       next
     end
@@ -451,13 +383,11 @@ task :handle_update do
     sh %{git checkout master}
     sh %{git reset --hard origin/master}
 
-    if branch == "master"
+    case branch
+    when "master"
       sh %{rake release_edge --trace}
-    elsif branch == "stable"
-      sh %{rake pages --trace PROJ=haml}
-      sh %{rake pages --trace PROJ=sass}
-    elsif branch =~ /^(haml|sass)-pages$/
-      sh %{rake pages --trace PROJ=#{$1}}
+    when "stable", "haml-pages"
+      sh %{rake pages --trace}
     end
 
     puts 'Done running handle_update'

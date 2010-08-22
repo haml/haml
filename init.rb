@@ -13,6 +13,6 @@ rescue LoadError
   end
 end
 
-# Load Haml and Sass.
+# Load Haml.
 # Haml may be undefined if we're running gems:install.
 Haml.init_rails(binding) if defined?(Haml)

@@ -1101,18 +1101,18 @@ END
   end
 
   def test_css_filter
-    assert_equal(<<CSS, render(<<SASS))
+    assert_equal(<<HTML, render(<<HAML))
 <style type='text/css'>
   /*<![CDATA[*/
     #foo {
       bar: baz; }
   /*]]>*/
 </style>
-CSS
+HTML
 :css
   #foo {
     bar: baz; }
-SASS
+HAML
   end
 
   def test_local_assigns_dont_modify_class
