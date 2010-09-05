@@ -133,11 +133,10 @@ module Sass::Tree
       rule_indent = '  ' * (tabs - 1)
       per_rule_indent, total_indent = [:nested, :expanded].include?(style) ? [rule_indent, ''] : ['', rule_indent]
 
-      total_rule = total_indent + resolved_rules.members.
-        map {|seq| seq.to_a.join}.
-        join(rule_separator).split("\n").map do |line|
-        per_rule_indent + line.strip
-      end.join(line_separator)
+      joined_rules = resolved_rules.members.map {|seq| seq.to_a.join}.join(rule_separator)
+      joined_rules.sub!(/\A\s*/, per_rule_indent)
+      joined_rules.gsub!(/\s*\n\s*/, "#{line_separator}#{per_rule_indent}")
+      total_rule = total_indent << joined_rules
 
       to_return = ''
       old_spaces = '  ' * (tabs - 1)

@@ -105,9 +105,7 @@ module Sass
       # @see Simple#to_a
       def to_a
         ary = @members.map {|seq_or_op| seq_or_op.is_a?(SimpleSequence) ? seq_or_op.to_a : seq_or_op}
-        ary = Haml::Util.intersperse(ary, " ")
-        ary = Haml::Util.substitute(ary, [" ", "\n", " "], ["\n"])
-        ary.flatten.compact
+        Haml::Util.intersperse(ary, " ").flatten.compact
       end
 
       # Returns a string representation of the sequence.
