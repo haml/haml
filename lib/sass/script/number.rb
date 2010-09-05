@@ -40,11 +40,12 @@ module Sass::Script
     # `3.1415926` will be printed as `3.142`.
     # @api public
     PRECISION = 1000.0
+    NO_UNITS  = []
 
     # @param value [Numeric] The value of the number
     # @param numerator_units [Array<String>] See \{#numerator\_units}
     # @param denominator_units [Array<String>] See \{#denominator\_units}
-    def initialize(value, numerator_units = [], denominator_units = [])
+    def initialize(value, numerator_units = NO_UNITS, denominator_units = NO_UNITS)
       super(value)
       @numerator_units = numerator_units
       @denominator_units = denominator_units
