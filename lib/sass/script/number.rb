@@ -334,9 +334,10 @@ module Sass::Script
 
     private
 
+    OPERATIONS = [:+, :-, :<=, :<, :>, :>=]
     def operate(other, operation)
       this = self
-      if [:+, :-, :<=, :<, :>, :>=].include?(operation)
+      if OPERATIONS.include?(operation)
         if unitless?
           this = this.coerce(other.numerator_units, other.denominator_units)
         else
