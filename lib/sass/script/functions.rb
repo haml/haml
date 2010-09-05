@@ -169,21 +169,10 @@ module Sass::Script
     # The context in which methods in {Script::Functions} are evaluated.
     # That means that all instance methods of {EvaluationContext}
     # are available to use in functions.
-    class EvaluationContext
-      # The options hash for the {Sass::Engine} that is processing the function call
-      #
-      # @return [{Symbol => Object}]
-      attr_reader :options
-
-      # @param options [{Symbol => Object}] See \{#options}
-      def initialize(options)
-        @options = options
-
-        # We need to include this individually in each instance
-        # because of an icky Ruby restriction
-        class << self; include Sass::Script::Functions; end
-      end
-
+    # 
+    # `options`: [{Symbol => Object}]
+    # : The options hash for the {Sass::Engine} that is processing the function call
+    EvaluationContextBase = Struct.new(:options) do
       # Asserts that the type of a given SassScript value
       # is the expected type (designated by a symbol).
       # For example:
@@ -201,10 +190,36 @@ module Sass::Script
         return if value.is_a?(Sass::Script.const_get(type))
         raise ArgumentError.new("#{value.inspect} is not a #{type.to_s.downcase}")
       end
+    end unless defined?(EvaluationContextBase) # avoid warnings in tests
+
+    class << self
+      # Returns whether user function with a given name exists.
+      #
+      # @param function_name [String]
+      # @return [Boolean]
+      def function_available?(function_name)
+        AVAILABLE_FUNCTIONS.include?(function_name)
+      end
+
+      private
+      def define_evaluation_context!
+        Haml::Util.silence_warnings do
+          me = self
+          const_set(:EvaluationContext, Class.new(EvaluationContextBase) { include me })
+          # cache available functions
+          const_set(:AVAILABLE_FUNCTIONS, public_instance_methods.map {|m| Haml::Util.ruby1_8? ? m.to_s : m.to_sym}.to_set)
+        end
+      end
+
+      def include(*args)
+        r = super
+        define_evaluation_context! # update EvaluationContext with new methods
+        r
+      end
     end
+    define_evaluation_context!
 
     instance_methods.each { |m| undef_method m unless m.to_s =~ /^__/ }
-
 
     # Creates a {Color} object from red, green, and blue values.
     #

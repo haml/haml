@@ -62,8 +62,8 @@ module Sass
       def _perform(environment)
         performed_args = @args.map {|a| a.perform(environment)}
         ruby_name      = @name.tr('-', '_')
-        unless Haml::Util.has?(:public_instance_method, Functions, ruby_name) && ruby_name !~ /^__/
-          return Script::String.new("#{name}(#{performed_args.join(', ')})")
+        unless Functions.function_available?(ruby_name) && ruby_name !~ /\A__/
+          return Script::String.new("#{@name}(#{performed_args.join(', ')})")
         end
 
         result = Functions::EvaluationContext.new(environment.options).send(ruby_name, *performed_args)
