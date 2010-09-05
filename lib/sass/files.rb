@@ -143,7 +143,7 @@ END
     def find_full_path(filename, load_path)
       partial_name = File.join(File.dirname(filename), "_#{File.basename(filename)}")
 
-      if Pathname.new(filename).absolute?
+      if absolute_path?(filename)
         [partial_name, filename].each do |name|
           return name if File.readable?(name)
         end
@@ -155,6 +155,13 @@ END
         return full_path if File.readable?(full_path)
       end
       nil
+    end
+    
+    ABSOLUTE = /\A(?:[\/\\]|[A-Za-z]:[\/\\])/
+    # Not using Pathname#absolute? as it is *very* slow.
+    # This might change in the future (ie: new implementation in 1.9 or stouset/pathname3)
+    def absolute_path?(filename)
+      filename =~ ABSOLUTE
     end
   end
 end
