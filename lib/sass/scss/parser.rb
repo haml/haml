@@ -825,17 +825,17 @@ MESSAGE
           :line => line)
       end
 
+      NEWLINE = "\n"
       def tok(rx)
         res = @scanner.scan(rx)
         if res
-          @line += res.count("\n")
+          @line += res.count(NEWLINE)
           @expected = nil
           if !@strs.empty? && rx != COMMENT && rx != SINGLE_LINE_COMMENT
             @strs.each {|s| s << res}
           end
+          res
         end
-
-        res
       end
     end
   end
