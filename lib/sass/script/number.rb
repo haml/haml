@@ -406,7 +406,7 @@ module Sass::Script
     end
 
     def convertable?(units)
-      Array(units).all?(&CONVERTABLE_UNITS.method(:include?))
+      Array(units).all? {|u| CONVERTABLE_UNITS.include?(u)}
     end
 
     def sans_common_units(units1, units2)
