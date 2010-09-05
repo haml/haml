@@ -60,15 +60,15 @@ module Sass
       # @return [Literal] The SassScript object that is the value of the function call
       # @raise [Sass::SyntaxError] if the function call raises an ArgumentError
       def _perform(environment)
-        args = self.args.map {|a| a.perform(environment)}
-        ruby_name = name.gsub('-', '_')
+        performed_args = @args.map {|a| a.perform(environment)}
+        ruby_name      = @name.tr('-', '_')
         unless Haml::Util.has?(:public_instance_method, Functions, ruby_name) && ruby_name !~ /^__/
-          return Script::String.new("#{name}(#{args.map {|a| a.perform(environment)}.join(', ')})")
+          return Script::String.new("#{name}(#{performed_args.join(', ')})")
         end
 
-        result = Functions::EvaluationContext.new(environment.options).send(ruby_name, *args)
+        result = Functions::EvaluationContext.new(environment.options).send(ruby_name, *performed_args)
         result.options = environment.options
-        return result
+        result
       rescue ArgumentError => e
         raise e unless e.backtrace.any? {|t| t =~ /:in `(block in )?(#{name}|perform)'$/}
         raise Sass::SyntaxError.new("#{e.message} for `#{name}'")
