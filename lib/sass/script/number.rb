@@ -247,16 +247,17 @@ module Sass::Script
     # as long as there is only one unit.
     #
     # @return [String] The representation
-    def inspect(opts = {})
-      value =
-        if self.value.is_a?(Float) && (self.value.infinite? || self.value.nan?)
-          self.value
+    def inspect(opts = nil)
+      raw_value = @value
+      prepared_value =
+        if raw_value.is_a?(Float) && (raw_value.infinite? || raw_value.nan?)
+          raw_value
         elsif int?
-          self.value.to_i
+          raw_value.to_i
         else
-          (self.value * PRECISION).round / PRECISION
+          (raw_value * PRECISION).round / PRECISION
         end
-      "#{value}#{unit_str}"
+      unitless? ? prepared_value.to_s : "#{prepared_value}#{unit_str}"
     end
     alias_method :to_sass, :inspect
 
