@@ -751,7 +751,11 @@ MESSAGE
       end
 
       def merge(arr)
-        arr && Haml::Util.merge_adjacent_strings([arr].flatten)
+        if arr
+          arr = Array(arr).flatten
+          # optimizing for the common case of only one element in the array
+          arr.size > 1 ? Haml::Util.merge_adjacent_strings(arr) : arr
+        end
       end
 
       EXPR_NAMES = {
