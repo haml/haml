@@ -298,6 +298,7 @@ module Haml
     # @return [Boolean] True if Sass was successfully loaded from the `sass` gem,
     #   false otherwise.
     def try_sass
+      return true if defined?(::SASS_BEGUN_TO_LOAD)
       begin
         require 'sass/version'
         loaded = Sass.respond_to?(:version) && Sass.version[:major] &&

@@ -8,7 +8,9 @@ end
 # Rails 3.0.0.beta.2+
 if defined?(ActiveSupport) && Haml::Util.has?(:public_method, ActiveSupport, :on_load)
   require 'haml/template/options'
+  autoload(:Sass, 'sass/rails_shim')
   ActiveSupport.on_load(:before_initialize) do
+    Sass # resolve autoload
     ActiveSupport.on_load(:action_view) do
       Haml.init_rails(binding)
     end
