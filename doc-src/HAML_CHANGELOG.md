@@ -9,12 +9,21 @@
   This flag hasn't been necessary since Rails 2.0.
   Existing Rails 2.0 installations will continue to work.
 
-## 3.0.18 (Unreleased)
+## 3.0.18
+
+[Tagged on GitHub](http://github.com/nex3/haml/commit/3.0.18).
 
 * Don't require `rake` in the gemspec, for bundler compatibility under
   JRuby. Thanks to [Gordon McCreight](http://www.gmccreight.com/blog).
 
 * Get rid of the annoying RDoc errors on install.
+
+* Disambiguate references to the `Rails` module when `haml-rails` is installed.
+
+* Fix a bug in `haml_tag` that would allow duplicate attributes to be added
+  and make `data-` attributes not work.
+
+* Compatibility with Rails 3 final.
 
 ## 3.0.17
 
