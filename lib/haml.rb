@@ -25,6 +25,17 @@ module Haml
   #   This isn't actually used;
   #   it's just passed in in case it needs to be used in the future
   def self.init_rails(binding)
+    # Rails 2.2+
+    if defined?(Rails) && Rails.respond_to?(:configuration) &&
+        Rails.configuration.respond_to?(:after_initialize)
+      Rails.configuration.after_initialize do
+        next if defined?(Sass)
+        autoload(:Sass, 'sass/rails2_shim')
+        # resolve autoload if it looks like they're using Sass without options
+        Sass if File.exist?(File.join(RAILS_ROOT, 'public/stylesheets/sass'))
+      end
+    end
+
     # No &method here for Rails 2.1 compatibility
     %w[haml/template].each {|f| require f}
   end
