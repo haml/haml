@@ -49,7 +49,7 @@ class ImporterTest < Test::Unit::TestCase
     css_file = <<CSS
 .apple { color: red; }
 
-.orange { color: orange; }
+.orange { color: #ffa500; }
 
 .pear { color: green; }
 CSS

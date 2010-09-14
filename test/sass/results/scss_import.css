@@ -8,7 +8,7 @@ body { font: Arial; background: blue; }
 
 #content.user.show #container.top #column.left { width: 100px; }
 #content.user.show #container.top #column.right { width: 600px; }
-#content.user.show #container.bottom { background: brown; }
+#content.user.show #container.bottom { background: #a52a2a; }
 
 midrule { inthe: middle; }
 
@@ -22,7 +22,7 @@ body { font: Arial; background: blue; }
 
 #content.user.show #container.top #column.left { width: 100px; }
 #content.user.show #container.top #column.right { width: 600px; }
-#content.user.show #container.bottom { background: brown; }
+#content.user.show #container.bottom { background: #a52a2a; }
 
 @import url(basic.css);
 @import url(../results/complex.css);

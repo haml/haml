@@ -17,19 +17,40 @@ module Sass::Script
   # the cached RGB and HSL values are retained.
   class Color < Literal
     class << self; include Haml::Util; end
-
     # A hash from color names to `[red, green, blue]` value arrays.
-    COLOR_NAMES = map_vals({
+  
+      
+      
+    # A hash from color names to `[red, green, blue]` value arrays.
+    HTML4_COLORS = map_vals({
+        'black'   => 0x000000,
+        'silver'  => 0xc0c0c0,
+        'gray'    => 0x808080,
+        'white'   => 0xffffff,
+        'maroon'  => 0x800000,
+        'red'     => 0xff0000,
+        'purple'  => 0x800080,
+        'fuchsia' => 0xff00ff,
+        'green'   => 0x008000,
+        'lime'    => 0x00ff00,
+        'olive'   => 0x808000,
+        'yellow'  => 0xffff00,
+        'navy'    => 0x000080,
+        'blue'    => 0x0000ff,
+        'teal'    => 0x008080,
+        'aqua'    => 0x00ffff
+      }) {|color| (0..2).map {|n| color >> (n << 3) & 0xff}.reverse}
+    # A hash from `[red, green, blue]` value arrays to color names.
+    HTML4_COLORS_REVERSE = map_hash(HTML4_COLORS) {|k, v| [v, k]}
+    
+    X11_COLORS = map_vals({
         'aliceblue' => 0xf0f8ff,
 		'antiquewhite' => 0xfaebd7,
-		'aqua' => 0x00ffff,
 		'aquamarine' => 0x7fffd4,
 		'azure' => 0xf0ffff,
 		'beige' => 0xf5f5dc,
 		'bisque' => 0xffe4c4,
-		'black' => 0x000000,
 		'blanchedalmond' => 0xffebcd,
-		'blue' => 0x0000ff,
 		'blueviolet' => 0x8a2be2,
 		'brown' => 0xa52a2a,
 		'burlywood' => 0xdeb887,
@@ -68,13 +89,10 @@ module Sass::Script
 		'firebrick' => 0xb22222,
 		'floralwhite' => 0xfffaf0,
 		'forestgreen' => 0x228b22,
-		'fuchsia' => 0xff00ff,
 		'gainsboro' => 0xdcdcdc,
 		'ghostwhite' => 0xf8f8ff,
 		'gold' => 0xffd700,
 		'goldenrod' => 0xdaa520,
-		'gray' => 0x808080,
-		'green' => 0x008000,
 		'greenyellow' => 0xadff2f,
 		'honeydew' => 0xf0fff0,
 		'hotpink' => 0xff69b4,
@@ -101,11 +119,9 @@ module Sass::Script
 		'lightslategrey' => 0x778899,
 		'lightsteelblue' => 0xb0c4de,
 		'lightyellow' => 0xffffe0,
-		'lime' => 0x00ff00,
 		'limegreen' => 0x32cd32,
 		'linen' => 0xfaf0e6,
 		'magenta' => 0xff00ff,
-		'maroon' => 0x800000,
 		'mediumaquamarine' => 0x66cdaa,
 		'mediumblue' => 0x0000cd,
 		'mediumorchid' => 0xba55d3,
@@ -120,9 +136,7 @@ module Sass::Script
 		'mistyrose' => 0xffe4e1,
 		'moccasin' => 0xffe4b5,
 		'navajowhite' => 0xffdead,
-		'navy' => 0x000080,
 		'oldlace' => 0xfdf5e6,
-		'olive' => 0x808000,
 		'olivedrab' => 0x6b8e23,
 		'orange' => 0xffa500,
 		'orangered' => 0xff4500,
@@ -137,8 +151,6 @@ module Sass::Script
 		'pink' => 0xffc0cb,
 		'plum' => 0xdda0dd,
 		'powderblue' => 0xb0e0e6,
-		'purple' => 0x800080,
-		'red' => 0xff0000,
 		'rosybrown' => 0xbc8f8f,
 		'royalblue' => 0x4169e1,
 		'saddlebrown' => 0x8b4513,
@@ -147,7 +159,6 @@ module Sass::Script
 		'seagreen' => 0x2e8b57,
 		'seashell' => 0xfff5ee,
 		'sienna' => 0xa0522d,
-		'silver' => 0xc0c0c0,
 		'skyblue' => 0x87ceeb,
 		'slateblue' => 0x6a5acd,
 		'slategray' => 0x708090,
@@ -156,20 +167,17 @@ module Sass::Script
 		'springgreen' => 0x00ff7f,
 		'steelblue' => 0x4682b4,
 		'tan' => 0xd2b48c,
-		'teal' => 0x008080,
 		'thistle' => 0xd8bfd8,
 		'tomato' => 0xff6347,
 		'turquoise' => 0x40e0d0,
 		'violet' => 0xee82ee,
 		'wheat' => 0xf5deb3,
-		'white' => 0xffffff,
 		'whitesmoke' => 0xf5f5f5,
-		'yellow' => 0xffff00,
 		'yellowgreen' => 0x9acd32
       }) {|color| (0..2).map {|n| color >> (n << 3) & 0xff}.reverse}
-    # A hash from `[red, green, blue]` value arrays to color names.
-    COLOR_NAMES_REVERSE = map_hash(COLOR_NAMES) {|k, v| [v, k]}
-
+      
+    COLOR_NAMES = HTML4_COLORS.merge X11_COLORS
+    
     # Constructs an RGB or HSL color object,
     # optionally with an alpha channel.
     # 
@@ -509,7 +517,7 @@ END
     def to_s(opts = {})
       return rgba_str if alpha?
       return smallest if options[:style] == :compressed
-      return COLOR_NAMES_REVERSE[rgb] if COLOR_NAMES_REVERSE[rgb]
+      return HTML4_COLORS_REVERSE[rgb] if HTML4_COLORS_REVERSE[rgb]
       hex_str
     end
     alias_method :to_sass, :to_s
@@ -525,7 +533,7 @@ END
 
     def smallest
       small_hex_str = hex_str.gsub(/^#(.)\1(.)\2(.)\3$/, '#\1\2\3')
-      return small_hex_str unless (color = COLOR_NAMES_REVERSE[rgb]) &&
+      return small_hex_str unless (color = HTML4_COLORS_REVERSE[rgb]) &&
         color.size <= small_hex_str.size
       return color
     end
