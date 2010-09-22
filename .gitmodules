@@ -3,4 +3,4 @@
 	url = git://github.com/norman/haml-spec.git
 [submodule "vendor/sass"]
 	path = vendor/sass
-	url = file://.
+	url = git://github.com/nex3/sass.git
