@@ -129,7 +129,7 @@ end
 task :submodules do
   if File.exist?(File.dirname(__FILE__) + "/.git")
     sh %{git submodule sync}
-    sh %{git submodule update --init}
+    sh %{git submodule update --init --recursive}
   end
 end
 
