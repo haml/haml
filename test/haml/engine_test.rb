@@ -641,6 +641,32 @@ HTML
 HAML
   end
 
+  def test_html5_javascript_filter
+    assert_equal(<<HTML, render(<<HAML, :format => :html5))
+<script>
+  //<![CDATA[
+    foo bar
+  //]]>
+</script>
+HTML
+:javascript
+  foo bar
+HAML
+  end
+
+  def test_html5_css_filter
+    assert_equal(<<HTML, render(<<HAML, :format => :html5))
+<style>
+  /*<![CDATA[*/
+    foo bar
+  /*]]>*/
+</style>
+HTML
+:css
+  foo bar
+HAML
+  end
+
   def test_erb_filter_with_multiline_expr
     assert_equal(<<HTML, render(<<HAML))
 foobarbaz
