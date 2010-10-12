@@ -523,7 +523,7 @@ END
     end
 
     # This is a class method so it can be accessed from Buffer.
-    def self.build_attributes(is_html, attr_wrapper, attributes = {})
+    def self.build_attributes(is_html, attr_wrapper, escape_attrs, attributes = {})
       quote_escape = attr_wrapper == '"' ? "&quot;" : "&apos;"
       other_quote_char = attr_wrapper == '"' ? "'" : '"'
 
@@ -546,16 +546,28 @@ END
           next
         end
 
-        value = Haml::Helpers.preserve(Haml::Helpers.escape_once(value.to_s))
-        # We want to decide whether or not to escape quotes
-        value.gsub!('&quot;', '"')
-        this_attr_wrapper = attr_wrapper
-        if value.include? attr_wrapper
-          if value.include? other_quote_char
-            value = value.gsub(attr_wrapper, quote_escape)
+        escaped =
+          if escape_attrs == :once
+            Haml::Helpers.escape_once(value.to_s)
+          elsif escape_attrs
+            CGI.escapeHTML(value.to_s)
           else
-            this_attr_wrapper = other_quote_char
+            value.to_s
           end
+        value = Haml::Helpers.preserve(escaped)
+        if escape_attrs
+          # We want to decide whether or not to escape quotes
+          value.gsub!('&quot;', '"')
+          this_attr_wrapper = attr_wrapper
+          if value.include? attr_wrapper
+            if value.include? other_quote_char
+              value = value.gsub(attr_wrapper, quote_escape)
+            else
+              this_attr_wrapper = other_quote_char
+            end
+          end
+        else
+          this_attr_wrapper = attr_wrapper
         end
         " #{attr}=#{this_attr_wrapper}#{value}#{this_attr_wrapper}"
       end
@@ -570,7 +582,8 @@ END
     end
 
     def prerender_tag(name, self_close, attributes)
-      attributes_string = Precompiler.build_attributes(html?, @options[:attr_wrapper], attributes)
+      attributes_string = Precompiler.build_attributes(
+        html?, @options[:attr_wrapper], @options[:escape_attrs], attributes)
       "<#{name}#{attributes_string}#{self_close && xhtml? ? ' /' : ''}>"
     end
 

@@ -209,7 +209,8 @@ RUBY
                       end) ? "" : "\n")
       end
 
-      attributes = Precompiler.build_attributes(html?, @options[:attr_wrapper], attributes)
+      attributes = Precompiler.build_attributes(
+        html?, @options[:attr_wrapper], @options[:escape_attrs], attributes)
       @buffer << "#{nuke_outer_whitespace || @options[:ugly] ? '' : tabs(tabulation)}<#{name}#{attributes}#{str}"
 
       if content

@@ -447,6 +447,7 @@ MESSAGE
 
       attributes = Haml::Precompiler.build_attributes(haml_buffer.html?,
                                                       haml_buffer.options[:attr_wrapper],
+                                                      haml_buffer.options[:escape_attrs],
                                                       attrs)
 
       if text.nil? && block.nil? && (haml_buffer.options[:autoclose].include?(name) || flags.include?(:/))

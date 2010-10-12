@@ -563,6 +563,28 @@ HTML
 HAML
   end
 
+  def test_escape_attrs_false
+    assert_equal(<<HTML, render(<<HAML, :escape_attrs => false))
+<div class='<?php echo "&quot;" ?>' id='foo'>
+  bar
+</div>
+HTML
+#foo{:class => '<?php echo "&quot;" ?>'}
+  bar
+HAML
+  end
+
+  def test_escape_attrs_always
+    assert_equal(<<HTML, render(<<HAML, :escape_attrs => :always))
+<div class='"&amp;lt;&amp;gt;&amp;amp;"' id='foo'>
+  bar
+</div>
+HTML
+#foo{:class => '"&lt;&gt;&amp;"'}
+  bar
+HAML
+  end
+
   def test_escape_html
     html = <<HTML
 &amp;

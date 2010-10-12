@@ -84,6 +84,7 @@ module Haml
         :ugly => false,
         :format => :xhtml,
         :escape_html => false,
+        :escape_attrs => true,
       }
 
 
@@ -294,6 +295,7 @@ module Haml
         :format => @options[:format],
         :encoding => @options[:encoding],
         :escape_html => @options[:escape_html],
+        :escape_attrs => @options[:escape_attrs],
       }
     end
 
