@@ -379,5 +379,15 @@ END
         ::Maruku.new(text).to_html
       end
     end
+
+    module Include
+      include Base
+
+      def render(path)
+        File.open(path.strip, 'r') do |fi|
+          fi.read
+        end
+      end
+    end
   end
 end
