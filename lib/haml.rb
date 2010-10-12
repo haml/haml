@@ -25,9 +25,10 @@ module Haml
   #   This isn't actually used;
   #   it's just passed in in case it needs to be used in the future
   def self.init_rails(binding)
-    # Rails 2.2+
+    # 2.2 <= Rails < 3
     if defined?(Rails) && Rails.respond_to?(:configuration) &&
-        Rails.configuration.respond_to?(:after_initialize)
+        Rails.configuration.respond_to?(:after_initialize) &&
+        !Haml::Util.ap_geq_3?
       Rails.configuration.after_initialize do
         next if defined?(Sass)
         autoload(:Sass, 'sass/rails2_shim')
