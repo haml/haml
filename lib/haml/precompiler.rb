@@ -1,4 +1,5 @@
 require 'strscan'
+require 'cgi'
 require 'haml/shared'
 
 module Haml
