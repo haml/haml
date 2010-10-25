@@ -155,8 +155,8 @@ module Haml
       end
 
       def handle_load_error(err)
-        dep = err.message.scan(/^no such file to load -- (.*)/)[0]
-        raise err if @options[:trace] || dep.nil? || dep.empty?
+        dep = err.message.match(/^no such file to load -- (.*)/)[1]
+        raise err if @options[:trace] || dep.nil?
         $stderr.puts <<MESSAGE
 Required dependency #{dep} not found!
     Run "gem install #{dep}" to get it.
