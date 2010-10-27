@@ -209,7 +209,7 @@ RUBY
                       end) ? "" : "\n")
       end
 
-      attributes = Precompiler.build_attributes(
+      attributes = Compiler.build_attributes(
         html?, @options[:attr_wrapper], @options[:escape_attrs], attributes)
       @buffer << "#{nuke_outer_whitespace || @options[:ugly] ? '' : tabs(tabulation)}<#{name}#{attributes}#{str}"
 
@@ -246,14 +246,14 @@ RUBY
     # @param from [{String => #to_s}] The attribute hash to merge from
     # @return [{String => String}] `to`, after being merged
     def self.merge_attrs(to, from)
-      from['id'] = Precompiler.filter_and_join(from['id'], '_') if from['id']
+      from['id'] = Compiler.filter_and_join(from['id'], '_') if from['id']
       if to['id'] && from['id']
         to['id'] << '_' << from.delete('id').to_s
       elsif to['id'] || from['id']
         from['id'] ||= to['id']
       end
 
-      from['class'] = Precompiler.filter_and_join(from['class'], ' ') if from['class']
+      from['class'] = Compiler.filter_and_join(from['class'], ' ') if from['class']
       if to['class'] && from['class']
         # Make sure we don't duplicate class names
         from['class'] = (from['class'].to_s.split(' ') | to['class'].split(' ')).sort.join(' ')

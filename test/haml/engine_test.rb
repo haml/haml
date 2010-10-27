@@ -790,6 +790,31 @@ HTML
 HAML
   end
 
+  def test_nested_case_assigned_to_var
+    assert_equal(<<HTML, render(<<HAML))
+bar
+HTML
+- if true
+  - var = case 12
+  - when 1; "foo"
+  - when 12; "bar"
+  = var
+HAML
+  end
+
+  def test_case_assigned_to_multiple_vars
+    assert_equal(<<HTML, render(<<HAML))
+bar
+bip
+HTML
+- var, vip = case 12
+- when 1; ["foo", "baz"]
+- when 12; ["bar", "bip"]
+= var
+= vip
+HAML
+  end
+
   def test_if_assigned_to_var
     assert_equal(<<HTML, render(<<HAML))
 foo
@@ -1130,7 +1155,15 @@ HAML
         end
 
         if Haml::Util.ruby1_8?
-          assert_match(/^#{Regexp.escape(__FILE__)}:#{line_no}/, err.backtrace[0], "Line: #{key}")
+          # Sometimes, the first backtrace entry is *only* in the message.
+          # No idea why.
+          bt =
+            if expected_message == :compile && err.message.include?("\n")
+              err.message.split("\n", 2)[1]
+            else
+              err.backtrace[0]
+            end
+          assert_match(/^#{Regexp.escape(__FILE__)}:#{line_no}/, bt, "Line: #{key}")
         end
       else
         assert(false, "Exception not raised for\n#{key}")

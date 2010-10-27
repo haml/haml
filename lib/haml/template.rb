@@ -29,7 +29,7 @@ module Haml
       require 'haml/helpers/xss_mods'
       Haml::Helpers.send(:include, Haml::Helpers::XssMods)
 
-      Haml::Precompiler.module_eval do
+      Haml::Compiler.module_eval do
         def precompiled_method_return_value_with_haml_xss
           "::Haml::Util.html_safe(#{precompiled_method_return_value_without_haml_xss})"
         end

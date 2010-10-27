@@ -82,21 +82,21 @@ module Haml
 
       # This should be overridden when a filter needs to have access to the Haml evaluation context.
       # Rather than applying a filter to a string at compile-time,
-      # \{#compile} uses the {Haml::Precompiler} instance to compile the string to Ruby code
+      # \{#compile} uses the {Haml::Compiler} instance to compile the string to Ruby code
       # that will be executed in the context of the active Haml template.
       #
-      # Warning: the {Haml::Precompiler} interface is neither well-documented
+      # Warning: the {Haml::Compiler} interface is neither well-documented
       # nor guaranteed to be stable.
       # If you want to make use of it, you'll probably need to look at the source code
       # and should test your filter when upgrading to new Haml versions.
       #
-      # @param precompiler [Haml::Precompiler] The precompiler instance
+      # @param compiler [Haml::Compiler] The compiler instance
       # @param text [String] The text of the filter
       # @raise [Haml::Error] if none of \{#compile}, \{#render}, and \{#render_with_options} are overridden
-      def compile(precompiler, text)
+      def compile(compiler, text)
         resolve_lazy_requires
         filter = self
-        precompiler.instance_eval do
+        compiler.instance_eval do
           if contains_interpolation?(text)
             return if options[:suppress_eval]
 
@@ -105,24 +105,26 @@ module Haml
               next s if escapes % 2 == 0
               ("\\" * (escapes - 1)) + "\n"
             end
-            newline if text.gsub!(/\n"\Z/, "\\n\"")
-            push_script <<RUBY.strip, :escape_html => false
+            # We need to add a newline at the beginning to get the
+            # filter lines to line up (since the Haml filter contains
+            # a line that doesn't show up in the source, namely the
+            # filter name). Then we need to escape the trailing
+            # newline so that the whole filter block doesn't take up
+            # too many.
+            text = "\n" + text.sub(/\n"\Z/, "\\n\"")
+            push_script <<RUBY.rstrip, :escape_html => false
 find_and_preserve(#{filter.inspect}.render_with_options(#{text}, _hamlout.options))
 RUBY
             return
           end
 
-          rendered = Haml::Helpers::find_and_preserve(filter.render_with_options(text, precompiler.options), precompiler.options[:preserve])
+          rendered = Haml::Helpers::find_and_preserve(filter.render_with_options(text, compiler.options), compiler.options[:preserve])
 
           if !options[:ugly]
             push_text(rendered.rstrip.gsub("\n", "\n#{'  ' * @output_tabs}"))
           else
             push_text(rendered.rstrip)
           end
-
-          (text.count("\n") - 1).times {newline}
-          resolve_newlines
-          newline
         end
       end
 
@@ -270,9 +272,9 @@ END
       lazy_require 'stringio'
 
       # @see Base#compile
-      def compile(precompiler, text)
-        return if precompiler.options[:suppress_eval]
-        precompiler.instance_eval do
+      def compile(compiler, text)
+        return if compiler.options[:suppress_eval]
+        compiler.instance_eval do
           push_silent <<-FIRST.gsub("\n", ';') + text + <<-LAST.gsub("\n", ';')
             _haml_old_stdout = $stdout
             $stdout = StringIO.new(_hamlout.buffer, 'a')
@@ -318,11 +320,11 @@ END
       lazy_require 'erb'
 
       # @see Base#compile
-      def compile(precompiler, text)
-        return if precompiler.options[:suppress_eval]
+      def compile(compiler, text)
+        return if compiler.options[:suppress_eval]
         src = ::ERB.new(text).src.sub(/^#coding:.*?\n/, '').
           sub(/^_erbout = '';/, "")
-        precompiler.send(:push_silent, src)
+        compiler.send(:push_silent, src)
       end
     end
 

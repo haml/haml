@@ -1,6 +1,7 @@
 require 'haml/helpers'
 require 'haml/buffer'
-require 'haml/precompiler'
+require 'haml/parser'
+require 'haml/compiler'
 require 'haml/filters'
 require 'haml/error'
 
@@ -15,7 +16,8 @@ module Haml
   #     output = haml_engine.render
   #     puts output
   class Engine
-    include Precompiler
+    include Parser
+    include Compiler
 
     # The options hash.
     # See {file:HAML_REFERENCE.md#haml_options the Haml options documentation}.
@@ -119,7 +121,7 @@ module Haml
       @to_merge = []
       @tab_change  = 0
 
-      precompile
+      compile(parse)
     rescue Haml::Error => e
       if @index || e.line
         e.backtrace.unshift "#{@options[:filename]}:#{(e.line ? e.line + 1 : @index) + @options[:line] - 1}"

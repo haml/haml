@@ -51,21 +51,22 @@ module Haml
   # We want to print the same deprecation warning,
   # so we have to compile in a method call to check for it.
   #
-  # I don't like having this in the precompiler pipeline,
+  # I don't like having this in the compilation pipeline,
   # and I'd like to get rid of it once Rails 3.1 is well-established.
   if defined?(ActionView::OutputBuffer) &&
       Haml::Util.has?(:instance_method, ActionView::OutputBuffer, :append_if_string=)
-    module Precompiler
-      def push_silent_with_haml_block_deprecation(text, can_suppress = false)
-        unless can_suppress && block_opened? && !mid_block_keyword?("- #{text}") &&
-            text =~ ActionView::Template::Handlers::Erubis::BLOCK_EXPR
-          return push_silent_without_haml_block_deprecation(text, can_suppress)
+    module Compiler
+      def compile_silent_script_with_haml_block_deprecation(&block)
+        unless block && !@node.value[:keyword] &&
+            @node.value[:text] =~ ActionView::Template::Handlers::Erubis::BLOCK_EXPR
+          return compile_silent_script_without_haml_block_deprecation(&block)
         end
 
-        push_silent_without_haml_block_deprecation("_hamlout.append_if_string= #{text}", can_suppress)
+        @node.value[:text] = "_hamlout.append_if_string= #{@node.value[:text]}"
+        compile_silent_script_without_haml_block_deprecation(&block)
       end
-      alias_method :push_silent_without_haml_block_deprecation, :push_silent
-      alias_method :push_silent, :push_silent_with_haml_block_deprecation
+      alias_method :compile_silent_script_without_haml_block_deprecation, :compile_silent_script
+      alias_method :compile_silent_script, :compile_silent_script_with_haml_block_deprecation
     end
 
     class Buffer

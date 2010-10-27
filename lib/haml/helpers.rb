@@ -445,10 +445,10 @@ MESSAGE
       attrs = Haml::Util.map_keys(rest.shift || {}) {|key| key.to_s}
       name, attrs = merge_name_and_attributes(name.to_s, attrs)
 
-      attributes = Haml::Precompiler.build_attributes(haml_buffer.html?,
-                                                      haml_buffer.options[:attr_wrapper],
-                                                      haml_buffer.options[:escape_attrs],
-                                                      attrs)
+      attributes = Haml::Compiler.build_attributes(haml_buffer.html?,
+        haml_buffer.options[:attr_wrapper],
+        haml_buffer.options[:escape_attrs],
+        attrs)
 
       if text.nil? && block.nil? && (haml_buffer.options[:autoclose].include?(name) || flags.include?(:/))
         haml_concat "<#{name}#{attributes} />"
@@ -553,7 +553,7 @@ MESSAGE
       return name, attributes_hash unless name =~ /^(.+?)?([\.#].*)$/
 
       return $1 || "div", Buffer.merge_attrs(
-        Precompiler.parse_class_and_id($2), attributes_hash)
+        Haml::Parser.parse_class_and_id($2), attributes_hash)
     end
 
     # Runs a block of code with the given buffer as the currently active buffer.
