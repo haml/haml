@@ -12,7 +12,7 @@ end
 
 require File.dirname(__FILE__) + '/../lib/haml'
 require File.dirname(__FILE__) + '/linked_rails'
-%w[rubygems erb erubis markaby active_support action_controller
+%w[rubygems erb erubis active_support action_controller
    action_view action_pack haml/template rbench].each {|dep| require(dep)}
 
 def view
@@ -40,7 +40,6 @@ RBench.run(times) do
   directory = File.dirname(__FILE__) + '/haml'
   haml_template    = File.read("#{directory}/templates/#{template_name}.haml")
   erb_template     = File.read("#{directory}/erb/#{template_name}.erb")
-  markaby_template = File.read("#{directory}/markaby/#{template_name}.mab")
 
   report "Cached" do
     obj = Object.new
