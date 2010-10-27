@@ -193,12 +193,6 @@ RUBY
                  nuke_outer_whitespace, nuke_inner_whitespace, obj_ref, content, *attributes_hashes)
       tabulation = @real_tabs
 
-      attributes = class_id
-      attributes_hashes.each do |old|
-        self.class.merge_attrs(attributes, to_hash(old.map {|k, v| [k.to_s, v]}))
-      end
-      self.class.merge_attrs(attributes, parse_object_ref(obj_ref)) if obj_ref
-
       if self_closing && xhtml?
         str = " />" + (nuke_outer_whitespace ? "" : "\n")
       else
@@ -209,9 +203,13 @@ RUBY
                       end) ? "" : "\n")
       end
 
-      attributes = Compiler.build_attributes(
-        html?, @options[:attr_wrapper], @options[:escape_attrs], attributes)
-      @buffer << "#{nuke_outer_whitespace || @options[:ugly] ? '' : tabs(tabulation)}<#{name}#{attributes}#{str}"
+      @buffer << "#{nuke_outer_whitespace || @options[:ugly] ? '' : tabs(tabulation)}<#{name}#{
+        attributes(class_id, obj_ref, *attributes_hashes)
+      }#{
+        Compiler.build_tag_closer(
+          xhtml?, html?, self_closing, nuke_outer_whitespace, nuke_inner_whitespace,
+          try_one_line, preserve_tag)
+      }"
 
       if content
         @buffer << "#{content}</#{name}>" << (nuke_outer_whitespace ? "" : "\n")
@@ -219,6 +217,16 @@ RUBY
       end
 
       @real_tabs += 1 unless self_closing || nuke_inner_whitespace
+    end
+
+    def attributes(class_id, obj_ref, *attributes_hashes)
+      attributes = class_id
+      attributes_hashes.each do |old|
+        self.class.merge_attrs(attributes, to_hash(old.map {|k, v| [k.to_s, v]}))
+      end
+      self.class.merge_attrs(attributes, parse_object_ref(obj_ref)) if obj_ref
+      Compiler.build_attributes(
+        html?, @options[:attr_wrapper], @options[:escape_attrs], attributes)
     end
 
     # Remove the whitespace from the right side of the buffer string.

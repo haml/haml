@@ -291,6 +291,31 @@ HAML
     assert_equal(hash, {:color => 'red'})
   end
 
+  def test_ugly_semi_prerendered_tags
+    assert_equal(<<HTML, render(<<HAML, :ugly => true))
+<p a='2'></p>
+<p a='2'>foo</p>
+<p a='2' />
+<p a='2'>foo</p>
+<p a='2'>foo
+bar</p>
+<p a='2'>foo
+bar</p>
+<p a='2'>
+foo
+</p>
+HTML
+%p{:a => 1 + 1}
+%p{:a => 1 + 1} foo
+%p{:a => 1 + 1}/
+%p{:a => 1 + 1}= "foo"
+%p{:a => 1 + 1}= "foo\\nbar"
+%p{:a => 1 + 1}~ "foo\\nbar"
+%p{:a => 1 + 1}
+  foo
+HAML
+  end
+
   def test_end_of_file_multiline
     assert_equal("<p>0</p>\n<p>1</p>\n<p>2</p>\n", render("- for i in (0...3)\n  %p= |\n   i |"))
   end
