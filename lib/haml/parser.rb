@@ -391,8 +391,7 @@ END
     def close
       node, @parent = @parent, @parent.parent
       @template_tabs -= 1
-      #send("close_#{node.type}", node) if respond_to?("close_#{node.type}", :include_private)
-      send("close_#{node.type}", node) if Haml::Parser.private_instance_methods.include?("close_#{node.type}")
+      send("close_#{node.type}", node) if respond_to?("close_#{node.type}", :include_private)
     end
 
     def close_filter(_)
