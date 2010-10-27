@@ -202,8 +202,14 @@ module Haml
 
       # @see Base#render_with_options
       def render_with_options(text, options)
+        if options[:format] == :html5
+          type = ''
+        else
+          type = " type=#{options[:attr_wrapper]}text/javascript#{options[:attr_wrapper]}"
+        end
+
         <<END
-<script type=#{options[:attr_wrapper]}text/javascript#{options[:attr_wrapper]}>
+<script#{type}>
   //<![CDATA[
     #{text.rstrip.gsub("\n", "\n    ")}
   //]]>
@@ -219,8 +225,14 @@ END
 
       # @see Base#render_with_options
       def render_with_options(text, options)
+        if options[:format] == :html5
+          type = ''
+        else
+          type = " type=#{options[:attr_wrapper]}text/css#{options[:attr_wrapper]}"
+        end
+
         <<END
-<style type=#{options[:attr_wrapper]}text/css#{options[:attr_wrapper]}>
+<style#{type}>
   /*<![CDATA[*/
     #{text.rstrip.gsub("\n", "\n    ")}
   /*]]>*/

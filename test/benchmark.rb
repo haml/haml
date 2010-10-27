@@ -5,15 +5,14 @@ times = (ARGV.first || 1000).to_i
 if times == 0 # Invalid parameter
   puts <<END
 ruby #$0 [times=1000]
-  Benchmark Haml against various other templating languages and Sass
-  on its own.
+  Benchmark Haml against various other templating languages.
 END
   exit 1
 end
 
 require File.dirname(__FILE__) + '/../lib/haml'
 require File.dirname(__FILE__) + '/linked_rails'
-%w[sass rubygems erb erubis markaby active_support action_controller
+%w[rubygems erb erubis markaby active_support action_controller
    action_view action_pack haml/template rbench].each {|dep| require(dep)}
 
 def view
@@ -90,10 +89,4 @@ RBench.run(times) do
     render @base, 'haml/templates/action_view_ugly'
     haml_ugly { render @base, 'haml/templates/action_view_ugly' }
   end
-end
-
-RBench.run(times) do
-  sass_template = File.read("#{File.dirname(__FILE__)}/sass/templates/complex.sass")
-
-  report("Sass") { Sass::Engine.new(sass_template).render }
 end

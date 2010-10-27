@@ -1,5 +1,7 @@
 module Haml
   module Compiler
+    include Haml::Util
+
     private
 
     # Returns the precompiled string with the preamble and postamble
@@ -31,8 +33,8 @@ END
 
       names.map do |name|
         # Can't use || because someone might explicitly pass in false with a symbol
-        sym_local = "_haml_locals[#{name.to_sym.inspect}]"
-        str_local = "_haml_locals[#{name.to_s.inspect}]"
+        sym_local = "_haml_locals[#{inspect_obj(name.to_sym)}]"
+        str_local = "_haml_locals[#{inspect_obj(name.to_s)}]"
         "#{name} = #{sym_local}.nil? ? #{str_local} : #{sym_local}"
       end.join(';') + ';'
     end
@@ -128,7 +130,7 @@ END
         @dont_indent_next_line = dont_indent_next_line
         return if tag_closed
       else
-        content = parse ? 'nil' : value.inspect
+        content = parse ? 'nil' : inspect_obj(value)
         if attributes_hashes.empty?
           attributes_hashes = ''
         elsif attributes_hashes.size == 1
@@ -139,7 +141,7 @@ END
 
         args = [t[:name], t[:self_closing], !block_given?, t[:preserve_tag],
           t[:escape_html], t[:attributes], t[:nuke_outer_whitespace],
-          t[:nuke_inner_whitespace]].map {|v| v.inspect}.join(', ')
+          t[:nuke_inner_whitespace]].map {|v| inspect_obj(v)}.join(', ')
         push_silent "_hamlout.open_tag(#{args}, #{object_ref}, #{content}#{attributes_hashes})"
         @dont_tab_up_next_text = @dont_indent_next_line = dont_indent_next_line
       end
@@ -261,7 +263,7 @@ END
       @to_merge.each do |type, val, tabs|
         case type
         when :text
-          str << val.inspect[1...-1]
+          str << inspect_obj(val)[1...-1]
           mtabs += tabs
         when :script
           if mtabs != 0 && !@options[:ugly]
@@ -274,12 +276,14 @@ END
         end
       end
 
-      @precompiled <<
-        if @options[:ugly]
-          "_hamlout.buffer << \"#{str}\";"
-        else
-          "_hamlout.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"
-        end
+      unless str.empty?
+        @precompiled <<
+          if @options[:ugly]
+            "_hamlout.buffer << \"#{str}\";"
+          else
+            "_hamlout.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"
+          end
+      end
       @to_merge = []
       @dont_tab_up_next_text = false
     end
@@ -321,7 +325,7 @@ END
     end
 
     # This is a class method so it can be accessed from Buffer.
-    def self.build_attributes(is_html, attr_wrapper, attributes = {})
+    def self.build_attributes(is_html, attr_wrapper, escape_attrs, attributes = {})
       quote_escape = attr_wrapper == '"' ? "&quot;" : "&apos;"
       other_quote_char = attr_wrapper == '"' ? "'" : '"'
 
@@ -334,8 +338,8 @@ END
       result = attributes.collect do |attr, value|
         next if value.nil?
 
-        value = filter_and_join(value, ' ') if attr == :class
-        value = filter_and_join(value, '_') if attr == :id
+        value = filter_and_join(value, ' ') if attr == 'class'
+        value = filter_and_join(value, '_') if attr == 'id'
 
         if value == true
           next " #{attr}" if is_html
@@ -344,16 +348,28 @@ END
           next
         end
 
-        value = Haml::Helpers.preserve(Haml::Helpers.escape_once(value.to_s))
-        # We want to decide whether or not to escape quotes
-        value.gsub!('&quot;', '"')
-        this_attr_wrapper = attr_wrapper
-        if value.include? attr_wrapper
-          if value.include? other_quote_char
-            value = value.gsub(attr_wrapper, quote_escape)
+        escaped =
+          if escape_attrs == :once
+            Haml::Helpers.escape_once(value.to_s)
+          elsif escape_attrs
+            CGI.escapeHTML(value.to_s)
           else
-            this_attr_wrapper = other_quote_char
+            value.to_s
           end
+        value = Haml::Helpers.preserve(escaped)
+        if escape_attrs
+          # We want to decide whether or not to escape quotes
+          value.gsub!('&quot;', '"')
+          this_attr_wrapper = attr_wrapper
+          if value.include? attr_wrapper
+            if value.include? other_quote_char
+              value = value.gsub(attr_wrapper, quote_escape)
+            else
+              this_attr_wrapper = other_quote_char
+            end
+          end
+        else
+          this_attr_wrapper = attr_wrapper
         end
         " #{attr}=#{this_attr_wrapper}#{value}#{this_attr_wrapper}"
       end
@@ -361,12 +377,15 @@ END
     end
 
     def self.filter_and_join(value, separator)
+      return "" if value == ""
       value = [value] unless value.is_a?(Array)
-      return value.flatten.collect {|item| item ? item.to_s : nil}.compact.join(separator)
+      value = value.flatten.collect {|item| item ? item.to_s : nil}.compact.join(separator)
+      return !value.empty? && value
     end
 
     def prerender_tag(name, self_close, attributes)
-      attributes_string = Compiler.build_attributes(html?, @options[:attr_wrapper], attributes)
+      attributes_string = Compiler.build_attributes(
+        html?, @options[:attr_wrapper], @options[:escape_attrs], attributes)
       "<#{name}#{attributes_string}#{self_close && xhtml? ? ' /' : ''}>"
     end
 

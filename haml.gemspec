@@ -3,13 +3,13 @@ require 'rubygems'
 # Note that Haml's gem-compilation process requires access to the filesystem.
 # This means that it cannot be automatically run by e.g. GitHub's gem system.
 # However, a build server automatically packages the master branch
-# every time it's pushed to; this is made available as the haml-edge gem.
+# every time it's pushed to; this is made available as a prerelease gem.
 HAML_GEMSPEC = Gem::Specification.new do |spec|
   spec.rubyforge_project = 'haml'
-  spec.name = File.exist?(File.dirname(__FILE__) + '/EDGE_GEM_VERSION') ? 'haml-edge' : 'haml'
-  spec.summary = "An elegant, structured XHTML/XML templating engine.\nComes with Sass, a similar CSS templating engine."
+  spec.name = 'haml'
+  spec.summary = "An elegant, structured XHTML/XML templating engine."
   spec.version = File.read(File.dirname(__FILE__) + '/VERSION').strip
-  spec.authors = ['Nathan Weizenbaum', 'Chris Eppstein', 'Hampton Catlin']
+  spec.authors = ['Nathan Weizenbaum', 'Hampton Catlin']
   spec.email = 'haml@googlegroups.com'
   spec.description = <<-END
       Haml (HTML Abstraction Markup Language) is a layer on top of XHTML or XML
@@ -25,19 +25,10 @@ HAML_GEMSPEC = Gem::Specification.new do |spec|
   spec.add_development_dependency 'maruku', '>= 0.5.9'
 
   readmes = Dir['*'].reject{ |x| x =~ /(^|[^.a-z])[a-z]+/ || x == "TODO" }
-  spec.executables = ['haml', 'html2haml', 'sass', 'css2sass', 'sass-convert']
-  spec.files = Dir['rails/init.rb', 'lib/**/*', 'vendor/**/*',
-    'bin/*', 'test/**/*', 'extra/**/*', 'Rakefile', 'init.rb',
-    '.yardopts'] + readmes
+  spec.executables = ['haml', 'html2haml']
+  spec.files = Dir['rails/init.rb', 'lib/**/*', 'bin/*', 'test/**/*',
+    'extra/**/*', 'vendor/sass/**/*', 'Rakefile', 'init.rb', '.yardopts'] + readmes
   spec.homepage = 'http://haml-lang.com/'
-  spec.has_rdoc = true
-  spec.extra_rdoc_files = readmes
-  spec.rdoc_options += [
-    '--title', 'Haml',
-    '--main', 'README.rdoc',
-    '--exclude', 'lib/haml/buffer.rb',
-    '--line-numbers',
-    '--inline-source'
-   ]
+  spec.has_rdoc = false
   spec.test_files = Dir['test/**/*_test.rb']
 end

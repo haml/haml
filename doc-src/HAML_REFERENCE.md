@@ -143,6 +143,14 @@ Available options are:
   See also [Escaping HTML](#escaping_html) and [Unescaping HTML](#unescaping_html)
   Defaults to false.
 
+{#escape_attrs-option} `:escape_attrs`
+: Sets whether or not to escape HTML-sensitive characters in attributes.
+  If this is true, all HTML-sensitive characters in attributes are escaped.
+  If it's set to false, no HTML-sensitive characters in attributes are escaped.
+  If it's set to `:once`, existing HTML escape sequences are preserved,
+  but other HTML-sensitive characters are escaped.
+  Defaults to `:once`.
+
 {#ugly-option} `:ugly`
 : If set to `true`, Haml makes no attempt to properly
   indent or format the HTML output.

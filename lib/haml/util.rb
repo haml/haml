@@ -6,7 +6,6 @@ require 'strscan'
 require 'rbconfig'
 
 require 'haml/root'
-require 'haml/util/subset_map'
 
 module Haml
   # A module containing various useful functions.
@@ -26,23 +25,21 @@ module Haml
     end
 
     # Converts an array of `[key, value]` pairs to a hash.
-    # For example:
     #
-    #     to_hash([[:foo, "bar"], [:baz, "bang"]])
-    #       #=> {:foo => "bar", :baz => "bang"}
-    #
+    # @example
+    #   to_hash([[:foo, "bar"], [:baz, "bang"]])
+    #     #=> {:foo => "bar", :baz => "bang"}
     # @param arr [Array<(Object, Object)>] An array of pairs
     # @return [Hash] A hash
     def to_hash(arr)
-      arr.compact.inject({}) {|h, (k, v)| h[k] = v; h}
+      Hash[arr.compact]
     end
 
     # Maps the keys in a hash according to a block.
-    # For example:
     #
-    #     map_keys({:foo => "bar", :baz => "bang"}) {|k| k.to_s}
-    #       #=> {"foo" => "bar", "baz" => "bang"}
-    #
+    # @example
+    #   map_keys({:foo => "bar", :baz => "bang"}) {|k| k.to_s}
+    #     #=> {"foo" => "bar", "baz" => "bang"}
     # @param hash [Hash] The hash to map
     # @yield [key] A block in which the keys are transformed
     # @yieldparam key [Object] The key that should be mapped
@@ -55,11 +52,10 @@ module Haml
     end
 
     # Maps the values in a hash according to a block.
-    # For example:
     #
-    #     map_values({:foo => "bar", :baz => "bang"}) {|v| v.to_sym}
-    #       #=> {:foo => :bar, :baz => :bang}
-    #
+    # @example
+    #   map_values({:foo => "bar", :baz => "bang"}) {|v| v.to_sym}
+    #     #=> {:foo => :bar, :baz => :bang}
     # @param hash [Hash] The hash to map
     # @yield [value] A block in which the values are transformed
     # @yieldparam value [Object] The value that should be mapped
@@ -72,11 +68,10 @@ module Haml
     end
 
     # Maps the key-value pairs of a hash according to a block.
-    # For example:
     #
-    #     map_hash({:foo => "bar", :baz => "bang"}) {|k, v| [k.to_s, v.to_sym]}
-    #       #=> {"foo" => :bar, "baz" => :bang}
-    #
+    # @example
+    #   map_hash({:foo => "bar", :baz => "bang"}) {|k, v| [k.to_s, v.to_sym]}
+    #     #=> {"foo" => :bar, "baz" => :bang}
     # @param hash [Hash] The hash to map
     # @yield [key, value] A block in which the key-value pairs are transformed
     # @yieldparam [key] The hash key
@@ -91,11 +86,10 @@ module Haml
 
     # Computes the powerset of the given array.
     # This is the set of all subsets of the array.
-    # For example:
     #
-    #     powerset([1, 2, 3]) #=>
-    #       Set[Set[], Set[1], Set[2], Set[3], Set[1, 2], Set[2, 3], Set[1, 3], Set[1, 2, 3]]
-    #
+    # @example
+    #   powerset([1, 2, 3]) #=>
+    #     Set[Set[], Set[1], Set[2], Set[3], Set[1, 2], Set[2, 3], Set[1, 3], Set[1, 2, 3]]
     # @param arr [Enumerable]
     # @return [Set<Set>] The subsets of `arr`
     def powerset(arr)
@@ -122,15 +116,16 @@ module Haml
 
     # Concatenates all strings that are adjacent in an array,
     # while leaving other elements as they are.
-    # For example:
     #
-    #     merge_adjacent_strings([1, "foo", "bar", 2, "baz"])
-    #       #=> [1, "foobar", 2, "baz"]
-    #
-    # @param enum [Enumerable]
+    # @example
+    #   merge_adjacent_strings([1, "foo", "bar", 2, "baz"])
+    #     #=> [1, "foobar", 2, "baz"]
+    # @param arr [Array]
     # @return [Array] The enumerable with strings merged
-    def merge_adjacent_strings(enum)
-      enum.inject([]) do |a, e|
+    def merge_adjacent_strings(arr)
+      # Optimize for the common case of one element
+      return arr if arr.size < 2
+      arr.inject([]) do |a, e|
         if e.is_a?(String)
           if a.last.is_a?(String)
             a.last << e
@@ -189,11 +184,11 @@ module Haml
     # @return [Array<Arrays>]
     #
     # @example
-    # paths([[1, 2], [3, 4], [5]]) #=>
-    #   # [[1, 3, 5],
-    #   #  [2, 3, 5],
-    #   #  [1, 4, 5],
-    #   #  [2, 4, 5]]
+    #   paths([[1, 2], [3, 4], [5]]) #=>
+    #     # [[1, 3, 5],
+    #     #  [2, 3, 5],
+    #     #  [1, 4, 5],
+    #     #  [2, 4, 5]]
     def paths(arrs)
       arrs.inject([[]]) do |paths, arr|
         flatten(arr.map {|e| paths.map {|path| path + [e]}}, 1)
@@ -231,6 +226,81 @@ module Haml
       info
     end
 
+    # Returns whether one version string represents a more recent version than another.
+    #
+    # @param v1 [String] A version string.
+    # @param v2 [String] Another version string.
+    # @return [Boolean]
+    def version_gt(v1, v2)
+      # Construct an array to make sure the shorter version is padded with nil
+      Array.new([v1.length, v2.length].max).zip(v1.split("."), v2.split(".")) do |_, p1, p2|
+        p1 ||= "0"
+        p2 ||= "0"
+        release1 = p1 =~ /^[0-9]+$/
+        release2 = p2 =~ /^[0-9]+$/
+        if release1 && release2
+          # Integer comparison if both are full releases
+          p1, p2 = p1.to_i, p2.to_i
+          next if p1 == p2
+          return p1 > p2
+        elsif !release1 && !release2
+          # String comparison if both are prereleases
+          next if p1 == p2
+          return p1 > p2
+        else
+          # If only one is a release, that one is newer
+          return release1
+        end
+      end
+    end
+
+    # Returns whether one version string represents the same or a more
+    # recent version than another.
+    #
+    # @param v1 [String] A version string.
+    # @param v2 [String] Another version string.
+    # @return [Boolean]
+    def version_geq(v1, v2)
+      version_gt(v1, v2) || !version_gt(v2, v1)
+    end
+
+    # A wrapper for `Marshal.dump` that calls `#_before_dump` on the object
+    # before dumping it, `#_after_dump` afterwards.
+    # It also calls `#_around_dump` and passes it a block in which the object is dumped.
+    #
+    # If any of these methods are undefined, they are not called.
+    #
+    # @param obj [Object] The object to dump.
+    # @return [String] The dumped data.
+    def dump(obj)
+      obj._before_dump if obj.respond_to?(:_before_dump)
+      return Marshal.dump(obj) unless obj.respond_to?(:_around_dump)
+      res = nil
+      obj._around_dump {res = Marshal.dump(obj)}
+      res
+    ensure
+      obj._after_dump if obj.respond_to?(:_after_dump)
+    end
+
+    # A wrapper for `Marshal.load` that calls `#_after_load` on the object
+    # after loading it, if it's defined.
+    #
+    # @param data [String] The data to load.
+    # @return [Object] The loaded object.
+    def load(data)
+      obj = Marshal.load(data)
+      obj._after_load if obj.respond_to?(:_after_load)
+      obj
+    end
+
+    # Throws a NotImplementedError for an abstract method.
+    #
+    # @param obj [Object] `self`
+    # @raise [NotImplementedError]
+    def abstract(obj)
+      raise NotImplementedError.new("#{obj.class} must implement ##{caller_info[2]}")
+    end
+
     # Silence all output to STDERR within a block.
     #
     # @yield A block in which no output will be printed to STDERR
@@ -261,6 +331,35 @@ module Haml
       warn(msg)
     end
 
+    # Try loading Sass. If the `sass` gem isn't installed,
+    # print a warning and load from the vendored gem.
+    #
+    # @return [Boolean] True if Sass was successfully loaded from the `sass` gem,
+    #   false otherwise.
+    def try_sass
+      return true if defined?(::SASS_BEGUN_TO_LOAD)
+      begin
+        require 'sass/version'
+        loaded = Sass.respond_to?(:version) && Sass.version[:major] &&
+          Sass.version[:minor] && ((Sass.version[:major] > 3 && Sass.version[:minor] > 1) ||
+          ((Sass.version[:major] == 3 && Sass.version[:minor] == 1) &&
+            (Sass.version[:prerelease] || Sass.version[:name] != "Bleeding Edge")))
+      rescue LoadError => e
+        loaded = false
+      end
+
+      unless loaded
+        haml_warn(<<WARNING)
+Sass is in the process of being separated from Haml,
+and will no longer be bundled at all in Haml 3.2.0.
+Please install the 'sass' gem if you want to use Sass.
+WARNING
+        $".delete('sass/version')
+        $LOAD_PATH.unshift(scope("vendor/sass/lib"))
+      end
+      loaded
+    end
+
     ## Cross Rails Version Compatibility
 
     # Returns the root of the Rails application,
@@ -269,8 +368,8 @@ module Haml
     #
     # @return [String, nil]
     def rails_root
-      if defined?(Rails.root)
-        return Rails.root.to_s if Rails.root
+      if defined?(::Rails.root)
+        return ::Rails.root.to_s if ::Rails.root
         raise "ERROR: Rails.root is nil!"
       end
       return RAILS_ROOT.to_s if defined?(RAILS_ROOT)
@@ -283,7 +382,7 @@ module Haml
     #
     # @return [String, nil]
     def rails_env
-      return Rails.env.to_s if defined?(Rails.root)
+      return ::Rails.env.to_s if defined?(::Rails.env)
       return RAILS_ENV.to_s if defined?(RAILS_ENV)
       return nil
     end
@@ -308,7 +407,7 @@ module Haml
       return false unless defined?(ActionPack) && defined?(ActionPack::VERSION) &&
         defined?(ActionPack::VERSION::STRING)
 
-      ActionPack::VERSION::STRING >= version
+      version_geq(ActionPack::VERSION::STRING, version)
     end
 
     # Returns an ActionView::Template* class.
@@ -433,7 +532,7 @@ MSG
     # Like {\#check\_encoding}, but also checks for a Ruby-style `-# coding:` comment
     # at the beginning of the template and uses that encoding if it exists.
     #
-    # The Sass encoding rules are simple.
+    # The Haml encoding rules are simple.
     # If a `-# coding:` comment exists,
     # we assume that that's the original encoding of the document.
     # Otherwise, we use whatever encoding Ruby has.
@@ -460,51 +559,6 @@ MSG
       end
 
       return check_encoding(str, &block)
-    end
-
-    # Like {\#check\_encoding}, but also checks for a `@charset` declaration
-    # at the beginning of the file and uses that encoding if it exists.
-    #
-    # The Sass encoding rules are simple.
-    # If a `@charset` declaration exists,
-    # we assume that that's the original encoding of the document.
-    # Otherwise, we use whatever encoding Ruby has.
-    # Then we convert that to UTF-8 to process internally.
-    # The UTF-8 end result is what's returned by this method.
-    #
-    # @param str [String] The string of which to check the encoding
-    # @yield [msg] A block in which an encoding error can be raised.
-    #   Only yields if there is an encoding error
-    # @yieldparam msg [String] The error message to be raised
-    # @return [(String, Encoding)] The original string encoded as UTF-8,
-    #   and the source encoding of the string (or `nil` under Ruby 1.8)
-    # @raise [Encoding::UndefinedConversionError] if the source encoding
-    #   cannot be converted to UTF-8
-    # @raise [ArgumentError] if the document uses an unknown encoding with `@charset`
-    def check_sass_encoding(str, &block)
-      return check_encoding(str, &block), nil if ruby1_8?
-      # We allow any printable ASCII characters but double quotes in the charset decl
-      bin = str.dup.force_encoding("BINARY")
-      encoding = Haml::Util::ENCODINGS_TO_CHECK.find do |enc|
-        bin =~ Haml::Util::CHARSET_REGEXPS[enc]
-      end
-      charset, bom = $1, $2
-      if charset
-        charset = charset.force_encoding(encoding).encode("UTF-8")
-        if endianness = encoding[/[BL]E$/]
-          begin
-            Encoding.find(charset + endianness)
-            charset << endianness
-          rescue ArgumentError # Encoding charset + endianness doesn't exist
-          end
-        end
-        str.force_encoding(charset)
-      elsif bom
-        str.force_encoding(encoding)
-      end
-
-      str = check_encoding(str, &block)
-      return str.encode("UTF-8"), str.encoding
     end
 
     unless ruby1_8?
@@ -616,6 +670,19 @@ MSG
     def set_eql?(set1, set2)
       return set1.eql?(set2) unless ruby1_8_6?
       set1.to_a.uniq.sort_by {|e| e.hash}.eql?(set2.to_a.uniq.sort_by {|e| e.hash})
+    end
+
+    # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them under Ruby 1.9.2.
+    # This is necessary so that the precompiled Haml template can be `#encode`d into `@options[:encoding]`
+    # before being evaluated.
+    #
+    # @param obj {Object}
+    # @return {String}
+    def inspect_obj(obj)
+      return obj.inspect unless version_geq(::RUBY_VERSION, "1.9.2")
+      return ':' + inspect_obj(obj.to_s) if obj.is_a?(Symbol)
+      return obj.inspect unless obj.is_a?(String)
+      '"' + obj.gsub(/[\x00-\x7F]+/) {|s| s.inspect[1...-1]} + '"'
     end
 
     ## Static Method Stuff

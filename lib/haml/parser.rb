@@ -546,7 +546,7 @@ END
         if type == :static
           static_attributes[name] = val
         else
-          dynamic_attributes << name.inspect << " => " << val << ","
+          dynamic_attributes << inspect_obj(name) << " => " << val << ","
         end
       end
       dynamic_attributes << "}"
@@ -581,7 +581,7 @@ END
 
       return name, [:static, content.first[1]] if content.size == 1
       return name, [:dynamic,
-        '"' + content.map {|(t, v)| t == :str ? v.inspect[1...-1] : "\#{#{v}}"}.join + '"']
+        '"' + content.map {|(t, v)| t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}"}.join + '"']
     end
 
     def raw_next_line
@@ -677,7 +677,7 @@ END
           res << '#{'
         else
           content = eval('"' + balance(scan, ?{, ?}, 1)[0][0...-1] + '"')
-          content = "Haml::Helpers.html_escape(#{content})" if escape_html
+          content = "Haml::Helpers.html_escape((#{content}))" if escape_html
           res << '#{' + content + "}"# Use eval to get rid of string escapes
         end
       end

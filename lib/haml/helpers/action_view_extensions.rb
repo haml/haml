@@ -19,7 +19,7 @@ module Haml
       #
       #     <div class="entry show">My Div</div>
       #
-      # Then, in a stylesheet (shown here as {Sass}),
+      # Then, in a stylesheet (shown here as [Sass](http://sass-lang.com)),
       # you could refer to this specific action:
       #
       #     .entry.show

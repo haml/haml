@@ -86,6 +86,7 @@ MESSAGE
     "foo\n:plain\n  1\n  2\n  3\#{''}\n4\n- raise 'foo'" => ["foo", 7],
     "foo\n:plain\n  1\n  2\n  \#{raise 'foo'}" => ["foo", 5],
     "= raise 'foo'\nfoo\nbar\nbaz\nbang" => ["foo", 1],
+    "- case 1\n\n- when 1\n  - raise 'foo'" => ["foo", 4],
   }
 
   User = Struct.new('User', :id)
@@ -109,6 +110,17 @@ MESSAGE
       options[:filename] = "(#{$1})"
     end
     Haml::Engine.new(text, options)
+  end
+
+  def setup
+    return if Haml::Util.ruby1_8?
+    @old_default_internal = Encoding.default_internal
+    Encoding.default_internal = nil
+  end
+
+  def teardown
+    return if Haml::Util.ruby1_8?
+    Encoding.default_internal = @old_default_internal
   end
 
   def test_empty_render
@@ -148,7 +160,7 @@ MESSAGE
     assert_equal("<p class='b css'>foo</p>\n", render("%p.css{:class => %w[css b]} foo")) # merge uniquely
     assert_equal("<p class='a b c d'>foo</p>\n", render("%p{:class => [%w[a b], %w[c d]]} foo")) # flatten
     assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => [:a, :b] } foo")) # stringify
-    assert_equal("<p class=''>foo</p>\n", render("%p{:class => [nil, false] } foo")) # strip falsey
+    assert_equal("<p>foo</p>\n", render("%p{:class => [nil, false] } foo")) # strip falsey
     assert_equal("<p class='a'>foo</p>\n", render("%p{:class => :a} foo")) # single stringify
     assert_equal("<p>foo</p>\n", render("%p{:class => false} foo")) # single falsey
     assert_equal("<p class='a b html'>foo</p>\n", render("%p(class='html'){:class => %w[a b]} foo")) # html attrs
@@ -159,7 +171,7 @@ MESSAGE
     assert_equal("<p id='css_a_b'>foo</p>\n", render("%p#css{:id => %w[a b]} foo")) # merge with css
     assert_equal("<p id='a_b_c_d'>foo</p>\n", render("%p{:id => [%w[a b], %w[c d]]} foo")) # flatten
     assert_equal("<p id='a_b'>foo</p>\n", render("%p{:id => [:a, :b] } foo")) # stringify
-    assert_equal("<p id=''>foo</p>\n", render("%p{:id => [nil, false] } foo")) # strip falsey
+    assert_equal("<p>foo</p>\n", render("%p{:id => [nil, false] } foo")) # strip falsey
     assert_equal("<p id='a'>foo</p>\n", render("%p{:id => :a} foo")) # single stringify
     assert_equal("<p>foo</p>\n", render("%p{:id => false} foo")) # single falsey
     assert_equal("<p id='html_a_b'>foo</p>\n", render("%p(id='html'){:id => %w[a b]} foo")) # html attrs
@@ -551,6 +563,28 @@ HTML
 HAML
   end
 
+  def test_escape_attrs_false
+    assert_equal(<<HTML, render(<<HAML, :escape_attrs => false))
+<div class='<?php echo "&quot;" ?>' id='foo'>
+  bar
+</div>
+HTML
+#foo{:class => '<?php echo "&quot;" ?>'}
+  bar
+HAML
+  end
+
+  def test_escape_attrs_always
+    assert_equal(<<HTML, render(<<HAML, :escape_attrs => :always))
+<div class='"&amp;lt;&amp;gt;&amp;amp;"' id='foo'>
+  bar
+</div>
+HTML
+#foo{:class => '"&lt;&gt;&amp;"'}
+  bar
+HAML
+  end
+
   def test_escape_html
     html = <<HTML
 &amp;
@@ -627,6 +661,32 @@ HAML
 HTML
 :javascript
  & < > \#{"&"}
+HAML
+  end
+
+  def test_html5_javascript_filter
+    assert_equal(<<HTML, render(<<HAML, :format => :html5))
+<script>
+  //<![CDATA[
+    foo bar
+  //]]>
+</script>
+HTML
+:javascript
+  foo bar
+HAML
+  end
+
+  def test_html5_css_filter
+    assert_equal(<<HTML, render(<<HAML, :format => :html5))
+<style>
+  /*<![CDATA[*/
+    foo bar
+  /*]]>*/
+</style>
+HTML
+:css
+  foo bar
 HAML
   end
 
@@ -785,6 +845,38 @@ HTML
 - else
   - "foo"
 = var
+HAML
+  end
+
+  def test_case_with_newline_after_case
+    assert_equal(<<HTML, render(<<HAML))
+foo
+HTML
+- case 1
+
+  - when 1
+    foo
+  - when 2
+    bar
+HAML
+
+    assert_equal(<<HTML, render(<<HAML))
+bar
+HTML
+- case 2
+
+- when 1
+  foo
+- when 2
+  bar
+HAML
+  end
+
+  def test_escape_html_with_interpolated_if_statement
+    assert_equal(<<HTML, render(<<HAML, :escape_html => true))
+foo,
+HTML
+foo\#{"," if true}
 HAML
   end
 
@@ -1134,18 +1226,18 @@ END
   end
 
   def test_css_filter
-    assert_equal(<<CSS, render(<<SASS))
+    assert_equal(<<HTML, render(<<HAML))
 <style type='text/css'>
   /*<![CDATA[*/
     #foo {
       bar: baz; }
   /*]]>*/
 </style>
-CSS
+HTML
 :css
   #foo {
     bar: baz; }
-SASS
+HAML
   end
 
   def test_local_assigns_dont_modify_class
@@ -1539,7 +1631,7 @@ HAML
 
   def test_loud_ruby_multiline_with_block
     assert_equal(<<HTML, render(<<HAML))
-farfazfang
+#{%w[far faz fang]}
 <p>foo</p>
 <p>bar</p>
 HTML
@@ -1669,18 +1761,8 @@ HAML
 HAML
     end
 
-    def test_convert_template_render
-      assert_equal(<<HTML, render(<<HAML.encode("iso-8859-1"), :encoding => "utf-8"))
-<p>bâr</p>
-<p>föö</p>
-HTML
-%p bâr
-%p föö
-HAML
-    end
-
     def test_fake_ascii_encoding
-      assert_equal(<<HTML.force_encoding("ascii-8bit"), render(<<HAML, :encoding => "ascii-8bit"))
+      assert_encoded_equal(<<HTML.force_encoding("ascii-8bit"), render(<<HAML, :encoding => "ascii-8bit"))
 <p>bâr</p>
 <p>föö</p>
 HTML
@@ -1734,15 +1816,23 @@ HTML
 HAML
     end
 
-    def test_different_coding_comment_than_encoding
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# coding: ibm866
-%p bâr
-%p föö
-HAML
+    def test_coding_comments
+      assert_valid_encoding_comment("-# coding: ibm866")
+      assert_valid_encoding_comment("-# CodINg: IbM866")
+      assert_valid_encoding_comment("-#coding:ibm866")
+      assert_valid_encoding_comment("-# CodINg= ibm866")
+      assert_valid_encoding_comment("-# foo BAR FAOJcoding: ibm866")
+      assert_valid_encoding_comment("-# coding: ibm866 ASFJ (&(&#!$")
+      assert_valid_encoding_comment("-# -*- coding: ibm866")
+      assert_valid_encoding_comment("-# coding: ibm866 -*- coding: blah")
+      assert_valid_encoding_comment("-# -*- coding: ibm866 -*-")
+      assert_valid_encoding_comment("-# -*- encoding: ibm866 -*-")
+      assert_valid_encoding_comment('-# -*- coding: "ibm866" -*-')
+      assert_valid_encoding_comment("-#-*-coding:ibm866-*-")
+      assert_valid_encoding_comment("-#-*-coding:ibm866-*-")
+      assert_valid_encoding_comment("-# -*- foo: bar; coding: ibm866; baz: bang -*-")
+      assert_valid_encoding_comment("-# foo bar coding: baz -*- coding: ibm866 -*-")
+      assert_valid_encoding_comment("-# -*- coding: ibm866 -*- foo bar coding: baz")
     end
 
     def test_different_coding_than_system
@@ -1752,182 +1842,27 @@ HTML
 %p тАЬ
 HAML
     end
-
-    def test_case_insensitive_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# CodINg: IbM866
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_whitespace_insensitive_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--#coding:ibm866
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_equals_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# CodINg= ibm866
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_prefixed_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# foo BAR FAOJcoding: ibm866
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_suffixed_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# coding: ibm866 ASFJ (&(&#!$
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_emacs_prefixed_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# -*- coding: ibm866
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_emacs_suffixed_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# coding: ibm866 -*- coding: blah
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_emacs_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# -*- coding: ibm866 -*-
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_emacs_encoding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# -*- encoding: ibm866 -*-
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_quoted_emacs_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# -*- coding: "ibm866" -*-
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_whitespace_insensitive_emacs_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--#-*-coding:ibm866-*-
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_whitespace_insensitive_emacs_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--#-*-coding:ibm866-*-
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_one_of_several_emacs_comments
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# -*- foo: bar; coding: ibm866; baz: bang -*-
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_prefixed_emacs_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# foo bar coding: baz -*- coding: ibm866 -*-
-%p bâr
-%p föö
-HAML
-    end
-
-    def test_suffixed_emacs_coding_comment
-      assert_renders_encoded(<<HTML.force_encoding("IBM866"), <<HAML)
-<p>bâr</p>
-<p>föö</p>
-HTML
--# -*- coding: ibm866 -*- foo bar coding: baz
-%p bâr
-%p föö
-HAML
-    end
-
   end
 
   private
 
+  def assert_valid_encoding_comment(comment)
+    assert_renders_encoded(<<HTML.encode("IBM866"), <<HAML.encode("IBM866").force_encoding("UTF-8"))
+<p>ЖЛЫ</p>
+<p>тАЬ</p>
+HTML
+#{comment}
+%p ЖЛЫ
+%p тАЬ
+HAML
+  end
+
   def assert_converts_template_properly
-    engine = Haml::Engine.new(<<HAML.encode("iso-8859-1"), :encoding => "utf-8")
+    engine = Haml::Engine.new(<<HAML.encode("iso-8859-1"), :encoding => "macRoman")
 %p bâr
 %p föö
 HAML
-    assert_equal(<<HTML, yield(engine))
+    assert_encoded_equal(<<HTML.encode("macRoman"), yield(engine))
 <p>bâr</p>
 <p>föö</p>
 HTML
@@ -1935,7 +1870,11 @@ HTML
 
   def assert_renders_encoded(html, haml)
     result = render(haml)
-    assert_equal html.encoding, result.encoding
-    assert_equal html, result
+    assert_encoded_equal html, result
+  end
+
+  def assert_encoded_equal(expected, actual)
+    assert_equal expected.encoding, actual.encoding
+    assert_equal expected, actual
   end
 end

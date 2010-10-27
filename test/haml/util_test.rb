@@ -5,6 +5,19 @@ require 'pathname'
 class UtilTest < Test::Unit::TestCase
   include Haml::Util
 
+  class Dumpable
+    attr_reader :arr
+    def initialize; @arr = []; end
+    def _before_dump; @arr << :before; end
+    def _after_dump; @arr << :after; end
+    def _around_dump
+      @arr << :around_before
+      yield
+      @arr << :around_after
+    end
+    def _after_load; @arr << :loaded; end
+  end
+
   def test_scope
     assert(File.exist?(scope("Rakefile")))
   end
@@ -215,6 +228,48 @@ class UtilTest < Test::Unit::TestCase
     assert_equal(["", 12, "boop"], caller_info(":12: in `boop'"))
     assert_equal(["/tmp/foo.rb", -12, "fizzle"], caller_info("/tmp/foo.rb:-12: in `fizzle'"))
     assert_equal(["/tmp/foo.rb", 12, "fizzle"], caller_info("/tmp/foo.rb:12: in `fizzle {}'"))
+  end
+
+  def test_version_gt
+    assert_version_gt("2.0.0", "1.0.0")
+    assert_version_gt("1.1.0", "1.0.0")
+    assert_version_gt("1.0.1", "1.0.0")
+    assert_version_gt("1.0.0", "1.0.0.rc")
+    assert_version_gt("1.0.0.1", "1.0.0.rc")
+    assert_version_gt("1.0.0.rc", "0.9.9")
+    assert_version_gt("1.0.0.beta", "1.0.0.alpha")
+
+    assert_version_eq("1.0.0", "1.0.0")
+    assert_version_eq("1.0.0", "1.0.0.0")
+  end
+
+  def assert_version_gt(v1, v2)
+    #assert(version_gt(v1, v2), "Expected #{v1} > #{v2}")
+    assert(!version_gt(v2, v1), "Expected #{v2} < #{v1}")
+  end
+
+  def assert_version_eq(v1, v2)
+    assert(!version_gt(v1, v2), "Expected #{v1} = #{v2}")
+    assert(!version_gt(v2, v1), "Expected #{v2} = #{v1}")
+  end
+
+  def test_dump_and_load
+    obj = Dumpable.new
+    data = dump(obj)
+    assert_equal([:before, :around_before, :around_after, :after], obj.arr)
+    obj2 = load(data)
+    assert_equal([:before, :around_before, :loaded], obj2.arr)
+  end
+
+  class FooBar
+    def foo
+      Haml::Util.abstract(self)
+    end
+  end
+
+  def test_abstract
+    assert_raise_message(NotImplementedError,
+      "UtilTest::FooBar must implement #foo") {FooBar.new.foo}
   end
 
   def test_def_static_method

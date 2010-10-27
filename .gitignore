@@ -3,7 +3,6 @@
 /doc
 /pkg
 /test/rails
-/.sass-cache
 /.haml
 /site
 *.rbc
