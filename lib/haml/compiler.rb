@@ -1,3 +1,5 @@
+require 'cgi'
+
 module Haml
   module Compiler
     include Haml::Util
