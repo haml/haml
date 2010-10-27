@@ -140,27 +140,27 @@ END
           attributes_hashes = ", (#{attributes_hashes.join(").merge(")})"
         end
 
-        if @options[:ugly]
-          push_merged_text "<#{t[:name]}"
-          push_generated_script(
-            "_hamlout.attributes(#{inspect_obj(t[:attributes])}, #{object_ref}#{attributes_hashes})")
-          push_merged_text(
-            Compiler.build_tag_closer(
-              xhtml?, html?, t[:self_closing], t[:nuke_outer_whitespace], t[:nuke_inner_whitespace],
-              !block_given?, t[:preserve_tag]))
+        push_merged_text "<#{t[:name]}", 0, !t[:nuke_outer_whitespace]
+        push_generated_script(
+          "_hamlout.attributes(#{inspect_obj(t[:attributes])}, #{object_ref}#{attributes_hashes})")
+        concat_merged_text(
+          if t[:self_closing] && xhtml?
+            " />" + (t[:nuke_outer_whitespace] ? "" : "\n")
+          else
+            ">" + ((if t[:self_closing] && html?
+                      t[:nuke_outer_whitespace]
+                    else
+                      !block_given? || t[:preserve_tag] || t[:nuke_inner_whitespace]
+                    end) ? "" : "\n")
+          end)
 
-          if value && !parse
-            push_merged_text "#{value}</#{t[:name]}>#{t[:nuke_outer_whitespace] ? "" : "\n"}"
-          end
+        if value && !parse
+          concat_merged_text("#{value}</#{t[:name]}>#{t[:nuke_outer_whitespace] ? "" : "\n"}")
         else
-          args = [t[:name], t[:self_closing], !block_given?, t[:preserve_tag],
-            t[:escape_html], t[:attributes], t[:nuke_outer_whitespace],
-            t[:nuke_inner_whitespace]].map {|v| inspect_obj(v)}.join(', ')
-          content = parse ? 'nil' : inspect_obj(value)
-          push_silent "_hamlout.open_tag(#{args}, #{object_ref}, #{content}#{attributes_hashes})"
+          @to_merge << [:text, '', 1] unless t[:nuke_inner_whitespace]
         end
 
-        @dont_tab_up_next_text = @dont_indent_next_line = dont_indent_next_line
+        @dont_indent_next_line = dont_indent_next_line
       end
 
       return if t[:self_closing]
@@ -394,19 +394,6 @@ END
         " #{attr}=#{this_attr_wrapper}#{value}#{this_attr_wrapper}"
       end
       result.compact.sort.join
-    end
-
-    def self.build_tag_closer(xhtml, html, self_closing, nuke_outer_whitespace,
-                              nuke_inner_whitespace, try_one_line, preserve_tag)
-      if self_closing && xhtml
-        str = " />" + (nuke_outer_whitespace ? "" : "\n")
-      else
-        str = ">" + ((if self_closing && html
-                        nuke_outer_whitespace
-                      else
-                        try_one_line || preserve_tag || nuke_inner_whitespace
-                      end) ? "" : "\n")
-      end
     end
 
     def self.filter_and_join(value, separator)
