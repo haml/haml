@@ -317,16 +317,21 @@ END
       end
 
       attributes = Parser.parse_class_and_id(attributes)
-      attributes_hashes.map! do |syntax, attributes_hash|
-        if syntax == :old
-          static_attributes = parse_static_hash(attributes_hash)
-          attributes_hash = nil if static_attributes
-        else
-          static_attributes, attributes_hash = attributes_hash
-        end
+      attributes_list = []
+
+      if attributes_hashes[:new]
+        static_attributes, attributes_hash = attributes_hashes[:new]
         Buffer.merge_attrs(attributes, static_attributes) if static_attributes
-        attributes_hash
-      end.compact!
+        attributes_list << attributes_hash
+      end
+
+      if attributes_hashes[:old]
+        static_attributes = parse_static_hash(attributes_hashes[:old])
+        Buffer.merge_attrs(attributes, static_attributes) if static_attributes
+        attributes_list << attributes_hashes[:old] unless static_attributes || @options[:suppress_eval]
+      end
+
+      attributes_list.compact!
 
       raise SyntaxError.new("Illegal nesting: nesting within a self-closing tag is illegal.", @next_line.index) if block_opened? && self_closing
       raise SyntaxError.new("There's no Ruby code for #{action} to evaluate.", last_line - 1) if parse && value.empty?
@@ -341,7 +346,7 @@ END
       value = handle_ruby_multiline(value) if parse
 
       ParseNode.new(:tag, @index, :name => tag_name, :attributes => attributes,
-        :attributes_hashes => attributes_hashes, :self_closing => self_closing,
+        :attributes_hashes => attributes_list, :self_closing => self_closing,
         :nuke_inner_whitespace => nuke_inner_whitespace,
         :nuke_outer_whitespace => nuke_outer_whitespace, :object_ref => object_ref,
         :escape_html => escape_html, :preserve_tag => preserve_tag,
@@ -462,17 +467,17 @@ END
 
       new_attributes_hash = old_attributes_hash = last_line = nil
       object_ref = "nil"
-      attributes_hashes = []
+      attributes_hashes = {}
       while rest
         case rest[0]
         when ?{
           break if old_attributes_hash
           old_attributes_hash, rest, last_line = parse_old_attributes(rest)
-          attributes_hashes << [:old, old_attributes_hash]
+          attributes_hashes[:old] = old_attributes_hash
         when ?(
           break if new_attributes_hash
           new_attributes_hash, rest, last_line = parse_new_attributes(rest)
-          attributes_hashes << [:new, new_attributes_hash]
+          attributes_hashes[:new] = new_attributes_hash
         when ?[
           break unless object_ref == "nil"
           object_ref, rest = balance(rest, ?[, ?])
