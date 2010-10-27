@@ -18,7 +18,7 @@
     <% end -%>
     <div id='body'><%= " Quotes should be loved! Just like people!" %></div>
     Wow.
-    <p>
+    <p code="<%= 1 + 2 %>">
       <%= "Holy cow        " +
           "multiline       " +
           "tags!           " +
@@ -28,7 +28,8 @@
           n.to_s
         }.join("|") %>
     </p>
-    <div class='silent'>
+    <% bar = 17 %>
+    <div class='silent' foo="<%= bar %>">
       <% foo = String.new
          foo << "this"
          foo << " shouldn't"

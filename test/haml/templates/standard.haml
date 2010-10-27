@@ -14,7 +14,7 @@
     - 120.times do |number|
       = number
     Wow.|
-    %p
+    %p{:code => 1 + 2}
       = "Holy cow        " + |
         "multiline       " + |      
         "tags!           " + |
@@ -23,7 +23,8 @@
       = [1, 2, 3].collect { |n|     |
           n.to_s                    |
         }.join("|")                 |
-    %div.silent
+    - bar = 17
+    %div.silent{:foo => bar}
       - foo = String.new
       - foo << "this"
       - foo << " shouldn't"
