@@ -212,6 +212,11 @@ END
           @options[:for_engine][:escape_html] = true
         end
 
+        opts.on('--no-escape-attrs',
+                "Don't escape HTML characters (like ampersands and angle brackets) in attributes.") do
+          @options[:for_engine][:escape_attrs] = false
+        end
+
         opts.on('-q', '--double-quote-attributes',
                 'Set attribute wrapper to double-quotes (default is single).') do
           @options[:for_engine][:attr_wrapper] = '"'

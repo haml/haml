@@ -12,6 +12,7 @@
   that allows attributes to either remain unescaped
   (for things like embedding PHP directives in Haml)
   or to be always escaped rather than `#escape_once`d.
+  This can also be used from the command line via `--no-escape-attrs`.
 
 ### Backwards Incompatibilities -- Must Read!
 
