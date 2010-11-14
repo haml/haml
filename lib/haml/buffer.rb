@@ -268,30 +268,31 @@ RUBY
       ref = ref[0]
       # Let's make sure the value isn't nil. If it is, return the default Hash.
       return {} if ref.nil?
+      # DISCUSS: switch default from :underscore to :hyphen?
+      separator = (@options[:object_ref_format] == :hyphen ? '-' : '_')
       class_name =
         if ref.respond_to?(:haml_object_ref)
           ref.haml_object_ref
         else
-          underscore(ref.class)
+          reformat(ref.class, separator)
         end
-      id = "#{class_name}_#{ref.id || 'new'}"
+      id = "#{class_name}#{separator}#{ref.id || 'new'}"
       if prefix
-        class_name = "#{ prefix }_#{ class_name}"
-        id = "#{ prefix }_#{ id }"
+        class_name = "#{prefix}#{separator}#{class_name}"
+        id = "#{prefix}#{separator}#{id}"
       end
 
       {'id' => id, 'class' => class_name}
     end
 
-    # Changes a word from camel case to underscores.
-    # Based on the method of the same name in Rails' Inflector,
-    # but copied here so it'll run properly without Rails.
-    def underscore(camel_cased_word)
-      camel_cased_word.to_s.gsub(/::/, '_').
-        gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-        gsub(/([a-z\d])([A-Z])/,'\1_\2').
-        tr("-", "_").
+    # Changes a word from camel case to a format using a given separator.
+    # Based on the method of the same name in Rails' Inflector.
+    def reformat(camel_cased_word, separator)
+      camel_cased_word.to_s.gsub(/::/, separator).
+        gsub(/([A-Z]+)([A-Z][a-z])/, '\1' + separator + '\2').
+        gsub(/([a-z\d])([A-Z])/, '\1' + separator + '\2').
         downcase
     end
+    
   end
 end

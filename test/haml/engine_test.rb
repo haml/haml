@@ -1282,6 +1282,16 @@ HAML
                  render("%p[user]{:style => 'width: 100px;'} New User", :locals => {:user => user}))
   end
 
+  def test_object_ref_with_format_hyphen
+    user = User.new 42
+    assert_equal("<p class='struct-user' id='struct-user-42'>New User</p>\n",
+                 render("%p[user] New User", :locals => {:user => user}, :object_ref_format => :hyphen))
+    
+    user = User.new
+    assert_equal("<p class='struct-user' id='struct-user-new'>New User</p>\n",
+                 render("%p[user] New User", :locals => {:user => user}, :object_ref_format => :hyphen))
+  end
+
   def test_object_ref_with_custom_haml_class
     custom = CustomHamlClass.new 42
     assert_equal("<p class='my_thing' id='my_thing_42' style='width: 100px;'>My Thing</p>\n",
