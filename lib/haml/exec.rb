@@ -124,7 +124,16 @@ module Haml
       # @param color [Symbol] The name of the color to use for this action.
       #   Can be `:red`, `:green`, or `:yellow`.
       def puts_action(name, color, arg)
+        return if @options[:for_engine][:quiet]
         printf color(color, "%11s %s\n"), name, arg
+      end
+
+      # Same as \{Kernel.puts}, but doesn't print anything if the `--quiet` option is set.
+      #
+      # @param args [Array] Passed on to \{Kernel.puts}
+      def puts(*args)
+        return if @options[:for_engine][:quiet]
+        Kernel.puts(*args)
       end
 
       # Wraps the given string in terminal escapes
