@@ -95,3 +95,6 @@ Please run `haml --rails #{File.expand_path(Haml::Util.rails_root)}' to update i
 END
   end
 end
+
+Haml::Template.options[:markdown] = []
+

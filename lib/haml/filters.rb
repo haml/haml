@@ -148,6 +148,10 @@ RUBY
         @lazy_requires = reqs
       end
 
+      def required
+        @required
+      end
+
       private
 
       def resolve_lazy_requires
@@ -350,13 +354,18 @@ END
     # [RPeg-Markdown](http://github.com/rtomayko/rpeg-markdown),
     # [Maruku](http://maruku.rubyforge.org),
     # or [BlueCloth](www.deveiate.org/projects/BlueCloth) are installed.
+    #
+    # Options specified in Haml::Template.options[:markdown] are passed to
+    # the markdown engine.  For example:
+    #
+    #   Haml::Template.options[:markdown] = [:filter_html]
     module Markdown
       include Base
       lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth'
 
       # @see Base#render
       def render(text)
-        engine = case @required
+        engine = case required
                  when 'rdiscount'
                    ::RDiscount
                  when 'peg_markdown'
@@ -366,7 +375,7 @@ END
                  when 'bluecloth'
                    ::BlueCloth
                  end
-        engine.new(text).to_html
+        engine.new(text, *Haml::Template.options[:markdown]).to_html
       end
     end
 
