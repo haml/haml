@@ -20,6 +20,8 @@
   This flag hasn't been necessary since Rails 2.0.
   Existing Rails 2.0 installations will continue to work.
 
+* Drop support for Hpricot 0.7. 0.8 has been out for nearly two years.
+
 ## 3.0.25 (Unreleased)
 
 * HTML-to-Haml conversion now works within Ruby even if Hpricot is loaded before `haml/html`.
