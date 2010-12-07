@@ -20,6 +20,10 @@
   This flag hasn't been necessary since Rails 2.0.
   Existing Rails 2.0 installations will continue to work.
 
+## 3.0.25 (Unreleased)
+
+* HTML-to-Haml conversion now works within Ruby even if Hpricot is loaded before `haml/html`.
+
 ## 3.0.24
 
 [Tagged on GitHub](http://github.com/nex3/haml/commit/3.0.24).
