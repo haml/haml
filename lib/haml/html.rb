@@ -100,11 +100,6 @@ module Hpricot
   module Node
     include Haml::HTML::Node
   end
-
-  # @see Hpricot
-  class BaseEle
-    include Haml::HTML::Node
-  end
 end
 
 # @private
