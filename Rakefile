@@ -144,7 +144,7 @@ task :release_edge do
     sh %{git checkout master}
     sh %{git reset --hard origin/master}
     sh %{rake package}
-    version = get_edge_version
+    version = get_version
     sh %{rubyforge add_release haml haml "Bleeding Edge (v#{version})" pkg/haml-#{version}.gem}
     sh %{gem push pkg/haml-#{version}.gem}
   end
