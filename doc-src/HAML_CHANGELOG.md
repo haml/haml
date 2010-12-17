@@ -22,7 +22,9 @@
 
 * Drop support for Hpricot 0.7. 0.8 has been out for nearly two years.
 
-## 3.0.25 (Unreleased)
+## 3.0.25
+
+[Tagged on GitHub](http://github.com/nex3/haml/commit/3.0.25).
 
 * HTML-to-Haml conversion now works within Ruby even if Hpricot is loaded before `haml/html`.
 
