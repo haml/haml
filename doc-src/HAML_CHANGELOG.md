@@ -22,6 +22,10 @@
 
 * Drop support for Hpricot 0.7. 0.8 has been out for nearly two years.
 
+## 3.0.26 (Unreleased)
+
+* Allow custom filters to be loaded from the command line.
+
 ## 3.0.25
 
 [Tagged on GitHub](http://github.com/nex3/haml/commit/3.0.25).
