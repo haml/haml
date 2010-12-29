@@ -549,15 +549,15 @@ MSG
         template = input.read()
         input.close() if input.is_a? File
 
+        @options[:load_paths].each {|p| $LOAD_PATH << p}
+        @options[:requires].each {|f| require f}
+
         begin
           engine = ::Haml::Engine.new(template, @options[:for_engine])
           if @options[:check_syntax]
             puts "Syntax OK"
             return
           end
-
-          @options[:load_paths].each {|p| $LOAD_PATH << p}
-          @options[:requires].each {|f| require f}
 
           if @options[:debug]
             puts engine.precompiled
