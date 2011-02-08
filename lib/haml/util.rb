@@ -264,9 +264,12 @@ module Haml
     #
     # @param v1 [String] A version string.
     # @param v2 [String] Another version string.
-    # @return [Boolean]
+    # @return [Boolean]    
     def version_geq(v1, v2)
-      version_gt(v1, v2) || !version_gt(v2, v1)
+      @@version_comparison_cache ||= {}
+      k = v1 + v2
+      return @@version_comparison_cache[k] unless @@version_comparison_cache[k].nil?
+      @@version_comparison_cache[k] = ( version_gt(v1, v2) || !version_gt(v2, v1) )
     end
 
     # A wrapper for `Marshal.dump` that calls `#_before_dump` on the object
