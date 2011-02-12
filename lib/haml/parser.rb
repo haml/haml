@@ -333,16 +333,19 @@ END
 
       attributes_list.compact!
 
-      raise SyntaxError.new("Illegal nesting: nesting within a self-closing tag is illegal.", @next_line.index) if block_opened? && self_closing
-      raise SyntaxError.new("There's no Ruby code for #{action} to evaluate.", last_line - 1) if parse && value.empty?
-      raise SyntaxError.new("Self-closing tags can't have content.", last_line - 1) if self_closing && !value.empty?
+      block_opened = block_opened?
+      value_empty = value.empty?
 
-      if block_opened? && !value.empty? && !is_ruby_multiline?(value)
+      raise SyntaxError.new("Illegal nesting: nesting within a self-closing tag is illegal.", @next_line.index) if block_opened && self_closing
+      raise SyntaxError.new("There's no Ruby code for #{action} to evaluate.", last_line - 1) if parse && value_empty
+      raise SyntaxError.new("Self-closing tags can't have content.", last_line - 1) if self_closing && !value_empty
+
+      if block_opened && !value.empty? && !is_ruby_multiline?(value)
         raise SyntaxError.new("Illegal nesting: content can't be both given on the same line as %#{tag_name} and nested within it.", @next_line.index)
       end
 
-      self_closing ||= !!(!block_opened? && value.empty? && @options[:autoclose].any? {|t| t === tag_name})
-      value = nil if value.empty? && (block_opened? || self_closing)
+      self_closing ||= !!(!block_opened && value_empty && @options[:autoclose].any? {|t| t === tag_name})
+      value = nil if value_empty && (block_opened || self_closing)
       value = handle_ruby_multiline(value) if parse
 
       ParseNode.new(:tag, @index, :name => tag_name, :attributes => attributes,
@@ -460,9 +463,14 @@ END
 
     # Parses a line into tag_name, attributes, attributes_hash, object_ref, action, value
     def parse_tag(line)
-      raise SyntaxError.new("Invalid tag: \"#{line}\".") unless match = line.scan(/%([-:\w]+)([-:\w\.\#]*)(.*)/)[0]
 
-      tag_name, attributes, rest = match
+
+      line =~ /%([-:\w]+)([-:\w\.\#]*)(.*)/
+      raise SyntaxError.new("Invalid tag: \"#{line}\".") unless $1 && $2 || $3
+      tag_name, attributes, rest = $1, $2, $3
+
+      #raise SyntaxError.new("Invalid tag: \"#{line}\".") unless match = line.scan(/%([-:\w]+)([-:\w\.\#]*)(.*)/)[0]
+      #tag_name, attributes, rest = match
       raise SyntaxError.new("Illegal element: classes and ids must have values.") if attributes =~ /[\.#](\.|#|\z)/
 
       new_attributes_hash = old_attributes_hash = last_line = nil
@@ -486,7 +494,9 @@ END
       end
 
       if rest
-        nuke_whitespace, action, value = rest.scan(/(<>|><|[><])?([=\/\~&!])?(.*)?/)[0]
+        rest =~ /(<>|><|[><])?([=\/\~&!])?(.*)?/
+        nuke_whitespace, action, value = $1, $2, $3
+        #nuke_whitespace, action, value = rest.scan(/(<>|><|[><])?([=\/\~&!])?(.*)?/)[0]
         nuke_whitespace ||= ''
         nuke_outer_whitespace = nuke_whitespace.include? '>'
         nuke_inner_whitespace = nuke_whitespace.include? '<'
