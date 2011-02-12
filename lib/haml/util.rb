@@ -266,7 +266,8 @@ module Haml
     # @param v2 [String] Another version string.
     # @return [Boolean]
     def version_geq(v1, v2)
-      version_gt(v1, v2) || !version_gt(v2, v1)
+      return @version_geq if defined? @version_geq
+      @version_geq = version_gt(v1, v2) || !version_gt(v2, v1)
     end
 
     # A wrapper for `Marshal.dump` that calls `#_before_dump` on the object
