@@ -109,7 +109,10 @@ module Haml
             @options[:filename] = filename
             open_file(filename) || $stdin
           end
-        output ||= open_file(args.shift, 'w') || $stdout
+        output ||=
+          open_file(args.shift, 'w') ||
+          open_file(filename.gsub(File.extname(filename), "") + '.haml', 'w') ||
+          $stdout
 
         @options[:input], @options[:output] = input, output
       end
