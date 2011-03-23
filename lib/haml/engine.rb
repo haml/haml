@@ -105,8 +105,10 @@ module Haml
         raise Haml::Error, "Invalid output format #{@options[:format].inspect}"
       end
 
-      if @options[:encoding] && @options[:encoding].is_a?(Encoding)
-        @options[:encoding] = @options[:encoding].name
+      unless ruby1_8?
+        if @options[:encoding] && @options[:encoding].is_a?(Encoding)
+          @options[:encoding] = @options[:encoding].name
+        end
       end
 
       # :eod is a special end-of-document marker
