@@ -365,6 +365,14 @@ END
       line.strip!
       conditional << ">" if conditional
 
+      if line =~ /--+>/
+        line = line.gsub(/--+>/, "--><!--")
+      elsif line =~ /<!--+/
+        line = line.gsub(/<!--+/, "--><!--")
+      elsif line =~ /-(-+)/
+        line = line.gsub(/-(-+)/, '-' + ' ' * $1.length)
+      end  
+
       if block_opened? && !line.empty?
         raise SyntaxError.new('Illegal nesting: nesting within a tag that already has content is illegal.', @next_line.index)
       end
