@@ -3,7 +3,7 @@
 * Table of contents
 {:toc}
 
-## 3.1.1 (Unreleased)
+## 3.1.1
 
 * Update the vendored Sass to version 3.1.0.
 
