@@ -145,7 +145,7 @@ END
         end
 
         @tab_up = nil
-        process_line(@line.text, @line.index) unless @line.text.empty? || @haml_comment
+        process_line(@line.text, @line.index) unless @line.text.empty?
         if block_opened? || @tab_up
           @template_tabs += 1
           @parent = @parent.children.last
