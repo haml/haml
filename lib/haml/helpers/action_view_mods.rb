@@ -51,7 +51,10 @@ module ActionView
           # We've got to do the same thing for compatibility.
 
           if is_haml? && block_is_haml?(block)
-            capture_haml(*args, &block)
+            value = nil
+            buffer = capture_haml(*args) { value = yield(*args) }
+            return buffer unless buffer.empty?
+            return value if value.is_a?(String)
           else
             capture_without_haml(*args, &block)
           end
@@ -85,7 +88,16 @@ module ActionView
       module CaptureHelper
         def capture_with_haml(*args, &block)
           if Haml::Helpers.block_is_haml?(block)
-            str = capture_haml(*args, &block)
+            value = nil
+            buffer = capture_haml(*args) { value = yield(*args) }
+            str =
+              if !buffer.empty?
+                buffer
+              elsif value.is_a?(String)
+                value
+              else
+                ''
+              end
             return ActionView::NonConcattingString.new(str) if defined?(ActionView::NonConcattingString)
             return str
           else

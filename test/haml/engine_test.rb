@@ -382,6 +382,20 @@ SOURCE
     assert_equal("<p foo='bar'></p>\n", render('%p{:foo => "bar"}', :attr_wrapper => nil))
   end
 
+  def test_comment_with_crazy_nesting
+    assert_equal(<<HTML, render(<<HAML))
+foo
+bar
+HTML
+foo
+-#
+  ul
+    %li{
+  foo
+bar
+HAML
+  end
+
   # Regression tests
 
   def test_whitespace_nuke_with_both_newlines
