@@ -357,6 +357,10 @@ HAML
     assert_equal("1\n\n2\n\n3\n\n", render("- trc([1, 2, 3]) do |i|\n  = i.inspect"))
   end
 
+  def test_capture_with_string_block
+    assert_equal("foo\n", render("= capture { 'foo' }", :action_view))
+  end
+
   def test_find_and_preserve_with_block
     assert_equal("<pre>Foo&#x000A;Bar</pre>\nFoo\nBar\n",
                  render("= find_and_preserve do\n  %pre\n    Foo\n    Bar\n  Foo\n  Bar"))
