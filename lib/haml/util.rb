@@ -424,7 +424,8 @@ WARNING
     #   For example, `:Error` will return `ActionView::TemplateError`
     #   or `ActionView::Template::Error`.
     def av_template_class(name)
-      return ActionView.const_get("Template#{name}") if ActionView.const_defined?("Template#{name}")
+      return ActionView.const_get("Template#{name}")
+    rescue NameError
       return ActionView::Template.const_get(name.to_s)
     end
 
