@@ -10,6 +10,10 @@
 
 * Don't throw errors when text is nested within comments.
 
+* Fix html2haml.
+
+* Fix an issue where destructive modification was sometimes performed on Rails SafeBuffers.
+
 ## 3.1.1
 
 * Update the vendored Sass to version 3.1.0.

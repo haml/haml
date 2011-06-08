@@ -9,7 +9,7 @@ module Haml
       # @param args [Array<String>] The command-line arguments
       def initialize(args)
         @args = args
-        @options = {}
+        @options = {:for_engine => {}}
       end
 
       # Parses the command-line arguments and runs the executable.
