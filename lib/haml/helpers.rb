@@ -170,10 +170,10 @@ MESSAGE
         result = capture_haml(i, &block)
 
         if result.count("\n") > 1
-          result.gsub!("\n", "\n  ")
+          result = result.gsub("\n", "\n  ")
           result = "\n  #{result.strip}\n"
         else
-          result.strip!
+          result = result.strip
         end
 
         "<li>#{result}</li>"
