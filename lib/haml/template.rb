@@ -54,7 +54,7 @@ end
 # Patching was necessary for versions <= 2.0.1,
 # but we can make it a normal handler for higher versions.
 if defined?(ActionView::TemplateHandler) ||
-    (defined?(ActionView::Template) && defined?(ActionView::Template::Handler)) ||
+    (defined?(ActionView::Template) && defined?(ActionView::Template::Handlers)) ||
     (Haml::Util.ap_geq?('3.1.0.rc1')) # Rails 3.1 without Template::Handler
   require 'haml/template/plugin'
 else
