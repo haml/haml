@@ -267,7 +267,7 @@ module Haml
     # @return [Boolean]    
     def version_geq(v1, v2)
       @@version_comparison_cache ||= {}
-      k = v1 + v2
+      k = "#{v1}#{v2}"
       return @@version_comparison_cache[k] unless @@version_comparison_cache[k].nil?
       @@version_comparison_cache[k] = ( version_gt(v1, v2) || !version_gt(v2, v1) )
     end
