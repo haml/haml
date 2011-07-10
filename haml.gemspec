@@ -23,6 +23,8 @@ HAML_GEMSPEC = Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'yard', '>= 0.5.3'
   spec.add_development_dependency 'maruku', '>= 0.5.9'
+  spec.add_development_dependency 'hpricot'
+  spec.add_develompent_dependency 'ruby_parser'
 
   readmes = Dir['*'].reject{ |x| x =~ /(^|[^.a-z])[a-z]+/ || x == "TODO" }
   spec.executables = ['haml', 'html2haml']
