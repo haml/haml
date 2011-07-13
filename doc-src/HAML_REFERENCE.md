@@ -1270,7 +1270,8 @@ Parses the filtered text with [Markdown](http://daringfireball.net/projects/mark
 Only works if [RDiscount](http://github.com/rtomayko/rdiscount),
 [RPeg-Markdown](http://github.com/rtomayko/rpeg-markdown),
 [Maruku](http://maruku.rubyforge.org),
-or [BlueCloth](www.deveiate.org/projects/BlueCloth) are installed.
+[BlueCloth](www.deveiate.org/projects/BlueCloth),
+or [Redcarpet](https://github.com/tanoku/redcarpet) are installed.
 
 {#maruku-filter}
 ### `:maruku`

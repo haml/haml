@@ -14,6 +14,9 @@
 
 * Fix an issue where destructive modification was sometimes performed on Rails SafeBuffers.
 
+* Add support for [Redcarpet](https://github.com/tanoku/redcarpet)
+  markdown.
+
 ## 3.1.1
 
 * Update the vendored Sass to version 3.1.0.

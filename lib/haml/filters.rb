@@ -352,7 +352,7 @@ END
     # or [BlueCloth](www.deveiate.org/projects/BlueCloth) are installed.
     module Markdown
       include Base
-      lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth'
+      lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth', 'redcarpet'
 
       # @see Base#render
       def render(text)
@@ -365,6 +365,8 @@ END
                    ::Maruku
                  when 'bluecloth'
                    ::BlueCloth
+                 when 'redcarpet'
+                   ::Redcarpet
                  end
         engine.new(text).to_html
       end
