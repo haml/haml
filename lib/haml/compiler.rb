@@ -346,7 +346,7 @@ END
 
     # This is a class method so it can be accessed from Buffer.
     def self.build_attributes(is_html, attr_wrapper, escape_attrs, attributes = {})
-      quote_escape = attr_wrapper == '"' ? "&quot;" : "&apos;"
+      quote_escape = attr_wrapper == '"' ? "&#34;" : "&#39;"
       other_quote_char = attr_wrapper == '"' ? "'" : '"'
 
       if attributes['data'].is_a?(Hash)
@@ -379,7 +379,7 @@ END
         value = Haml::Helpers.preserve(escaped)
         if escape_attrs
           # We want to decide whether or not to escape quotes
-          value = value.gsub('&quot;', '"')
+          value = value.gsub('&quot;', '"').gsub('&#34;', '"')
           this_attr_wrapper = attr_wrapper
           if value.include? attr_wrapper
             if value.include? other_quote_char
