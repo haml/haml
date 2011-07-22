@@ -40,6 +40,11 @@
 * Fix for inner whitespace removal in loops.
   (thanks [Richard Michael](https://github.com/richardkmichael))
 
+* Use numeric character references rather than HTML entities when escaping
+  double quotes and apostrophes in attributes. This works around some bugs in
+  Internet Explorer earlier than version 9.
+  (thanks [Doug Mayer](https://github.com/doxavore))
+
 ## 3.1.5 (Unreleased)
 
 * Respect Rails' `html_safe` flag when escaping attribute values
@@ -67,6 +72,8 @@
 * Fix html2haml.
 
 * Fix an issue where destructive modification was sometimes performed on Rails SafeBuffers.
+
+* Use character code entities for attribute value replacements instead of named/keyword entities.
 
 ## 3.1.1
 
