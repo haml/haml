@@ -395,12 +395,14 @@ HAML
     end
 
     def test_rjs
-      assert_equal(<<HTML, render(<<HAML, :action_view))
+      if defined?(ActionView::Helpers::PrototypeHelper)
+        assert_equal(<<HTML, render(<<HAML, :action_view))
 window.location.reload();
 HTML
 = update_page do |p|
   - p.reload
 HAML
+      end
     end
 
     def test_cache
