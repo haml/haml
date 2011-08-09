@@ -204,7 +204,7 @@ module Haml
       def render(text)
         <<END
 <?php
-  #{text.rstrip.gsub("\n", "\n  ")}
+  #{text}
 ?>
 END
       end
@@ -222,7 +222,6 @@ END
         else
           type = " type=#{options[:attr_wrapper]}text/javascript#{options[:attr_wrapper]}"
         end
-
 
         <<END
 <script#{type}>
