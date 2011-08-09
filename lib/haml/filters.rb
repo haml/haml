@@ -204,7 +204,7 @@ module Haml
       def render(text)
         <<END
 <?php
-  #{text}
+  #{text.rstrip.gsub("\n", "\n  ")}
 ?>
 END
       end
