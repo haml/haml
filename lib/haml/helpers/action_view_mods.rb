@@ -177,7 +177,7 @@ module ActionView
           wrap_block = block_given? && is_haml? && block_is_haml?(proc)
           if wrap_block
             oldproc = proc
-            proc = proc {|*args| with_tabs(1) {oldproc.call(*args)}}
+            proc = haml_bind_proc {|*args| with_tabs(1) {oldproc.call(*args)}}
           end
           res = form_for_without_haml(object_name, *args, &proc)
           res << "\n" if wrap_block
