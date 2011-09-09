@@ -22,6 +22,10 @@
 * Fix parser to allow lines ending with `some_method?` to be a Ruby multinline
   (thanks to [Brad Ediger](https://github.com/bradediger))
 
+* Always use :xhtml format when the mime_type of the rendered template is 'text/xml'.
+  (thanks to [Stephen Bannasch](https://github.com/stepheneb)).
+
+
 ## 3.1.5 (Unreleased)
 
 * Respect Rails' `html_safe` flag when escaping attribute values

@@ -21,6 +21,8 @@ module Haml
     def compile(template)
       options = Haml::Template.options.dup
 
+      options[:mime_type] = template.mime_type
+
       # template is a template object in Rails >=2.1.0,
       # a source string previously
       if template.respond_to? :source
@@ -99,7 +101,7 @@ if defined?(ActionView::TemplateError) &&
       begin
         render_source = create_template_source(handler, template, render_symbol, local_assigns.keys)
         line_offset = @@template_args[render_symbol].size + handler.line_offset
-      
+
         file_name = 'compiled-template' if file_name.blank?
         CompiledTemplates.module_eval(render_source, file_name, -line_offset)
       rescue Exception => e # errors from template code
@@ -112,10 +114,10 @@ if defined?(ActionView::TemplateError) &&
         # There's no way to tell Haml about the filename,
         # so we've got to insert it ourselves.
         e.backtrace[0].gsub!('(haml)', file_name) if e.is_a?(Haml::Error)
-        
+
         raise ActionView::TemplateError.new(extract_base_path_from(file_name) || view_paths.first, file_name || template, @assigns, template, e)
       end
-      
+
       @@compile_time[render_symbol] = Time.now
       # logger.debug "Compiled template #{file_name || template}\n ==> #{render_symbol}" if logger
     end

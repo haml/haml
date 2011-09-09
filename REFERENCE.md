@@ -133,6 +133,10 @@ Available options are:
   Other options are `:html4` and `:html5`, which are
   identical to `:xhtml` except there are no self-closing tags,
   the XML prolog is ignored and correct DOCTYPEs are generated.
+  <br/><br/> <!-- There's no better way to do a paragraph break in a dl in Maruku -->
+  If the mime_type of the template being rendered is `text/xml` then
+  a format of `:xhtml` will be used even if the global output format
+  is set to `:html4` or `:html5`.
 
 {#escape_html-option} `:escape_html`
 : Sets whether or not to escape HTML-sensitive characters in script.
@@ -838,6 +842,10 @@ For example:
 is compiled to:
 
     <?xml version='1.0' encoding='iso-8859-1' ?>
+
+If the mime_type of the template being rendered is `text/xml` then
+a format of `:xhtml` will be used even if the global output format
+is set to `:html4` or `:html5`.
 
 ## Comments
 
