@@ -3,7 +3,7 @@
 * Table of contents
 {:toc}
 
-## 3.1.3 (Unreleased)
+## 3.1.3
 
 * Stop partial layouts from being displayed twice.
 
