@@ -20,6 +20,8 @@ module Haml
 
     def compile(template)
       options = Haml::Template.options.dup
+      
+      options[:mime_type] = template.mime_type
 
       # template is a template object in Rails >=2.1.0,
       # a source string previously

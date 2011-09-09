@@ -3,6 +3,9 @@
 * Table of contents
 {:toc}
 
+* Always use :xhtml format when the mime_type of the rendered template is 'text/xml'.
+  (thanks to [Stephen Bannasch](https://github.com/stepheneb)).
+
 ## 3.1.3
 
 * Stop partial layouts from being displayed twice.
