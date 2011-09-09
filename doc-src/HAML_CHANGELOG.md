@@ -3,6 +3,10 @@
 * Table of contents
 {:toc}
 
+## 3.1.3 (Unreleased)
+
+* Stop partial layouts from being displayed twice.
+
 ## 3.1.2
 
 * If the ActionView `#capture` helper is used in a Haml template but without any Haml being run in the block,
