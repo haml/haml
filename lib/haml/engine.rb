@@ -101,6 +101,8 @@ module Haml
       @options.merge! options.reject {|k, v| v.nil?}
       @index = 0
 
+      @options[:format] = :xhtml if @options[:mime_type] == 'text/xml'
+
       unless [:xhtml, :html4, :html5].include?(@options[:format])
         raise Haml::Error, "Invalid output format #{@options[:format].inspect}"
       end
