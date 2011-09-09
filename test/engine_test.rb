@@ -1528,6 +1528,36 @@ HAML
       render("%div{data_val, :data => {:foo => 'blip', :brat => 'wurst'}}"))
   end
 
+  def test_xml_doc_using_html5_format_and_mime_type
+    assert_equal(<<XML, render(<<HAML, { :format => :html5, :mime_type => 'text/xml' }))
+<?xml version='1.0' encoding='utf-8' ?>
+<root>
+  <element />
+  <hr />
+</root>
+XML
+!!! XML
+%root
+  %element/
+  %hr
+HAML
+  end
+
+  def test_xml_doc_using_html4_format_and_mime_type
+    assert_equal(<<XML, render(<<HAML, { :format => :html4, :mime_type => 'text/xml' }))
+<?xml version='1.0' encoding='utf-8' ?>
+<root>
+  <element />
+  <hr />
+</root>
+XML
+!!! XML
+%root
+  %element/
+  %hr
+HAML
+  end
+
   # New attributes
 
   def test_basic_new_attributes
