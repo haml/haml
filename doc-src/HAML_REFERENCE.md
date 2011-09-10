@@ -96,7 +96,7 @@ Haml doesn't escape Ruby strings by default.
 However, if a string marked HTML-safe is passed to [Haml's escaping syntax](#escaping_html),
 it won't be escaped.
 
-Finally, all the {file:Haml/Helpers.html Haml helpers} that return strings
+Finally, all the {Haml::Helpers Haml helpers} that return strings
 that are known to be HTML safe are marked as such.
 In addition, string input is escaped unless it's HTML safe.
 
