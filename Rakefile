@@ -304,7 +304,9 @@ rescue LoadError; end
 # ----- Testing Multiple Rails Versions -----
 
 rails_versions = [
-  "v2.3.5",
+  "v3.1.0",
+  "v3.0.10",
+  "v2.3.14",
   "v2.2.3",
   "v2.1.2",
 ]
@@ -329,7 +331,7 @@ namespace :test do
       rails_versions.each {|version| test_rails_version version}
 
       puts "Checking out rails_xss. Please wait."
-      sh %{git clone git://github.com/NZKoz/rails_xss.git test/plugins/rails_xss}
+      sh %{git clone git://github.com/rails/rails_xss.git test/plugins/rails_xss}
       test_rails_version(rails_versions.find {|s| s =~ /^v2\.3/})
     ensure
       `rm -rf test/rails`

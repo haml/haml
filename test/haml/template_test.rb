@@ -394,8 +394,8 @@ HTML
 HAML
     end
 
-    def test_rjs
-      if defined?(ActionView::Helpers::PrototypeHelper)
+    if defined?(ActionView::Helpers::PrototypeHelper)
+      def test_rjs
         assert_equal(<<HTML, render(<<HAML, :action_view))
 window.location.reload();
 HTML
