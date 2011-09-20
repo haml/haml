@@ -331,7 +331,7 @@ namespace :test do
       rails_versions.each {|version| test_rails_version version}
 
       puts "Checking out rails_xss. Please wait."
-      sh %{git clone git://github.com/NZKoz/rails_xss.git test/plugins/rails_xss}
+      sh %{git clone git://github.com/rails/rails_xss.git test/plugins/rails_xss}
       test_rails_version(rails_versions.find {|s| s =~ /^v2\.3/})
     ensure
       `rm -rf test/rails`
