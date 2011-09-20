@@ -8,16 +8,16 @@ if File.exists?(linked_rails) && !$:.include?(linked_rails + '/activesupport/lib
   $:.unshift linked_rails + '/railties/lib'
 end
 require 'rubygems'
+require 'action_pack'
 require 'action_controller'
 require 'action_view'
 
-begin
+if ActionPack::VERSION::MAJOR >= 3
   # Necessary for Rails 3
   require 'rails'
-rescue LoadError
-  # Necessary for Rails 2.3.7
+else
+  # Necessary for Rails 2.3.*
   require 'initializer'
-rescue LoadError
 end
 
 if defined?(Rails::Application) # Rails 3
