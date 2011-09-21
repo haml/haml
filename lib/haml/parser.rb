@@ -429,7 +429,7 @@ END
     # that can then be merged with another attributes hash.
     def self.parse_class_and_id(list)
       attributes = {}
-      list.scan(/([#.])([-:_a-zA-Z0-9]+)/) do |type, property|
+      list.scan(/([#.])([\/\-:_a-zA-Z0-9]+)/) do |type, property|
         case type
         when '.'
           if attributes['class']
@@ -460,7 +460,7 @@ END
 
     # Parses a line into tag_name, attributes, attributes_hash, object_ref, action, value
     def parse_tag(line)
-      raise SyntaxError.new("Invalid tag: \"#{line}\".") unless match = line.scan(/%([-:\w]+)([-:\w\.\#]*)(.*)/)[0]
+      raise SyntaxError.new("Invalid tag: \"#{line}\".") unless match = line.scan(/%([-:\w]+)([\/\-:\w\.\#]*)(.*)/)[0]
 
       tag_name, attributes, rest = match
       raise SyntaxError.new("Illegal element: classes and ids must have values.") if attributes =~ /[\.#](\.|#|\z)/
