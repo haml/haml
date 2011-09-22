@@ -321,22 +321,45 @@ def test_rails_version(version)
   Rake::Task['test'].execute
 end
 
-namespace :test do
-  desc "Test all supported versions of rails. This takes a while."
-  task :rails_compatibility do
-    sh %{rm -rf test/rails}
-    puts "Checking out rails. Please wait."
-    sh %{git clone git://github.com/rails/rails.git test/rails}
+def gemfiles
+  @gemfiles ||=
     begin
-      rails_versions.each {|version| test_rails_version version}
-
-      puts "Checking out rails_xss. Please wait."
-      sh %{git clone git://github.com/rails/rails_xss.git test/plugins/rails_xss}
-      test_rails_version(rails_versions.find {|s| s =~ /^v2\.3/})
-    ensure
-      `rm -rf test/rails`
-      `rm -rf test/plugins`
+      raise 'Must install bundler to run Rails compatibility tests' if `which bundle`.empty?
+      Dir[File.dirname(__FILE__) + '/test/gemfiles/Gemfile.*'].
+        reject {|f| f =~ /\.lock$/}.
+        reject {|f| RUBY_VERSION !~ /^1\.8/ && f =~ /Gemfile\.rails-2\.[0-2]/}
     end
+end
+
+def with_each_gemfile
+  old_env = ENV['BUNDLE_GEMFILE']
+  gemfiles.each do |gemfile|
+    puts "Using gemfile: #{gemfile}"
+    ENV['BUNDLE_GEMFILE'] = gemfile
+    yield
+  end
+ensure
+  ENV['BUNDLE_GEMFILE'] = old_env
+end
+
+namespace :test do
+  namespace :bundles do
+    desc "Install all dependencies necessary to test Haml."
+    task :install do
+      with_each_gemfile {sh "bundle install"}
+    end
+
+    desc "Update all dependencies for testing Haml."
+    task :update do
+      with_each_gemfile {sh "bundle update"}
+    end
+  end
+
+  desc "Test all supported versions of rails. This takes a while."
+  task :rails_compatibility => 'test:bundles:install' do
+    `rm -rf test/rails`
+    `rm -rf test/plugins`
+    with_each_gemfile {sh "bundle exec rake test"}
   end
 end
 
