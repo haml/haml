@@ -219,7 +219,7 @@ HTML
   end
 
   def test_style_to_css_filter
-    assert_equal(<<HAML.rstrip, render_erb(<<HTML))
+    assert_equal(<<HAML.rstrip, render(<<HTML))
 :css
   foo {
       bar: baz;
