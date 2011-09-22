@@ -73,6 +73,7 @@ GEM
     rdoc (3.9.4)
     ruby_parser (2.3.0)
       sexp_processor (~> 3.0)
+    sass (3.1.7)
     sexp_processor (3.0.6)
     sprockets (2.0.0)
       hike (~> 1.2)
@@ -94,3 +95,4 @@ DEPENDENCIES
   json
   rails (>= 3.1.0, < 3.2.0)
   ruby_parser
+  sass

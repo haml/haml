@@ -26,6 +26,7 @@ GEM
     rake (0.9.2)
     ruby_parser (2.3.0)
       sexp_processor (~> 3.0)
+    sass (3.1.7)
     sexp_processor (3.0.6)
 
 PLATFORMS
@@ -38,3 +39,4 @@ DEPENDENCIES
   rails (>= 2.3.0, < 2.4.0)
   rails_xss (>= 0.1.1)
   ruby_parser
+  sass
