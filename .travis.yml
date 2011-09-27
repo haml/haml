@@ -10,13 +10,10 @@ gemfile:
   - test/gemfiles/Gemfile.rails-3.0.x
   - test/gemfiles/Gemfile.rails-3.1.x
 matrix:
-  exclusion:
-    - rvm: 1.9.2
-      gemfile: test/gemfiles/Gemfile.rails-2.0.x
-    - rvm: 1.9.2
-      gemfile: test/gemfiles/Gemfile.rails-2.1.x
-    - rvm: 1.9.2
-      gemfile: test/gemfiles/Gemfile.rails-2.2.x
+  exclude:
+    - { rvm: 1.9.2, gemfile: test/gemfiles/Gemfile.rails-2.0.x }
+    - { rvm: 1.9.2, gemfile: test/gemfiles/Gemfile.rails-2.1.x }
+    - { rvm: 1.9.2, gemfile: test/gemfiles/Gemfile.rails-2.2.x }
 branches:
   only:
     - master
