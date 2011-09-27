@@ -54,7 +54,9 @@ end
 # Patching was necessary for versions <= 2.0.1,
 # but we can make it a normal handler for higher versions.
 if defined?(ActionView::TemplateHandler) ||
-    (defined?(ActionView::Template) && defined?(ActionView::Template::Handler))
+    (defined?(ActionView::Template) && defined?(ActionView::Template::Handler)) ||
+    # Rails >= 3.2.0 uses Handlers instead of Handler
+    (defined?(ActionView::Template) && defined?(ActionView::Template::Handlers))
   require 'haml/template/plugin'
 else
   require 'haml/template/patch'
