@@ -100,7 +100,6 @@ MESSAGE
       [*self.id] unless id.nil?
     end
   end
-      
 
   def render(text, options = {}, &block)
     scope  = options.delete(:scope)  || Object.new
