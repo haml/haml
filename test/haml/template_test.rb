@@ -415,5 +415,20 @@ HTML
   Test
 HAML
     end
+
+    def test_form_builder_label_with_block
+      if defined?(ActionView::Helpers::InstanceTag)
+        assert_equal(<<HTML, render(<<HAML, :action_view))
+<form #{rails_form_attr}action="" method="post">#{rails_form_opener}
+  <label for="article_title">Block content
+  </label>
+</form>
+HTML
+#{rails_block_helper_char} form_for #{form_for_calling_convention(:article)}, :url => '' do |f|
+  = f.label :title do
+    Block content
+HAML
+      end
+    end
   end
 end
