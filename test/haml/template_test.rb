@@ -297,6 +297,21 @@ HAML
     end
   end
 
+  if defined?(ActionView::Helpers::InstanceTag)
+    def test_form_builder_label_with_block
+      assert_equal(<<HTML, render(<<HAML, :action_view))
+<form #{rails_form_attr}action="" method="post">#{rails_form_opener}
+  <label for="article_title">Block content
+  </label>
+</form>
+HTML
+#{rails_block_helper_char} form_for #{form_for_calling_convention(:article)}, :url => '' do |f|
+  = f.label :title do
+    Block content
+HAML
+    end
+  end
+
   ## XSS Protection Tests
 
   # In order to enable these, either test against Rails 3.0
