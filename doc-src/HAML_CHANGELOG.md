@@ -3,6 +3,10 @@
 * Table of contents
 {:toc}
 
+## 3.2.0 (Unreleased)
+
+* Add Kramdown support to Markdown filter.
+
 ## 3.1.3
 
 * Stop partial layouts from being displayed twice.
