@@ -349,6 +349,7 @@ END
     # Only works if [RDiscount](https://github.com/rtomayko/rdiscount),
     # [RPeg-Markdown](https://github.com/rtomayko/rpeg-markdown),
     # [Maruku](http://maruku.rubyforge.org),
+    # [Kramdown](https://github.com/gettalong/kramdown),
     # or [BlueCloth](http://www.deveiate.org/projects/BlueCloth) are installed.
     module Markdown
       include Base
