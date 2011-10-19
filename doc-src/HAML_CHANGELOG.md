@@ -1094,10 +1094,10 @@ and handles encoding-related issues
 There are numerous improvements to the Markdown filter.
 No longer will Haml attempt to use RedCloth's inferior Markdown implementation.
 Instead, it will look for all major Markdown implementations:
-[RDiscount](http://github.com/rtomayko/rdiscount),
-[RPeg-Markdown](http://github.com/rtomayko/rpeg-markdown),
+[RDiscount](https://github.com/rtomayko/rdiscount),
+[RPeg-Markdown](https://github.com/rtomayko/rpeg-markdown),
 [Maruku](http://maruku.rubyforge.org),
-and [BlueCloth](www.deveiate.org/projects/BlueCloth).
+and [BlueCloth](http://www.deveiate.org/projects/BlueCloth).
 
 #### `:cdata`
 
