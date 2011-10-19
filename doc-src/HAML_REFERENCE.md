@@ -1267,10 +1267,11 @@ Only works if [RedCloth](http://redcloth.org) is installed.
 {#markdown-filter}
 ### `:markdown`
 Parses the filtered text with [Markdown](http://daringfireball.net/projects/markdown).
-Only works if [RDiscount](http://github.com/rtomayko/rdiscount),
-[RPeg-Markdown](http://github.com/rtomayko/rpeg-markdown),
+Only works if [RDiscount](https://github.com/rtomayko/rdiscount),
+[RPeg-Markdown](https://github.com/rtomayko/rpeg-markdown),
 [Maruku](http://maruku.rubyforge.org),
-or [BlueCloth](www.deveiate.org/projects/BlueCloth) are installed.
+[Kramdown](https://github.com/gettalong/kramdown),
+or [BlueCloth](http://www.deveiate.org/projects/BlueCloth) are installed.
 
 {#maruku-filter}
 ### `:maruku`
