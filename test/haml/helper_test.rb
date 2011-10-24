@@ -180,6 +180,20 @@ HTML
 HAML
   end
 
+  def test_form_builder_block_content
+    def @base.protect_against_forgery?; false; end
+    assert_equal(<<HTML, render(<<HAML, :action_view))
+<form #{rails_form_attr}action="" method="post">#{rails_form_opener}
+  <label for="post_field">Custom Label for Field
+  </label>
+</form>
+HTML
+#{rails_block_helper_char} form_for #{form_for_calling_convention('post')}, :url => '' do |f|
+  = f.label :field do
+    Custom Label for Field
+HAML
+  end
+
   def test_form_tag_in_helper_with_string_block
     def @base.protect_against_forgery?; false; end
     assert_equal(<<HTML, render(<<HAML, :action_view))
