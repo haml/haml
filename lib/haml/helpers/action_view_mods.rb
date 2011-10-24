@@ -131,6 +131,7 @@ module ActionView
 
     class InstanceTag
       # Includes TagHelper
+      include Haml::Helpers
 
       def haml_buffer
         @template_object.send :haml_buffer
@@ -140,8 +141,8 @@ module ActionView
         @template_object.send :is_haml?
       end
 
-      def content_tag(*args)
-        html_tag = content_tag_with_haml(*args)
+      def content_tag(*args, &block)
+        html_tag = content_tag_with_haml(*args, &block)
         return html_tag unless respond_to?(:error_wrapping)
         return error_wrapping(html_tag) if method(:error_wrapping).arity == 1
         return html_tag unless object.respond_to?(:errors) && object.errors.respond_to?(:on)
