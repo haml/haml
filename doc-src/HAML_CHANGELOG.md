@@ -3,6 +3,10 @@
 * Table of contents
 {:toc}
 
+## 3.1.4 (Unreleased)
+
+* Fix the use of `FormBuilder#block` with a label in Haml.
+
 ## 3.1.3
 
 * Stop partial layouts from being displayed twice.
