@@ -138,7 +138,7 @@ RUBY
       # For example:
       #
       #     module Haml::Filters::Markdown
-      #       lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth'
+      #       lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth', 'kramdown'
       #
       #       ...
       #     end
@@ -346,13 +346,14 @@ END
     Filters.defined['redcloth'] = RedCloth
 
     # Parses the filtered text with [Markdown](http://daringfireball.net/projects/markdown).
-    # Only works if [RDiscount](http://github.com/rtomayko/rdiscount),
-    # [RPeg-Markdown](http://github.com/rtomayko/rpeg-markdown),
+    # Only works if [RDiscount](https://github.com/rtomayko/rdiscount),
+    # [RPeg-Markdown](https://github.com/rtomayko/rpeg-markdown),
     # [Maruku](http://maruku.rubyforge.org),
-    # or [BlueCloth](www.deveiate.org/projects/BlueCloth) are installed.
+    # [Kramdown](https://github.com/gettalong/kramdown),
+    # or [BlueCloth](http://www.deveiate.org/projects/BlueCloth) are installed.
     module Markdown
       include Base
-      lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth'
+      lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth', 'kramdown'
 
       # @see Base#render
       def render(text)
@@ -365,6 +366,8 @@ END
                    ::Maruku
                  when 'bluecloth'
                    ::BlueCloth
+                when 'kramdown'
+                   ::Kramdown::Document
                  end
         engine.new(text).to_html
       end
