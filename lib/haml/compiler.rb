@@ -18,7 +18,7 @@ END
       postamble = <<END.gsub("\n", ";")
 #{precompiled_method_return_value}
 ensure
-@haml_buffer = @haml_buffer.upper
+@haml_buffer = @haml_buffer.upper if @haml_buffer
 end
 END
       preamble + locals_code(local_names) + precompiled + postamble
