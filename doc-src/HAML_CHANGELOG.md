@@ -6,6 +6,7 @@
 ## 3.2.0 (Unreleased)
 
 * Add Kramdown support to Markdown filter.
+* Add RedCarpet support to Markdown filter.
 
 ## 3.1.4 (Unreleased)
 
