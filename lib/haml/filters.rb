@@ -1,3 +1,4 @@
+
 module Haml
   # The module containing the default Haml filters,
   # as well as the base module, {Haml::Filters::Base}.
@@ -349,11 +350,11 @@ END
     # Only works if [RDiscount](https://github.com/rtomayko/rdiscount),
     # [RPeg-Markdown](https://github.com/rtomayko/rpeg-markdown),
     # [Maruku](http://maruku.rubyforge.org),
-    # [Kramdown](https://github.com/gettalong/kramdown),
-    # or [BlueCloth](http://www.deveiate.org/projects/BlueCloth) are installed.
+    # [Redcarpet](https://github.com/tanoku/redcarpet) are installed.
+    # or [Kramdown](https://github.com/gettalong/kramdown),
     module Markdown
       include Base
-      lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth', 'kramdown'
+      lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth', 'redcarpet', 'kramdown'
 
       # @see Base#render
       def render(text)
@@ -366,7 +367,9 @@ END
                    ::Maruku
                  when 'bluecloth'
                    ::BlueCloth
-                when 'kramdown'
+                 when 'redcarpet'
+                   ::Redcarpet
+                 when 'kramdown'
                    ::Kramdown::Document
                  end
         engine.new(text).to_html
@@ -384,5 +387,17 @@ END
         ::Maruku.new(text).to_html
       end
     end
+
+    # Parses the filtered text with [Redcarpet](https://github.com/tanoku/redcarpet)
+    module Redcarpet
+      include Base
+      lazy_require 'redcarpet'
+
+      # @see Base#render
+      def render(text)
+        ::Redcarpet.new(text).to_html
+      end
+    end
+
   end
 end
