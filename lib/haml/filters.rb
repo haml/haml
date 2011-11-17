@@ -350,8 +350,8 @@ END
     # Only works if [RDiscount](https://github.com/rtomayko/rdiscount),
     # [RPeg-Markdown](https://github.com/rtomayko/rpeg-markdown),
     # [Maruku](http://maruku.rubyforge.org),
-    # [Redcarpet](https://github.com/tanoku/redcarpet) are installed.
-    # or [Kramdown](https://github.com/gettalong/kramdown),
+    # [Redcarpet](https://github.com/tanoku/redcarpet),
+    # or [Kramdown](https://github.com/gettalong/kramdown) are installed.
     module Markdown
       include Base
       lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth', 'redcarpet', 'kramdown'
