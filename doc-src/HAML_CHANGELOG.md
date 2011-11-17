@@ -27,6 +27,8 @@
 
 * Fix an issue where destructive modification was sometimes performed on Rails SafeBuffers.
 
+* Use character code entities for attribute value replacements instead of named/keyword entities.
+
 ## 3.1.1
 
 * Update the vendored Sass to version 3.1.0.

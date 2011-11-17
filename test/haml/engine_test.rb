@@ -1094,7 +1094,7 @@ HAML
     assert_equal("<p strange=*attrs*></p>\n", render("%p{ :strange => 'attrs'}", :attr_wrapper => '*'))
     assert_equal("<p escaped='quo\"te'></p>\n", render("%p{ :escaped => 'quo\"te'}", :attr_wrapper => '"'))
     assert_equal("<p escaped=\"quo'te\"></p>\n", render("%p{ :escaped => 'quo\\'te'}", :attr_wrapper => '"'))
-    assert_equal("<p escaped=\"q'uo&quot;te\"></p>\n", render("%p{ :escaped => 'q\\'uo\"te'}", :attr_wrapper => '"'))
+    assert_equal("<p escaped=\"q'uo&#34;te\"></p>\n", render("%p{ :escaped => 'q\\'uo\"te'}", :attr_wrapper => '"'))
     assert_equal("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n", render("!!! XML", :attr_wrapper => '"'))
   end
 
@@ -1466,7 +1466,7 @@ HAML
     assert_equal("<div data-one_plus_one='2'></div>\n",
       render("%div{:data => {:one_plus_one => 1+1}}"))
 
-    assert_equal("<div data-foo='Here&apos;s a \"quoteful\" string.'></div>\n",
+    assert_equal("<div data-foo='Here&#39;s a \"quoteful\" string.'></div>\n",
       render(%{%div{:data => {:foo => %{Here's a "quoteful" string.}}}})) #'
   end
 
