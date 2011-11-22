@@ -21,6 +21,8 @@ module Haml
     # @api public
     RUBY_ENGINE = defined?(::RUBY_ENGINE) ? ::RUBY_ENGINE : "ruby"
 
+    @@version_comparison_cache = {}
+
     # Returns the path of a file relative to the Haml root directory.
     #
     # @param file [String] The filename relative to the Haml root
@@ -266,7 +268,9 @@ module Haml
     # @param v2 [String] Another version string.
     # @return [Boolean]
     def version_geq(v1, v2)
-      version_gt(v1, v2) || !version_gt(v2, v1)
+      k = "#{v1}#{v2}"
+      return @@version_comparison_cache.fetch(k) if @@version_comparison_cache.key?(k)
+      @@version_comparison_cache[k] = version_gt(v1, v2) || !version_gt(v2, v1)
     end
 
     # A wrapper for `Marshal.dump` that calls `#_before_dump` on the object

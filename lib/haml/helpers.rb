@@ -337,7 +337,7 @@ MESSAGE
     # @yield [args] A block of Haml code that will be converted to a string
     # @yieldparam args [Array] `args`
     def capture_haml(*args, &block)
-      buffer = eval('_hamlout', block.binding) rescue haml_buffer
+      buffer = eval('if defined? _hamlout then _hamlout else nil end', block.binding) || haml_buffer
       with_haml_buffer(buffer) do
         position = haml_buffer.buffer.length
 
@@ -540,10 +540,7 @@ MESSAGE
     # @param block [Proc] A Ruby block
     # @return [Boolean] Whether or not `block` is defined directly in a Haml template
     def block_is_haml?(block)
-      eval('_hamlout', block.binding)
-      true
-    rescue
-      false
+      eval('!!defined?(_hamlout)', block.binding)
     end
 
     private

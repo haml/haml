@@ -443,8 +443,7 @@ END
 
     def compile(node)
       parent, @node = @node, node
-      block = proc {node.children.each {|c| compile c}}
-      send("compile_#{node.type}", &(block unless node.children.empty?))
+      send(:"compile_#{node.type}") {node.children.each {|c| compile c}}
     ensure
       @node = parent
     end
