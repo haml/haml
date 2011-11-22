@@ -7,6 +7,7 @@
 
 * Add Kramdown support to Markdown filter.
 * Add RedCarpet support to Markdown filter.
+* Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
 
 ## 3.1.4 (Unreleased)
 
