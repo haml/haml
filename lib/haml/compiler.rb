@@ -443,7 +443,11 @@ END
 
     def compile(node)
       parent, @node = @node, node
-      send(:"compile_#{node.type}") {node.children.each {|c| compile c}}
+      if node.children.empty?
+        send(:"compile_#{node.type}")
+      else
+        send(:"compile_#{node.type}") {node.children.each {|c| compile c}}
+      end
     ensure
       @node = parent
     end
