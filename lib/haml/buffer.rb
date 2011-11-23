@@ -274,7 +274,14 @@ RUBY
         else
           underscore(ref.class)
         end
-      id = "#{class_name}_#{ref.id || 'new'}"
+      ref_id =
+        if ref.respond_to?(:to_key)
+          key = ref.to_key
+          key.join('_') unless key.nil? #TODO further sanitize each key like dom_id
+        else
+          ref.id
+        end
+      id = "#{class_name}_#{ref_id || 'new'}"
       if prefix
         class_name = "#{ prefix }_#{ class_name}"
         id = "#{ prefix }_#{ id }"
