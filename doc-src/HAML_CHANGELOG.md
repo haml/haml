@@ -8,6 +8,7 @@
 * Add Kramdown support to Markdown filter.
 * Add RedCarpet support to Markdown filter.
 * Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
+* Generate object references based on `#to_key` if it exists in preference to `#id`.
 
 ## 3.1.4 (Unreleased)
 

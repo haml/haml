@@ -695,9 +695,9 @@ Square brackets follow a tag definition and contain a Ruby object
 that is used to set the class and id of that tag.
 The class is set to the object's class
 (transformed to use underlines rather than camel case)
-and the id is set to the object's class, followed by its id.
-Because the id of an object is normally an obscure implementation detail,
-this is most useful for elements that represent instances of Models.
+and the id is set to the object's class, followed by the value
+of its `#to_key` or `#id` method (in that order).
+This is most useful for elements that represent instances of Models.
 Additionally, the second argument (if present) will be used as a prefix for
 both the id and class attributes.
 For example:
