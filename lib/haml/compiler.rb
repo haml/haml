@@ -156,8 +156,8 @@ END
 
         if value && !parse
           concat_merged_text("#{value}</#{t[:name]}>#{t[:nuke_outer_whitespace] ? "" : "\n"}")
-        else
-          @to_merge << [:text, '', 1] unless t[:nuke_inner_whitespace]
+        elsif !t[:nuke_inner_whitespace] && !t[:self_closing]
+          @to_merge << [:text, '', 1]
         end
 
         @dont_indent_next_line = dont_indent_next_line
