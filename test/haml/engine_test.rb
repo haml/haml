@@ -403,6 +403,25 @@ HAML
 
   # Regression tests
 
+  unless Haml::Util.ruby1_8?
+    def test_indentation_after_dynamic_attr_hash
+      assert_equal(<<HTML, render(<<HAML))
+<html>
+  <body>
+    <img src='test' />
+    foo
+    bar
+  </body>
+</html>
+HTML
+%html
+  %body
+    %img{:src => 'te'+'st'}
+    = "foo\\nbar"
+HAML
+    end
+  end
+
   def test_whitespace_nuke_with_both_newlines
     assert_equal("<p>foo</p>\n", render('%p<= "\nfoo\n"'))
     assert_equal(<<HTML, render(<<HAML))

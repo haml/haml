@@ -13,6 +13,7 @@
 ## 3.1.4 (Unreleased)
 
 * Fix the use of `FormBuilder#block` with a label in Haml.
+* Fix indentation after a self-closing tag with dynamic attributes.
 
 ## 3.1.3
 
