@@ -358,21 +358,23 @@ END
 
       # @see Base#render
       def render(text)
-        engine = case @required
-                 when 'rdiscount'
-                   ::RDiscount
-                 when 'peg_markdown'
-                   ::PEGMarkdown
-                 when 'maruku'
-                   ::Maruku
-                 when 'bluecloth'
-                   ::BlueCloth
-                 when 'redcarpet'
-                   ::Redcarpet
-                 when 'kramdown'
-                   ::Kramdown::Document
-                 end
-        engine.new(text).to_html
+        if @required == 'redcarpet'
+          ::Redcarpet::Markdown.new(::Redcarpet::Render::HTML.new).render(text)
+        else
+          engine = case @required
+                   when 'rdiscount'
+                     ::RDiscount
+                   when 'peg_markdown'
+                     ::PEGMarkdown
+                   when 'maruku'
+                     ::Maruku
+                   when 'bluecloth'
+                     ::BlueCloth
+                   when 'kramdown'
+                     ::Kramdown::Document
+                   end
+          engine.new(text).to_html
+        end
       end
     end
 
@@ -395,7 +397,7 @@ END
 
       # @see Base#render
       def render(text)
-        ::Redcarpet.new(text).to_html
+        ::Redcarpet::Markdown.new(::Redcarpet::Render::HTML.new).render(text)
       end
     end
 
