@@ -69,7 +69,7 @@ task :permissions do
 end
 
 task :revision_file do
-  require 'lib/haml'
+  require scope('lib/haml')
 
   release = Rake.application.top_level_tasks.include?('release') || File.exist?(scope('EDGE_GEM_VERSION'))
   if Haml.version[:rev] && !release
