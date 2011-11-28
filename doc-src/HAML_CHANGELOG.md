@@ -3,7 +3,7 @@
 * Table of contents
 {:toc}
 
-## 3.1.4 (Unreleased)
+## 3.1.4
 
 * Fix the use of `FormBuilder#block` with a label in Haml.
 * Fix indentation after a self-closing tag with dynamic attributes.
