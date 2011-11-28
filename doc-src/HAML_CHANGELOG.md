@@ -10,7 +10,7 @@
 * Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
 * Generate object references based on `#to_key` if it exists in preference to `#id`.
 
-## 3.1.4 (Unreleased)
+## 3.1.4
 
 * Fix the use of `FormBuilder#block` with a label in Haml.
 * Fix indentation after a self-closing tag with dynamic attributes.
