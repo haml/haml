@@ -3,6 +3,11 @@
 * Table of contents
 {:toc}
 
+## 3.1.5 (Unreleased)
+
+* Respect Rails' `html_safe` flag when escaping attribute values
+  (thanks to [Gerad Suyderhoud](https://github.com/gerad)).
+
 ## 3.1.4
 
 * Fix the use of `FormBuilder#block` with a label in Haml.
