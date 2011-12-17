@@ -199,10 +199,10 @@ END
       when FILTER; push filter(text[1..-1].downcase)
       when DOCTYPE
         return push doctype(text) if text[0...3] == '!!!'
-        return push plain(text[3..-1].strip, !:escape_html) if text[1..2] == "=="
-        return push script(text[2..-1].strip, !:escape_html) if text[1] == SCRIPT
-        return push flat_script(text[2..-1].strip, !:escape_html) if text[1] == FLAT_SCRIPT
-        return push plain(text[1..-1].strip, !:escape_html) if text[1] == ?\s
+        return push plain(text[3..-1].strip, false) if text[1..2] == "=="
+        return push script(text[2..-1].strip, false) if text[1] == SCRIPT
+        return push flat_script(text[2..-1].strip, false) if text[1] == FLAT_SCRIPT
+        return push plain(text[1..-1].strip, false) if text[1] == ?\s
         push plain(text)
       when ESCAPE; push plain(text[1..-1])
       else; push plain(text)
@@ -233,7 +233,7 @@ END
       end
 
       escape_html = @options[:escape_html] if escape_html.nil?
-      script(unescape_interpolation(text, escape_html), !:escape_html)
+      script(unescape_interpolation(text, escape_html), false)
     end
 
     def script(text, escape_html = nil, preserve = false)

@@ -30,7 +30,7 @@ class DummyController
   def initialize
     @logger = Egocentic.new
   end
-    
+
   def self.controller_path
     ''
   end
@@ -59,7 +59,7 @@ class TemplateTest < Test::Unit::TestCase
 
   def create_base
     vars = { 'article' => Article.new, 'foo' => 'value one' }
-    
+
     unless Haml::Util.has?(:instance_method, ActionView::Base, :finder)
       base = ActionView::Base.new(TEMPLATE_PATH, vars)
     else
@@ -67,7 +67,7 @@ class TemplateTest < Test::Unit::TestCase
       base = ActionView::Base.new([], vars)
       base.finder.append_view_path(TEMPLATE_PATH)
     end
-    
+
     if Haml::Util.has?(:private_method, base, :evaluate_assigns)
       # Rails < 3.0
       base.send(:evaluate_assigns)
@@ -109,9 +109,9 @@ class TemplateTest < Test::Unit::TestCase
     Haml::Template.options[:escape_html] = false
     if ActionPack::VERSION::MAJOR < 2 ||
         (ActionPack::VERSION::MAJOR == 2 && ActionPack::VERSION::MINOR < 2)
-      render_method ||= proc { |name| @base.render(name) }
+      render_method ||= proc { |n| @base.render(n) }
     else
-      render_method ||= proc { |name| @base.render(:file => name) }
+      render_method ||= proc { |n| @base.render(:file => n) }
     end
 
     load_result(name).split("\n").zip(render_method[name].split("\n")).each_with_index do |pair, line|
@@ -144,7 +144,7 @@ class TemplateTest < Test::Unit::TestCase
       engine.render_proc(@base).call
     end
   end
-  
+
   def test_templates_should_render_correctly_with_def_method
     assert_renders_correctly("standard") do |name|
       engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"))
