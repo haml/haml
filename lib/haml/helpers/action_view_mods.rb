@@ -178,7 +178,7 @@ module ActionView
           wrap_block = block_given? && is_haml? && block_is_haml?(proc)
           if wrap_block
             oldproc = proc
-            proc = proc {|*args| with_tabs(1) {oldproc.call(*args)}}
+            proc = proc {|*args_local| with_tabs(1) {oldproc.call(*args_local)}}
           end
           res = form_for_without_haml(object_name, *args, &proc)
           res << "\n" if wrap_block
@@ -238,9 +238,9 @@ module ActionView
           wrap_block = block_given? && is_haml? && block_is_haml?(proc)
           if wrap_block
             oldproc = proc
-            proc = haml_bind_proc do |*args|
+            proc = haml_bind_proc do |*args_local|
               tab_up
-              oldproc.call(*args)
+              oldproc.call(*args_local)
               tab_down
               concat haml_indent
             end
