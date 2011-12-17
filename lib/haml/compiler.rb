@@ -372,7 +372,7 @@ END
           if escape_attrs == :once
             Haml::Helpers.escape_once(value.to_s)
           elsif escape_attrs
-            CGI.escapeHTML(value.to_s)
+            Haml::Helpers.html_escape(value.to_s)
           else
             value.to_s
           end

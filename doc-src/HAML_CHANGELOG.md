@@ -10,6 +10,12 @@
 * Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
 * Generate object references based on `#to_key` if it exists in preference to `#id`.
 
+## 3.1.5 (Unreleased)
+
+* Respect Rails' `html_safe` flag when escaping attribute values
+  (thanks to [Gerad Suyderhoud](https://github.com/gerad)).
+>>>>>>> stable
+
 ## 3.1.4
 
 * Fix the use of `FormBuilder#block` with a label in Haml.
