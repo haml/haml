@@ -1,4 +1,4 @@
-# Haml
+# Haml [![Build Status](https://secure.travis-ci.org/nex3/haml.png)](http://travis-ci.org/nex3/haml) [![Dependency Status](https://gemnasium.com/nex3/haml.png)](https://gemnasium.com/nex3/haml)
 
 Haml is a templating engine for HTML.
 It's are designed to make it both easier and more pleasant
