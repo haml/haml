@@ -343,7 +343,7 @@ module Haml
           output + child.to_haml(tabs + 1, options)
         end
       end
-      
+
       def dynamic_attributes
         @dynamic_attributes ||= begin
           Haml::Util.map_hash(attr_hash) do |name, value|
@@ -366,7 +366,7 @@ module Haml
           else
             CGI.unescapeHTML(self.innerText)
           end
-          
+
         content = erb_to_interpolation(content, options)
         content.gsub!(/\A\s*\n(\s*)/, '\1')
         original_indent = content[/\A(\s*)/, 1]
@@ -380,15 +380,15 @@ module Haml
       def static_attribute?(name, options)
         attr_hash[name] && !dynamic_attribute?(name, options)
       end
-      
+
       def dynamic_attribute?(name, options)
         options[:erb] and dynamic_attributes.key?(name)
       end
-      
+
       def static_id?(options)
         static_attribute?('id', options) && haml_css_attr?(attr_hash['id'])
       end
-      
+
       def static_classname?(options)
         static_attribute?('class', options)
       end
