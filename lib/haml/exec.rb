@@ -334,6 +334,10 @@ END
           @module_opts[:xhtml] = true
         end
 
+        opts.on("--html-attributes", "Use HTML style attributes instead of Ruby hash style.") do
+          @module_opts[:html_style_attributes] = true
+        end
+
         super
       end
 

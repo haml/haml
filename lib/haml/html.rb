@@ -401,11 +401,24 @@ module Haml
       # that's prettier than that produced by Hash#inspect
       def haml_attributes(options)
         attrs = attr_hash.sort.map do |name, value|
-          value = dynamic_attribute?(name, options) ? dynamic_attributes[name] : value.inspect
+          haml_attribute_pair(name, value, options)
+        end
+        if options[:html_style_attributes]
+          "(#{attrs.join(' ')})"
+        else
+          "{#{attrs.join(', ')}}"
+        end
+      end
+
+      # Returns the string representation of a single attribute key value pair
+      def haml_attribute_pair(name, value, options)
+        value = dynamic_attribute?(name, options) ? dynamic_attributes[name] : value.inspect
+        if options[:html_style_attributes]
+          "#{name}=#{value}"
+        else
           name = name.index(/\W/) ? name.inspect : ":#{name}"
           "#{name} => #{value}"
         end
-        "{#{attrs.join(', ')}}"
       end
     end
   end
