@@ -343,7 +343,7 @@ module Haml
           output + child.to_haml(tabs + 1, options)
         end
       end
-      
+
       def dynamic_attributes
         @dynamic_attributes ||= begin
           Haml::Util.map_hash(attr_hash) do |name, value|
@@ -366,7 +366,7 @@ module Haml
           else
             CGI.unescapeHTML(self.innerText)
           end
-          
+
         content = erb_to_interpolation(content, options)
         content.gsub!(/\A\s*\n(\s*)/, '\1')
         original_indent = content[/\A(\s*)/, 1]
@@ -380,15 +380,15 @@ module Haml
       def static_attribute?(name, options)
         attr_hash[name] && !dynamic_attribute?(name, options)
       end
-      
+
       def dynamic_attribute?(name, options)
         options[:erb] and dynamic_attributes.key?(name)
       end
-      
+
       def static_id?(options)
         static_attribute?('id', options) && haml_css_attr?(attr_hash['id'])
       end
-      
+
       def static_classname?(options)
         static_attribute?('class', options)
       end
@@ -401,11 +401,24 @@ module Haml
       # that's prettier than that produced by Hash#inspect
       def haml_attributes(options)
         attrs = attr_hash.sort.map do |name, value|
-          value = dynamic_attribute?(name, options) ? dynamic_attributes[name] : value.inspect
+          haml_attribute_pair(name, value, options)
+        end
+        if options[:html_style_attributes]
+          "(#{attrs.join(' ')})"
+        else
+          "{#{attrs.join(', ')}}"
+        end
+      end
+
+      # Returns the string representation of a single attribute key value pair
+      def haml_attribute_pair(name, value, options)
+        value = dynamic_attribute?(name, options) ? dynamic_attributes[name] : value.inspect
+        if options[:html_style_attributes]
+          "#{name}=#{value}"
+        else
           name = name.index(/\W/) ? name.inspect : ":#{name}"
           "#{name} => #{value}"
         end
-        "{#{attrs.join(', ')}}"
       end
     end
   end
