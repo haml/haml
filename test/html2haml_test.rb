@@ -40,6 +40,13 @@ class Html2HamlTest < Test::Unit::TestCase
       render('<meta http-equiv="Content-Type" content="text/html" />'))
   end
 
+  def test_should_have_html_style_attributes
+    assert_equal('%input(name="login" type="text")/',
+      render('<input type="text" name="login" />', :html_style_attributes => true))
+    assert_equal('%meta(content="text/html" http-equiv="Content-Type")/',
+      render('<meta http-equiv="Content-Type" content="text/html" />', :html_style_attributes => true))
+  end
+
   def test_class_with_dot_and_hash
     assert_equal('%div{:class => "foo.bar"}', render("<div class='foo.bar'></div>"))
     assert_equal('%div{:class => "foo#bar"}', render("<div class='foo#bar'></div>"))
