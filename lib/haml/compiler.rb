@@ -349,6 +349,9 @@ END
       quote_escape = attr_wrapper == '"' ? "&quot;" : "&apos;"
       other_quote_char = attr_wrapper == '"' ? "'" : '"'
 
+      # Allow escape_attrs on a per-tag basis
+      escape_attrs = attributes['escape_attrs'] if attributes.has_key?('escape_attrs')
+
       if attributes['data'].is_a?(Hash)
         attributes = attributes.dup
         attributes =
