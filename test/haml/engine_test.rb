@@ -636,6 +636,17 @@ HTML
   bar
 HAML
   end
+  
+  def test_escape_attrs_can_be_overridden_in_tag
+    assert_equal(<<HTML, render(<<HAML, :escape_attrs => true))
+<div class='<?php echo "&quot;" ?>' id='foo'>
+  bar
+</div>
+HTML
+#foo{:class => '<?php echo "&quot;" ?>', :escape_attrs => false}
+  bar
+HAML
+  end
 
   def test_escape_attrs_always
     assert_equal(<<HTML, render(<<HAML, :escape_attrs => :always))
