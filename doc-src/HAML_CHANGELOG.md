@@ -9,6 +9,7 @@
 * Add RedCarpet support to Markdown filter.
 * Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
 * Generate object references based on `#to_key` if it exists in preference to `#id`.
+* Add SCSS filter.
 
 ## 3.1.5 (Unreleased)
 

@@ -9,6 +9,20 @@
     h1
       :font-weight normal
 
+%style
+  - width = 5 + 17
+  :scss
+    p {
+      border: {
+        style: dotted;
+        width: #{width}px;
+        color: #ff00ff
+      }
+    }
+    h1 {
+      font-weight: normal;
+    }
+
 :test
   This
   Should

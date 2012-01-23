@@ -1259,6 +1259,11 @@ Embedded Ruby code is evaluated in the same context as the Haml template.
 ### `:sass`
 Parses the filtered text with Sass to produce CSS output.
 
+{#scss-filter}
+### `:scss`
+Parses the filtered text with Sass like the `:sass` filter, but uses the newer SCSS
+syntax to produce CSS output.
+
 {#textile-filter}
 ### `:textile`
 Parses the filtered text with [Textile](http://www.textism.com/tools/textile).
