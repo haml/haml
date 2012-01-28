@@ -473,6 +473,7 @@ MESSAGE
       attributes = Haml::Compiler.build_attributes(haml_buffer.html?,
         haml_buffer.options[:attr_wrapper],
         haml_buffer.options[:escape_attrs],
+        haml_buffer.options[:hyphenate_data_attrs],
         attrs)
 
       if text.nil? && block.nil? && (haml_buffer.options[:autoclose].include?(name) || flags.include?(:/))

@@ -1494,6 +1494,13 @@ HAML
       render(%{%div{:data => {:foo => %{Here's a "quoteful" string.}}}})) #'
   end
 
+  def test_html5_data_attributes_with_hyphens
+    assert_equal("<div data-foo-bar='blip'></div>\n",
+      render("%div{:data => {:foo_bar => 'blip'}}", :hyphenate_data_attrs => true))
+    assert_equal("<div data-baz='bang' data-foo-bar='blip'></div>\n",
+      render("%div{:data => {:foo_bar => 'blip', :baz => 'bang'}}", :hyphenate_data_attrs => true))
+  end
+
   def test_html5_data_attributes_with_multiple_defs
     # Should always use the more-explicit attribute
     assert_equal("<div data-foo='second'></div>\n",
