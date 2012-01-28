@@ -194,7 +194,7 @@ RUBY
       end
       self.class.merge_attrs(attributes, parse_object_ref(obj_ref)) if obj_ref
       Compiler.build_attributes(
-        html?, @options[:attr_wrapper], @options[:escape_attrs], attributes)
+        html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:hyphenate_data_attrs], attributes)
     end
 
     # Remove the whitespace from the right side of the buffer string.
@@ -237,16 +237,16 @@ RUBY
         from['class'] ||= to['class']
       end
 
-      from_data = from['data'].is_a?(Hash)
-      to_data = to['data'].is_a?(Hash)
-      if from_data && to_data
-        to['data'] = to['data'].merge(from['data'])
-      elsif to_data
-        to = Haml::Util.map_keys(to.delete('data')) {|name| "data-#{name}"}.merge(to)
-      elsif from_data
-        from = Haml::Util.map_keys(from.delete('data')) {|name| "data-#{name}"}.merge(from)
-      end
+      from_data = from.delete('data') || {}
+      to_data = to.delete('data') || {}
 
+      # forces to_data & from_data into a hash
+      from_data = { nil => from_data } unless from_data.is_a?(Hash)
+      to_data = { nil => to_data } unless to_data.is_a?(Hash)
+
+      merged_data = to_data.merge(from_data)
+
+      to['data'] = merged_data unless merged_data.empty?
       to.merge!(from)
     end
 
