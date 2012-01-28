@@ -171,6 +171,10 @@ Available options are:
   of this type within the attributes will be escaped
   (e.g. by replacing them with `&apos;`) if
   the character is an apostrophe or a quotation mark.
+{#hyphenate_data_attrs} `:hyphenate_data_attrs`
+: If set to `true`, Haml will convert underscores to hyphens in all
+  [Custom Data Attributes](#html5_custom_data_attributes)
+  This defaults to `false`.
 
 {#filename-option} `:filename`
 : The name of the Haml file being parsed.
@@ -521,6 +525,10 @@ For example:
 will render as:
 
     <a data-author_id='123' href='/posts'>Posts By Author</a>
+
+In addition, if Haml's [`:hyphenate_data_attrs` option](#hyphenate_data_attrs-option) is set to `true` the output render as:
+
+    <a data-author-id='123' href='/posts'>Posts By Author</a>
 
 ### Class and ID: `.` and `#`
 
