@@ -12,6 +12,8 @@
 * Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
 
 * Generate object references based on `#to_key` if it exists in preference to `#id`.
+* Add an {file:HAML_REFERENCE.md#hyphenate_data_attrs-option `:hyphenate_data_attrs` option}
+  that converts underscores to hyphens in your HTML5 data keys (thanks to [Andrew Smith](https://github.com/fullsailor))
 
 * Add SCSS filter.
   (thanks to [Matt Wildig](https://github.com/mattwildig))
