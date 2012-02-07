@@ -53,10 +53,22 @@ END
       push_text @node.value[:text]
     end
 
+    def nuke_inner_whitespace?(node)
+      if node.value && node.value[:nuke_inner_whitespace]
+        true
+      elsif node.parent
+        nuke_inner_whitespace?(node.parent)
+      else
+        false
+      end
+    end
+
     def compile_script(&block)
       push_script(@node.value[:text],
-        :preserve_script => @node.value[:preserve],
-        :escape_html => @node.value[:escape_html], &block)
+                  :preserve_script       => @node.value[:preserve],
+                  :escape_html           => @node.value[:escape_html],
+                  :nuke_inner_whitespace => nuke_inner_whitespace?(@node),
+                  &block)
     end
 
     def compile_silent_script
