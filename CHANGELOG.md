@@ -37,6 +37,9 @@
 * html2haml now includes an `--html-attributes` option.
   (thanks [Stefan Natchev](https://github.com/snatchev))
 
+* Fix for inner whitespace removal in loops.
+  (thanks [Richard Michael](https://github.com/richardkmichael))
+
 ## 3.1.5 (Unreleased)
 
 * Respect Rails' `html_safe` flag when escaping attribute values
