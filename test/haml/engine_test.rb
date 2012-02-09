@@ -95,6 +95,11 @@ MESSAGE
       "my_thing"
     end
   end
+  class CustomModelClass < Struct.new(:id)
+    def model_name
+      "my_model_name"
+    end
+  end
   CpkRecord = Struct.new('CpkRecord', :id) do
     def to_key
       [*self.id] unless id.nil?
@@ -1325,7 +1330,13 @@ HAML
     assert_equal("<p class='my_thing' id='my_thing_42' style='width: 100px;'>My Thing</p>\n",
                  render("%p[custom]{:style => 'width: 100px;'} My Thing", :locals => {:custom => custom}))
   end
-  
+
+  def test_object_ref_with_class_with_model_name
+    custom = CustomModelClass.new 42
+    assert_equal("<p class='my_model_name' id='my_model_name_42' style='width: 100px;'>My Thing</p>\n",
+                 render("%p[custom]{:style => 'width: 100px;'} My Thing", :locals => {:custom => custom}))
+  end
+
   def test_object_ref_with_multiple_ids
     cpk_record = CpkRecord.new([42,6,9])
     assert_equal("<p class='struct_cpk_record' id='struct_cpk_record_42_6_9' style='width: 100px;'>CPK Record</p>\n",
