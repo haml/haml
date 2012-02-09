@@ -9,6 +9,7 @@
 * Add RedCarpet support to Markdown filter.
 * Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
 * Generate object references based on `#to_key` if it exists in preference to `#id`.
+* Generate object references based on `#model_name` if it exists before using the class name (thanks to [Hugo Frappier](https://github.com/frahugo)).
 
 ## 3.1.5 (Unreleased)
 

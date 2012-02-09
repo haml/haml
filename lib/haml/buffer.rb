@@ -271,6 +271,8 @@ RUBY
       class_name =
         if ref.respond_to?(:haml_object_ref)
           ref.haml_object_ref
+        elsif ref.respond_to?(:model_name)
+          ref.model_name
         else
           underscore(ref.class)
         end
