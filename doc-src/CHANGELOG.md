@@ -6,9 +6,15 @@
 ## 3.2.0 (Unreleased)
 
 * Add Kramdown support to Markdown filter.
+
 * Add RedCarpet support to Markdown filter.
+
 * Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
+
 * Generate object references based on `#to_key` if it exists in preference to `#id`.
+
+* Fix parser to allow lines ending with `some_method?` to be a Ruby multinline
+  (thanks to [Brad Ediger](https://github.com/bradediger))
 
 ## 3.1.5 (Unreleased)
 

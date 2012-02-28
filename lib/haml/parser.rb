@@ -664,8 +664,15 @@ END
       text
     end
 
+    # `text' is a Ruby multiline block if it:
+    # - ends with a comma
+    # - but not "?," which is a character literal
+    #   (however, "x?," is a method call and not a literal)
+    # - and not "?\," which is a character literal
+    #
     def is_ruby_multiline?(text)
-      text && text.length > 1 && text[-1] == ?, && text[-2] != ?? && text[-3..-2] != "?\\"
+      text && text.length > 1 && text[-1] == ?, &&
+        !((text[-3..-2] =~ /\W\?/) || text[-3..-2] == "?\\")
     end
 
     def contains_interpolation?(str)

@@ -1662,6 +1662,35 @@ HTML
 HAML
   end
 
+  def test_ruby_multiline_with_punctuated_methods_is_continuation
+    assert_equal(<<HTML, render(<<HAML))
+bar, , true, bang
+<p>foo</p>
+<p>bar</p>
+HTML
+= ["bar",
+   "  ".strip!,
+   "".empty?,
+   "bang"].join(", ")
+%p foo
+%p bar
+HAML
+  end
+
+  def test_ruby_character_literals_are_not_continuation
+    assert_equal(<<HTML, render(<<HAML))
+,
+,
+<p>foo</p>
+<p>bar</p>
+HTML
+= ?,
+= ?\,
+%p foo
+%p bar
+HAML
+  end
+
   def test_escaped_loud_ruby_multiline
     assert_equal(<<HTML, render(<<HAML))
 bar&lt;, baz, bang
