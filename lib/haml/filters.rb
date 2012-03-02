@@ -358,7 +358,7 @@ END
 
       # @see Base#render
       def render(text)
-        if @required == 'redcarpet'
+        if @required == 'redcarpet' && Gem.loaded_specs['redcarpet'].version >= Gem::Version.create('2.0')
           ::Redcarpet::Markdown.new(::Redcarpet::Render::HTML.new).render(text)
         else
           engine = case @required
@@ -370,6 +370,8 @@ END
                      ::Maruku
                    when 'bluecloth'
                      ::BlueCloth
+                   when 'redcarpet'
+                     ::Redcarpet
                    when 'kramdown'
                      ::Kramdown::Document
                    end
