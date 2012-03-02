@@ -339,6 +339,14 @@ HAML
       assert_equal("Foo &amp; Bar\n", render('Foo #{"&"} Bar', :action_view))
     end
 
+    def test_xss_protection_in_attributes
+      assert_equal("<div data-html='&lt;foo&gt;bar&lt;/foo&gt;'></div>\n", render('%div{ "data-html" => "<foo>bar</foo>" }', :action_view))
+    end
+
+    def test_xss_protection_in_attributes_with_safe_strings
+      assert_equal("<div data-html='<foo>bar</foo>'></div>\n", render('%div{ "data-html" => "<foo>bar</foo>".html_safe }', :action_view))
+    end
+
     def test_xss_protection_with_bang_in_interpolation
       assert_equal("Foo & Bar\n", render('! Foo #{"&"} Bar', :action_view))
     end
