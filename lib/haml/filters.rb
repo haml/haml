@@ -1,4 +1,3 @@
-
 module Haml
   # The module containing the default Haml filters,
   # as well as the base module, {Haml::Filters::Base}.
@@ -399,7 +398,11 @@ END
 
       # @see Base#render
       def render(text)
-        ::Redcarpet::Markdown.new(::Redcarpet::Render::HTML.new).render(text)
+        if Gem.loaded_specs['redcarpet'].version >= Gem::Version.create('2.0')
+          ::Redcarpet::Markdown.new(::Redcarpet::Render::HTML.new).render(text)
+        else
+          ::Redcarpet.new(text).to_html
+        end
       end
     end
 
