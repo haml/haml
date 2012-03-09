@@ -13,15 +13,15 @@ module ActionView
     def delegate_template_exists_with_haml(template_path)
       template_exists?(template_path, :haml) && [:haml]
     end
-    alias_method :delegate_template_exists_without_haml, :delegate_template_exists?
     alias_method :delegate_template_exists?, :delegate_template_exists_with_haml
+    alias_method :delegate_template_exists_without_haml, :delegate_template_exists?
 
     def compile_template_with_haml(extension, template, file_name, local_assigns)
       return compile_haml(template, file_name, local_assigns) if extension.to_s == "haml"
       compile_template_without_haml(extension, template, file_name, local_assigns)
     end
-    alias_method :compile_template_without_haml, :compile_template
     alias_method :compile_template, :compile_template_with_haml
+    alias_method :compile_template_without_haml, :compile_template
 
     def compile_haml(template, file_name, local_assigns)
       render_symbol = assign_method_name(:haml, template, file_name)

@@ -1219,6 +1219,11 @@ when you don't want lines starting with `.` or `-` to be parsed.
 Surrounds the filtered text with `<script>` and CDATA tags.
 Useful for including inline Javascript.
 
+{#coffeescript-filter}
+### `:coffeescript`
+Parses the filtered text with coffeescript and surrounds it with `<script>` and CDATA tags.
+Useful for including inline Javascript.
+
 {#css-filter}
 ### `:css`
 Surrounds the filtered text with `<style>` and CDATA tags.

@@ -219,6 +219,15 @@ END
       end
     end
 
+    module Coffeescript
+      include Base
+      lazy_require 'coffee-script'    
+
+      def render_with_options(text, options)
+        Javascript::render_with_options(CoffeeScript.compile(text), options)
+      end
+    end
+
     # Surrounds the filtered text with `<style>` and CDATA tags.
     # Useful for including inline CSS.
     module Css
@@ -395,7 +404,7 @@ END
 
       # @see Base#render
       def render(text)
-        ::Redcarpet.new(text).to_html
+        ::Redcarpet::Markdown.new(::Redcarpet::Render::HTML.new).render(text)
       end
     end
 
