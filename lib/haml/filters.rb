@@ -369,44 +369,34 @@ END
       def render(text)
         engine = case @required
                  when 'rdiscount'
-                   ::RDiscount
+                   RDiscount
                  when 'peg_markdown'
-                   ::PEGMarkdown
+                   PEGMarkdown
                  when 'maruku'
-                   ::Maruku
+                   Maruku
                  when 'bluecloth'
-                   ::BlueCloth
+                   BlueCloth
                  when 'redcarpet'
-                   ::Redcarpet
+                   Redcarpet
                  when 'kramdown'
-                   ::Kramdown::Document
+                   Kramdown::Document
                  end
-        engine.new(text).to_html
+        engine.render(text) rescue eval("::#{engine}").new(text).to_html
       end
     end
 
-    # Parses the filtered text with [Maruku](http://maruku.rubyforge.org),
-    # which has some non-standard extensions to Markdown.
-    module Maruku
-      include Base
-      lazy_require 'maruku'
-
-      # @see Base#render
-      def render(text)
-        ::Maruku.new(text).to_html
-      end
-    end
-
-    # Parses the filtered text with [Redcarpet](https://github.com/tanoku/redcarpet)
     module Redcarpet
       include Base
-      lazy_require 'redcarpet'
 
-      # @see Base#render
       def render(text)
-        ::Redcarpet::Markdown.new(::Redcarpet::Render::HTML.new).render(text)
+        if ::Redcarpet.respond_to? :new
+          # version 1.x
+          ::Redcarpet.new(text).to_html
+        elsif ::Redcarpet::Markdown.respond_to? :new
+          # version 2.x
+          ::Redcarpet::Markdown.new(::Redcarpet::Render::HTML.new).render(text)
+        end
       end
     end
-
   end
 end
