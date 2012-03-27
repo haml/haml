@@ -111,18 +111,23 @@ module ActionView
     end
 
     module TagHelper
-      def content_tag_with_haml(name, *args, &block)
-        return content_tag_without_haml(name, *args, &block) unless is_haml?
+      def content_tag_with_haml(name, content_or_options_with_block = nil, *args, &block)
+        return content_tag_without_haml(name, content_or_options_with_block, *args, &block) unless is_haml?
 
         preserve = haml_buffer.options[:preserve].include?(name.to_s)
 
-        if block_given? && block_is_haml?(block) && preserve
-          return content_tag_without_haml(name, *args) {preserve(&block)}
+        if block_given?
+          if block_is_haml?(block) && preserve
+            content_tag_without_haml(name, content_or_options_with_block, *args) {preserve(&block)}
+          else
+            content_tag_without_haml(name, content_or_options_with_block, *args, &block)
+          end
+        else
+          if preserve && content_or_options_with_block
+            content_or_options_with_block = Haml::Helpers.preserve(content_or_options_with_block)
+          end
+          content = content_tag_without_haml(name, content_or_options_with_block, *args, &block)
         end
-
-        content = content_tag_without_haml(name, *args, &block)
-        content = Haml::Helpers.preserve(content) if preserve && content
-        content
       end
 
       alias_method :content_tag_without_haml, :content_tag
