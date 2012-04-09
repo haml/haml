@@ -30,7 +30,7 @@ class HelperTest < Test::Unit::TestCase
       on(name) || []
     end
   end
-  
+
   def setup
     @base = ActionView::Base.new
     @base.controller = ActionController::Base.new
@@ -68,6 +68,10 @@ class HelperTest < Test::Unit::TestCase
     assert_equal("<li>[1]</li>\n", render("= list_of([[1]]) do |i|\n  = i.inspect"))
     assert_equal("<li>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>\n",
       render("= list_of(['Fee', 'Fi', 'Fo', 'Fum']) do |title|\n  %h1= title\n  %p A word!"))
+    assert_equal("<li c='3' d='4'>1</li>\n<li c='3' d='4'>2</li>\n", render("= list_of([1, 2], {c: 3, d: 4}) do |i|\n  = i"))
+    assert_equal("<li c='3' d='4'>[1]</li>\n", render("= list_of([[1]], {c: 3, d: 4}) do |i|\n  = i.inspect"))
+    assert_equal("<li c='3' d='4'>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li c='3' d='4'>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li c='3' d='4'>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li c='3' d='4'>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>\n",
+      render("= list_of(['Fee', 'Fi', 'Fo', 'Fum'], {c: 3, d: 4}) do |title|\n  %h1= title\n  %p A word!"))
   end
 
   def test_buffer_access
@@ -110,14 +114,14 @@ HAML
       ActionView::Base.new.render(:inline => "<%= concat('foo') %>")
     rescue ArgumentError, NameError
       proper_behavior = true
-    end    
+    end
     assert(proper_behavior)
   end
-  
+
   def test_action_view_included
     assert(Haml::Helpers.action_view?)
   end
-  
+
   def test_form_tag
     # This is usually provided by ActionController::Base.
     def @base.protect_against_forgery?; false; end
@@ -359,7 +363,7 @@ HAML
   end
 
   def test_capture_deals_properly_with_collections
-    Haml::Helpers.module_eval do 
+    Haml::Helpers.module_eval do
       def trc(collection, &block)
         collection.each do |record|
           haml_concat capture_haml(record, &block)

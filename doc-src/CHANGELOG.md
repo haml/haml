@@ -13,6 +13,9 @@
 
 * Generate object references based on `#to_key` if it exists in preference to `#id`.
 
+* Helper `list_of` takes an extra argument that is rendered into list item attributes
+  (thanks [Iain Barnett](http://iainbarnett.me.uk/))
+
 * Fix parser to allow lines ending with `some_method?` to be a Ruby multinline
   (thanks to [Brad Ediger](https://github.com/bradediger))
 
