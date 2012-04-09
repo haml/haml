@@ -147,7 +147,7 @@ MESSAGE
     #     <li>hello</li>
     #     <li>yall</li>
     #
-    # And
+    # And:
     #
     #     = list_of({:title => 'All the stuff', :description => 'A book about all the stuff.'}) do |key, val|
     #       %h3= key.humanize
@@ -164,10 +164,33 @@ MESSAGE
     #       <p>A book about all the stuff.</p>
     #     </li>
     #
+    # While:
+    #
+    #     = list_of(["Home", "About", "Contact", "FAQ"], {class: "nav", role: "nav"}) do |item|
+    #       %a{ href="#" }= item
+    #
+    # Produces:
+    #
+    #     <li class='nav' role='nav'>
+    #       <a href='#'>Home</a>
+    #     </li>
+    #     <li class='nav' role='nav'>
+    #       <a href='#'>About</a>
+    #     </li>
+    #     <li class='nav' role='nav'>
+    #       <a href='#'>Contact</a>
+    #     </li>
+    #     <li class='nav' role='nav'>
+    #       <a href='#'>FAQ</a>
+    #     </li>
+    #
+    #  `[[class", "nav"], [role", "nav"]]` could have been used instead of `{class: "nav", role: "nav"}` (or any enumerable collection where each pair of items responds to #to_s)
+    #
     # @param enum [Enumerable] The list of objects to iterate over
+    # @param [Enumerable<#to_s,#to_s>] opts Each key/value pair will become an attribute pair for each list item element.
     # @yield [item] A block which contains Haml code that goes within list items
     # @yieldparam item An element of `enum`
-    def list_of(enum, &block)
+    def list_of(enum, opts={}, &block)
       to_return = enum.collect do |i|
         result = capture_haml(i, &block)
 
@@ -178,7 +201,7 @@ MESSAGE
           result = result.strip
         end
 
-        "<li>#{result}</li>"
+        %Q!<li#{opts.empty? ? "" : " ".<<(opts.map{|k,v| "#{k}='#{v}'" }.join(" "))}>#{result}</li>!
       end
       to_return.join("\n")
     end
