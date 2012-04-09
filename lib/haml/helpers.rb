@@ -147,7 +147,7 @@ MESSAGE
     #     <li>hello</li>
     #     <li>yall</li>
     #
-    # And
+    # And:
     #
     #     = list_of({:title => 'All the stuff', :description => 'A book about all the stuff.'}) do |key, val|
     #       %h3= key.humanize
