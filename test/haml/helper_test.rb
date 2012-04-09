@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path File.join( File.dirname(__FILE__),  '/../test_helper')
 
 class ActionView::Base
   def nested_tag
@@ -68,6 +68,10 @@ class HelperTest < Test::Unit::TestCase
     assert_equal("<li>[1]</li>\n", render("= list_of([[1]]) do |i|\n  = i.inspect"))
     assert_equal("<li>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>\n",
       render("= list_of(['Fee', 'Fi', 'Fo', 'Fum']) do |title|\n  %h1= title\n  %p A word!"))
+    assert_equal("<li c='3' d='4'>1</li>\n<li c='3' d='4'>2</li>\n", render("= list_of([1, 2], {c: 3, d: 4}) do |i|\n  = i"))
+    assert_equal("<li c='3' d='4'>[1]</li>\n", render("= list_of([[1]], {c: 3, d: 4}) do |i|\n  = i.inspect"))
+    assert_equal("<li c='3' d='4'>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li c='3' d='4'>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li c='3' d='4'>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li c='3' d='4'>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>\n",
+      render("= list_of(['Fee', 'Fi', 'Fo', 'Fum'], {c: 3, d: 4}) do |title|\n  %h1= title\n  %p A word!"))
   end
 
   def test_buffer_access
