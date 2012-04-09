@@ -9,6 +9,7 @@
 * Add RedCarpet support to Markdown filter.
 * Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
 * Generate object references based on `#to_key` if it exists in preference to `#id`.
+* Helper `list_of` takes an extra argument that is rendered into list item attributes (thanks [Iain Barnett](http://iainbarnett.me.uk/))
 
 ## 3.1.5 (Unreleased)
 
