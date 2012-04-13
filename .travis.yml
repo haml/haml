@@ -9,6 +9,7 @@ gemfile:
   - test/gemfiles/Gemfile.rails-xss-2.3.x
   - test/gemfiles/Gemfile.rails-3.0.x
   - test/gemfiles/Gemfile.rails-3.1.x
+  - test/gemfiles/Gemfile.rails-3.2.x
 matrix:
   exclude:
     - { rvm: 1.9.2, gemfile: test/gemfiles/Gemfile.rails-2.0.x }
