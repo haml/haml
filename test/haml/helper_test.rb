@@ -133,17 +133,30 @@ HTML
 HAML
   end
 
-  def test_text_area
-    assert_equal(%(<textarea id="body" name="body">Foo&#x000A;Bar&#x000A; Baz&#x000A;   Boom</textarea>\n),
-                 render('= text_area_tag "body", "Foo\nBar\n Baz\n   Boom"', :action_view))
+  if Haml::Util.ap_geq?("3.2.3")
+    def test_text_area
+      assert_equal(%(<textarea id="body" name="body">\nFoo&#x000A;Bar&#x000A; Baz&#x000A;   Boom</textarea>\n),
+                   render('= text_area_tag "body", "Foo\nBar\n Baz\n   Boom"', :action_view))
 
-    assert_equal(%(<textarea cols="40" id="post_body" name="post[body]" rows="20">Foo bar&#x000A;baz</textarea>\n),
-                 render('= text_area :post, :body', :action_view))    
+      assert_equal(%(<textarea cols="40" id="post_body" name="post[body]" rows="20">\nFoo bar&#x000A;baz</textarea>\n),
+                   render('= text_area :post, :body', :action_view))
 
-    assert_equal(%(<pre>Foo bar&#x000A;   baz</pre>\n),
-                 render('= content_tag "pre", "Foo bar\n   baz"', :action_view))    
+      assert_equal(%(<pre>Foo bar&#x000A;   baz</pre>\n),
+                   render('= content_tag "pre", "Foo bar\n   baz"', :action_view))
+    end
+  else
+    def test_text_area
+      assert_equal(%(<textarea id="body" name="body">Foo&#x000A;Bar&#x000A; Baz&#x000A;   Boom</textarea>\n),
+                   render('= text_area_tag "body", "Foo\nBar\n Baz\n   Boom"', :action_view))
+
+      assert_equal(%(<textarea cols="40" id="post_body" name="post[body]" rows="20">Foo bar&#x000A;baz</textarea>\n),
+                   render('= text_area :post, :body', :action_view))
+
+      assert_equal(%(<pre>Foo bar&#x000A;   baz</pre>\n),
+                   render('= content_tag "pre", "Foo bar\n   baz"', :action_view))
+    end
   end
-  
+
   def test_capture_haml
     assert_equal(<<HTML, render(<<HAML))
 "<p>13</p>\\n"

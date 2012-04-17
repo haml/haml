@@ -8,6 +8,9 @@
 * Respect Rails' `html_safe` flag when escaping attribute values
   (thanks to [Gerad Suyderhoud](https://github.com/gerad)).
 
+* Fix for Rails 3.2.3 textarea helpers
+  (thanks to [James Coleman](https://github.com/jcoleman) and others).
+
 ## 3.1.4
 
 * Fix the use of `FormBuilder#block` with a label in Haml.
