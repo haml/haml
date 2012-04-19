@@ -1678,16 +1678,15 @@ HAML
   end
 
   def test_ruby_character_literals_are_not_continuation
-    assert_equal(<<HTML, render(<<HAML))
-,
-,
-<p>foo</p>
-<p>bar</p>
-HTML
+    html = if RUBY_VERSION < "1.9"
+      "44\n44\n<p>foo</p>\n"
+    else
+      ",\n,\n<p>foo</p>\n"
+    end
+    assert_equal(html, render(<<HAML))
 = ?,
 = ?\,
 %p foo
-%p bar
 HAML
   end
 
