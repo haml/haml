@@ -1,6 +1,6 @@
 rvm:
   - 1.8.7
-  - 1.9.2
+  - 1.9.3
 gemfile:
   - test/gemfiles/Gemfile.rails-2.0.x
   - test/gemfiles/Gemfile.rails-2.1.x
@@ -12,9 +12,9 @@ gemfile:
   - test/gemfiles/Gemfile.rails-3.2.x
 matrix:
   exclude:
-    - { rvm: 1.9.2, gemfile: test/gemfiles/Gemfile.rails-2.0.x }
-    - { rvm: 1.9.2, gemfile: test/gemfiles/Gemfile.rails-2.1.x }
-    - { rvm: 1.9.2, gemfile: test/gemfiles/Gemfile.rails-2.2.x }
+    - { rvm: 1.9.3, gemfile: test/gemfiles/Gemfile.rails-2.0.x }
+    - { rvm: 1.9.3, gemfile: test/gemfiles/Gemfile.rails-2.1.x }
+    - { rvm: 1.9.3, gemfile: test/gemfiles/Gemfile.rails-2.2.x }
 branches:
   only:
     - master
