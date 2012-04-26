@@ -1,59 +1,53 @@
 # Haml
 
-Haml is a templating engine for HTML.
-It's are designed to make it both easier and more pleasant
-to write HTML documents,
-by eliminating redundancy,
-reflecting the underlying structure that the document represents,
-and providing elegant, easily understandable, and powerful syntax.
+Haml is a templating engine for HTML. It's designed to make it both easier and
+more pleasant to write HTML documents, by eliminating redundancy, reflecting the
+underlying structure that the document represents, and providing an elegant syntax
+that's both powerful and easy to understand.
 
-## Using
+## Basic Usage
 
-Haml can be used from the command line
-or as part of a Ruby web framework.
-The first step is to install the gem:
+Haml can be used from the command line or as part of a Ruby web framework. The
+first step is to install the gem:
 
     gem install haml
 
-After you convert some HTML to Haml, you can run
+After you write some Haml, you can run
 
     haml document.haml
 
-to compile them.
-For more information on these commands, check out
+to compile it to HTML. For more information on these commands, check out
 
     haml --help
 
-To install Haml in Rails 2,
-just add `config.gem "haml"` to `config/environment.rb`.
-In Rails 3, add `gem "haml"` to your Gemfile instead.
-and both Haml and Sass will be installed.
-Views with the `.html.haml` extension will automatically use Haml.
+To use Haml programatically, check out the [YARD
+documentation](http://haml-lang.com/docs/yardoc/).
 
-To use Haml programatically,
-check out the [YARD documentation](http://haml-lang.com/docs/yardoc/).
+## Using Haml with Rails
+
+To use Haml with Rails, simply add Haml to your Gemfile and run `bundle`.
+
+If you'd like to replace Rails's Erb-based generators with Haml, add
+[haml-rails](https://github.com/indirect/haml-rails) to your Gemfile as well.
 
 ## Formatting
 
-The most basic element of Haml
-is a shorthand for creating HTML:
+The most basic element of Haml is a shorthand for creating HTML:
 
     %tagname{:attr1 => 'value1', :attr2 => 'value2'} Contents
 
-No end-tag is needed; Haml handles that automatically.
-If you prefer HTML-style attributes, you can also use:
+No end-tag is needed; Haml handles that automatically. If you prefer HTML-style
+attributes, you can also use:
 
     %tagname(attr1='value1' attr2='value2') Contents
 
-Adding `class` and `id` attributes is even easier.
-Haml uses the same syntax as the CSS that styles the document:
+Adding `class` and `id` attributes is even easier. Haml uses the same syntax as
+the CSS that styles the document:
 
     %tagname#id.class
 
-In fact, when you're using the `<div>` tag,
-it becomes _even easier_.
-Because `<div>` is such a common element,
-a tag without a name defaults to a div. So
+In fact, when you're using the `<div>` tag, it becomes _even easier_. Because
+`<div>` is such a common element, a tag without a name defaults to a div. So
 
     #foo Hello!
 
@@ -61,11 +55,9 @@ becomes
 
     <div id='foo'>Hello!</div>
 
-Haml uses indentation
-to bring the individual elements to represent the HTML structure.
-A tag's children are indented beneath than the parent tag.
-Again, a closing tag is automatically added.
-For example:
+Haml uses indentation to bring the individual elements to represent the HTML
+structure. A tag's children are indented beneath than the parent tag. Again, a
+closing tag is automatically added. For example:
 
     %ul
       %li Salt
@@ -84,11 +76,9 @@ You can also put plain text as a child of an element:
       Hello,
       World!
 
-It's also possible to embed Ruby code into Haml documents.
-An equals sign, `=`, will output the result of the code.
-A hyphen, `-`, will run the code but not output the result.
-You can even use control statements
-like `if` and `while`:
+It's also possible to embed Ruby code into Haml documents. An equals sign, `=`,
+will output the result of the code. A hyphen, `-`, will run the code but not
+output the result. You can even use control statements like `if` and `while`:
 
     %p
       Date/Time:
@@ -97,37 +87,53 @@ like `if` and `while`:
       - if now > DateTime.parse("December 31, 2006")
         = "Happy new " + "year!"
 
-Haml provides far more tools than those presented here.
-Check out the [reference documentation](http://beta.haml-lang.com/docs/yardoc/file.HAML_REFERENCE.html)
+Haml provides far more tools than those presented here. Check out the [reference
+documentation](http://beta.haml-lang.com/docs/yardoc/file.HAML_REFERENCE.html)
 for full details.
 
 ### Indentation
 
-Haml's indentation can be made up of one or more tabs or spaces.
-However, indentation must be consistent within a given document.
-Hard tabs and spaces can't be mixed,
-and the same number of tabs or spaces must be used throughout.
+Haml's indentation can be made up of one or more tabs or spaces. However,
+indentation must be consistent within a given document. Hard tabs and spaces
+can't be mixed, and the same number of tabs or spaces must be used throughout.
 
 ## Authors
 
-Haml was created by [Hampton Catlin](http://hamptoncatlin.com)
-(hcatlin) and he is the author of the original implementation. However, Hampton
-doesn't even know his way around the code anymore and now occasionally consults
-on the language issues.  Hampton lives in Jacksonville, Florida and is the lead
-mobile developer for Wikimedia.
+Haml was created by [Hampton Catlin](http://hamptoncatlin.com), the author of
+the original implementation. However, Hampton doesn't even know his way around
+the code anymore and now just occasionally consults on the language issues.
 
-[Nathan Weizenbaum](http://nex-3.com) is the primary developer and architect of
-the "modern" Ruby implementation of Haml. His hard work has kept the project
-alive by endlessly answering forum posts, fixing bugs, refactoring, finding
-speed improvements, writing documentation, implementing new features, and
-getting Hampton coffee (a fitting task for a boy-genius). Nathan lives in
-Seattle, Washington and while not being a student at the University of
-Washington or working at an internship, he consults for Unspace Interactive.
+[Nathan Weizenbaum](http://nex-3.com) was for many years the primary developer
+and architect of the "modern" Ruby implementation of Haml. His hard work kept
+the project alive by endlessly answering forum posts, fixing bugs, refactoring,
+finding speed improvements, writing documentation, and implementing new
+features.
 
-If you use this software, you must pay Hampton a compliment. And
-buy Nathan some jelly beans. Maybe pet a kitten. Yeah. Pet that kitty.
+Most of Nathan's time is now occupied by his full-time job and work on
+[Sass](http://sass-lang.com/). He is currently in the process of handing Haml
+off to a new maintainer.
 
-Some of the work on Haml was supported by Unspace Interactive.
+## License
+
+Some of Nathan's work on Haml was supported by Unspace Interactive.
 
 Beyond that, the implementation is licensed under the MIT License.
-Okay, fine, I guess that means compliments aren't __required__.
+
+Copyright (c) 2006-2009 Hampton Catlin and Nathan Weizenbaum
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
