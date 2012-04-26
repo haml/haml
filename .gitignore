@@ -6,3 +6,4 @@
 /.haml
 /site
 *.rbc
+.rbenv-version
