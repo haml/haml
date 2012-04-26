@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
-require File.dirname(__FILE__) + '/../test_helper'
+require File.dirname(__FILE__) + '/test_helper'
 
 class EngineTest < Test::Unit::TestCase
   # A map of erroneous Haml documents to the error messages they should produce.

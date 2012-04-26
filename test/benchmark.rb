@@ -37,9 +37,8 @@ RBench.run(times) do
   column :erubis, :title => "Erubis"
 
   template_name = 'standard'
-  directory = File.dirname(__FILE__) + '/haml'
-  haml_template    = File.read("#{directory}/templates/#{template_name}.haml")
-  erb_template     = File.read("#{directory}/erb/#{template_name}.erb")
+  haml_template    = File.read("#{File.dirname(__FILE__)}/templates/#{template_name}.haml")
+  erb_template     = File.read("#{File.dirname(__FILE__)}/erb/#{template_name}.erb")
 
   report "Cached" do
     obj = Object.new
