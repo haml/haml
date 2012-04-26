@@ -7,7 +7,7 @@ rescue LoadError
 end
 
 class SpecTest < Test::Unit::TestCase
-  spec_file = File.dirname(__FILE__) + '/haml/spec/tests.json'
+  spec_file = File.dirname(__FILE__) + '/haml-spec/tests.json'
   if !File.exists?(spec_file)
     error = <<MSG.rstrip
 Couldn't load haml-spec, skipping some tests.

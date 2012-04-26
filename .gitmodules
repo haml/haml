@@ -1,5 +1,5 @@
-[submodule "test/haml/spec"]
-	path = test/haml/spec
+[submodule "test/haml-spec"]
+	path = test/haml-spec
 	url = git://github.com/norman/haml-spec.git
 [submodule "vendor/sass"]
 	path = vendor/sass

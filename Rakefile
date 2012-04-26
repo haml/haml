@@ -29,7 +29,7 @@ Rake::TestTask.new do |t|
   test_files = FileList[scope('test/**/*_test.rb')]
   test_files.exclude(scope('test/rails/*'))
   test_files.exclude(scope('test/plugins/*'))
-  test_files.exclude(scope('test/haml/spec/*'))
+  test_files.exclude(scope('test/haml-spec/*'))
   t.test_files = test_files
   t.verbose = true
 end
@@ -63,7 +63,7 @@ task :permissions do
   sh %{chmod -R a+r .}
   require 'shellwords'
   Dir.glob('test/**/*_test.rb') do |file|
-    next if file =~ %r{^test/haml/spec/}
+    next if file =~ %r{^test/haml-spec/}
     sh %{chmod a+rx #{file}}
   end
 end
