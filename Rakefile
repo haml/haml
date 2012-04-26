@@ -183,15 +183,6 @@ begin
   require 'yard'
 
   namespace :doc do
-    task :sass do
-      require 'sass'
-      Dir[scope("yard/default/**/*.sass")].each do |sass|
-        File.open(sass.gsub(/sass$/, 'css'), 'w') do |f|
-          f.write(Sass::Engine.new(File.read(sass)).render)
-        end
-      end
-    end
-
     desc "List all undocumented methods and classes."
     task :undocumented do
       opts = ENV["YARD_OPTS"] || ""
@@ -226,7 +217,6 @@ OPTS
       end
     end
   end
-  Rake::Task['yard'].prerequisites.insert(0, 'doc:sass')
   Rake::Task['yard'].instance_variable_set('@comment', nil)
 
   desc "Generate Documentation"
@@ -346,7 +336,7 @@ namespace :test do
   namespace :bundles do
     desc "Install all dependencies necessary to test Haml."
     task :install do
-      with_each_gemfile {sh "bundle install"}
+      with_each_gemfile {sh "bundle"}
     end
 
     desc "Update all dependencies for testing Haml."
