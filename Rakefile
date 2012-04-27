@@ -6,10 +6,6 @@ task :default => :test
 
 CLEAN << %w(pkg doc coverage .yardoc)
 
-def scope(path)
-  File.join(File.dirname(__FILE__), path)
-end
-
 desc "Benchmark Haml against ERb. TIMES=n sets the number of runs, default is 1000."
 task :benchmark do
   sh "ruby test/benchmark.rb #{ENV['TIMES']}"
@@ -91,7 +87,7 @@ task :profile do
   require 'ruby-prof'
   require 'haml'
 
-  file = File.read(scope("test/templates/#{file || 'standard'}.haml"))
+  file = File.read(File.expand_path("../test/templates/#{file || 'standard'}.haml", __FILE__))
   obj = Object.new
   Haml::Engine.new(file, :ugly => true).def_method(obj, :render)
   result = RubyProf.profile { times.times { obj.render } }
