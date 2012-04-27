@@ -104,14 +104,13 @@ the original implementation. However, Hampton doesn't even know his way around
 the code anymore and now just occasionally consults on the language issues.
 
 [Nathan Weizenbaum](http://nex-3.com) was for many years the primary developer
-and architect of the "modern" Ruby implementation of Haml. His hard work kept
-the project alive by endlessly answering forum posts, fixing bugs, refactoring,
-finding speed improvements, writing documentation, and implementing new
-features.
+and architect of the "modern" Ruby implementation of Haml. His hard work
+endlessly answering forum posts, fixing bugs, refactoring, finding speed
+improvements, writing documentation, and implementing new features is what has
+kept the project alive.
 
-Most of Nathan's time is now occupied by his full-time job and work on
-[Sass](http://sass-lang.com/). He is currently in the process of handing Haml
-off to a new maintainer.
+[Norman Clarke](http://github.com/norman), the author of Haml Spec and the Haml
+implementation in Lua, took over as maintainer in April 2012.
 
 ## License
 
