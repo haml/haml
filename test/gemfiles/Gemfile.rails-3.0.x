@@ -1,4 +1,4 @@
-source :gemcutter
+source :rubygems
 
 gem 'json'
 gem 'ruby_parser'
