@@ -1,11 +1,26 @@
 require 'rubygems'
+require 'bundler/setup'
+require 'action_pack'
+require 'action_controller'
+require 'action_view'
 
-lib_dir = File.dirname(__FILE__) + '/../lib'
-require File.dirname(__FILE__) + '/linked_rails'
+begin
+  require 'rails'
+  class TestApp < Rails::Application
+    config.root = ""
+  end
+  Rails.application = TestApp
+
+# For Rails 2.x
+rescue LoadError
+  require 'initializer'
+  RAILS_ROOT = ""
+end
+
+ActionController::Base.logger = Logger.new(nil)
 
 require 'test/unit'
 require 'fileutils'
-$:.unshift lib_dir unless $:.include?(lib_dir)
 require 'haml'
 
 require 'haml/template'
