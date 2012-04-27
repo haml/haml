@@ -1,3 +1,5 @@
+require 'rubygems'
+
 lib_dir = File.dirname(__FILE__) + '/../lib'
 require File.dirname(__FILE__) + '/linked_rails'
 
