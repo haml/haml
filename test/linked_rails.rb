@@ -2,23 +2,17 @@ require 'action_pack'
 require 'action_controller'
 require 'action_view'
 
-if ActionPack::VERSION::MAJOR >= 3
-  # Necessary for Rails 3
+begin
   require 'rails'
-else
-  # Necessary for Rails 2.3.*
-  require 'initializer'
-end
-
-if defined?(Rails::Application) # Rails 3
   class TestApp < Rails::Application
-    config.root = File.join(File.dirname(__FILE__), "../..")
+    config.root = ""
   end
   Rails.application = TestApp
-elsif defined?(RAILS_ROOT)
-  RAILS_ROOT.replace(File.join(File.dirname(__FILE__), "../.."))
-else
-  RAILS_ROOT = File.join(File.dirname(__FILE__), "../..")
+
+# For Rails 2.x
+rescue LoadError
+  require 'initializer'
+  RAILS_ROOT = ""
 end
 
 ActionController::Base.logger = Logger.new(nil)
