@@ -1,3 +1,8 @@
+require "rubygems"
+require "bundler/setup"
+require "haml"
+require "rbench"
+
 times = (ARGV.first || 1000).to_i
 
 if times == 0 # Invalid parameter
@@ -8,8 +13,6 @@ END
   exit 1
 end
 
-require File.dirname(__FILE__) + '/../lib/haml'
-require File.dirname(__FILE__) + '/linked_rails'
 %w[rubygems erb erubis active_support action_controller
    action_view action_pack haml/template rbench].each {|dep| require(dep)}
 
@@ -53,36 +56,31 @@ RBench.run(times) do
   end
 
   report "ActionView" do
-    @base = view
 
-    @base.unmemoize_all
     Haml::Template.options[:ugly] = false
     # To cache the template
-    render @base, 'haml/templates/standard'
-    render @base, 'haml/erb/standard'
+    render view, 'templates/standard'
+    render view, 'erb/standard'
 
-    haml { render @base, 'haml/templates/standard' }
-    erb  { render @base, 'haml/erb/standard' }
+    haml { render view, 'templates/standard' }
+    erb  { render view, 'erb/standard' }
 
     Haml::Template.options[:ugly] = true
-    render @base, 'haml/templates/standard_ugly'
-    haml_ugly { render @base, 'haml/templates/standard_ugly' }
+    render view, 'templates/standard_ugly'
+    haml_ugly { render view, 'templates/standard_ugly' }
   end
 
   report "ActionView with deep partials" do
-    @base = view
-
-    @base.unmemoize_all
     Haml::Template.options[:ugly] = false
     # To cache the template
-    render @base, 'haml/templates/action_view'
-    render @base, 'haml/erb/action_view'
+    render view, 'templates/action_view'
+    render view, 'erb/action_view'
 
-    haml { render @base, 'haml/templates/action_view' }
-    erb  { render @base, 'haml/erb/action_view' }
+    haml { render view, 'templates/action_view' }
+    erb  { render view, 'erb/action_view' }
 
     Haml::Template.options[:ugly] = true
-    render @base, 'haml/templates/action_view_ugly'
-    haml_ugly { render @base, 'haml/templates/action_view_ugly' }
+    render view, 'templates/action_view_ugly'
+    haml_ugly { render view, 'templates/action_view_ugly' }
   end
 end
