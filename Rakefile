@@ -51,27 +51,6 @@ begin
 rescue LoadError
 end
 
-task :pages do
-  puts "#{'=' * 50} Running rake pages"
-  ensure_git_cleanup do
-    sh %{git checkout haml-pages}
-    sh %{git reset --hard origin/haml-pages}
-
-    Dir.chdir("/var/www/haml-pages") do
-      sh %{git fetch origin}
-
-      sh %{git checkout stable}
-      sh %{git reset --hard origin/stable}
-
-      sh %{git checkout haml-pages}
-      sh %{git reset --hard origin/haml-pages}
-      sh %{rake build --trace}
-      sh %{mkdir -p tmp}
-      sh %{touch tmp/restart.txt}
-    end
-  end
-end
-
   desc <<END
 Profile Haml.
   TIMES=n sets the number of runs. Defaults to 1000.
