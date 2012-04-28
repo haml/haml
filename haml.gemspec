@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
                          'extra/**/*', 'Rakefile', 'init.rb', '.yardopts'] + readmes
   spec.homepage    = 'http://haml-lang.com/'
   spec.has_rdoc    = false
-  spec.test_files  = Dir["test/**/*_test.rb"].reject {|x| x =~ /haml-spec/}
+  spec.test_files  = Dir["test/**/*_test.rb"]
 
   spec.add_development_dependency 'yard', '>= 0.5.3'
   spec.add_development_dependency 'maruku', '>= 0.5.9'
