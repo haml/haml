@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 require File.dirname(__FILE__) + '/test_helper'
 
 class ActionView::Base
@@ -436,7 +435,7 @@ MESSAGE
     render("- something_that_uses_haml_concat")
     assert false, "Expected Haml::Error"
   rescue Haml::Error => e
-    assert_equal 16, e.backtrace[0].scan(/:(\d+)/).first.first.to_i
+    assert_equal 15, e.backtrace[0].scan(/:(\d+)/).first.first.to_i
   end
 
   class ActsLikeTag

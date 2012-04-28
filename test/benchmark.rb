@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 times = (ARGV.first || 1000).to_i
 
 if times == 0 # Invalid parameter
