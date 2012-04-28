@@ -14,6 +14,14 @@ HAML_GEMSPEC = Gem::Specification.new do |spec|
       envisioned as a plugin for Ruby on Rails, but it can function as a
       stand-alone templating engine.
     END
+  spec.post_install_message =<<-PIM
+    ********************************************************************************
+
+      haml requires the "hpricot" gem in order to convert your HTML to HAML.
+      You can install it by running "gem install hpricot" now.
+
+    ********************************************************************************
+  PIM
 
   spec.add_development_dependency 'yard', '>= 0.5.3'
   spec.add_development_dependency 'maruku', '>= 0.5.9'
