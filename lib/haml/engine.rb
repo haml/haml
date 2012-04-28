@@ -87,7 +87,7 @@ module Haml
         :format => :xhtml,
         :escape_html => false,
         :escape_attrs => true,
-        :hyphenate_data_attrs => false,
+        :underscore_data_attrs => false,
       }
 
 
@@ -299,7 +299,7 @@ module Haml
         :encoding => @options[:encoding],
         :escape_html => @options[:escape_html],
         :escape_attrs => @options[:escape_attrs],
-        :hyphenate_data_attrs => @options[:hyphenate_data_attrs],
+        :underscore_data_attrs => @options[:underscore_data_attrs],
       }
     end
 

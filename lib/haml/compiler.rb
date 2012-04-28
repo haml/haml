@@ -345,13 +345,13 @@ END
     end
 
     # This is a class method so it can be accessed from Buffer.
-    def self.build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
+    def self.build_attributes(is_html, attr_wrapper, escape_attrs, underscore_data_attrs, attributes = {})
       quote_escape = attr_wrapper == '"' ? "&quot;" : "&apos;"
       other_quote_char = attr_wrapper == '"' ? "'" : '"'
 
       if attributes['data'].is_a?(Hash)
         data_attributes = attributes.delete('data')
-        data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs)
+        data_attributes = build_data_keys(data_attributes, underscore_data_attrs)
         attributes = data_attributes.merge(attributes)
       end
 
@@ -403,12 +403,12 @@ END
       return !value.empty? && value
     end
 
-    def self.build_data_keys(data_hash, hyphenate)
-      Haml::Util.map_keys(data_hash) do |name| 
+    def self.build_data_keys(data_hash, underscore)
+      Haml::Util.map_keys(data_hash) do |name|
         if name == nil
           "data"
-        elsif hyphenate
-          "data-#{name.to_s.gsub(/_/, '-')}"
+        elsif underscore
+          "data-#{name.to_s.gsub(/-/, '_')}"
         else
           "data-#{name}"
         end
@@ -417,7 +417,7 @@ END
 
     def prerender_tag(name, self_close, attributes)
       attributes_string = Compiler.build_attributes(
-        html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:hyphenate_data_attrs], attributes)
+        html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:underscore_data_attrs], attributes)
       "<#{name}#{attributes_string}#{self_close && xhtml? ? ' /' : ''}>"
     end
 

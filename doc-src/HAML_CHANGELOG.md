@@ -9,8 +9,10 @@
 * Add RedCarpet support to Markdown filter.
 * Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
 * Generate object references based on `#to_key` if it exists in preference to `#id`.
-* Add an {file:HAML_REFERENCE.md#hyphenate_data_attrs-option `:hyphenate_data_attrs` option}
-  that converts underscores to hyphens in your HTML5 data keys (thanks to [Andrew Smith](https://github.com/fullsailor))
+* Underscores in HTML 5 `data` attributes are replaced with hyphens by default. A new
+  {file:HAML_REFERENCE.md#underscore_data_attrs-option `:underscore_data_attrs` option}
+  preserves pre-3.2 behavior where underscores are left in place (thanks to [Andrew Smith](https://github.com/fullsailor)
+  and [Cody Robbins](https://github.com/codyrobbins))
 
 ## 3.1.5 (Unreleased)
 
@@ -416,7 +418,7 @@ won't do any indentation of their arguments.
 * All attribute values may be non-String types.
   Their `#to_s` method will be called to convert them to strings.
   Previously, this only worked for attributes other than `class`.
-  
+
 ### `:class` and `:id` Attributes Accept Ruby Arrays
 
 In an attribute hash, the `:class` attribute now accepts an Array
@@ -909,7 +911,7 @@ There are several components to this:
 
 * Fixed CSS id concatenation when a numeric id is given as an attribute.
   (thanks to [Norman Clarke](http://blog.njclarke.com/)).
-  
+
 * Fixed a couple bugs with using "-end" in strings.
 
 ## 2.2.4

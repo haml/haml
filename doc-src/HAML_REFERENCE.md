@@ -171,9 +171,10 @@ Available options are:
   of this type within the attributes will be escaped
   (e.g. by replacing them with `&apos;`) if
   the character is an apostrophe or a quotation mark.
-{#hyphenate_data_attrs} `:hyphenate_data_attrs`
-: If set to `true`, Haml will convert underscores to hyphens in all
-  [Custom Data Attributes](#html5_custom_data_attributes)
+{#underscore_data_attrs} `:underscore_data_attrs`
+: If set to `true`, Haml will leave underscores in all
+  [Custom Data Attributes](#html5_custom_data_attributes) in place
+  instead of replacing them with hyphens.
   This defaults to `false`.
 
 {#filename-option} `:filename`

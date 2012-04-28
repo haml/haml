@@ -157,7 +157,7 @@ module Haml
         return result
       <% else %>
 
-        has_newline = result.include?("\\n") 
+        has_newline = result.include?("\\n")
         <% if in_tag && !nuke_inner_whitespace %>
           <% unless preserve_tag %> if !has_newline <% end %>
           @real_tabs -= 1
@@ -194,7 +194,7 @@ RUBY
       end
       self.class.merge_attrs(attributes, parse_object_ref(obj_ref)) if obj_ref
       Compiler.build_attributes(
-        html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:hyphenate_data_attrs], attributes)
+        html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:underscore_data_attrs], attributes)
     end
 
     # Remove the whitespace from the right side of the buffer string.
