@@ -8,3 +8,4 @@
 *.rbc
 .rbenv-version
 Gemfile.lock
+.rvmrc
