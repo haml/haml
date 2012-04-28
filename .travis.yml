@@ -21,6 +21,7 @@ matrix:
     # Don't kill Travis: just test against the latest version on JRuby and rbx.
     - { rvm: jruby-19mode, gemfile: test/gemfiles/Gemfile.rails-2.0.x }
     - { rvm: jruby-19mode, gemfile: test/gemfiles/Gemfile.rails-2.1.x }
+    - { rvm: jruby-19mode, gemfile: test/gemfiles/Gemfile.rails-2.2.x }
     - { rvm: jruby-19mode, gemfile: test/gemfiles/Gemfile.rails-2.3.x }
     - { rvm: jruby-19mode, gemfile: test/gemfiles/Gemfile.rails-xss-2.3.x }
     - { rvm: jruby-19mode, gemfile: test/gemfiles/Gemfile.rails-3.0.x }
@@ -28,6 +29,7 @@ matrix:
 
     - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-2.0.x }
     - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-2.1.x }
+    - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-2.2.x }
     - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-2.3.x }
     - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-xss-2.3.x }
     - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-3.0.x }
