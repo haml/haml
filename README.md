@@ -97,6 +97,28 @@ Haml's indentation can be made up of one or more tabs or spaces. However,
 indentation must be consistent within a given document. Hard tabs and spaces
 can't be mixed, and the same number of tabs or spaces must be used throughout.
 
+## Contributing
+
+Contributions are welcomed, but before you get started please read the
+[guidelines](http://haml-lang.com/development.html#contributing).
+
+After forking and then cloning the repo locally, install Bundler and then use it
+to install the development gem dependecies:
+
+    gem install bundler
+    bundle install
+
+Once this is complete, you should be able to run the test suite:
+
+    rake
+
+You'll get a warning that you need to install haml-spec, so run this:
+
+    git submodule update --init
+
+At this point `rake` should run without error or warning and you are ready to
+start working on your patch!
+
 ## Authors
 
 Haml was created by [Hampton Catlin](http://hamptoncatlin.com), the author of
