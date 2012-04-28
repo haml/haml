@@ -97,6 +97,11 @@ Haml's indentation can be made up of one or more tabs or spaces. However,
 indentation must be consistent within a given document. Hard tabs and spaces
 can't be mixed, and the same number of tabs or spaces must be used throughout.
 
+## Contributing
+
+Contributions are welcomed, but before you get started please read the
+[guidelines](http://haml-lang.com/development.html#contributing).
+
 ## Authors
 
 Haml was created by [Hampton Catlin](http://hamptoncatlin.com), the author of
