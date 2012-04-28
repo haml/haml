@@ -9,10 +9,10 @@
 * Add RedCarpet support to Markdown filter.
 * Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
 * Generate object references based on `#to_key` if it exists in preference to `#id`.
-* Underscores in HTML 5 `data` attributes are replaced with hyphens by default. A new
+* Underscores in HTML 5 `data` attribute values are replaced with hyphens by default. A new
   {file:HAML_REFERENCE.md#underscore_data_attrs-option `:underscore_data_attrs` option}
   preserves pre-3.2 behavior where underscores are left in place (thanks to [Andrew Smith](https://github.com/fullsailor)
-  and [Cody Robbins](https://github.com/codyrobbins))
+  and [Cody Robbins](https://github.com/codyrobbins)).
 
 ## 3.1.5 (Unreleased)
 
