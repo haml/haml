@@ -454,7 +454,8 @@ END
     end
 
     def compile(node)
-      parent, @node = @node, node
+      parent = instance_variable_defined?('@node') ? @node : nil
+      @node = node
       if node.children.empty?
         send(:"compile_#{node.type}")
       else

@@ -152,7 +152,7 @@ RUBY
       private
 
       def resolve_lazy_requires
-        return unless @lazy_requires
+        return unless instance_variable_defined?('@lazy_requires')
 
         @lazy_requires[0...-1].each do |req|
           begin
