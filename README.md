@@ -88,7 +88,7 @@ output the result. You can even use control statements like `if` and `while`:
         = "Happy new " + "year!"
 
 Haml provides far more tools than those presented here. Check out the [reference
-documentation](http://beta.haml-lang.com/docs/yardoc/file.HAML_REFERENCE.html)
+documentation](http://beta.haml-lang.com/docs/yardoc/file.REFERENCE.html)
 for full details.
 
 ### Indentation

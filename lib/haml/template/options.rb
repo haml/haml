@@ -8,7 +8,7 @@ module Haml
 
     @options = {}
     # The options hash for Haml when used within Rails.
-    # See {file:HAML_REFERENCE.md#haml_options the Haml options documentation}.
+    # See {file:REFERENCE.md#haml_options the Haml options documentation}.
     #
     # @return [{Symbol => Object}]
     attr_accessor :options

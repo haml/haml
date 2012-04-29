@@ -11,7 +11,7 @@ require 'haml/version'
 # * {Haml::Error} is raised when Haml encounters an error.
 # * {Haml::HTML} handles conversion of HTML to Haml.
 #
-# Also see the {file:HAML_REFERENCE.md full Haml reference}.
+# Also see the {file:REFERENCE.md full Haml reference}.
 module Haml
   # Initializes Haml for Rails.
   #

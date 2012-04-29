@@ -9,23 +9,30 @@
 
 * Add RedCarpet support to Markdown filter.
 
-* Performance improvements (thanks to [Chris Heald](https://github.com/cheald)).
+* Generate object references based on `#to_key` if it exists in preference to
+  `#id`.
 
-* Generate object references based on `#to_key` if it exists in preference to `#id`.
-* Add an {file:HAML_REFERENCE.md#hyphenate_data_attrs-option `:hyphenate_data_attrs` option}
-  that converts underscores to hyphens in your HTML5 data keys (thanks to [Andrew Smith](https://github.com/fullsailor))
+* Performance improvements.
+  (thanks to [Chris Heald](https://github.com/cheald))
+
+* Add an {file:REFERENCE.md#hyphenate_data_attrs-option `:hyphenate_data_attrs`
+  option} that converts underscores to hyphens in your HTML5 data keys. This is
+  a language change from 3.1 and is enabled by default.
+  (thanks to [Andrew Smith](https://github.com/fullsailor))
 
 * Add SCSS filter.
   (thanks to [Matt Wildig](https://github.com/mattwildig))
 
-* Helper `list_of` takes an extra argument that is rendered into list item attributes
+* Helper `list_of` takes an extra argument that is rendered into list item
+  attributes.
   (thanks  [Iain Barnett](http://iainbarnett.me.uk/))
 
-* Fix parser to allow lines ending with `some_method?` to be a Ruby multinline
+* Fix parser to allow lines ending with `some_method?` to be a Ruby multinline.
   (thanks to [Brad Ediger](https://github.com/bradediger))
 
-* Always use :xhtml format when the mime_type of the rendered template is 'text/xml'.
-  (thanks to [Stephen Bannasch](https://github.com/stepheneb)).
+* Always use :xhtml format when the mime_type of the rendered template is
+  'text/xml'.
+  (thanks to [Stephen Bannasch](https://github.com/stepheneb))
 
 
 ## 3.1.5 (Unreleased)

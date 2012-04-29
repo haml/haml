@@ -20,7 +20,7 @@ module Haml
     include Compiler
 
     # The options hash.
-    # See {file:HAML_REFERENCE.md#haml_options the Haml options documentation}.
+    # See {file:REFERENCE.md#haml_options the Haml options documentation}.
     #
     # @return [{Symbol => Object}]
     attr_accessor :options
@@ -55,7 +55,7 @@ module Haml
     # The source code that is evaluated to produce the Haml document.
     #
     # In Ruby 1.9, this is automatically converted to the correct encoding
-    # (see {file:HAML_REFERENCE.md#encoding-option the `:encoding` option}).
+    # (see {file:REFERENCE.md#encoding-option the `:encoding` option}).
     #
     # @return [String]
     def precompiled
@@ -69,13 +69,13 @@ module Haml
     #
     # @param template [String] The Haml template
     # @param options [{Symbol => Object}] An options hash;
-    #   see {file:HAML_REFERENCE.md#haml_options the Haml options documentation}
+    #   see {file:REFERENCE.md#haml_options the Haml options documentation}
     # @raise [Haml::Error] if there's a Haml syntax error in the template
     def initialize(template, options = {})
       @options = {
         :suppress_eval        => false,
         :attr_wrapper         => "'",
-        # Don't forget to update the docs in doc-src/HAML_REFERENCE.md
+        # Don't forget to update the docs in doc-src/REFERENCE.md
         # if you update these
         :autoclose            => %w[meta img link br hr input area param col base],
         :preserve             => %w[textarea pre code],
@@ -288,7 +288,7 @@ module Haml
     # All of the values here are such that when `#inspect` is called on the hash,
     # it can be `Kernel#eval`ed to get the same result back.
     #
-    # See {file:HAML_REFERENCE.md#haml_options the Haml options documentation}.
+    # See {file:REFERENCE.md#haml_options the Haml options documentation}.
     #
     # @return [{Symbol => Object}] The options hash
     def options_for_buffer
