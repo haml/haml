@@ -34,6 +34,8 @@
   'text/xml'.
   (thanks to [Stephen Bannasch](https://github.com/stepheneb))
 
+* html2haml now includes an `--html-attributes` option.
+  (thanks [Stefan Natchev](https://github.com/snatchev))
 
 ## 3.1.5 (Unreleased)
 
