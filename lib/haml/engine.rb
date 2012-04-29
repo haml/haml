@@ -73,21 +73,19 @@ module Haml
     # @raise [Haml::Error] if there's a Haml syntax error in the template
     def initialize(template, options = {})
       @options = {
-        :suppress_eval => false,
-        :attr_wrapper => "'",
-
+        :suppress_eval        => false,
+        :attr_wrapper         => "'",
         # Don't forget to update the docs in doc-src/HAML_REFERENCE.md
         # if you update these
-        :autoclose => %w[meta img link br hr input area param col base],
-        :preserve => %w[textarea pre code],
-
-        :filename => '(haml)',
-        :line => 1,
-        :ugly => false,
-        :format => :xhtml,
-        :escape_html => false,
-        :escape_attrs => true,
-        :hyphenate_data_attrs => false,
+        :autoclose            => %w[meta img link br hr input area param col base],
+        :preserve             => %w[textarea pre code],
+        :filename             => '(haml)',
+        :line                 => 1,
+        :ugly                 => false,
+        :format               => :xhtml,
+        :escape_html          => false,
+        :escape_attrs         => true,
+        :hyphenate_data_attrs => true,
       }
 
 
@@ -295,14 +293,14 @@ module Haml
     # @return [{Symbol => Object}] The options hash
     def options_for_buffer
       {
-        :autoclose => @options[:autoclose],
-        :preserve => @options[:preserve],
-        :attr_wrapper => @options[:attr_wrapper],
-        :ugly => @options[:ugly],
-        :format => @options[:format],
-        :encoding => @options[:encoding],
-        :escape_html => @options[:escape_html],
-        :escape_attrs => @options[:escape_attrs],
+        :autoclose            => @options[:autoclose],
+        :preserve             => @options[:preserve],
+        :attr_wrapper         => @options[:attr_wrapper],
+        :ugly                 => @options[:ugly],
+        :format               => @options[:format],
+        :encoding             => @options[:encoding],
+        :escape_html          => @options[:escape_html],
+        :escape_attrs         => @options[:escape_attrs],
         :hyphenate_data_attrs => @options[:hyphenate_data_attrs],
       }
     end

@@ -1483,22 +1483,25 @@ HAML
   end
 
   # HTML5 custom data attributes
-  def test_html5_data_attributes
+  def test_html5_data_attributes_without_hyphenation
     assert_equal("<div data-author_id='123' data-biz='baz' data-foo='bar'></div>\n",
-      render("%div{:data => {:author_id => 123, :foo => 'bar', :biz => 'baz'}}"))
+      render("%div{:data => {:author_id => 123, :foo => 'bar', :biz => 'baz'}}",
+        :hyphenate_data_attrs => false))
 
     assert_equal("<div data-one_plus_one='2'></div>\n",
-      render("%div{:data => {:one_plus_one => 1+1}}"))
+      render("%div{:data => {:one_plus_one => 1+1}}",
+        :hyphenate_data_attrs => false))
 
     assert_equal("<div data-foo='Here&apos;s a \"quoteful\" string.'></div>\n",
-      render(%{%div{:data => {:foo => %{Here's a "quoteful" string.}}}})) #'
+      render(%{%div{:data => {:foo => %{Here's a "quoteful" string.}}}},
+        :hyphenate_data_attrs => false)) #'
   end
 
   def test_html5_data_attributes_with_hyphens
     assert_equal("<div data-foo-bar='blip'></div>\n",
-      render("%div{:data => {:foo_bar => 'blip'}}", :hyphenate_data_attrs => true))
+      render("%div{:data => {:foo_bar => 'blip'}}"))
     assert_equal("<div data-baz='bang' data-foo-bar='blip'></div>\n",
-      render("%div{:data => {:foo_bar => 'blip', :baz => 'bang'}}", :hyphenate_data_attrs => true))
+      render("%div{:data => {:foo_bar => 'blip', :baz => 'bang'}}"))
   end
 
   def test_html5_data_attributes_with_multiple_defs
