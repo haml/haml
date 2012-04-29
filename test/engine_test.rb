@@ -105,7 +105,7 @@ MESSAGE
     locals = options.delete(:locals) || {}
     engine(text, options).to_html(scope, locals, &block)
   end
-  
+
   def engine(text, options = {})
     unless options[:filename]
       # use caller method name as fake filename. useful for debugging
@@ -963,7 +963,7 @@ HAML
   def test_bang_equals_inline_should_not_escape
     assert_equal("<p>foo & bar</p>\n", render("%p!= 'foo & bar'", :escape_html => true))
   end
-  
+
   def test_static_attributes_should_be_escaped
     assert_equal("<img class='atlantis' style='ugly&amp;stupid' />\n",
                  render("%img.atlantis{:style => 'ugly&stupid'}"))
@@ -1146,7 +1146,7 @@ HAML
     assert_equal("<p class='foo'>deep {nested { things }}</p>\n", render("%p{:class => 'foo'} deep {nested { things }}"))
     assert_equal("<p class='bar foo'>{a { d</p>\n", render("%p{{:class => 'foo'}, :class => 'bar'} {a { d"))
     assert_equal("<p foo='bar'>a}</p>\n", render("%p{:foo => 'bar'} a}"))
-    
+
     foo = []
     foo[0] = Struct.new('Foo', :id).new
     assert_equal("<p class='struct_foo' id='struct_foo_new'>New User]</p>\n",
@@ -1160,12 +1160,12 @@ HAML
     assert_equal("<p class='prefix_struct_foo' id='prefix_struct_foo_1'>New User]</p>\n",
                  render("%p[foo[0], :prefix] New User]", :locals => {:foo => foo}))
   end
-  
+
   def test_empty_attrs
     assert_equal("<p attr=''>empty</p>\n", render("%p{ :attr => '' } empty"))
     assert_equal("<p attr=''>empty</p>\n", render("%p{ :attr => x } empty", :locals => {:x => ''}))
   end
-  
+
   def test_nil_attrs
     assert_equal("<p>nil</p>\n", render("%p{ :attr => nil } nil"))
     assert_equal("<p>nil</p>\n", render("%p{ :attr => x } nil", :locals => {:x => nil}))
@@ -1271,13 +1271,8 @@ HAML
   end
 
   def test_empty_filter
-    assert_equal(<<END, render(':javascript'))
-<script type='text/javascript'>
-  //<![CDATA[
-    
-  //]]>
-</script>
-END
+    expectation = "<script type='text/javascript'>\n  //<![CDATA[\n    \n  //]]>\n</script>\n"
+    assert_equal(expectation, render(':javascript'))
   end
 
   def test_ugly_filter
@@ -1324,7 +1319,7 @@ HAML
     assert_equal("<p class='my_thing' id='my_thing_42' style='width: 100px;'>My Thing</p>\n",
                  render("%p[custom]{:style => 'width: 100px;'} My Thing", :locals => {:custom => custom}))
   end
-  
+
   def test_object_ref_with_multiple_ids
     cpk_record = CpkRecord.new([42,6,9])
     assert_equal("<p class='struct_cpk_record' id='struct_cpk_record_42_6_9' style='width: 100px;'>CPK Record</p>\n",
