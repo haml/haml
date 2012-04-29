@@ -174,7 +174,8 @@ module Haml
     # @param block [#to_proc] A block that can be yielded to within the template
     # @return [String] The rendered template
     def render(scope = Object.new, locals = {}, &block)
-      buffer = Haml::Buffer.new(scope.instance_variable_get('@haml_buffer'), options_for_buffer)
+      parent = scope.instance_variable_defined?('@haml_buffer') ? scope.instance_variable_get('@haml_buffer') : nil
+      buffer = Haml::Buffer.new(parent, options_for_buffer)
 
       if scope.is_a?(Binding) || scope.is_a?(Proc)
         scope_object = eval("self", scope)

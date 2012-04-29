@@ -613,9 +613,10 @@ END
       # `flat?' here is a little outdated,
       # so we have to manually check if either the previous or current line
       # closes the flat block, as well as whether a new block is opened.
-      @line.tabs if @line
+      line_defined = instance_variable_defined?('@line')
+      @line.tabs if line_defined
       unless (flat? && !closes_flat?(line) && !closes_flat?(@line)) ||
-          (@line && @line.text[0] == ?: && line.full =~ %r[^#{@line.full[/^\s+/]}\s])
+          (line_defined && @line.text[0] == ?: && line.full =~ %r[^#{@line.full[/^\s+/]}\s])
         return next_line if line.text.empty?
 
         handle_multiline(line)
