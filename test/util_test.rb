@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/test_helper'
 require 'pathname'
 
-class UtilTest < Test::Unit::TestCase
+class UtilTest < MiniTest::Unit::TestCase
   include Haml::Util
 
   class Dumpable

@@ -16,7 +16,7 @@ module Haml::Helpers
   end
 end
 
-class HelperTest < Test::Unit::TestCase
+class HelperTest < MiniTest::Unit::TestCase
   Post = Struct.new('Post', :body, :error_field, :errors)
   class PostErrors
     def on(name)
@@ -289,19 +289,19 @@ HAML
   end
 
   def test_haml_tag_raises_error_for_multiple_content
-    assert_raise(Haml::Error) { render("- haml_tag :p, 'foo' do\n  bar") }
+    assert_raises(Haml::Error) { render("- haml_tag :p, 'foo' do\n  bar") }
   end
 
   def test_haml_tag_flags
     assert_equal("<p />\n", render("- haml_tag :p, :/"))
     assert_equal("<p>kumquat</p>\n", render("- haml_tag :p, :< do\n  kumquat"))
 
-    assert_raise(Haml::Error) { render("- haml_tag :p, 'foo', :/") }
-    assert_raise(Haml::Error) { render("- haml_tag :p, :/ do\n  foo") }
+    assert_raises(Haml::Error) { render("- haml_tag :p, 'foo', :/") }
+    assert_raises(Haml::Error) { render("- haml_tag :p, :/ do\n  foo") }
   end
 
   def test_haml_tag_error_return
-    assert_raise(Haml::Error) { render("= haml_tag :p") }
+    assert_raises(Haml::Error) { render("= haml_tag :p") }
   end
 
   def test_haml_tag_with_multiline_string
@@ -417,7 +417,7 @@ HAML
   end
 
   def test_error_return
-    assert_raise(Haml::Error, <<MESSAGE) {render("= haml_concat 'foo'")}
+    assert_raises(Haml::Error, <<MESSAGE) {render("= haml_concat 'foo'")}
 haml_concat outputs directly to the Haml template.
 Disregard its return value and use the - operator,
 or use capture_haml to get the value as a String.

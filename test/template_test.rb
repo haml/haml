@@ -39,7 +39,7 @@ class DummyController
   end
 end
 
-class TemplateTest < Test::Unit::TestCase
+class TemplateTest < MiniTest::Unit::TestCase
   TEMPLATE_PATH = File.join(File.dirname(__FILE__), "templates")
   TEMPLATES = %w{         very_basic        standard    helpers
     whitespace_handling   original_engine   list        helpful
@@ -194,7 +194,7 @@ class TemplateTest < Test::Unit::TestCase
 
   unless Haml::Util.ap_geq_3?
     def test_form_for_error_return
-      assert_raise(Haml::Error) { render(<<HAML) }
+      assert_raises(Haml::Error) { render(<<HAML) }
 = form_for :article, @article, :url => '' do |f|
   Title:
   = f.text_field :title
@@ -204,7 +204,7 @@ HAML
     end
 
     def test_form_tag_error_return
-      assert_raise(Haml::Error) { render(<<HAML) }
+      assert_raises(Haml::Error) { render(<<HAML) }
 = form_tag '' do
   Title:
   Body:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 require File.dirname(__FILE__) + '/test_helper'
 
-class EngineTest < Test::Unit::TestCase
+class EngineTest < MiniTest::Unit::TestCase
   # A map of erroneous Haml documents to the error messages they should produce.
   # The error messages may be arrays;
   # if so, the second element should be the line number that should be reported for the error.
@@ -1434,7 +1434,7 @@ HAML
   end
 
   def test_arbitrary_output_option
-    assert_raise_message(Haml::Error, "Invalid output format :html1") do
+    assert_raises_message(Haml::Error, "Invalid output format :html1") do
       engine("%br", :format => :html1)
     end
   end
@@ -1484,7 +1484,7 @@ HAML
 
   # because anything before the doctype triggers quirks mode in IE
   def test_xml_prolog_and_doctype_dont_result_in_a_leading_whitespace_in_html
-    assert_no_match(/^\s+/, render("!!! xml\n!!!", :format => :html4))
+    refute_match(/^\s+/, render("!!! xml\n!!!", :format => :html4))
   end
 
   # HTML5
