@@ -1,8 +1,5 @@
 # Frequently Asked Questions
 
-* Table of contents
-{:toc}
-
 ## Haml
 
 ### Why is my markup indented properly in development mode, but not in production?
