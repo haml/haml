@@ -63,9 +63,9 @@ MESSAGE
     "%p{:foo => 'bar' :bar => 'baz'}" => :compile,
     "%p{:foo => }" => :compile,
     "%p{=> 'bar'}" => :compile,
-    "%p{:foo => 'bar}" => :compile,
     "%p{'foo => 'bar'}" => :compile,
-    "%p{:foo => 'bar\"}" => :compile,
+    "%p{:foo => 'bar}" => :unterminated_string,
+    "%p{:foo => 'bar\"}" => :unterminated_string,
 
     # Regression tests
     "- raise 'foo'\n\n\n\nbar" => ["foo", 1],
@@ -1217,8 +1217,14 @@ HAML
         line_no ||= key.split("\n").length
 
         if expected_message == :compile
-          if Haml::Util.ruby1_8?
+          if RUBY_VERSION < "1.9" && !jruby?
             assert_match(/^compile error\n/, err.message, "Line: #{key}")
+          else
+            assert_match(/^#{Regexp.quote __FILE__}:#{line_no}: syntax error,/, err.message, "Line: #{key}")
+          end
+        elsif expected_message == :unterminated_string
+          if jruby?
+            assert_match(/^#{Regexp.quote __FILE__}:#{line_no}: unterminated string meets end of file/, err.message, "Line: #{key}")
           else
             assert_match(/^#{Regexp.quote __FILE__}:#{line_no}: syntax error,/, err.message, "Line: #{key}")
           end
@@ -1226,17 +1232,20 @@ HAML
           assert_equal(expected_message, err.message, "Line: #{key}")
         end
 
-        if Haml::Util.ruby1_8?
-          # Sometimes, the first backtrace entry is *only* in the message.
-          # No idea why.
-          bt =
-            if expected_message == :compile && err.message.include?("\n")
-              err.message.split("\n", 2)[1]
-            else
-              err.backtrace[0]
-            end
-          assert_match(/^#{Regexp.escape(__FILE__)}:#{line_no}/, bt, "Line: #{key}")
-        end
+        # It appears we no longer need this. Keeping it here but commented out
+        # for the time being.
+
+        # if Haml::Util.ruby1_8?
+        #   # Sometimes, the first backtrace entry is *only* in the message.
+        #   # No idea why.
+        #   bt =
+        #     if expected_message == :compile && err.message.include?("\n")
+        #       err.message.split("\n", 2)[1]
+        #     else
+        #       err.backtrace[0]
+        #     end
+        #   assert_match(/^#{Regexp.escape(__FILE__)}:#{line_no}/, bt, "Line: #{key}")
+        # end
       else
         assert(false, "Exception not raised for\n#{key}")
       end
