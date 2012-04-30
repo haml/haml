@@ -942,6 +942,7 @@ For example:
     -#
       This won't be displayed
         Nor will this
+                       Nor will this.
     %p bar
 
 is compiled to:

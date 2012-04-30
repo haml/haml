@@ -45,6 +45,9 @@
   Internet Explorer earlier than version 9.
   (thanks [Doug Mayer](https://github.com/doxavore))
 
+* Fix multiline silent comments: Haml previously did not allow free indentation
+  inside multline silent comments.
+
 ## 3.1.5 (Unreleased)
 
 * Respect Rails' `html_safe` flag when escaping attribute values

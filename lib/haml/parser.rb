@@ -151,7 +151,7 @@ END
           @parent = @parent.children.last
         end
 
-        if !flat? && @next_line.tabs - @line.tabs > 1
+        if !@haml_comment && !flat? && @next_line.tabs - @line.tabs > 1
           raise SyntaxError.new("The line was indented #{@next_line.tabs - @line.tabs} levels deeper than the previous line.", @next_line.index)
         end
 
