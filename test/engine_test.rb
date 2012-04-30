@@ -372,6 +372,16 @@ HAML
                  render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :xhtml))
   end
 
+  def test_nuke_inner_whitespace_in_loops
+    assert_equal(<<HTML, render(<<HAML))
+<ul>foobarbaz</ul>
+HTML
+%ul<
+  - for str in %w[foo bar baz]
+    = str
+HAML
+  end
+
   def test_both_whitespace_nukes_work_together
     assert_equal(<<RESULT, render(<<SOURCE))
 <p><q>Foo
