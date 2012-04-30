@@ -5,6 +5,9 @@
 * Respect Rails' `html_safe` flag when escaping attribute values
   (thanks to [Gerad Suyderhoud](https://github.com/gerad)).
 
+* Fix for Rails 3.2.3 textarea helpers
+  (thanks to [James Coleman](https://github.com/jcoleman) and others).
+
 ## 3.1.4
 
 * Fix the use of `FormBuilder#block` with a label in Haml.
@@ -403,7 +406,7 @@ won't do any indentation of their arguments.
 * All attribute values may be non-String types.
   Their `#to_s` method will be called to convert them to strings.
   Previously, this only worked for attributes other than `class`.
-  
+
 ### `:class` and `:id` Attributes Accept Ruby Arrays
 
 In an attribute hash, the `:class` attribute now accepts an Array
@@ -896,7 +899,7 @@ There are several components to this:
 
 * Fixed CSS id concatenation when a numeric id is given as an attribute.
   (thanks to [Norman Clarke](http://blog.njclarke.com/)).
-  
+
 * Fixed a couple bugs with using "-end" in strings.
 
 ## 2.2.4

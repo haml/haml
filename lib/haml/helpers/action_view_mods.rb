@@ -256,3 +256,5 @@ module ActionView
     end
   end
 end
+
+require "haml/helpers/rails_323_textarea_fix" if Haml::Util.ap_geq?("3.2.3")
