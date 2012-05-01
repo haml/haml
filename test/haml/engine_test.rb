@@ -188,11 +188,11 @@ MESSAGE
   def test_dynamic_attributes_with_no_content
     assert_equal(<<HTML, render(<<HAML))
 <p>
-  <a href='http://haml-lang.com'></a>
+  <a href='http://haml.info'></a>
 </p>
 HTML
 %p
-  %a{:href => "http://" + "haml-lang.com"}
+  %a{:href => "http://" + "haml.info"}
 HAML
   end
 

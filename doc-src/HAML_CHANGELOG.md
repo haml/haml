@@ -963,7 +963,7 @@ Haml 2.2 introduces a new syntax for attributes
 based on the HTML syntax.
 For example:
 
-    %a(href="http://haml-lang.com" title="Haml's so cool!")
+    %a(href="http://haml.info" title="Haml's so cool!")
       %img(src="/images/haml.png" alt="Haml")
 
 There are two main reasons for this.

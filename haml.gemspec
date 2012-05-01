@@ -28,7 +28,7 @@ HAML_GEMSPEC = Gem::Specification.new do |spec|
   spec.executables = ['haml', 'html2haml']
   spec.files = Dir['rails/init.rb', 'lib/**/*', 'bin/*', 'test/**/*',
     'extra/**/*', 'vendor/sass/**/*', 'Rakefile', 'init.rb', '.yardopts'] + readmes
-  spec.homepage = 'http://haml-lang.com/'
+  spec.homepage = 'http://haml.info/'
   spec.has_rdoc = false
   spec.test_files = Dir['test/**/*_test.rb']
 end

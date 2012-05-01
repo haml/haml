@@ -31,7 +31,7 @@ and both Haml and Sass will be installed.
 Views with the `.html.haml` extension will automatically use Haml.
 
 To use Haml programatically,
-check out the [YARD documentation](http://haml-lang.com/docs/yardoc/).
+check out the [YARD documentation](http://haml.info/docs/yardoc/).
 
 ## Formatting
 
@@ -98,7 +98,7 @@ like `if` and `while`:
         = "Happy new " + "year!"
 
 Haml provides far more tools than those presented here.
-Check out the [reference documentation](http://beta.haml-lang.com/docs/yardoc/file.HAML_REFERENCE.html)
+Check out the [reference documentation](http://haml.info/docs/yardoc/file.HAML_REFERENCE.html)
 for full details.
 
 ### Indentation
