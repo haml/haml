@@ -369,7 +369,9 @@ MESSAGE
 
         captured = haml_buffer.buffer.slice!(position..-1)
         return captured if haml_buffer.options[:ugly]
-        captured = captured.split(/^/)
+        # Note that the "reject" is needed for rbx 1.2.4, which includes empty
+        # strings in the returned array when splitting by /^/.
+        captured = captured.split(/^/).reject {|x| x == ""}
 
         min_tabs = nil
         captured.each do |line|
