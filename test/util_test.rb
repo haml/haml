@@ -1,5 +1,4 @@
-require File.dirname(__FILE__) + '/test_helper'
-require 'pathname'
+require 'test_helper'
 
 class UtilTest < MiniTest::Unit::TestCase
   include Haml::Util

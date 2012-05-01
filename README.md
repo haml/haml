@@ -119,6 +119,12 @@ You'll get a warning that you need to install haml-spec, so run this:
 At this point `rake` should run without error or warning and you are ready to
 start working on your patch!
 
+Note that you can also run just one test out of the test suite if you're working
+on a specific area:
+
+    ruby -Itest test/helper_test.rb -n test_buffer_access
+
+
 ## Authors
 
 Haml was created by [Hampton Catlin](http://hamptoncatlin.com), the author of

@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'bundler/setup'
-require "test/unit" # On JRuby, tests won't run unless we include this WTF
+require 'test/unit' # On JRuby, tests won't run unless we include this. WTF?
 require 'minitest/autorun'
 require 'action_pack'
 require 'action_controller'
@@ -23,8 +23,8 @@ ActionController::Base.logger = Logger.new(nil)
 
 require 'fileutils'
 require 'haml'
-
 require 'haml/template'
+
 Haml::Template.options[:ugly] = false
 Haml::Template.options[:format] = :xhtml
 

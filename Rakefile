@@ -12,7 +12,7 @@ task :benchmark do
 end
 
 Rake::TestTask.new do |t|
-  t.libs << 'lib'
+  t.libs << 'lib' << 'test'
   t.test_files = Dir["test/**/*_test.rb"]
   t.verbose = true
 end

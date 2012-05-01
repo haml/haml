@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/test_helper'
+require 'test_helper'
 require 'sass/plugin'
-require File.dirname(__FILE__) + '/mocks/article'
+require 'mocks/article'
 
 require 'action_pack/version'
 

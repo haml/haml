@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-require File.dirname(__FILE__) + '/test_helper'
+require 'test_helper'
 
 class EngineTest < MiniTest::Unit::TestCase
   # A map of erroneous Haml documents to the error messages they should produce.
