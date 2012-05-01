@@ -167,7 +167,7 @@ HTML
 - (foo = capture_haml(13) do |a|
   %p= a
 - end; nil)
-= foo.dump
+= foo.inspect
 HAML
   end
 
