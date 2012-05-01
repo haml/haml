@@ -1256,7 +1256,9 @@ HAML
   def test_exception
     render("%p\n  hi\n  %a= undefined\n= 12")
   rescue Exception => e
-    assert_match("(test_exception):3", e.backtrace[0])
+    backtrace = e.backtrace
+    backtrace.shift if rubinius?
+    assert_match("(test_exception):3", backtrace[0])
   else
     # Test failed... should have raised an exception
     assert(false)
