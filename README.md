@@ -21,7 +21,7 @@ to compile it to HTML. For more information on these commands, check out
     haml --help
 
 To use Haml programatically, check out the [YARD
-documentation](http://haml-lang.com/docs/yardoc/).
+documentation](http://haml.info/docs/yardoc/).
 
 ## Using Haml with Rails
 
@@ -88,7 +88,7 @@ output the result. You can even use control statements like `if` and `while`:
         = "Happy new " + "year!"
 
 Haml provides far more tools than those presented here. Check out the [reference
-documentation](http://beta.haml-lang.com/docs/yardoc/file.REFERENCE.html)
+documentation](http://haml.info/docs/yardoc/file.REFERENCE.html)
 for full details.
 
 ### Indentation
@@ -100,7 +100,7 @@ can't be mixed, and the same number of tabs or spaces must be used throughout.
 ## Contributing
 
 Contributions are welcomed, but before you get started please read the
-[guidelines](http://haml-lang.com/development.html#contributing).
+[guidelines](http://haml.info/development.html#contributing).
 
 After forking and then cloning the repo locally, install Bundler and then use it
 to install the development gem dependecies:

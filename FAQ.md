@@ -1,8 +1,5 @@
 # Frequently Asked Questions
 
-* Table of contents
-{:toc}
-
 ## Haml
 
 ### Why is my markup indented properly in development mode, but not in production?
@@ -154,7 +151,7 @@ For other plugins, a little searching will probably turn up a way to fix them as
 
 ## You still haven't answered my question!
 
-Sorry! Try looking at the [Haml](http://haml-lang.com/docs/yardoc/HAML_REFERENCE.md.html) reference,
+Sorry! Try looking at the [Haml](http://haml.info/docs/yardoc/HAML_REFERENCE.md.html) reference,
 If you can't find an answer there,
 feel free to ask in `#haml` on irc.freenode.net
-or send an email to the [mailing list](http://groups.google.com/group/haml?hl=en).
+or send an email to the [mailing list](http://groups.google.com/group/haml).
