@@ -1084,7 +1084,9 @@ HAML
       render("\n\n= 123\n\n= nil[]", :filename => 'test', :line => 2)
     rescue Exception => e
       assert_kind_of NoMethodError, e
-      assert_match(/test:6/, e.backtrace.first)
+      backtrace = e.backtrace
+      backtrace.shift if rubinius?
+      assert_match(/test:6/, backtrace.first)
     end
   end
 
