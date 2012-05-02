@@ -1519,10 +1519,22 @@ HAML
   end
   
   def test_html5_data_attributes_with_nested_hash
+    Haml::Helpers.module_eval do
+      def data_circular_hash
+        r = {}
+        r[:r] = r
+        {:data => {:bar => r, :foo => 'bar', :foo => r, :baz => 'blip'}}
+      end
+    end
     assert_equal("<div data-foo-bar='blip'></div>\n",
       render("%div{:data => {:foo => {:bar => 'blip'}}}"))
     assert_equal("<div data-baz='bang' data-foo-bar='blip'></div>\n",
       render("%div{:data => {:foo => {:bar => 'blip'}, :baz => 'bang'}}"))
+    assert_equal("<div data-foo-bar='blip'></div>\n",
+      render("%div{:data => {:foo => {:bar => 'blip'}}}"))
+    assert_equal("<div data-baz='blip'></div>\n",
+      render("%div{data_circular_hash}"))
+    assert_equal(Thread.current[:visited_ids], nil)
   end
 
   def test_html5_data_attributes_with_multiple_defs
