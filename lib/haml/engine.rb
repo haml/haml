@@ -73,19 +73,20 @@ module Haml
     # @raise [Haml::Error] if there's a Haml syntax error in the template
     def initialize(template, options = {})
       @options = {
-        :suppress_eval        => false,
-        :attr_wrapper         => "'",
+        :suppress_eval                    => false,
+        :attr_wrapper                     => "'",
         # Don't forget to update the docs in doc-src/REFERENCE.md
         # if you update these
-        :autoclose            => %w[meta img link br hr input area param col base],
-        :preserve             => %w[textarea pre code],
-        :filename             => '(haml)',
-        :line                 => 1,
-        :ugly                 => false,
-        :format               => :xhtml,
-        :escape_html          => false,
-        :escape_attrs         => true,
-        :hyphenate_data_attrs => true,
+        :autoclose                        => %w[meta img link br hr input area param col base],
+        :preserve                         => %w[textarea pre code],
+        :filename                         => '(haml)',
+        :line                             => 1,
+        :ugly                             => false,
+        :format                           => :xhtml,
+        :escape_html                      => false,
+        :escape_attrs                     => true,
+        :hyphenate_data_attrs             => true,
+        :ignore_default_internal_encoding => false
       }
 
 
@@ -94,7 +95,10 @@ module Haml
       end
 
       unless ruby1_8?
-        @options[:encoding] = Encoding.default_internal || template.encoding
+        unless options[:ignore_default_internal_encoding]
+          @options[:encoding] = Encoding.default_internal
+        end
+        @options[:encoding] ||= template.encoding
         @options[:encoding] = "utf-8" if @options[:encoding].name == "US-ASCII"
       end
       @options.merge! options.reject {|k, v| v.nil?}
@@ -126,7 +130,8 @@ module Haml
 
       compile(parse)
     rescue Haml::Error => e
-      if @index || e.line
+      index = instance_variable_defined?('@index') ? @index : false
+      if index || e.line
         e.backtrace.unshift "#{@options[:filename]}:#{(e.line ? e.line + 1 : @index) + @options[:line] - 1}"
       end
       raise
