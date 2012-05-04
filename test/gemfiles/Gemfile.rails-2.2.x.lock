@@ -13,6 +13,7 @@ GEM
     erubis (2.7.0)
     hpricot (0.8.6)
     json (1.7.0)
+    minitest (2.12.1)
     rails (2.2.3)
       actionmailer (= 2.2.3)
       actionpack (= 2.2.3)
@@ -33,6 +34,7 @@ DEPENDENCIES
   erubis
   hpricot
   json
+  minitest
   rails (>= 2.2.0, < 2.3.0)
   ruby_parser
   sass

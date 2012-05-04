@@ -1,8 +1,5 @@
 # Haml Changelog
 
-* Table of contents
-{:toc}
-
 ## 3.2.0 (Unreleased)
 
 * Add Kramdown support to Markdown filter.
@@ -37,6 +34,17 @@
 * html2haml now includes an `--html-attributes` option.
   (thanks [Stefan Natchev](https://github.com/snatchev))
 
+* Fix for inner whitespace removal in loops.
+  (thanks [Richard Michael](https://github.com/richardkmichael))
+
+* Use numeric character references rather than HTML entities when escaping
+  double quotes and apostrophes in attributes. This works around some bugs in
+  Internet Explorer earlier than version 9.
+  (thanks [Doug Mayer](https://github.com/doxavore))
+
+* Fix multiline silent comments: Haml previously did not allow free indentation
+  inside multline silent comments.
+
 ## 3.1.5 (Unreleased)
 
 * Respect Rails' `html_safe` flag when escaping attribute values
@@ -64,6 +72,8 @@
 * Fix html2haml.
 
 * Fix an issue where destructive modification was sometimes performed on Rails SafeBuffers.
+
+* Use character code entities for attribute value replacements instead of named/keyword entities.
 
 ## 3.1.1
 
@@ -1000,7 +1010,7 @@ Haml 2.2 introduces a new syntax for attributes
 based on the HTML syntax.
 For example:
 
-    %a(href="http://haml-lang.com" title="Haml's so cool!")
+    %a(href="http://haml.info" title="Haml's so cool!")
       %img(src="/images/haml.png" alt="Haml")
 
 There are two main reasons for this.

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-require File.dirname(__FILE__) + '/test_helper'
+require 'test_helper'
 
-class EngineTest < Test::Unit::TestCase
+class EngineTest < MiniTest::Unit::TestCase
   # A map of erroneous Haml documents to the error messages they should produce.
   # The error messages may be arrays;
   # if so, the second element should be the line number that should be reported for the error.
@@ -63,8 +63,8 @@ MESSAGE
     "%p{:foo => 'bar' :bar => 'baz'}" => :compile,
     "%p{:foo => }" => :compile,
     "%p{=> 'bar'}" => :compile,
-    "%p{:foo => 'bar}" => :compile,
     "%p{'foo => 'bar'}" => :compile,
+    "%p{:foo => 'bar}" => :compile,
     "%p{:foo => 'bar\"}" => :compile,
 
     # Regression tests
@@ -192,11 +192,11 @@ MESSAGE
   def test_dynamic_attributes_with_no_content
     assert_equal(<<HTML, render(<<HAML))
 <p>
-  <a href='http://haml-lang.com'></a>
+  <a href='http://haml.info'></a>
 </p>
 HTML
 %p
-  %a{:href => "http://" + "haml-lang.com"}
+  %a{:href => "http://" + "haml.info"}
 HAML
   end
 
@@ -370,6 +370,16 @@ HAML
                  render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :html4))
     assert_equal("<p baz='false' foo='bar'></p>\n",
                  render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :xhtml))
+  end
+
+  def test_nuke_inner_whitespace_in_loops
+    assert_equal(<<HTML, render(<<HAML))
+<ul>foobarbaz</ul>
+HTML
+%ul<
+  - for str in %w[foo bar baz]
+    = str
+HAML
   end
 
   def test_both_whitespace_nukes_work_together
@@ -1074,7 +1084,9 @@ HAML
       render("\n\n= 123\n\n= nil[]", :filename => 'test', :line => 2)
     rescue Exception => e
       assert_kind_of NoMethodError, e
-      assert_match(/test:6/, e.backtrace.first)
+      backtrace = e.backtrace
+      backtrace.shift if rubinius?
+      assert_match(/test:6/, backtrace.first)
     end
   end
 
@@ -1117,7 +1129,7 @@ HAML
     assert_equal("<p strange=*attrs*></p>\n", render("%p{ :strange => 'attrs'}", :attr_wrapper => '*'))
     assert_equal("<p escaped='quo\"te'></p>\n", render("%p{ :escaped => 'quo\"te'}", :attr_wrapper => '"'))
     assert_equal("<p escaped=\"quo'te\"></p>\n", render("%p{ :escaped => 'quo\\'te'}", :attr_wrapper => '"'))
-    assert_equal("<p escaped=\"q'uo&quot;te\"></p>\n", render("%p{ :escaped => 'q\\'uo\"te'}", :attr_wrapper => '"'))
+    assert_equal("<p escaped=\"q'uo&#x0022;te\"></p>\n", render("%p{ :escaped => 'q\\'uo\"te'}", :attr_wrapper => '"'))
     assert_equal("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n", render("!!! XML", :attr_wrapper => '"'))
   end
 
@@ -1206,27 +1218,27 @@ HAML
         expected_message, line_no = value
         line_no ||= key.split("\n").length
 
+
         if expected_message == :compile
-          if Haml::Util.ruby1_8?
-            assert_match(/^compile error\n/, err.message, "Line: #{key}")
-          else
-            assert_match(/^#{Regexp.quote __FILE__}:#{line_no}: syntax error,/, err.message, "Line: #{key}")
-          end
+          assert_match(/(compile error|syntax error|unterminated string|expecting)/, err.message, "Line: #{key}")
         else
           assert_equal(expected_message, err.message, "Line: #{key}")
         end
 
-        if Haml::Util.ruby1_8?
-          # Sometimes, the first backtrace entry is *only* in the message.
-          # No idea why.
-          bt =
-            if expected_message == :compile && err.message.include?("\n")
-              err.message.split("\n", 2)[1]
-            else
-              err.backtrace[0]
-            end
-          assert_match(/^#{Regexp.escape(__FILE__)}:#{line_no}/, bt, "Line: #{key}")
-        end
+        # It appears we no longer need this. Keeping it here but commented out
+        # for the time being.
+
+        # if Haml::Util.ruby1_8?
+        #   # Sometimes, the first backtrace entry is *only* in the message.
+        #   # No idea why.
+        #   bt =
+        #     if expected_message == :compile && err.message.include?("\n")
+        #       err.message.split("\n", 2)[1]
+        #     else
+        #       err.backtrace[0]
+        #     end
+        #   assert_match(/^#{Regexp.escape(__FILE__)}:#{line_no}/, bt, "Line: #{key}")
+        # end
       else
         assert(false, "Exception not raised for\n#{key}")
       end
@@ -1244,7 +1256,9 @@ HAML
   def test_exception
     render("%p\n  hi\n  %a= undefined\n= 12")
   rescue Exception => e
-    assert_match("(test_exception):3", e.backtrace[0])
+    backtrace = e.backtrace
+    backtrace.shift if rubinius?
+    assert_match("(test_exception):3", backtrace[0])
   else
     # Test failed... should have raised an exception
     assert(false)
@@ -1253,7 +1267,7 @@ HAML
   def test_compile_error
     render("a\nb\n- fee)\nc")
   rescue Exception => e
-    assert_match(/\(test_compile_error\):3: syntax error/i, e.message)
+    assert_match(/\(test_compile_error\):3: (syntax error|expecting \$end)/i, e.message)
   else
     assert(false,
            '"a\nb\n- fee)\nc" doesn\'t produce an exception!')
@@ -1424,7 +1438,7 @@ HAML
   end
 
   def test_arbitrary_output_option
-    assert_raise_message(Haml::Error, "Invalid output format :html1") do
+    assert_raises_message(Haml::Error, "Invalid output format :html1") do
       engine("%br", :format => :html1)
     end
   end
@@ -1474,7 +1488,7 @@ HAML
 
   # because anything before the doctype triggers quirks mode in IE
   def test_xml_prolog_and_doctype_dont_result_in_a_leading_whitespace_in_html
-    assert_no_match(/^\s+/, render("!!! xml\n!!!", :format => :html4))
+    refute_match(/^\s+/, render("!!! xml\n!!!", :format => :html4))
   end
 
   # HTML5
@@ -1492,7 +1506,7 @@ HAML
       render("%div{:data => {:one_plus_one => 1+1}}",
         :hyphenate_data_attrs => false))
 
-    assert_equal("<div data-foo='Here&apos;s a \"quoteful\" string.'></div>\n",
+    assert_equal("<div data-foo='Here&#x0027;s a \"quoteful\" string.'></div>\n",
       render(%{%div{:data => {:foo => %{Here's a "quoteful" string.}}}},
         :hyphenate_data_attrs => false)) #'
   end

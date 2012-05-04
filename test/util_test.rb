@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/test_helper'
-require 'pathname'
+require 'test_helper'
 
-class UtilTest < Test::Unit::TestCase
+class UtilTest < MiniTest::Unit::TestCase
   include Haml::Util
 
   class Dumpable
@@ -258,17 +257,6 @@ class UtilTest < Test::Unit::TestCase
     assert_equal([:before, :around_before, :around_after, :after], obj.arr)
     obj2 = load(data)
     assert_equal([:before, :around_before, :loaded], obj2.arr)
-  end
-
-  class FooBar
-    def foo
-      Haml::Util.abstract(self)
-    end
-  end
-
-  def test_abstract
-    assert_raise_message(NotImplementedError,
-      "UtilTest::FooBar must implement #foo") {FooBar.new.foo}
   end
 
   def test_def_static_method

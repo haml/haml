@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.executables = ['haml', 'html2haml']
   spec.files       = Dir['rails/init.rb', 'lib/**/*', 'bin/*', 'test/**/*',
                          'extra/**/*', 'Rakefile', 'init.rb', '.yardopts'] + readmes
-  spec.homepage    = 'http://haml-lang.com/'
+  spec.homepage    = 'http://haml.info/'
   spec.has_rdoc    = false
   spec.test_files  = Dir["test/**/*_test.rb"]
 
@@ -19,8 +19,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'sass'
   spec.add_development_dependency 'rails'
   spec.add_development_dependency 'ruby_parser'
-  spec.add_development_dependency 'ruby-prof'
   spec.add_development_dependency 'rbench'
+  spec.add_development_dependency 'minitest'
 
   spec.description = <<-END
 Haml (HTML Abstraction Markup Language) is a layer on top of HTML or XML that's

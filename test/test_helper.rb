@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
+require 'test/unit' # On JRuby, tests won't run unless we include this. WTF?
+require 'minitest/autorun'
 require 'action_pack'
 require 'action_controller'
 require 'action_view'
@@ -19,15 +21,14 @@ end
 
 ActionController::Base.logger = Logger.new(nil)
 
-require 'test/unit'
 require 'fileutils'
 require 'haml'
-
 require 'haml/template'
+
 Haml::Template.options[:ugly] = false
 Haml::Template.options[:format] = :xhtml
 
-class Test::Unit::TestCase
+class MiniTest::Unit::TestCase
   def assert_warning(message)
     the_real_stderr, $stderr = $stderr, StringIO.new
     yield
@@ -73,7 +74,7 @@ class Test::Unit::TestCase
       '" type="hidden" value="' + char + '" /></div>'
   end
 
-  def assert_raise_message(klass, message)
+  def assert_raises_message(klass, message)
     yield
   rescue Exception => e
     assert_instance_of(klass, e)
@@ -82,7 +83,7 @@ class Test::Unit::TestCase
     flunk "Expected exception #{klass}, none raised"
   end
 
-  def assert_raise_line(line)
+  def assert_raises_line(line)
     yield
   rescue Sass::SyntaxError => e
     assert_equal(line, e.sass_line)

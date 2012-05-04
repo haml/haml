@@ -8,8 +8,8 @@
       %li= i
   %h1 I can catch errors!
   - begin
-    - String.silly
-  - rescue NameError => e
+    - raise "foo"
+  - rescue RuntimeError => e
     = "Oh no! \"#{e}\" happened!"
   %p
     "false" is:

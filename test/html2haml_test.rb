@@ -1,8 +1,8 @@
-require File.dirname(__FILE__) + '/test_helper'
-require File.dirname(__FILE__) + '/html2haml/erb_tests'
+require 'test_helper'
+require 'html2haml/erb_tests'
 require 'haml/html'
 
-class Html2HamlTest < Test::Unit::TestCase
+class Html2HamlTest < MiniTest::Unit::TestCase
   def test_empty_render_should_remain_empty
     assert_equal '', render('')
   end

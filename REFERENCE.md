@@ -1,8 +1,5 @@
 # Haml (XHTML Abstraction Markup Language)
 
-* Table of contents
-{:toc}
-
 Haml is a markup language
 that's used to cleanly and simply describe the XHTML of any web document,
 without the use of inline code.
@@ -942,6 +939,7 @@ For example:
     -#
       This won't be displayed
         Nor will this
+                       Nor will this.
     %p bar
 
 is compiled to:

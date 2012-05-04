@@ -41,6 +41,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.18)
+    minitest (2.12.1)
     multi_json (1.3.2)
     polyglot (0.3.3)
     rack (1.4.1)
@@ -90,6 +91,7 @@ DEPENDENCIES
   erubis
   hpricot
   json
+  minitest
   rails (>= 3.2.0, < 3.3.0)
   ruby_parser
   sass
