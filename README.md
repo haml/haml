@@ -1,5 +1,7 @@
 # Haml
 
+[![Build Status](https://secure.travis-ci.org/haml/haml.png?branch=master)](http://travis-ci.org/haml/haml)
+
 Haml is a templating engine for HTML. It's designed to make it both easier and
 more pleasant to write HTML documents, by eliminating redundancy, reflecting the
 underlying structure that the document represents, and providing an elegant syntax
