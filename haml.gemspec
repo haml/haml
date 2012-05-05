@@ -13,6 +13,8 @@ Gem::Specification.new do |spec|
   spec.has_rdoc    = false
   spec.test_files  = Dir["test/**/*_test.rb"]
 
+  spec.add_dependency "tilt"
+
   spec.add_development_dependency 'yard', '>= 0.5.3'
   spec.add_development_dependency 'maruku', '>= 0.5.9'
   spec.add_development_dependency 'hpricot'

@@ -10,4 +10,5 @@
 Gemfile.lock
 .rvmrc
 .rbx
+tmp
 .sass-cache
