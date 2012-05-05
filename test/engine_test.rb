@@ -113,18 +113,8 @@ MESSAGE
       caller[i+=1] =~ /`(.+?)'/ until $1 and $1.index('test_') == 0
       options[:filename] = "(#{$1})"
     end
+    options[:ignore_default_internal_encoding] = true
     Haml::Engine.new(text, options)
-  end
-
-  def setup
-    return if Haml::Util.ruby1_8?
-    @old_default_internal = Encoding.default_internal
-    Encoding.default_internal = nil
-  end
-
-  def teardown
-    return if Haml::Util.ruby1_8?
-    Encoding.default_internal = @old_default_internal
   end
 
   def test_empty_render
