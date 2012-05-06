@@ -99,7 +99,7 @@ module Haml
       # @return [Boolean]
       def valid_ruby?(code)
         RubyParser.new.parse(code)
-      rescue Racc::ParseError => e
+      rescue Racc::ParseError
         false
       end
 
