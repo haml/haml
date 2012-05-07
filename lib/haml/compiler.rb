@@ -440,7 +440,7 @@ END
         hash.merge! flatten_data_attributes(k[-1], key.empty? ? k[0] : "#{key}-#{k[0]}")
       end
     ensure
-      Thread.current[:visited_ids] = nil
+      Thread.current[:visited_ids] = nil if key == ''
     end
 
     def prerender_tag(name, self_close, attributes)
