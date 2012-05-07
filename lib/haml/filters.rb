@@ -187,18 +187,6 @@ rescue LoadError; end
 module Haml
   module Filters
 
-    # Filters for other template engines are provided by Tilt.
-    ["Sass", "Scss", "Less", "CoffeeScript", "Maruku"].each do |name|
-      module_eval(<<-END)
-        module #{name}
-          include Base
-          def render(text)
-            Tilt::#{name}Template.new {text}.render
-          end
-        end
-      END
-    end
-
     # Does not parse the filtered text.
     # This is useful for large blocks of text without HTML tags,
     # when you don't want lines starting with `.` or `-`
@@ -255,6 +243,67 @@ END
 END
       end
     end
+
+    module TiltFilter
+      def template_class=(val)
+        @template_class = val
+      end
+
+      def template_class
+        @template_class
+      end
+
+      def self.extended(base)
+        base.instance_eval do
+          def render(text)
+            template_class.new {text}.render
+          end
+        end
+      end
+    end
+
+    module Sass
+      include Base
+      extend Css
+      extend TiltFilter
+
+      def self.render_with_options(text, options)
+        text = template_class.new {text}.render
+        super
+      end
+    end
+
+    module Scss
+      include Base
+      extend Css
+      extend TiltFilter
+
+      def self.render_with_options(text, options)
+        text = template_class.new {text}.render
+        super
+      end
+    end
+
+    module Markdown
+      include Base
+      extend TiltFilter
+    end
+
+    module Coffeescript
+      include Base
+      extend Javascript
+      extend TiltFilter
+
+      def self.render_with_options(text, options)
+        text = template_class.new {text}.render
+        super
+      end
+    end
+
+    Sass.template_class         = Tilt["template.sass"]
+    Scss.template_class         = Tilt["template.scss"]
+    Markdown.template_class     = Tilt["template.markdown"]
+    Coffeescript.template_class = Tilt["template.coffee"]
 
     # Surrounds the filtered text with CDATA tags.
     module Cdata

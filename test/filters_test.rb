@@ -10,8 +10,8 @@ class FiltersTest < MiniTest::Unit::TestCase
   end
 
   TESTS = {
-    :sass         => ["sass", /width: 100;/, ":sass\n  p\n    width: 100"],
-    :scss         => ["sass", /width: 100;/, ":scss\n  $width: 100;\n  p {\n    width: $width;\n  }"],
+    :sass         => ["sass/plugin", /width: 100;/, ":sass\n  p\n    width: 100"],
+    :scss         => ["sass/plugin", /width: 100;/, ":scss\n  $width: 100;\n  p {\n    width: $width;\n  }"],
     :less         => ["less", /width: 100;/, ":less\n  @width: 100;\n  p {\n    width: @width;\n  }"],
     :coffeescript => ["coffee_script", /var foo;/, ":coffeescript\n foo = 'bar'"],
     :maruku       => ["maruku", /h1/, ":maruku\n  # foo"],
@@ -24,8 +24,8 @@ class FiltersTest < MiniTest::Unit::TestCase
       begin
         Haml::Util.silence_warnings do
           require library
-          assert_match(pattern, render(haml))
         end
+        assert_match(pattern, render(haml))
       rescue LoadError
         warn "Could not load #{key} filter's dependencies"
       end
