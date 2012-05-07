@@ -1,10 +1,17 @@
 require "rake/clean"
-require 'rake/testtask'
-require 'rubygems/package_task'
+require "rake/testtask"
+require "rubygems/package_task"
 
 task :default => :test
 
 CLEAN << %w(pkg doc coverage .yardoc)
+
+def silence_warnings
+  the_real_stderr, $stderr = $stderr, StringIO.new
+  yield
+ensure
+  $stderr = the_real_stderr
+end
 
 desc "Benchmark Haml against ERb. TIMES=n sets the number of runs, default is 1000."
 task :benchmark do
@@ -30,7 +37,9 @@ task :submodules do
 end
 
 begin
-  require 'yard'
+  silence_warnings do
+    require 'yard'
+  end
 
   namespace :doc do
     desc "List all undocumented methods and classes."
