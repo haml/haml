@@ -165,7 +165,7 @@ RUBY
         begin
           @required = @lazy_requires[-1]
           require @required
-        rescue LoadError => e
+        rescue LoadError
           classname = self.name.match(/\w+$/)[0]
 
           if @lazy_requires.size == 1

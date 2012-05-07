@@ -75,7 +75,6 @@ END
       return if @options[:suppress_eval]
       push_silent(@node.value[:text])
       keyword = @node.value[:keyword]
-      ruby_block = block_given? && !keyword
 
       if block_given?
         # Store these values because for conditional statements,
