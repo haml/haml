@@ -126,6 +126,8 @@ on a specific area:
 
     ruby -Itest test/helper_test.rb -n test_buffer_access
 
+Haml supports Ruby 1.8.7 and higher, so please make sure your changes run on
+both 1.9 and 1.8.
 
 ## Authors
 
