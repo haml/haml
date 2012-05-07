@@ -9,3 +9,5 @@
 .rbenv-version
 Gemfile.lock
 .rvmrc
+.rbx
+.sass-cache
