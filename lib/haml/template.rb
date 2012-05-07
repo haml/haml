@@ -24,7 +24,10 @@ module Haml
 
       Haml::Template.options[:escape_html] = true
 
-      Haml::Util.module_eval {def rails_xss_safe?; true; end}
+      Haml::Util.module_eval do
+        undef :rails_xss_safe? if defined? rails_xss_safe?
+        def rails_xss_safe?; true; end
+      end
 
       require 'haml/helpers/xss_mods'
       Haml::Helpers.send(:include, Haml::Helpers::XssMods)
