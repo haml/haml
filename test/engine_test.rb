@@ -1433,8 +1433,8 @@ HAML
   end
   
   def test_html5_data_attributes_with_nested_hash
-    assert_equal("<div data-a='b'></div>\n",
-      render("%div{:data => lambda {c={:a => 'b'}; c[:c] = c}.call}"))
+    assert_equal("<div data-d='b'></div>\n",
+      render("%div{:data => lambda {c={:d => 'b'}; c[:c] = c}.call}"))
     assert_equal(Thread.current[:visited_ids], nil)
   end
 
