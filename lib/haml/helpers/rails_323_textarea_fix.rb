@@ -1,3 +1,5 @@
+require "abstract_controller/rendering"
+
 # Rails 3.2.3's form helpers add a newline after opening textareas, which can
 # cause problems with newlines being considered content rather than markup.
 # These changes fix the issue by making the helpers emit "<haml:newline/>"
