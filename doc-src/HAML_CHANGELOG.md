@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 3.1.6
+
+* Require "abstract_controller/rendering" on Rails 3.2.3 before alias method
+  chaining `render_to_body`.
+
 ## 3.1.5
 
 * Respect Rails' `html_safe` flag when escaping attribute values
