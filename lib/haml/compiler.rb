@@ -437,7 +437,7 @@ END
       
       return {key => data} unless data.is_a?(Hash)
       data.inject({}) do |hash, k|
-        hash.merge! flatten_data_attributes(k[-1], key.empty? ? k[0] : "#{key}-#{k[0]}")
+        hash.merge! flatten_data_attributes(k[-1], key == '' ? k[0] : "#{key}-#{k[0]}")
       end
     ensure
       Thread.current[:visited_ids] = nil if key == ''
