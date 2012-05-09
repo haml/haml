@@ -143,7 +143,9 @@ module Haml
           @tabulation = 0
         <% end %>
 
+        <% if !(in_tag && preserve_tag && !nuke_inner_whitespace) %>
         tabulation = @real_tabs
+        <% end %>
         result = <%= result_name %>.<% if nuke_inner_whitespace %>strip<% else %>rstrip<% end %>
       <% else %>
         result = <%= result_name %><% if nuke_inner_whitespace %>.strip<% end %>
@@ -161,7 +163,10 @@ module Haml
 
         return result if self.instance_variable_get(:@preserve_pattern).match(result)
 
+        <% if !(in_tag && preserve_tag && !nuke_inner_whitespace) %>
         has_newline = result.include?("\\n")
+        <% end %>
+
         <% if in_tag && !nuke_inner_whitespace %>
           <% unless preserve_tag %> if !has_newline <% end %>
           @real_tabs -= 1
@@ -170,6 +175,7 @@ module Haml
           <% unless preserve_tag %> end <% end %>
         <% end %>
 
+        <% if !(in_tag && preserve_tag && !nuke_inner_whitespace) %>
         # Precompiled tabulation may be wrong
         <% if !interpolated && !in_tag %>
           result = tabs + result if @tabulation > 0
@@ -188,6 +194,7 @@ module Haml
         <% end %>
         <% if interpolated %> @tabulation = old_tabulation <% end %>
         result
+        <% end %>
       <% end %>
 RUBY
 
