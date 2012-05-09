@@ -611,6 +611,7 @@ MESSAGE
     def haml_bind_proc(&proc)
       _hamlout = haml_buffer
       _erbout = _hamlout.buffer
+      _erbout.to_s #"use" the variable to silence warnings
       proc { |*args| proc.call(*args) }
     end
   end
