@@ -45,7 +45,7 @@
 * Fix multiline silent comments: Haml previously did not allow free indentation
   inside multline silent comments.
 
-## 3.1.5 (Unreleased)
+## 3.1.5
 
 * Respect Rails' `html_safe` flag when escaping attribute values
   (thanks to [Gerad Suyderhoud](https://github.com/gerad)).
