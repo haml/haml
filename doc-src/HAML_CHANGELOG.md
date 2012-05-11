@@ -2,8 +2,8 @@
 
 ## 3.1.6
 
-* Require "abstract_controller/rendering" on Rails 3.2.3 before alias method
-  chaining `render_to_body`.
+* In indented mode, don't reindent buffers that contain preserved tags, and
+  provide a better workaround for Rails 3.2.3's textarea helpers.
 
 ## 3.1.5
 
