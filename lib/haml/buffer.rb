@@ -97,6 +97,8 @@ module Haml
       # The number of tabs that Engine thinks we should have
       # @real_tabs + @tabulation is the number of tabs actually output
       @real_tabs = 0
+
+      @preserve_pattern = /<[\s]*#{@options[:preserve].join("|")}/i
     end
 
     # Appends text to the buffer, properly tabulated.
@@ -157,7 +159,9 @@ module Haml
         return result
       <% else %>
 
-        has_newline = result.include?("\\n") 
+        return result if self.instance_variable_get(:@preserve_pattern).match(result)
+
+        has_newline = result.include?("\\n")
         <% if in_tag && !nuke_inner_whitespace %>
           <% unless preserve_tag %> if !has_newline <% end %>
           @real_tabs -= 1
