@@ -8,42 +8,32 @@
 # compatibility with the latest version of Rails, made at a moment when the Haml
 # project is transitioning to a new maintainer.
 
-module AbstractController
-  module Rendering
-    def render_to_body_with_haml(options = {})
-      if rendered = render_to_body_without_haml(options)
-        rendered.gsub('<haml:newline/>', "\n").html_safe
-      end
-    end
-    alias_method_chain :render_to_body, :haml
-  end
-end
+# module AbstractController
+#   module Rendering
+#     def render_to_body_with_haml(options = {})
+#       if rendered = render_to_body_without_haml(options)
+#         rendered.gsub('<haml:newline/>', "\n").html_safe
+#       end
+#     end
+#     alias_method_chain :render_to_body, :haml
+#   end
+# end
 
 module ActionView
-
-  class Renderer
-    def render_template_with_haml(context, options)
-      if rendered = render_template_without_haml(context, options)
-        rendered.gsub('<haml:newline/>', "\n").html_safe
-      end
-    end
-    alias_method_chain :render_template, :haml
-  end
-
   module Helpers
-    module TagHelper
-      private
 
-      def content_tag_string_with_haml(name, content, options, escape = true)
-        if name.to_sym == :textarea
-          tag_options = tag_options(options, escape) if options
-          content = ERB::Util.h(content) if escape
-          "<#{name}#{tag_options}><haml:newline/>#{content}</#{name}>".html_safe
-        else
-          content_tag_string_without_haml(name, content, options, escape)
-        end
+    module FormTagHelper
+      def text_area_tag_with_haml(*args)
+        text_area_tag_without_haml(*args).sub('>&#x000A;', ">\n").html_safe
       end
-      alias_method_chain :content_tag_string, :haml
+      alias_method_chain :text_area_tag, :haml
+    end
+
+    module FormHelper
+      def text_area_with_haml(*args)
+        text_area_without_haml(*args).sub('>&#x000A;', ">\n").html_safe
+      end
+      alias_method_chain :text_area, :haml
     end
   end
 end
