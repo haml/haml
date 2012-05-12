@@ -338,6 +338,14 @@ END
           @module_opts[:html_style_attributes] = true
         end
 
+        unless ::Haml::Util.ruby1_8?
+          opts.on('-E ex[:in]', 'Specify the default external and internal character encodings.') do |encoding|
+            external, internal = encoding.split(':')
+            Encoding.default_external = external if external && !external.empty?
+            Encoding.default_internal = internal if internal && !internal.empty?
+          end
+        end
+
         super
       end
 
