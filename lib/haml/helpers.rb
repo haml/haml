@@ -70,7 +70,7 @@ MESSAGE
     #     context.haml_tag :p, "Stuff"
     #
     def init_haml_helpers
-      @haml_buffer = Haml::Buffer.new(@haml_buffer, Haml::Engine.new('').send(:options_for_buffer))
+      @haml_buffer = Haml::Buffer.new(haml_buffer, Haml::Engine.new('').send(:options_for_buffer))
       nil
     end
 
@@ -599,7 +599,7 @@ MESSAGE
     #
     # @return [Haml::Buffer]
     def haml_buffer
-      @haml_buffer
+      @haml_buffer if defined? @haml_buffer
     end
 
     # Gives a proc the same local `_hamlout` and `_erbout` variables
