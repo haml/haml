@@ -78,7 +78,6 @@ module Haml
       #
       # @see #compile
       def internal_compile(*args)
-        resolve_lazy_requires
         compile(*args)
       end
 
@@ -96,7 +95,6 @@ module Haml
       # @param text [String] The text of the filter
       # @raise [Haml::Error] if none of \{#compile}, \{#render}, and \{#render_with_options} are overridden
       def compile(compiler, text)
-        resolve_lazy_requires
         filter = self
         compiler.instance_eval do
           if contains_interpolation?(text)
@@ -129,60 +127,9 @@ RUBY
           end
         end
       end
-
-      # This becomes a class method of modules that include {Base}.
-      # It allows the module to specify one or more Ruby files
-      # that Haml should try to require when compiling the filter.
-      #
-      # The first file specified is tried first, then the second, etc.
-      # If none are found, the compilation throws an exception.
-      #
-      # For example:
-      #
-      #     module Haml::Filters::Markdown
-      #       lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth', 'kramdown'
-      #
-      #       ...
-      #     end
-      #
-      # @param reqs [Array<String>] The requires to run
-      def lazy_require(*reqs)
-        @lazy_requires = reqs
-      end
-
-      private
-
-      def resolve_lazy_requires
-        return unless instance_variable_defined?('@lazy_requires')
-
-        @lazy_requires[0...-1].each do |req|
-          begin
-            @required = req
-            require @required
-            return
-          rescue LoadError; end # RCov doesn't see this, but it is run
-        end
-
-        begin
-          @required = @lazy_requires[-1]
-          require @required
-        rescue LoadError
-          classname = self.name.match(/\w+$/)[0]
-
-          if @lazy_requires.size == 1
-            raise Error.new("Can't run #{classname} filter; required file '#{@lazy_requires.first}' not found")
-          else
-            raise Error.new("Can't run #{classname} filter; required #{@lazy_requires.map { |r| "'#{r}'" }.join(' or ')}, but none were found")
-          end
-        end
-      end
     end
   end
 end
-
-begin
-  require 'rubygems'
-rescue LoadError; end
 
 module Haml
   module Filters
