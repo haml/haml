@@ -128,11 +128,6 @@ RUBY
         end
       end
     end
-  end
-end
-
-module Haml
-  module Filters
 
     # Does not parse the filtered text.
     # This is useful for large blocks of text without HTML tags,
