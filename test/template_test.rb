@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'sass/plugin'
 require 'mocks/article'
 
 require 'action_pack/version'
@@ -53,7 +52,7 @@ class TemplateTest < MiniTest::Unit::TestCase
     @base = create_base
 
     # filters template uses :sass
-    Sass::Plugin.options.update(:line_comments => true, :style => :compact)
+    # Sass::Plugin.options.update(:line_comments => true, :style => :compact)
   end
 
   def create_base

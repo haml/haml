@@ -1290,10 +1290,8 @@ HAML
   end
 
   def test_ugly_filter
-    assert_equal(<<END, render(":sass\n  #foo\n    bar: baz", :ugly => true))
-#foo {
-  bar: baz; }
-END
+    expectation = "foo\n"
+    assert_equal(expectation, render(":plain\n  foo"), :ugly => true)
   end
 
   def test_css_filter
