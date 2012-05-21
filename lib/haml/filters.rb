@@ -355,7 +355,7 @@ END
     # The Ruby code is evaluated in the same context as the Haml template.
     module Ruby
       include Base
-      lazy_require 'stringio'
+      require 'stringio'
 
       # @see Base#compile
       def compile(compiler, text)
