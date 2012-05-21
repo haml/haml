@@ -245,12 +245,15 @@ END
     end
 
     module TiltFilter
-      def template_class=(val)
-        @template_class = val
-      end
+      extend self
+      attr_accessor :template_class, :tilt_extension
 
       def template_class
-        @template_class
+        @template_class or begin
+          @template_class = Tilt["t.#{tilt_extension}"]
+        rescue LoadError
+          raise Error.new("Can't run #{self} filter; required dependencies not available")
+        end
       end
 
       def self.extended(base)
@@ -262,48 +265,67 @@ END
       end
     end
 
-    module Sass
-      include Base
-      extend Css
-      extend TiltFilter
+    module PrecompiledFilter
+      def precompiled(text)
+        template_class.new { text }.send(:precompiled, {}).first
+      end
 
-      def self.render_with_options(text, options)
-        text = template_class.new {text}.render
-        super
+      def compile(compiler, text)
+        return if compiler.options[:suppress_eval]
+        compiler.send(:push_script, precompiled(text))
       end
     end
 
-    module Scss
-      include Base
-      extend Css
-      extend TiltFilter
+    template_engines = {
+      "Sass"     => "sass",
+      "Scss"     => "scss",
+      "Less"     => "less",
+      "Markdown" => "markdown",
+      "Coffee"   => "coffee",
+      "Nokogiri" => "nokogiri",
+      "Builder"  => "builder",
+      "Markaby"  => "mab",
+      "Erb"      => "erb"
+    }
 
-      def self.render_with_options(text, options)
-        text = template_class.new {text}.render
-        super
+    template_engines.each do |name, extension|
+      module_eval(<<-END)
+        module #{name}
+          include Base
+          extend TiltFilter
+        end
+        # Let Tilt figure out which library to use, since there are lot of engine
+        # for Markdown, and may eventually be more than one for Sass, Less, etc.
+        #{name}.tilt_extension = '#{extension}'
+      END
+    end
+
+    # Some filters precompile for performance
+    Nokogiri.extend PrecompiledFilter
+    Builder.extend  PrecompiledFilter
+    Erb.extend  PrecompiledFilter
+
+    # Parses the filtered text with ERB.
+    # Not available if the {file:REFERENCE.md#suppress_eval-option
+    # `:suppress_eval`} option is set to true. Embedded Ruby code is evaluated
+    # in the same context as the Haml template.
+    module Erb
+      class << self
+        def precompiled(text)
+          super.sub(/^#coding:.*?\n/, '')
+        end
       end
     end
 
-    module Markdown
+    # Allow :coffee as a longhand for :coffee
+    Filters.defined["coffeescript"] = Coffee
+
+    # Maruku has no dedicated extension
+    module Maruku
       include Base
       extend TiltFilter
     end
-
-    module Coffeescript
-      include Base
-      extend Javascript
-      extend TiltFilter
-
-      def self.render_with_options(text, options)
-        text = template_class.new {text}.render
-        super
-      end
-    end
-
-    Sass.template_class         = Tilt["template.sass"]
-    Scss.template_class         = Tilt["template.scss"]
-    Markdown.template_class     = Tilt["template.markdown"]
-    Coffeescript.template_class = Tilt["template.coffee"]
+    Maruku.template_class = Tilt::MarukuTemplate
 
     # Surrounds the filtered text with CDATA tags.
     module Cdata
@@ -364,33 +386,5 @@ END
         Haml::Helpers.preserve text
       end
     end
-
-    # Parses the filtered text with ERB.
-    # Not available if the {file:REFERENCE.md#suppress_eval-option `:suppress_eval`} option is set to true.
-    # Embedded Ruby code is evaluated in the same context as the Haml template.
-    module ERB
-      include Base
-      lazy_require 'erb'
-
-      # @see Base#compile
-      def compile(compiler, text)
-        return if compiler.options[:suppress_eval]
-        src = ::ERB.new(text).src.sub(/^#coding:.*?\n/, '').
-          sub(/^_erbout = '';/, "")
-        compiler.send(:push_silent, src)
-      end
-    end
-
-    # Parses the filtered text with [Redcarpet](https://github.com/tanoku/redcarpet)
-    module Redcarpet
-      include Base
-      lazy_require 'redcarpet'
-
-      # @see Base#render
-      def render(text)
-        ::Redcarpet.new(text).to_html
-      end
-    end
-
   end
 end
