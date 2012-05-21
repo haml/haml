@@ -25,10 +25,19 @@ require 'fileutils'
 require 'haml'
 require 'haml/template'
 
-Haml::Template.options[:ugly] = false
+Haml::Template.options[:ugly]   = false
 Haml::Template.options[:format] = :xhtml
 
+module Declarative
+  def test(name, &block)
+    define_method("test #{name}", &block)
+  end
+end
+
 class MiniTest::Unit::TestCase
+
+  extend Declarative
+
   def assert_warning(message)
     the_real_stderr, $stderr = $stderr, StringIO.new
     yield
