@@ -39,6 +39,12 @@ class MiniTest::Unit::TestCase
 
   extend Declarative
 
+  def render(text, options = {}, &block)
+    scope  = options.delete(:scope)  || Object.new
+    locals = options.delete(:locals) || {}
+    Haml::Engine.new(text, options).to_html(scope, locals, &block)
+  end
+
   def assert_warning(message)
     the_real_stderr, $stderr = $stderr, StringIO.new
     yield

@@ -723,56 +723,6 @@ HAML
     assert_equal("<a href='#'></a>\n", render('%a(href="#")'))
   end
 
-  def test_javascript_filter_with_dynamic_interp_and_escape_html
-    assert_equal(<<HTML, render(<<HAML, :escape_html => true))
-<script type='text/javascript'>
-  //<![CDATA[
-    & < > &
-  //]]>
-</script>
-HTML
-:javascript
- & < > \#{"&"}
-HAML
-  end
-
-  def test_html5_javascript_filter
-    assert_equal(<<HTML, render(<<HAML, :format => :html5))
-<script>
-  //<![CDATA[
-    foo bar
-  //]]>
-</script>
-HTML
-:javascript
-  foo bar
-HAML
-  end
-
-  def test_html5_css_filter
-    assert_equal(<<HTML, render(<<HAML, :format => :html5))
-<style>
-  /*<![CDATA[*/
-    foo bar
-  /*]]>*/
-</style>
-HTML
-:css
-  foo bar
-HAML
-  end
-
-  def test_erb_filter_with_multiline_expr
-    assert_equal(<<HTML, render(<<HAML))
-foobarbaz
-HTML
-:erb
-  <%= "foo" +
-      "bar" +
-      "baz" %>
-HAML
-  end
-
   def test_silent_script_with_hyphen_case
     assert_equal("", render("- 'foo-case-bar-case'"))
   end
@@ -818,15 +768,6 @@ HAML
       render('%a(href="#") #{"Foo"}'))
 
     assert_equal("<a href='#\"'></a>\n", render('%a(href="#\\"")'))
-  end
-
-  def test_filter_with_newline_and_interp
-    assert_equal(<<HTML, render(<<HAML))
-\\n
-HTML
-:plain
-  \\n\#{""}
-HAML
   end
 
   def test_case_assigned_to_var
@@ -1282,31 +1223,6 @@ HAML
   def test_balanced_conditional_comments
     assert_equal("<!--[if !(IE 6)|(IE 7)]> Bracket: ] <![endif]-->\n",
                  render("/[if !(IE 6)|(IE 7)] Bracket: ]"))
-  end
-
-  def test_empty_filter
-    expectation = "<script type='text/javascript'>\n  //<![CDATA[\n    \n  //]]>\n</script>\n"
-    assert_equal(expectation, render(':javascript'))
-  end
-
-  def test_ugly_filter
-    expectation = "foo\n"
-    assert_equal(expectation, render(":plain\n  foo"), :ugly => true)
-  end
-
-  def test_css_filter
-    assert_equal(<<HTML, render(<<HAML))
-<style type='text/css'>
-  /*<![CDATA[*/
-    #foo {
-      bar: baz; }
-  /*]]>*/
-</style>
-HTML
-:css
-  #foo {
-    bar: baz; }
-HAML
   end
 
   def test_local_assigns_dont_modify_class
