@@ -77,26 +77,3 @@ if defined?(Rails.configuration.after_initialize) &&
 else
   Haml::Template.try_enabling_xss_integration
 end
-
-if Haml::Util.rails_root
-  # Update init.rb to the current version
-  # if it's out of date.
-  #
-  # We can probably remove this as of v1.9,
-  # because the new init file is sufficiently flexible
-  # to not need updating.
-  rails_init_file = File.join(Haml::Util.rails_root, 'vendor', 'plugins', 'haml', 'init.rb')
-  haml_init_file = Haml::Util.scope('init.rb')
-  begin
-    if File.exists?(rails_init_file)
-      require 'fileutils'
-      FileUtils.cp(haml_init_file, rails_init_file) unless FileUtils.cmp(rails_init_file, haml_init_file)
-    end
-  rescue SystemCallError
-    Haml::Util.haml_warn <<END
-HAML WARNING:
-#{rails_init_file} is out of date and couldn't be automatically updated.
-Please run `haml --rails #{File.expand_path(Haml::Util.rails_root)}' to update it.
-END
-  end
-end
