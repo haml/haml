@@ -117,16 +117,6 @@ module Haml
       [[value, range.first].max, range.last].min
     end
 
-    # Intersperses a value in an enumerable, as would be done with `Array#join`
-    # but without concatenating the array together afterwards.
-    #
-    # @param enum [Enumerable]
-    # @param val
-    # @return [Array]
-    def intersperse(enum, val)
-      enum.inject([]) {|a, e| a << e << val}[0...-1]
-    end
-
     # Substitutes a sub-array of one array with another sub-array.
     #
     # @param ary [Array] The array in which to make the substitution

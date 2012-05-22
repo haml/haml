@@ -72,12 +72,6 @@ class UtilTest < MiniTest::Unit::TestCase
     assert_equal(0, restrict(-1, 0..1))
   end
 
-  def test_intersperse
-    assert_equal(["foo", " ", "bar", " ", "baz"],
-      intersperse(%w[foo bar baz], " "))
-    assert_equal([], intersperse([], " "))
-  end
-
   def test_substitute
     assert_equal(["foo", "bar", "baz", 3, 4],
       substitute([1, 2, 3, 4], [1, 2], ["foo", "bar", "baz"]))
