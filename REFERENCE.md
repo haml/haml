@@ -1098,7 +1098,7 @@ and might compile to
 
     <p>This is scrumptious cake!</p>
 
-Backslashes can be used to escape `#{` strings,
+Backslashes can be used to escape `#{}` strings,
 but they don't act as escapes anywhere else in the string.
 For example:
 
