@@ -65,13 +65,6 @@ class UtilTest < MiniTest::Unit::TestCase
       powerset([1, 2, 3]))
   end
 
-  def test_restrict
-    assert_equal(0.5, restrict(0.5, 0..1))
-    assert_equal(1, restrict(2, 0..1))
-    assert_equal(1.3, restrict(2, 0..1.3))
-    assert_equal(0, restrict(-1, 0..1))
-  end
-
   def test_substitute
     assert_equal(["foo", "bar", "baz", 3, 4],
       substitute([1, 2, 3, 4], [1, 2], ["foo", "bar", "baz"]))

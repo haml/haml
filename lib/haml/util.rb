@@ -106,17 +106,6 @@ module Haml
       end
     end
 
-    # Restricts a number to falling within a given range.
-    # Returns the number if it falls within the range,
-    # or the closest value in the range if it doesn't.
-    #
-    # @param value [Numeric]
-    # @param range [Range<Numeric>]
-    # @return [Numeric]
-    def restrict(value, range)
-      [[value, range.first].max, range.last].min
-    end
-
     # Substitutes a sub-array of one array with another sub-array.
     #
     # @param ary [Array] The array in which to make the substitution
