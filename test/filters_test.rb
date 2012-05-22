@@ -36,7 +36,7 @@ end
 class JavascriptFilterTest < MiniTest::Unit::TestCase
   test "should never HTML-escape ampersands" do
     html = "<script type='text/javascript'>\n  //<![CDATA[\n    & < > &\n  //]]>\n</script>\n"
-    haml = ":javascript\n  & < > #{"&"}"
+    haml = %Q{:javascript\n  & < > \#{"&"}}
     assert_equal(html, render(haml, :escape_html => true))
   end
 
