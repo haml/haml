@@ -72,14 +72,6 @@ class UtilTest < MiniTest::Unit::TestCase
     assert_equal(0, restrict(-1, 0..1))
   end
 
-  def test_merge_adjacent_strings
-    assert_equal(["foo bar baz", :bang, "biz bop", 12],
-      merge_adjacent_strings(["foo ", "bar ", "baz", :bang, "biz", " bop", 12]))
-    str = "foo"
-    assert_equal(["foo foo foo", :bang, "foo foo", 12],
-      merge_adjacent_strings([str, " ", str, " ", str, :bang, str, " ", str, 12]))
-  end
-
   def test_intersperse
     assert_equal(["foo", " ", "bar", " ", "baz"],
       intersperse(%w[foo bar baz], " "))

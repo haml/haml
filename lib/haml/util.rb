@@ -117,31 +117,6 @@ module Haml
       [[value, range.first].max, range.last].min
     end
 
-    # Concatenates all strings that are adjacent in an array,
-    # while leaving other elements as they are.
-    #
-    # @example
-    #   merge_adjacent_strings([1, "foo", "bar", 2, "baz"])
-    #     #=> [1, "foobar", 2, "baz"]
-    # @param arr [Array]
-    # @return [Array] The enumerable with strings merged
-    def merge_adjacent_strings(arr)
-      # Optimize for the common case of one element
-      return arr if arr.size < 2
-      arr.inject([]) do |a, e|
-        if e.is_a?(String)
-          if a.last.is_a?(String)
-            a.last << e
-          else
-            a << e.dup
-          end
-        else
-          a << e
-        end
-        a
-      end
-    end
-
     # Intersperses a value in an enumerable, as would be done with `Array#join`
     # but without concatenating the array together afterwards.
     #
