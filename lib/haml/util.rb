@@ -106,24 +106,6 @@ module Haml
       end
     end
 
-    # Computes a single longest common subsequence for `x` and `y`.
-    # If there are more than one longest common subsequences,
-    # the one returned is that which starts first in `x`.
-    #
-    # @param x [Array]
-    # @param y [Array]
-    # @yield [a, b] An optional block to use in place of a check for equality
-    #   between elements of `x` and `y`.
-    # @yieldreturn [Object, nil] If the two values register as equal,
-    #   this will return the value to use in the LCS array.
-    # @return [Array] The LCS
-    def lcs(x, y, &block)
-      x = [nil, *x]
-      y = [nil, *y]
-      block ||= proc {|a, b| a == b && a}
-      lcs_backtrace(lcs_table(x, y, &block), x, y, x.size-1, y.size-1, &block)
-    end
-
     # Returns information about the caller of the previous method.
     #
     # @param entry [String] An entry in the `#caller` list, or a similarly formatted string
