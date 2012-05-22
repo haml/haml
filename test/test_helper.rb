@@ -1,3 +1,8 @@
+if ENV["COVERAGE"]
+  require "simplecov"
+  SimpleCov.start
+end
+
 require 'rubygems'
 gem "minitest"
 require 'bundler/setup'

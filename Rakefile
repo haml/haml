@@ -24,6 +24,13 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
+task :set_coverage_env do
+  ENV["COVERAGE"] = "true"
+end
+
+desc "Run Simplecov (only works on 1.9)"
+task :coverage => [:set_coverage_env, :test]
+
 gemspec = File.expand_path("../haml.gemspec", __FILE__)
 if File.exist? gemspec
   Gem::PackageTask.new(eval(File.read(gemspec))) { |pkg| }
