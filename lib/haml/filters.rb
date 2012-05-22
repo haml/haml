@@ -16,7 +16,7 @@ module Haml
     # Loads an external template engine from
     # [Tilt](https://github.com/rtomayko/tilt) as a filter.
     def register_tilt_filter(name, options = {})
-      if const_defined?(name.to_s, false)
+      if const_defined?(name.to_s)
         raise "#{name} filter already defined"
       end
 
