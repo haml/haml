@@ -65,13 +65,6 @@ class UtilTest < MiniTest::Unit::TestCase
       powerset([1, 2, 3]))
   end
 
-  def test_paths
-    assert_equal([[1, 3, 5], [2, 3, 5], [1, 4, 5], [2, 4, 5]],
-      paths([[1, 2], [3, 4], [5]]))
-    assert_equal([[]], paths([]))
-    assert_equal([[1, 2, 3]], paths([[1], [2], [3]]))
-  end
-
   def test_lcs
     assert_equal([1, 2, 3], lcs([1, 2, 3], [1, 2, 3]))
     assert_equal([], lcs([], [1, 2, 3]))

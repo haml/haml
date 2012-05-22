@@ -106,23 +106,6 @@ module Haml
       end
     end
 
-    # Return an array of all possible paths through the given arrays.
-    #
-    # @param arrs [Array<Array>]
-    # @return [Array<Arrays>]
-    #
-    # @example
-    #   paths([[1, 2], [3, 4], [5]]) #=>
-    #     # [[1, 3, 5],
-    #     #  [2, 3, 5],
-    #     #  [1, 4, 5],
-    #     #  [2, 4, 5]]
-    def paths(arrs)
-      arrs.inject([[]]) do |paths, arr|
-        flatten(arr.map {|e| paths.map {|path| path + [e]}}, 1)
-      end
-    end
-
     # Computes a single longest common subsequence for `x` and `y`.
     # If there are more than one longest common subsequences,
     # the one returned is that which starts first in `x`.
