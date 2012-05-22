@@ -11,6 +11,18 @@ class FiltersTest < MiniTest::Unit::TestCase
     end
   end
 
+  test "should raise error when attempting to register a defined Tilt filter" do
+    begin
+      assert_raises RuntimeError do
+        2.times do
+          Haml::Filters.register_tilt_filter "Foo"
+        end
+      end
+    ensure
+      Haml::Filters.defined.delete "foo"
+    end
+  end
+
   test "ERB filter with multiline expressions" do
     html = "foobarbaz\n"
     haml = %Q{:erb\n  <%= "foo" +\n      "bar" +\n      "baz" %>}
@@ -29,7 +41,7 @@ class FiltersTest < MiniTest::Unit::TestCase
 
   test "should be compatible with ugly mode" do
     expectation = "foo\n"
-    assert_equal(expectation, render(":plain\n  foo"), :ugly => true)
+    assert_equal(expectation, render(":plain\n  foo", :ugly => true))
   end
 end
 
@@ -74,5 +86,21 @@ class CSSFilterTest < MiniTest::Unit::TestCase
     html = "<style>\n  /*<![CDATA[*/\n    foo bar\n  /*]]>*/\n</style>\n"
     haml = ":css\n  foo bar"
     assert_equal(html, render(haml, :format => :html5))
+  end
+end
+
+class CDATAFilterTest < MiniTest::Unit::TestCase
+  test "should wrap output in CDATA tag" do
+    html = "<![CDATA[\n    foo\n]]>\n"
+    haml = ":cdata\n  foo"
+    assert_equal(html, render(haml))
+  end
+end
+
+class EscapedFilterTest < MiniTest::Unit::TestCase
+  test "should escape ampersands" do
+    html = "&amp;\n"
+    haml = ":escaped\n  &"
+    assert_equal(html, render(haml))
   end
 end
