@@ -1167,7 +1167,7 @@ There is now a `:cdata` filter for wrapping text in CDATA tags.
 
 #### `:sass`
 
-The `:sass` filter now uses options set in {Sass::Plugin},
+The `:sass` filter now uses options set in `Sass::Plugin`,
 if they're available.
 
 ### Executables
