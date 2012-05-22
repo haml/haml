@@ -54,22 +54,6 @@ module Haml
       to_hash(hash.map {|k, v| [yield(k), v]})
     end
 
-    # Maps the values in a hash according to a block.
-    #
-    # @example
-    #   map_values({:foo => "bar", :baz => "bang"}) {|v| v.to_sym}
-    #     #=> {:foo => :bar, :baz => :bang}
-    # @param hash [Hash] The hash to map
-    # @yield [value] A block in which the values are transformed
-    # @yieldparam value [Object] The value that should be mapped
-    # @yieldreturn [Object] The new value for the value
-    # @return [Hash] The mapped hash
-    # @see #map_keys
-    # @see #map_hash
-    def map_vals(hash)
-      to_hash(hash.map {|k, v| [k, yield(v)]})
-    end
-
     # Maps the key-value pairs of a hash according to a block.
     #
     # @example

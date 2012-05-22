@@ -36,14 +36,6 @@ class UtilTest < MiniTest::Unit::TestCase
       }, map_keys({:foo => 1, :bar => 2, :baz => 3}) {|k| k.to_s})
   end
 
-  def test_map_vals
-    assert_equal({
-        :foo => "1",
-        :bar => "2",
-        :baz => "3"
-      }, map_vals({:foo => 1, :bar => 2, :baz => 3}) {|k| k.to_s})
-  end
-
   def test_map_hash
     assert_equal({
         "foo" => "1",
