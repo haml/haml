@@ -6,9 +6,44 @@ module Haml
   #
   # @see Haml::Filters::Base
   module Filters
+
+    extend self
+
     # @return [{String => Haml::Filters::Base}] a hash of filter names to classes
-    def self.defined
-      @defined ||= {}
+    attr_reader :defined
+    @defined = {}
+
+    # Loads an external template engine from
+    # [Tilt](https://github.com/rtomayko/tilt) as a filter.
+    def register_tilt_filter(name, options = {})
+      if const_defined?(name.to_s, false)
+        raise "#{name} filter already defined"
+      end
+
+      filter = const_set(name, Module.new)
+      filter.extend TiltFilter
+
+      # Some template engines should be precompiled for performance, at the
+      # moment this includes Erb, Nokogiri and Builder.
+      filter.extend PrecompiledTiltFilter if options.has_key? :precompiled
+
+      # Some template engines don't have a dedicated extension, such as Maruku,
+      # so look for the actual Tilt template class passed in as an option.
+      if options.has_key? :template_class
+        filter.template_class = options[:template_class]
+      else
+        # Rely on Tilt's extension mapping to get the preferred template class
+        # for a given kind. This lets Haml outsource the management of the
+        # various Markdown implementations, for example. This will become more
+        # and more important as time goes on and template engines get new
+        # implementations, as is happening right now with Sass and Sassc.
+        filter.tilt_extension = options.fetch(:extension) { name.downcase }
+      end
+
+      # All ":coffeescript" as alias for ":coffee", etc.
+      if options.has_key?(:alias)
+        [options[:alias]].flatten.each {|x| Filters.defined[x.to_s] = filter}
+      end
     end
 
     # The base module for Haml filters.
@@ -186,89 +221,6 @@ END
       end
     end
 
-    module TiltFilter
-      extend self
-      attr_accessor :template_class, :tilt_extension
-
-      def template_class
-        @template_class or begin
-          @template_class = Tilt["t.#{tilt_extension}"]
-        rescue LoadError
-          raise Error.new("Can't run #{self} filter; required dependencies not available")
-        end
-      end
-
-      def self.extended(base)
-        base.instance_eval do
-          def render(text)
-            template_class.new {text}.render
-          end
-        end
-      end
-    end
-
-    module PrecompiledFilter
-      def precompiled(text)
-        template_class.new { text }.send(:precompiled, {}).first
-      end
-
-      def compile(compiler, text)
-        return if compiler.options[:suppress_eval]
-        compiler.send(:push_script, precompiled(text))
-      end
-    end
-
-    template_engines = {
-      "Sass"     => "sass",
-      "Scss"     => "scss",
-      "Less"     => "less",
-      "Markdown" => "markdown",
-      "Coffee"   => "coffee",
-      "Nokogiri" => "nokogiri",
-      "Builder"  => "builder",
-      "Markaby"  => "mab",
-      "Erb"      => "erb"
-    }
-
-    template_engines.each do |name, extension|
-      module_eval(<<-END)
-        module #{name}
-          include Base
-          extend TiltFilter
-        end
-        # Let Tilt figure out which library to use, since there are lot of engine
-        # for Markdown, and may eventually be more than one for Sass, Less, etc.
-        #{name}.tilt_extension = '#{extension}'
-      END
-    end
-
-    # Some filters precompile for performance
-    Nokogiri.extend PrecompiledFilter
-    Builder.extend  PrecompiledFilter
-    Erb.extend  PrecompiledFilter
-
-    # Parses the filtered text with ERB.
-    # Not available if the {file:REFERENCE.md#suppress_eval-option
-    # `:suppress_eval`} option is set to true. Embedded Ruby code is evaluated
-    # in the same context as the Haml template.
-    module Erb
-      class << self
-        def precompiled(text)
-          super.sub(/^#coding:.*?\n/, '')
-        end
-      end
-    end
-
-    # Allow :coffee as a longhand for :coffee
-    Filters.defined["coffeescript"] = Coffee
-
-    # Maruku has no dedicated extension
-    module Maruku
-      include Base
-      extend TiltFilter
-    end
-    Maruku.template_class = Tilt::MarukuTemplate
-
     # Surrounds the filtered text with CDATA tags.
     module Cdata
       include Base
@@ -326,6 +278,79 @@ END
       # @see Base#render
       def render(text)
         Haml::Helpers.preserve text
+      end
+    end
+
+    module TiltFilter
+      extend self
+      attr_accessor :template_class, :tilt_extension
+
+      def template_class
+        @template_class or begin
+          @template_class = Tilt["t.#{tilt_extension}"] or
+            raise "Can't run #{self} filter; you must require its dependencies first"
+        rescue LoadError
+          raise Error.new("Can't run #{self} filter; required dependencies not available")
+        end
+      end
+
+      def self.extended(base)
+        base.instance_eval do
+          include Base
+          def render(text)
+            Haml::Util.silence_warnings do
+              template_class.new {text}.render
+            end
+          end
+        end
+      end
+    end
+
+    module PrecompiledTiltFilter
+      def precompiled(text)
+        template_class.new { text }.send(:precompiled, {}).first
+      end
+
+      def compile(compiler, text)
+        return if compiler.options[:suppress_eval]
+        compiler.send(:push_script, precompiled(text))
+      end
+    end
+
+    # These are the "core" filters that will be part of Haml proper going
+    # forward.
+    register_tilt_filter "Sass"
+    register_tilt_filter "Scss"
+    register_tilt_filter "Less"
+    register_tilt_filter "Markdown"
+    register_tilt_filter "Erb",      :precompiled    => true
+    register_tilt_filter "Coffee",   :alias          => "coffeescript"
+
+    # These filters will be moved into "haml/contrib" and you'll have to include
+    # them yourself if you want to use them:
+    #
+    # require "haml/contrib/filters/nokogiri"
+    register_tilt_filter "Wiki"
+    register_tilt_filter "Yajl"
+    register_tilt_filter "Markaby",  :extension      => "mab"
+    register_tilt_filter "Nokogiri", :precompiled    => true
+    register_tilt_filter "Builder",  :precompiled    => true
+
+    # These filters will be moved into "haml/contrib" but will be required by
+    # default in Haml 3.2. After 3.2 they will no longer be automatically
+    # required.
+    register_tilt_filter "Textile"
+    register_tilt_filter "Maruku",   :template_class => Tilt::MarukuTemplate
+
+    # Parses the filtered text with ERB.
+    # Not available if the {file:REFERENCE.md#suppress_eval-option
+    # `:suppress_eval`} option is set to true. Embedded Ruby code is evaluated
+    # in the same context as the Haml template.
+    module Erb
+      class << self
+        def precompiled(text)
+          super.sub(/^#coding:.*?\n/, '')
+        end
       end
     end
   end

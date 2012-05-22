@@ -33,7 +33,23 @@ class FiltersTest < MiniTest::Unit::TestCase
   end
 end
 
+class ErbFilterTest < MiniTest::Unit::TestCase
+  test "should evaluate in the same context as Haml" do
+    haml  = ":erb\n  <%= foo %>"
+    html  = "bar\n"
+    scope = Object.new.instance_eval {foo = "bar"; binding}
+    assert_equal(html, render(haml, :scope => scope))
+  end
+end
+
 class JavascriptFilterTest < MiniTest::Unit::TestCase
+  test "should interpolate" do
+    scope = Object.new.instance_eval {foo = "bar"; binding}
+    haml  = ":javascript\n  \#{foo}"
+    html  = render(haml, :scope => scope)
+    assert_match(/bar/, html)
+  end
+
   test "should never HTML-escape ampersands" do
     html = "<script type='text/javascript'>\n  //<![CDATA[\n    & < > &\n  //]]>\n</script>\n"
     haml = %Q{:javascript\n  & < > \#{"&"}}
