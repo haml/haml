@@ -106,18 +106,6 @@ module Haml
       end
     end
 
-    # Destructively strips whitespace from the beginning and end
-    # of the first and last elements, respectively,
-    # in the array (if those elements are strings).
-    #
-    # @param arr [Array]
-    # @return [Array] `arr`
-    def strip_string_array(arr)
-      arr.first.lstrip! if arr.first.is_a?(String)
-      arr.last.rstrip! if arr.last.is_a?(String)
-      arr
-    end
-
     # Return an array of all possible paths through the given arrays.
     #
     # @param arrs [Array<Array>]
