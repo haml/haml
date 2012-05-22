@@ -196,6 +196,21 @@ module Haml
       def render(text); text; end
     end
 
+    # Surrounds the filtered text with `<?php ?>` tags.
+    # This is useful for including PHP code.
+    module Php
+      include Base
+      
+      # @see Base#render
+      def render(text)
+        <<END
+<?php
+  #{text.rstrip.gsub("\n", "\n  ")}
+?>
+END
+      end
+    end
+
     # Surrounds the filtered text with `<script>` and CDATA tags.
     # Useful for including inline Javascript.
     module Javascript
