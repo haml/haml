@@ -153,23 +153,22 @@ module Haml
       $stderr = the_real_stderr
     end
 
-    @@silence_warnings = false
     # Silences all Haml warnings within a block.
     #
     # @yield A block in which no Haml warnings will be printed
     def silence_haml_warnings
-      old_silence_warnings = @@silence_warnings
-      @@silence_warnings = true
+      old_silence_warnings = Thread.current[:silence_haml_warnings]
+      Thread.current[:silence_haml_warnings] = true
       yield
     ensure
-      @@silence_warnings = old_silence_warnings
+      Thread.current[:silence_haml_warnings] = old_silence_warnings
     end
 
     # The same as `Kernel#warn`, but is silenced by \{#silence\_haml\_warnings}.
     #
     # @param msg [String]
     def haml_warn(msg)
-      return if @@silence_warnings
+      return if Thread.current[:silence_haml_warnings]
       warn(msg)
     end
 
