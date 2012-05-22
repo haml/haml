@@ -14,7 +14,18 @@ module Haml
     @defined = {}
 
     # Loads an external template engine from
-    # [Tilt](https://github.com/rtomayko/tilt) as a filter.
+    # [Tilt](https://github.com/rtomayko/tilt) as a filter. This method is used
+    # internally by Haml to set up filters for Sass, SCSS, Less, Coffeescript,
+    # and others. It's left public to make it easy for developers to add their
+    # own Tilt-based filters if they choose.
+    #
+    # @return [Module] The generated filter.
+    # @param [Hash] options Options for generating the filter module.
+    # @option options [Boolean] :precompiled Whether the filter should be precompiled. Erb, Nokogiri and Builder use this, for example.
+    # @option options [Class] :template_class The Tilt template class to use, in the event it can't be inferred from an extension.
+    # @option options [String] :extension The extension associated with the content, for example "markdown". This lets Tilt choose the preferred engine when there are more than one.
+    # @option options [String,Array<String>] :alias Any aliases for the filter. For example, :coffee is also available as :coffeescript.
+    # @since 3.2.0
     def register_tilt_filter(name, options = {})
       if const_defined?(name.to_s)
         raise "#{name} filter already defined"
@@ -23,20 +34,11 @@ module Haml
       filter = const_set(name, Module.new)
       filter.extend TiltFilter
 
-      # Some template engines should be precompiled for performance, at the
-      # moment this includes Erb, Nokogiri and Builder.
       filter.extend PrecompiledTiltFilter if options.has_key? :precompiled
 
-      # Some template engines don't have a dedicated extension, such as Maruku,
-      # so look for the actual Tilt template class passed in as an option.
       if options.has_key? :template_class
         filter.template_class = options[:template_class]
       else
-        # Rely on Tilt's extension mapping to get the preferred template class
-        # for a given kind. This lets Haml outsource the management of the
-        # various Markdown implementations, for example. This will become more
-        # and more important as time goes on and template engines get new
-        # implementations, as is happening right now with Sass and Sassc.
         filter.tilt_extension = options.fetch(:extension) { name.downcase }
       end
 
@@ -44,6 +46,7 @@ module Haml
       if options.has_key?(:alias)
         [options[:alias]].flatten.each {|x| Filters.defined[x.to_s] = filter}
       end
+      filter
     end
 
     # The base module for Haml filters.

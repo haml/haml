@@ -2,9 +2,17 @@
 
 ## 3.2.0 (Unreleased)
 
-* Add Kramdown support to Markdown filter.
+* Filters that rely on third-party template engines are now implemented using
+  [Tilt](github.com/rtomayko/tilt). Several new filters have been added, namely
+  Sass (:sass), LessCSS, (:less), and Coffeescript (:coffee/:coffeescript).
 
-* Add RedCarpet support to Markdown filter.
+  Though the list of "official" filters is kept intentionally small, Haml comes
+  with a helper method that makes adding support for other Tilt-based template
+  engines trivial.
+
+  As of 3.2, Haml will also ship with a "haml-contrib" gem that includes useful
+  but less-frequently used filters and helpers. This includes several additional
+  filters such as Nokogiri, Yajl, Markaby, and others.
 
 * Generate object references based on `#to_key` if it exists in preference to
   `#id`.
@@ -16,9 +24,6 @@
   option} that converts underscores to hyphens in your HTML5 data keys. This is
   a language change from 3.1 and is enabled by default.
   (thanks to [Andrew Smith](https://github.com/fullsailor))
-
-* Add SCSS filter.
-  (thanks to [Matt Wildig](https://github.com/mattwildig))
 
 * Helper `list_of` takes an extra argument that is rendered into list item
   attributes.
