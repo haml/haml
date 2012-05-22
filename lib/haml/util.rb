@@ -309,14 +309,6 @@ module Haml
       ironruby? || (Haml::Util::RUBY_VERSION[0] == 1 && Haml::Util::RUBY_VERSION[1] < 9)
     end
 
-    # Whether or not this is running under Ruby 1.8.6 or lower.
-    # Note that lower versions are not officially supported.
-    #
-    # @return [Boolean]
-    def ruby1_8_6?
-      ruby1_8? && Haml::Util::RUBY_VERSION[2] < 7
-    end
-
     # Checks that the encoding of a string is valid in Ruby 1.9
     # and cleans up potential encoding gotchas like the UTF-8 BOM.
     # If it's not, yields an error string describing the invalid character
@@ -470,7 +462,7 @@ MSG
     # @param n [Fixnum] The number of levels to flatten
     # @return [Array] The flattened array
     def flatten(arr, n)
-      return arr.flatten(n) unless ruby1_8_6?
+      return arr.flatten(n)
       return arr if n == 0
       arr.inject([]) {|res, e| e.is_a?(Array) ? res.concat(flatten(e, n - 1)) : res << e}
     end
@@ -481,7 +473,7 @@ MSG
     # @param set [Set]
     # @return [Fixnum] The order-independent hashcode of `set`
     def set_hash(set)
-      return set.hash unless ruby1_8_6?
+      return set.hash
       set.map {|e| e.hash}.uniq.sort.hash
     end
 
@@ -492,7 +484,7 @@ MSG
     # @param set2 [Set]
     # @return [Boolean] Whether or not the sets are hashcode equal
     def set_eql?(set1, set2)
-      return set1.eql?(set2) unless ruby1_8_6?
+      return set1.eql?(set2)
       set1.to_a.uniq.sort_by {|e| e.hash}.eql?(set2.to_a.uniq.sort_by {|e| e.hash})
     end
 
