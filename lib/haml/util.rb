@@ -5,8 +5,6 @@ require 'stringio'
 require 'strscan'
 require 'rbconfig'
 
-require 'haml/root'
-
 module Haml
   # A module containing various useful functions.
   module Util
@@ -28,7 +26,7 @@ module Haml
     # @param file [String] The filename relative to the Haml root
     # @return [String] The filename relative to the the working directory
     def scope(file)
-      File.join(Haml::ROOT_DIR, file)
+      File.expand_path("../../../#{file}", __FILE__)
     end
 
     # Converts an array of `[key, value]` pairs to a hash.
