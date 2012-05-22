@@ -1,9 +1,7 @@
 require 'erb'
 require 'set'
-require 'enumerator'
 require 'stringio'
 require 'strscan'
-require 'rbconfig'
 
 module Haml
   # A module containing various useful functions.
