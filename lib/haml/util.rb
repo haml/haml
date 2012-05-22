@@ -143,17 +143,6 @@ module Haml
       @@version_comparison_cache[k] = version_gt(v1, v2) || !version_gt(v2, v1)
     end
 
-    # A wrapper for `Marshal.load` that calls `#_after_load` on the object
-    # after loading it, if it's defined.
-    #
-    # @param data [String] The data to load.
-    # @return [Object] The loaded object.
-    def load(data)
-      obj = Marshal.load(data)
-      obj._after_load if obj.respond_to?(:_after_load)
-      obj
-    end
-
     # Silence all output to STDERR within a block.
     #
     # @yield A block in which no output will be printed to STDERR
