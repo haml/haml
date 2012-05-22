@@ -177,14 +177,6 @@ class UtilTest < MiniTest::Unit::TestCase
     assert(!version_gt(v2, v1), "Expected #{v2} = #{v1}")
   end
 
-  def test_dump_and_load
-    obj = Dumpable.new
-    data = dump(obj)
-    assert_equal([:before, :around_before, :around_after, :after], obj.arr)
-    obj2 = load(data)
-    assert_equal([:before, :around_before, :loaded], obj2.arr)
-  end
-
   def test_def_static_method
     klass = Class.new
     def_static_method(klass, :static_method, [:arg1, :arg2],
