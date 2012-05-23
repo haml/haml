@@ -432,8 +432,8 @@ END
       seen << data.object_id
 
       return {key => data} unless data.is_a?(Hash)
-      data.inject({}) do |hash, k|
-        hash.merge! flatten_data_attributes(k[-1], key == '' ? k[0] : "#{key}-#{k[0]}", seen)
+      data.sort {|x, y| x[0].to_s <=> y[0].to_s}.inject({}) do |hash, a|
+        hash.merge! flatten_data_attributes(a[1], key == '' ? a[0] : "#{key}-#{a[0]}", seen)
       end
     end
 
