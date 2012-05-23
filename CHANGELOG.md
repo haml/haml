@@ -4,7 +4,7 @@
 
 * Filters that rely on third-party template engines are now implemented using
   [Tilt](github.com/rtomayko/tilt). Several new filters have been added, namely
-  Sass (:sass), LessCSS, (:less), and Coffeescript (:coffee/:coffeescript).
+  SCSS (:scss), LessCSS, (:less), and Coffeescript (:coffee/:coffeescript).
 
   Though the list of "official" filters is kept intentionally small, Haml comes
   with a helper method that makes adding support for other Tilt-based template
