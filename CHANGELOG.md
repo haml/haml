@@ -2,6 +2,16 @@
 
 ## 3.2.0 (Unreleased)
 
+* Haml now flattens deeply nested data attribute hashes. For example:
+
+  `.foo{:data => {:a => "b", :c => {:d => "e", :f => "g"}}}`
+
+  would render to:
+
+  `<div class='foo' data-a='b' data-c-d='e' data-c-f='g'></div>`
+
+  (thanks to [Péter Pál Koszta](https://github.com/koszta))
+
 * Filters that rely on third-party template engines are now implemented using
   [Tilt](github.com/rtomayko/tilt). Several new filters have been added, namely
   SCSS (:scss), LessCSS, (:less), and Coffeescript (:coffee/:coffeescript).
