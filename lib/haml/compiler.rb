@@ -426,20 +426,15 @@ END
         end
       end
     end
-    
-    def self.flatten_data_attributes(data, key = '')
-      # Storing the visited nodes' id to prevent infinite loop on circular references
-      Thread.current[:visited_ids] ||= []
-      
-      return {key => nil} if Thread.current[:visited_ids].include? data.object_id
-      Thread.current[:visited_ids] << data.object_id
-      
+
+    def self.flatten_data_attributes(data, key = '', seen = [])
+      return {key => nil} if seen.include? data.object_id
+      seen << data.object_id
+
       return {key => data} unless data.is_a?(Hash)
       data.inject({}) do |hash, k|
-        hash.merge! flatten_data_attributes(k[-1], key == '' ? k[0] : "#{key}-#{k[0]}")
+        hash.merge! flatten_data_attributes(k[-1], key == '' ? k[0] : "#{key}-#{k[0]}", seen)
       end
-    ensure
-      Thread.current[:visited_ids] = nil if key == ''
     end
 
     def prerender_tag(name, self_close, attributes)
