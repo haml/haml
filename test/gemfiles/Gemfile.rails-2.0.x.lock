@@ -1,8 +1,13 @@
 PATH
   remote: ../..
   specs:
-    haml (3.2.0.alpha.11)
+    haml (3.2.0.alpha.12)
       tilt
+
+PATH
+  remote: ../../vendor/haml-contrib
+  specs:
+    haml-contrib (0.0.0)
 
 GEM
   remote: http://rubygems.org/
@@ -17,6 +22,7 @@ GEM
       activesupport (= 2.0.5)
     activesupport (2.0.5)
     hpricot (0.8.6)
+    json (1.7.3)
     maruku (0.6.0)
       syntax (>= 1.0.0)
     minitest (2.12.1)
@@ -41,7 +47,9 @@ PLATFORMS
 
 DEPENDENCIES
   haml!
+  haml-contrib!
   hpricot
+  json
   maruku (>= 0.5.9)
   minitest
   rails (>= 2.0.0, < 2.1.0)

@@ -1,7 +1,12 @@
 PATH
+  remote: ../../vendor/haml-contrib
+  specs:
+    haml-contrib (0.0.0)
+
+PATH
   remote: /Users/norman/work/haml/haml
   specs:
-    haml (3.2.0.alpha.11)
+    haml (3.2.0.alpha.12)
       tilt
 
 GEM
@@ -99,7 +104,9 @@ PLATFORMS
 
 DEPENDENCIES
   haml!
+  haml-contrib!
   hpricot
+  json
   maruku (>= 0.5.9)
   minitest
   rails (>= 3.2.0, < 3.3.0)

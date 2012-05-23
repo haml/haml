@@ -1,7 +1,7 @@
 source :rubygems
 gemspec
 
-gem "haml-contrib", :git => "git://github.com/haml/haml-contrib.git"
+gem "haml-contrib", :path => "vendor/haml-contrib"
 
 platform :mri do
   gem "ruby-prof"
