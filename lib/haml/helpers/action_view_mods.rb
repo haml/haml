@@ -89,7 +89,6 @@ module ActionView
         def capture_with_haml(*args, &block)
           if Haml::Helpers.block_is_haml?(block)
             _hamlout = eval('_hamlout', block.binding) # Necessary since capture_haml checks _hamlout
-            nil if _hamlout
             value = nil
             buffer = capture_haml(*args) { value = yield(*args) }
             str =
