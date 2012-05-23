@@ -8,7 +8,6 @@ module Haml
     # It's used to raise an error when the return value of a helper is used
     # when it shouldn't be.
     class ErrorReturn
-      # @param message [String] The error message to raise when \{#to\_s} is called
       def initialize(method)
         @message = <<MESSAGE
 #{method} outputs directly to the Haml template.
@@ -457,12 +456,12 @@ MESSAGE
     #     </table>
     #
     # @param name [#to_s] The name of the tag
-    # @param flags [Array<Symbol>] Haml end-of-tag flags
     #
-    # @overload haml_tag(name, *flags, attributes = {})
+    # @overload haml_tag(name, *rest, attributes = {})
     #   @yield The block of Haml code within the tag
     # @overload haml_tag(name, text, *flags, attributes = {})
     #   @param text [#to_s] The text within the tag
+    #   @param flags [Array<Symbol>] Haml end-of-tag flags
     def haml_tag(name, *rest, &block)
       ret = ErrorReturn.new("haml_tag")
 

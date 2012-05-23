@@ -532,7 +532,6 @@ MSG
     #   (**not** to the ERB template)
     # @param vars [Array<Symbol>] The names of the static boolean variables
     #   to be made available to the ERB template
-    # @param erb [String] The template for the method code
     def def_static_method(klass, name, args, *vars)
       erb = vars.pop
       info = caller_info
