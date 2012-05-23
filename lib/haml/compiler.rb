@@ -357,12 +357,15 @@ END
 
     # This is a class method so it can be accessed from Buffer.
     def self.build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
-      quote_escape = attr_wrapper == '"' ? "&#x0022;" : "&#x0027;"
+      # @TODO this is an absolutely ridiculous amount of arguments. At least
+      # some of this needs to be moved into an instance method.
+      quote_escape     = attr_wrapper == '"' ? "&#x0022;" : "&#x0027;"
       other_quote_char = attr_wrapper == '"' ? "'" : '"'
+      join_char        = hyphenate_data_attrs ? '-' : '_'
 
       if attributes['data'].is_a?(Hash)
         data_attributes = attributes.delete('data')
-        data_attributes = flatten_data_attributes(data_attributes)
+        data_attributes = flatten_data_attributes(data_attributes, '', join_char)
         data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs)
         attributes = data_attributes.merge(attributes)
       end
@@ -416,7 +419,7 @@ END
     end
 
     def self.build_data_keys(data_hash, hyphenate)
-      Haml::Util.map_keys(data_hash) do |name| 
+      Haml::Util.map_keys(data_hash) do |name|
         if name == nil
           "data"
         elsif hyphenate
@@ -427,13 +430,15 @@ END
       end
     end
 
-    def self.flatten_data_attributes(data, key = '', seen = [])
+    def self.flatten_data_attributes(data, key, join_char, seen = [])
       return {key => nil} if seen.include? data.object_id
       seen << data.object_id
 
       return {key => data} unless data.is_a?(Hash)
-      data.sort {|x, y| x[0].to_s <=> y[0].to_s}.inject({}) do |hash, a|
-        hash.merge! flatten_data_attributes(a[1], key == '' ? a[0] : "#{key}-#{a[0]}", seen)
+      data.sort {|x, y| x[0].to_s <=> y[0].to_s}.inject({}) do |hash, array|
+        k, v = array
+        joined = key == '' ? k : [key, k].join(join_char)
+        hash.merge! flatten_data_attributes(v, joined, join_char, seen)
       end
     end
 

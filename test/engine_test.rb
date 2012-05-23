@@ -1440,6 +1440,14 @@ HAML
 HAML
   end
 
+  def test_html5_data_attributes_with_nested_hash_and_without_hyphenation
+    assert_equal("<div data-a_b='c'></div>\n", render(<<-HAML, :hyphenate_data_attrs => false))
+- hash = {:a => {:b => 'c'}}
+- hash[:d] = hash
+%div{:data => hash}
+HAML
+  end
+
   def test_html5_data_attributes_with_multiple_defs
     # Should always use the more-explicit attribute
     assert_equal("<div data-foo='second'></div>\n",
