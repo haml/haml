@@ -126,7 +126,7 @@ module Haml
 
       compile(parse)
     rescue Haml::Error => e
-      if @index || e.line
+      if index || e.line
         e.backtrace.unshift "#{@options[:filename]}:#{(e.line ? e.line + 1 : @index) + @options[:line] - 1}"
       end
       raise
@@ -312,6 +312,10 @@ module Haml
       scope_object.send(:instance_variable_set, '@_haml_locals', locals)
       set_locals = locals.keys.map { |k| "#{k} = @_haml_locals[#{k.inspect}]" }.join("\n")
       eval(set_locals, scope)
+    end
+
+    def index
+      @index if defined? @index
     end
   end
 end
