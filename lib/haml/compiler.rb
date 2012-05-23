@@ -362,6 +362,7 @@ END
 
       if attributes['data'].is_a?(Hash)
         data_attributes = attributes.delete('data')
+        data_attributes = flatten_data_attributes(data_attributes)
         data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs)
         attributes = data_attributes.merge(attributes)
       end
@@ -424,6 +425,21 @@ END
           "data-#{name}"
         end
       end
+    end
+    
+    def self.flatten_data_attributes(data, key = '')
+      # Storing the visited nodes' id to prevent infinite loop on circular references
+      Thread.current[:visited_ids] ||= []
+      
+      return {key => nil} if Thread.current[:visited_ids].include? data.object_id
+      Thread.current[:visited_ids] << data.object_id
+      
+      return {key => data} unless data.is_a?(Hash)
+      data.inject({}) do |hash, k|
+        hash.merge! flatten_data_attributes(k[-1], key == '' ? k[0] : "#{key}-#{k[0]}")
+      end
+    ensure
+      Thread.current[:visited_ids] = nil if key == ''
     end
 
     def prerender_tag(name, self_close, attributes)

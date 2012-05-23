@@ -1431,6 +1431,12 @@ HAML
     assert_equal("<div data-baz='bang' data-foo-bar='blip'></div>\n",
       render("%div{:data => {:foo_bar => 'blip', :baz => 'bang'}}"))
   end
+  
+  def test_html5_data_attributes_with_nested_hash
+    assert_equal("<div data-d-a='b'></div>\n",
+      render("%div{:data => lambda {c={:d => {:a => 'b'}}; c[:c] = c}.call}"))
+    assert_equal(Thread.current[:visited_ids], nil)
+  end
 
   def test_html5_data_attributes_with_multiple_defs
     # Should always use the more-explicit attribute
