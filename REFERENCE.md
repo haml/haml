@@ -1186,34 +1186,31 @@ compiles to
 
 ## Filters {#filters}
 
-The colon character designates a filter.
-This allows you to pass an indented block of text as input
-to another filtering program and add the result to the output of Haml.
-The syntax is simply a colon followed by the name of the filter.
+The colon character designates a filter. This allows you to pass an indented
+block of text as input to another filtering program and add the result to the
+output of Haml. The syntax is simply a colon followed by the name of the filter.
 For example,
 
     %p
       :markdown
-        Textile
-        =======
+        # Greetings
 
         Hello, *World*
 
 is compiled to
 
     <p>
-      <h1>Textile</h1>
+      <h1>Greetings</h1>
 
       <p>Hello, <em>World</em></p>
     </p>
 
-Filters can have Ruby code interpolated with `#{}`.
-For example,
+Filters can have Ruby code interpolated with `#{}`. For example,
 
     - flavor = "raspberry"
     #content
       :textile
-        I *really* prefer _#{h flavor}_ jam.
+        I *really* prefer _#{flavor}_ jam.
 
 is compiled to
 
@@ -1221,85 +1218,117 @@ is compiled to
       <p>I <strong>really</strong> prefer <em>raspberry</em> jam.</p>
     </div>
 
-Currently, filters ignore the [`:escape_html`](#escape_html-option) option.
-This means that `#{}` interpolation within filters is never HTML-escaped.
+Currently, filters ignore the [`:escape_html`](#escape_html-option) option. This
+means that `#{}` interpolation within filters is never HTML-escaped.
 
-Haml has the following filters defined:
+The functionality of some filters such as Markdown can be provided by many
+different libraries. Usually you don't have to worry about this - you can just
+load the gem of your choice and Haml will automatically use it.
 
-{#plain-filter}
-### `:plain`
-Does not parse the filtered text.
-This is useful for large blocks of text without HTML tags,
-when you don't want lines starting with `.` or `-` to be parsed.
+However in some cases you may want to make Haml explicitly use a specific gem
+to be used by a filter. In these cases you can do this via Tilt, the library
+Haml uses to implement many filters:
 
-{#javascript-filter}
-### `:javascript`
-Surrounds the filtered text with `<script>` and CDATA tags.
-Useful for including inline Javascript.
+    Tilt.prefer Tilt::RedCarpetTemplate
 
-{#css-filter}
-### `:css`
-Surrounds the filtered text with `<style>` and CDATA tags.
-Useful for including inline CSS.
+See the [Tilt documentation](https://github.com/rtomayko/tilt#fallback-mode) for
+more info.
+
+Haml comes with the following filters defined:
 
 {#cdata-filter}
 ### `:cdata`
 Surrounds the filtered text with CDATA tags.
+
+{#coffee-filter}
+### `:coffee`
+Compiles the filtered text to Javascript using Cofeescript. You can also
+reference this filter as `:coffeescript`. This filter is implemented using
+Tilt.
+
+{#css-filter}
+### `:css`
+Surrounds the filtered text with `<style>` and CDATA tags. Useful for including
+inline CSS.
+
+{#erb-filter}
+### `:erb`
+Parses the filtered text with ERb, like an RHTML template. Not available if the
+[`:suppress_eval`](#suppress_eval-option) option is set to true. Embedded Ruby
+code is evaluated in the same context as the Haml template. This filter is
+implemented using Tilt.
 
 {#escaped-filter}
 ### `:escaped`
 Works the same as plain, but HTML-escapes the text
 before placing it in the document.
 
-{#ruby-filter}
-### `:ruby`
-Parses the filtered text with the normal Ruby interpreter.
-All output sent to `$stdout`, like with `puts`,
-is output into the Haml document.
-Not available if the [`:suppress_eval`](#suppress_eval-option) option is set to true.
-The Ruby code is evaluated in the same context as the Haml template.
+{#javascript-filter}
+### `:javascript`
+Surrounds the filtered text with `<script>` and CDATA tags.
+Useful for including inline Javascript.
+
+{#less-filter}
+### `:less`
+Parses the filtered text with [Less](http://lesscss.org/) to produce CSS output.
+This filter is implemented using Tilt.
+
+
+{#markdown-filter}
+### `:markdown`
+Parses the filtered text with
+[Markdown](http://daringfireball.net/projects/markdown). This filter is
+implemented using Tilt.
+
+{#maruku-filter}
+### `:maruku`
+Parses the filtered text with [Maruku](https://github.com/nex3/maruku), which
+has some non-standard extensions to Markdown.
+
+As of Haml 3.2, this filter is defined in [Haml
+contrib](https://github.com/haml/haml-contrib) but is loaded automatically for
+historical reasons. In future versions of Haml it will likely not be loaded by
+default. This filter is implemented using Tilt.
+
+{#plain-filter}
+### `:plain`
+Does not parse the filtered text. This is useful for large blocks of text
+without HTML tags, when you don't want lines starting with `.` or `-` to be
+parsed.
 
 {#preserve-filter}
 ### `:preserve`
 Inserts the filtered text into the template with whitespace preserved.
-`preserve`d blocks of text aren't indented,
-and newlines are replaced with the HTML escape code for newlines,
-to preserve nice-looking output.
-See also [Whitespace Preservation](#whitespace_preservation).
+`preserve`d blocks of text aren't indented, and newlines are replaced with the
+HTML escape code for newlines, to preserve nice-looking output. See also
+[Whitespace Preservation](#whitespace_preservation).
 
-{#erb-filter}
-### `:erb`
-Parses the filtered text with ERb, like an RHTML template.
-Not available if the [`:suppress_eval`](#suppress_eval-option) option is set to true.
-Embedded Ruby code is evaluated in the same context as the Haml template.
+{#ruby-filter}
+### `:ruby`
+Parses the filtered text with the normal Ruby interpreter. All output sent to
+`$stdout`, like with `puts`, is output into the Haml document. Not available if
+the [`:suppress_eval`](#suppress_eval-option) option is set to true. The Ruby
+code is evaluated in the same context as the Haml template.
 
 {#sass-filter}
 ### `:sass`
-Parses the filtered text with Sass to produce CSS output.
+Parses the filtered text with [Sass](http://sass-lang.com/) to produce CSS
+output. This filter is implemented using Tilt.
 
 {#scss-filter}
 ### `:scss`
-Parses the filtered text with Sass like the `:sass` filter, but uses the newer SCSS
-syntax to produce CSS output.
+Parses the filtered text with Sass like the `:sass` filter, but uses the newer
+SCSS syntax to produce CSS output. This filter is implemented using Tilt.
 
 {#textile-filter}
 ### `:textile`
 Parses the filtered text with [Textile](http://www.textism.com/tools/textile).
 Only works if [RedCloth](http://redcloth.org) is installed.
 
-{#markdown-filter}
-### `:markdown`
-Parses the filtered text with [Markdown](http://daringfireball.net/projects/markdown).
-Only works if [RDiscount](https://github.com/rtomayko/rdiscount),
-[RPeg-Markdown](https://github.com/rtomayko/rpeg-markdown),
-[Maruku](http://maruku.rubyforge.org),
-[Kramdown](https://github.com/gettalong/kramdown),
-or [BlueCloth](http://www.deveiate.org/projects/BlueCloth) are installed.
-
-{#maruku-filter}
-### `:maruku`
-Parses the filtered text with [Maruku](http://maruku.rubyforge.org),
-which has some non-standard extensions to Markdown.
+As of Haml 3.2, this filter is defined in [Haml
+contrib](https://github.com/haml/haml-contrib) but is loaded automatically for
+historical reasons. In future versions of Haml it will likely not be loaded by
+default. This filter is implemented using Tilt.
 
 ### Custom Filters
 
@@ -1369,8 +1398,7 @@ Blocks of literal text can be preserved using the [`:preserve` filter](#preserve
 
 ## Helpers
 
-Haml offers a bunch of helpers that are useful
-for doing stuff like preserving whitespace,
-creating nicely indented output for user-defined helpers,
-and other useful things.
-The helpers are all documented in the {Haml::Helpers} and {Haml::Helpers::ActionViewExtensions} modules.
+Haml offers a bunch of helpers that are useful for doing stuff like preserving
+whitespace, creating nicely indented output for user-defined helpers, and other
+useful things. The helpers are all documented in the {Haml::Helpers} and
+{Haml::Helpers::ActionViewExtensions} modules.

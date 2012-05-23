@@ -9,7 +9,8 @@ module Haml
 
     extend self
 
-    # @return [{String => Haml::Filters::Base}] a hash of filter names to classes
+    # @return [{String => Haml::Filters::Base}] a hash mapping filter names to
+    #   classes.
     attr_reader :defined
     @defined = {}
 
@@ -21,10 +22,15 @@ module Haml
     #
     # @return [Module] The generated filter.
     # @param [Hash] options Options for generating the filter module.
-    # @option options [Boolean] :precompiled Whether the filter should be precompiled. Erb, Nokogiri and Builder use this, for example.
-    # @option options [Class] :template_class The Tilt template class to use, in the event it can't be inferred from an extension.
-    # @option options [String] :extension The extension associated with the content, for example "markdown". This lets Tilt choose the preferred engine when there are more than one.
-    # @option options [String,Array<String>] :alias Any aliases for the filter. For example, :coffee is also available as :coffeescript.
+    # @option options [Boolean] :precompiled Whether the filter should be
+    #   precompiled. Erb, Nokogiri and Builder use this, for example.
+    # @option options [Class] :template_class The Tilt template class to use,
+    #   in the event it can't be inferred from an extension.
+    # @option options [String] :extension The extension associated with the
+    #   content, for example "markdown". This lets Tilt choose the preferred
+    #   engine when there are more than one.
+    # @option options [String,Array<String>] :alias Any aliases for the filter.
+    #   For example, :coffee is also available as :coffeescript.
     # @since 3.2.0
     def register_tilt_filter(name, options = {})
       if const_defined?(name.to_s)
@@ -119,19 +125,22 @@ module Haml
         compile(*args)
       end
 
-      # This should be overridden when a filter needs to have access to the Haml evaluation context.
-      # Rather than applying a filter to a string at compile-time,
-      # \{#compile} uses the {Haml::Compiler} instance to compile the string to Ruby code
-      # that will be executed in the context of the active Haml template.
+      # This should be overridden when a filter needs to have access to the Haml
+      # evaluation context. Rather than applying a filter to a string at
+      # compile-time, \{#compile} uses the {Haml::Compiler} instance to compile
+      # the string to Ruby code that will be executed in the context of the
+      # active Haml template.
       #
       # Warning: the {Haml::Compiler} interface is neither well-documented
       # nor guaranteed to be stable.
-      # If you want to make use of it, you'll probably need to look at the source code
-      # and should test your filter when upgrading to new Haml versions.
+      # If you want to make use of it, you'll probably need to look at the
+      # source code and should test your filter when upgrading to new Haml
+      # versions.
       #
       # @param compiler [Haml::Compiler] The compiler instance
       # @param text [String] The text of the filter
-      # @raise [Haml::Error] if none of \{#compile}, \{#render}, and \{#render_with_options} are overridden
+      # @raise [Haml::Error] if none of \{#compile}, \{#render}, and
+      #   \{#render_with_options} are overridden
       def compile(compiler, text)
         filter = self
         compiler.instance_eval do
@@ -168,9 +177,8 @@ RUBY
     end
 
     # Does not parse the filtered text.
-    # This is useful for large blocks of text without HTML tags,
-    # when you don't want lines starting with `.` or `-`
-    # to be parsed.
+    # This is useful for large blocks of text without HTML tags, when you don't
+    # want lines starting with `.` or `-` to be parsed.
     module Plain
       include Base
 
@@ -178,8 +186,8 @@ RUBY
       def render(text); text; end
     end
 
-    # Surrounds the filtered text with `<script>` and CDATA tags.
-    # Useful for including inline Javascript.
+    # Surrounds the filtered text with `<script>` and CDATA tags. Useful for
+    # including inline Javascript.
     module Javascript
       include Base
 
@@ -201,8 +209,8 @@ END
       end
     end
 
-    # Surrounds the filtered text with `<style>` and CDATA tags.
-    # Useful for including inline CSS.
+    # Surrounds the filtered text with `<style>` and CDATA tags. Useful for
+    # including inline CSS.
     module Css
       include Base
 
@@ -234,8 +242,8 @@ END
       end
     end
 
-    # Works the same as {Plain}, but HTML-escapes the text
-    # before placing it in the document.
+    # Works the same as {Plain}, but HTML-escapes the text before placing it in
+    # the document.
     module Escaped
       include Base
 
@@ -245,11 +253,11 @@ END
       end
     end
 
-    # Parses the filtered text with the normal Ruby interpreter.
-    # All output sent to `$stdout`, such as with `puts`,
-    # is output into the Haml document.
-    # Not available if the {file:REFERENCE.md#suppress_eval-option `:suppress_eval`} option is set to true.
-    # The Ruby code is evaluated in the same context as the Haml template.
+    # Parses the filtered text with the normal Ruby interpreter. All output sent
+    # to `$stdout`, such as with `puts`, is output into the Haml document. Not
+    # available if the {file:REFERENCE.md#suppress_eval-option `:suppress_eval`}
+    # option is set to true. The Ruby code is evaluated in the same context as
+    # the Haml template.
     module Ruby
       include Base
       require 'stringio'
@@ -270,9 +278,8 @@ END
     end
 
     # Inserts the filtered text into the template with whitespace preserved.
-    # `preserve`d blocks of text aren't indented,
-    # and newlines are replaced with the HTML escape code for newlines,
-    # to preserve nice-looking output.
+    # `preserve`d blocks of text aren't indented, and newlines are replaced with
+    # the HTML escape code for newlines, to preserve nice-looking output.
     #
     # @see Haml::Helpers#preserve
     module Preserve
@@ -284,6 +291,7 @@ END
       end
     end
 
+    # @private
     module TiltFilter
       extend self
       attr_accessor :template_class, :tilt_extension
@@ -309,6 +317,7 @@ END
       end
     end
 
+    # @private
     module PrecompiledTiltFilter
       def precompiled(text)
         template_class.new { text }.send(:precompiled, {}).first
@@ -320,30 +329,23 @@ END
       end
     end
 
-    # These are the "core" filters that will be part of Haml proper going
-    # forward.
+    # @!parse module Sass; end
     register_tilt_filter "Sass"
+
+    # @!parse module Scss; end
     register_tilt_filter "Scss"
+
+    # @!parse module Less; end
     register_tilt_filter "Less"
+
+    # @!parse module Markdown; end
     register_tilt_filter "Markdown"
-    register_tilt_filter "Erb",      :precompiled    => true
-    register_tilt_filter "Coffee",   :alias          => "coffeescript"
 
-    # These filters will be moved into "haml/contrib" and you'll have to include
-    # them yourself if you want to use them:
-    #
-    # require "haml/contrib/filters/nokogiri"
-    register_tilt_filter "Wiki"
-    register_tilt_filter "Yajl"
-    register_tilt_filter "Markaby",  :extension      => "mab"
-    register_tilt_filter "Nokogiri", :precompiled    => true
-    register_tilt_filter "Builder",  :precompiled    => true
+    # @!parse module Erb; end
+    register_tilt_filter "Erb", :precompiled => true
 
-    # These filters will be moved into "haml/contrib" but will be required by
-    # default in Haml 3.2. After 3.2 they will no longer be automatically
-    # required.
-    register_tilt_filter "Textile"
-    register_tilt_filter "Maruku",   :template_class => Tilt::MarukuTemplate
+    # @!parse module Coffee; end
+    register_tilt_filter "Coffee", :alias => "coffeescript"
 
     # Parses the filtered text with ERB.
     # Not available if the {file:REFERENCE.md#suppress_eval-option
@@ -358,3 +360,8 @@ END
     end
   end
 end
+
+# These filters have been demoted to Haml Contrib but are still included by
+# default in Haml 3.2.
+require "haml/filters/maruku"
+require "haml/filters/textile"
