@@ -4,7 +4,7 @@ require "rubygems/package_task"
 
 task :default => :test
 
-CLEAN << %w(pkg doc coverage .yardoc)
+CLEAN += %w(pkg doc coverage .yardoc)
 
 def silence_warnings
   the_real_stderr, $stderr = $stderr, StringIO.new
