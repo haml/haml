@@ -50,7 +50,7 @@
 * Fix multiline silent comments: Haml previously did not allow free indentation
   inside multline silent comments.
 
-## 3.1.6 (Unreleased)
+## 3.1.6
 
 * In indented mode, don't reindent buffers that contain preserved tags, and
   provide a better workaround for Rails 3.2.3's textarea helpers.
