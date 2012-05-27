@@ -1153,7 +1153,7 @@ HAML
   EXCEPTION_MAP.each do |key, value|
     define_method("test_exception (#{key.inspect})") do
       begin
-        render(key, :filename => __FILE__)
+        render(key, :filename => "(test_exception (#{key.inspect}))")
       rescue Exception => err
         value = [value] unless value.is_a?(Array)
         expected_message, line_no = value
