@@ -294,10 +294,12 @@ END
     # @private
     module TiltFilter
       extend self
-      attr_accessor :template_class, :tilt_extension, :options
+      attr_accessor :tilt_extension, :options
+      attr_accessor :tilt_extension
+      attr_writer :template_class
 
       def template_class
-        @template_class or begin
+        (@template_class if defined? @template_class) or begin
           @template_class = Tilt["t.#{tilt_extension}"] or
             raise "Can't run #{self} filter; you must require its dependencies first"
         rescue LoadError
