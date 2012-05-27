@@ -13,8 +13,8 @@ begin
 extend Haml::Helpers
 _hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{options_for_buffer.inspect})
 _erbout = _hamlout.buffer
-__in_erb_template = true
 END
+      preamble << "__in_erb_template = true;" unless ap_geq_3?
       postamble = <<END.gsub("\n", ";")
 #{precompiled_method_return_value}
 ensure
