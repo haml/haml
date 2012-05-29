@@ -153,22 +153,6 @@ module Haml
       $stderr = the_real_stderr
     end
 
-    ## Cross Rails Version Compatibility
-
-    # Returns the root of the Rails application,
-    # if this is running in a Rails context.
-    # Returns `nil` if no such root is defined.
-    #
-    # @return [String, nil]
-    def rails_root
-      if defined?(::Rails.root)
-        return ::Rails.root.to_s if ::Rails.root
-        raise "ERROR: Rails.root is nil!"
-      end
-      return RAILS_ROOT.to_s if defined?(RAILS_ROOT)
-      return nil
-    end
-
     # Returns the environment of the Rails application,
     # if this is running in a Rails context.
     # Returns `nil` if no such environment is defined.
@@ -237,15 +221,6 @@ module Haml
       return unless text
       return text.html_safe if defined?(ActiveSupport::SafeBuffer)
       text.html_safe!
-    end
-
-    # Assert that a given object (usually a String) is HTML safe
-    # according to Rails' XSS handling, if it's loaded.
-    #
-    # @param text [Object]
-    def assert_html_safe!(text)
-      return unless rails_xss_safe? && text && !text.to_s.html_safe?
-      raise Haml::Error.new("Expected #{text.inspect} to be HTML-safe.")
     end
 
     # The class for the Rails SafeBuffer XSS protection class.
@@ -358,33 +333,6 @@ MSG
       return check_encoding(str, &block)
     end
 
-    unless ruby1_8?
-      # @private
-      def _enc(string, encoding)
-        string.encode(encoding).force_encoding("BINARY")
-      end
-
-      # We could automatically add in any non-ASCII-compatible encodings here,
-      # but there's not really a good way to do that
-      # without manually checking that each encoding
-      # encodes all ASCII characters properly,
-      # which takes long enough to affect the startup time of the CLI.
-      ENCODINGS_TO_CHECK = %w[UTF-8 UTF-16BE UTF-16LE UTF-32BE UTF-32LE]
-
-      CHARSET_REGEXPS = Hash.new do |h, e|
-        h[e] =
-          begin
-            # /\A(?:\uFEFF)?@charset "(.*?)"|\A(\uFEFF)/
-            Regexp.new(/\A(?:#{_enc("\uFEFF", e)})?#{
-              _enc('@charset "', e)}(.*?)#{_enc('"', e)}|\A(#{
-              _enc("\uFEFF", e)})/)
-          rescue
-            # /\A@charset "(.*?)"/
-            Regexp.new(/\A#{_enc('@charset "', e)}(.*?)#{_enc('"', e)}/)
-          end
-      end
-    end
-
     # Checks to see if a class has a given method.
     # For example:
     #
@@ -401,40 +349,6 @@ MSG
     # @return [Boolean] Whether or not the given collection has the given method
     def has?(attr, klass, method)
       klass.send("#{attr}s").include?(ruby1_8? ? method.to_s : method.to_sym)
-    end
-
-    # A version of `Enumerable#enum_with_index` that works in Ruby 1.8 and 1.9.
-    #
-    # @param enum [Enumerable] The enumerable to get the enumerator for
-    # @return [Enumerator] The with-index enumerator
-    def enum_with_index(enum)
-      ruby1_8? ? enum.enum_with_index : enum.each_with_index
-    end
-
-    # A version of `Enumerable#enum_cons` that works in Ruby 1.8 and 1.9.
-    #
-    # @param enum [Enumerable] The enumerable to get the enumerator for
-    # @param n [Fixnum] The size of each cons
-    # @return [Enumerator] The consed enumerator
-    def enum_cons(enum, n)
-      ruby1_8? ? enum.enum_cons(n) : enum.each_cons(n)
-    end
-
-    # A version of `Enumerable#enum_slice` that works in Ruby 1.8 and 1.9.
-    #
-    # @param enum [Enumerable] The enumerable to get the enumerator for
-    # @param n [Fixnum] The size of each slice
-    # @return [Enumerator] The consed enumerator
-    def enum_slice(enum, n)
-      ruby1_8? ? enum.enum_slice(n) : enum.each_slice(n)
-    end
-
-    # Returns the ASCII code of the given character.
-    #
-    # @param c [String] All characters but the first are ignored.
-    # @return [Fixnum] The ASCII code of `c`.
-    def ord(c)
-      ruby1_8? ? c[0] : c.ord
     end
 
     # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them under Ruby 1.9.2.
