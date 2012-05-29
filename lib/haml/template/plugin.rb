@@ -36,39 +36,6 @@ module Haml
       end
     end
   end
-
-  # Rails 3.0 prints a deprecation warning when block helpers
-  # return strings that go unused.
-  # We want to print the same deprecation warning,
-  # so we have to compile in a method call to check for it.
-  #
-  # I don't like having this in the compilation pipeline,
-  # and I'd like to get rid of it once Rails 3.1 is well-established.
-  if defined?(ActionView::OutputBuffer) &&
-      Haml::Util.has?(:instance_method, ActionView::OutputBuffer, :append_if_string=)
-    module Compiler
-      def compile_silent_script_with_haml_block_deprecation(&block)
-        unless block && !@node.value[:keyword] &&
-            @node.value[:text] =~ ActionView::Template::Handlers::Erubis::BLOCK_EXPR
-          return compile_silent_script_without_haml_block_deprecation(&block)
-        end
-
-        @node.value[:text] = "_hamlout.append_if_string= #{@node.value[:text]}"
-        compile_silent_script_without_haml_block_deprecation(&block)
-      end
-      alias_method :compile_silent_script_without_haml_block_deprecation, :compile_silent_script
-      alias_method :compile_silent_script, :compile_silent_script_with_haml_block_deprecation
-    end
-
-    class Buffer
-      def append_if_string=(value)
-        if value.is_a?(String) && !value.is_a?(ActionView::NonConcattingString)
-          ActiveSupport::Deprecation.warn("- style block helpers are deprecated. Please use =", caller)
-          buffer << value
-        end
-      end
-    end
-  end
 end
 
 if defined? ActionView::Template and ActionView::Template.respond_to? :register_template_handler

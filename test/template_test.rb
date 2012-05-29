@@ -273,27 +273,6 @@ END
     end
   end
 
-  if defined?(ActionView::OutputBuffer) &&
-      Haml::Util.has?(:instance_method, ActionView::OutputBuffer, :append_if_string=)
-    def test_av_block_deprecation_warning
-      assert_warning(/^DEPRECATION WARNING: - style block helpers are deprecated\. Please use =\./) do
-        assert_equal <<HTML, render(<<HAML, :action_view)
-<form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
-  Title:
-  <input id="article_title" name="article[title]" size="30" type="text" value="Hello" />
-  Body:
-  <input id="article_body" name="article[body]" size="30" type="text" value="World" />
-</form>
-HTML
-- form_for @article, :as => :article, :html => {:class => nil, :id => nil}, :url => '' do |f|
-  Title:
-  = f.text_field :title
-  Body:
-  = f.text_field :body
-HAML
-      end
-    end
-  end
 
   if ActionPack::VERSION::MAJOR >= 3
     # Rails 3's #label helper can take a block.
