@@ -33,7 +33,7 @@ module Haml
     #   For example, :coffee is also available as :coffeescript.
     # @since 3.2.0
     def register_tilt_filter(name, options = {})
-      if const_defined?(name.to_s)
+      if constants.map(&:to_s).include?(name.to_s)
         raise "#{name} filter already defined"
       end
 
