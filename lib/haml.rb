@@ -10,6 +10,12 @@ require 'haml/version'
 #
 # Also see the {file:REFERENCE.md full Haml reference}.
 module Haml
+
+  def self.init_rails(*args)
+    # Maintain this as a no-op for any libraries that may be depending on the
+    # previous definition here.
+  end
+
 end
 
 require 'haml/util'
