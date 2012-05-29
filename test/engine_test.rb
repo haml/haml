@@ -154,7 +154,6 @@ MESSAGE
   end
 
   def test_ruby_code_should_work_inside_attributes
-    author = 'hcatlin'
     assert_equal("<p class='3'>foo</p>", render("%p{:class => 1+2} foo").chomp)
   end
 
