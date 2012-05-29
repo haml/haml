@@ -1,5 +1,4 @@
 require 'strscan'
-require 'haml/shared'
 
 module Haml
   module Parser
@@ -104,8 +103,8 @@ module Haml
           break @template_tabs + 1 if flat? && whitespace =~ /^#{@flat_spaces}/
 
           raise SyntaxError.new(<<END.strip.gsub("\n", ' '), line.index)
-Inconsistent indentation: #{Haml::Shared.human_indentation whitespace, true} used for indentation,
-but the rest of the document was indented using #{Haml::Shared.human_indentation @indentation}.
+Inconsistent indentation: #{Haml::Util.human_indentation whitespace, true} used for indentation,
+but the rest of the document was indented using #{Haml::Util.human_indentation @indentation}.
 END
         end
       end
@@ -530,7 +529,7 @@ END
         break if name.nil?
 
         if name == false
-          text = (Haml::Shared.balance(line, ?(, ?)) || [line]).first
+          text = (Haml::Util.balance(line, ?(, ?)) || [line]).first
           raise Haml::SyntaxError.new("Invalid attribute list: #{text.inspect}.", last_line - 1)
         end
         attributes[name] = value
@@ -682,7 +681,7 @@ END
 
     def unescape_interpolation(str, escape_html = nil)
       res = ''
-      rest = Haml::Shared.handle_interpolation str.dump do |scan|
+      rest = Haml::Util.handle_interpolation str.dump do |scan|
         escapes = (scan[2].size - 1) / 2
         res << scan.matched[0...-3 - escapes]
         if escapes % 2 == 1
@@ -697,7 +696,7 @@ END
     end
 
     def balance(*args)
-      res = Haml::Shared.balance(*args)
+      res = Haml::Util.balance(*args)
       return res if res
       raise SyntaxError.new("Unbalanced brackets.")
     end
