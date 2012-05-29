@@ -3,6 +3,7 @@
 /doc
 /pkg
 /test/rails
+/test/gemfiles/*.lock
 /.haml
 /site
 *.rbc
