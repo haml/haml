@@ -437,38 +437,6 @@ MSG
       ruby1_8? ? c[0] : c.ord
     end
 
-    # Flattens the first `n` nested arrays in a cross-version manner.
-    #
-    # @param arr [Array] The array to flatten
-    # @param n [Fixnum] The number of levels to flatten
-    # @return [Array] The flattened array
-    def flatten(arr, n)
-      return arr.flatten(n)
-      return arr if n == 0
-      arr.inject([]) {|res, e| e.is_a?(Array) ? res.concat(flatten(e, n - 1)) : res << e}
-    end
-
-    # Returns the hash code for a set in a cross-version manner.
-    # Aggravatingly, this is order-dependent in Ruby 1.8.6.
-    #
-    # @param set [Set]
-    # @return [Fixnum] The order-independent hashcode of `set`
-    def set_hash(set)
-      return set.hash
-      set.map {|e| e.hash}.uniq.sort.hash
-    end
-
-    # Tests the hash-equality of two sets in a cross-version manner.
-    # Aggravatingly, this is order-dependent in Ruby 1.8.6.
-    #
-    # @param set1 [Set]
-    # @param set2 [Set]
-    # @return [Boolean] Whether or not the sets are hashcode equal
-    def set_eql?(set1, set2)
-      return set1.eql?(set2)
-      set1.to_a.uniq.sort_by {|e| e.hash}.eql?(set2.to_a.uniq.sort_by {|e| e.hash})
-    end
-
     # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them under Ruby 1.9.2.
     # This is necessary so that the precompiled Haml template can be `#encode`d into `@options[:encoding]`
     # before being evaluated.
