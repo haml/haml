@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'yard', '>= 0.5.3'
   spec.add_development_dependency 'maruku', '>= 0.5.9'
   spec.add_development_dependency 'hpricot'
-  spec.add_development_dependency 'rails'
+  spec.add_development_dependency 'rails', '>= 3.0.0'
   spec.add_development_dependency 'ruby_parser'
   spec.add_development_dependency 'rbench'
   spec.add_development_dependency 'minitest'
