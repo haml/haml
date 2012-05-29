@@ -60,11 +60,6 @@ class MiniTest::Unit::TestCase
     Haml::Util.silence_warnings(&block)
   end
 
-  def rails_form_attr
-    return 'accept-charset="UTF-8" ' if Haml::Util.ap_geq?("3.0.0.rc")
-    return ''
-  end
-
   def rails_form_opener
     return '' unless Haml::Util.ap_geq?("3.0.0.rc")
     if Haml::Util.ap_geq?("3.0.0.rc2")

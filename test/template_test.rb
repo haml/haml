@@ -278,7 +278,7 @@ END
     def test_av_block_deprecation_warning
       assert_warning(/^DEPRECATION WARNING: - style block helpers are deprecated\. Please use =\./) do
         assert_equal <<HTML, render(<<HAML, :action_view)
-<form #{rails_form_attr}action="" method="post">#{rails_form_opener}
+<form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
   Title:
   <input id="article_title" name="article[title]" size="30" type="text" value="Hello" />
   Body:
@@ -299,7 +299,7 @@ HAML
     # Rails 3's #label helper can take a block.
     def test_form_builder_label_with_block
       assert_equal(<<HTML, render(<<HAML, :action_view))
-<form #{rails_form_attr}action="" method="post">#{rails_form_opener}
+<form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
   <label for="article_title">Block content
   </label>
 </form>
@@ -401,7 +401,7 @@ HAML
 
     def test_xss_protection_with_form_for
       assert_equal(<<HTML, render(<<HAML, :action_view))
-<form #{rails_form_attr}action="" method="post">#{rails_form_opener}
+<form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
   Title:
   <input id="article_title" name="article[title]" size="30" type="text" value="Hello" />
   Body:
