@@ -153,22 +153,6 @@ module Haml
       $stderr = the_real_stderr
     end
 
-    ## Cross Rails Version Compatibility
-
-    # Returns the root of the Rails application,
-    # if this is running in a Rails context.
-    # Returns `nil` if no such root is defined.
-    #
-    # @return [String, nil]
-    def rails_root
-      if defined?(::Rails.root)
-        return ::Rails.root.to_s if ::Rails.root
-        raise "ERROR: Rails.root is nil!"
-      end
-      return RAILS_ROOT.to_s if defined?(RAILS_ROOT)
-      return nil
-    end
-
     # Returns the environment of the Rails application,
     # if this is running in a Rails context.
     # Returns `nil` if no such environment is defined.
