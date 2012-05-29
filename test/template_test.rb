@@ -304,7 +304,7 @@ HAML
   </label>
 </form>
 HTML
-#{rails_block_helper_char} form_for #{form_for_calling_convention(:article)}, :url => '' do |f|
+= form_for #{form_for_calling_convention(:article)}, :url => '' do |f|
   = f.label :title do
     Block content
 HAML
@@ -408,7 +408,7 @@ HAML
   <input id="article_body" name="article[body]" size="30" type="text" value="World" />
 </form>
 HTML
-#{rails_block_helper_char} form_for #{form_for_calling_convention(:article)}, :url => '' do |f|
+= form_for #{form_for_calling_convention(:article)}, :url => '' do |f|
   Title:
   = f.text_field :title
   Body:

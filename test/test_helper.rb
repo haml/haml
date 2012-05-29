@@ -68,8 +68,7 @@ class MiniTest::Unit::TestCase
   end
 
   def rails_block_helper_char
-    return '=' if Haml::Util.ap_geq_3?
-    return '-'
+    '='
   end
 
   def form_for_calling_convention(name)

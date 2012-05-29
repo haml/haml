@@ -130,7 +130,7 @@ HAML
   <strong>baz</strong>
 </form>
 HTML
-#{rails_block_helper_char} form_tag 'foo' do
+= form_tag 'foo' do
   %p bar
   %strong baz
 HAML
@@ -177,7 +177,7 @@ HAML
 <strong>bar</strong>
 </div>
 HTML
-#{rails_block_helper_char} content_tag :div do
+= content_tag :div do
   %p bar
   %strong bar
 HAML
@@ -191,7 +191,7 @@ HAML
   <div class="#{error_class}"><label for="post_error_field">Error field</label></div>
 </form>
 HTML
-#{rails_block_helper_char} form_for #{form_for_calling_convention('post')}, :url => '' do |f|
+= form_for #{form_for_calling_convention('post')}, :url => '' do |f|
   = f.label 'error_field'
 HAML
   end
@@ -201,7 +201,7 @@ HAML
     assert_equal(<<HTML, render(<<HAML, :action_view))
 <form #{rails_form_attr}action="/foo" method="post">#{rails_form_opener}bar</form>
 HTML
-#{rails_block_helper_char} wacky_form
+= wacky_form
 HAML
   end
 
