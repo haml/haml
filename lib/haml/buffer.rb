@@ -201,7 +201,7 @@ RUBY
     def attributes(class_id, obj_ref, *attributes_hashes)
       attributes = class_id
       attributes_hashes.each do |old|
-        self.class.merge_attrs(attributes, to_hash(old.map {|k, v| [k.to_s, v]}))
+        self.class.merge_attrs(attributes, Hash[old.map {|k, v| [k.to_s, v]}])
       end
       self.class.merge_attrs(attributes, parse_object_ref(obj_ref)) if obj_ref
       Compiler.build_attributes(

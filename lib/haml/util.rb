@@ -27,17 +27,6 @@ module Haml
       File.expand_path("../../../#{file}", __FILE__)
     end
 
-    # Converts an array of `[key, value]` pairs to a hash.
-    #
-    # @example
-    #   to_hash([[:foo, "bar"], [:baz, "bang"]])
-    #     #=> {:foo => "bar", :baz => "bang"}
-    # @param arr [Array<(Object, Object)>] An array of pairs
-    # @return [Hash] A hash
-    def to_hash(arr)
-      Hash[arr.compact]
-    end
-
     # Computes the powerset of the given array.
     # This is the set of all subsets of the array.
     #
