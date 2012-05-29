@@ -60,7 +60,7 @@ MESSAGE
     "%p(foo 'bar')" => "Invalid attribute list: \"(foo 'bar')\".",
     "%p(foo 'bar'\nbaz='bang')" => ["Invalid attribute list: \"(foo 'bar'\".", 1],
     "%p(foo='bar'\nbaz 'bang'\nbip='bop')" => ["Invalid attribute list: \"(foo='bar' baz 'bang'\".", 2],
-    "%p{:foo => 'bar' :bar => 'baz'}" => :compile,
+    "%p{'foo' => 'bar' 'bar' => 'baz'}" => :compile,
     "%p{:foo => }" => :compile,
     "%p{=> 'bar'}" => :compile,
     "%p{'foo => 'bar'}" => :compile,
