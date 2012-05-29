@@ -239,15 +239,6 @@ module Haml
       text.html_safe!
     end
 
-    # Assert that a given object (usually a String) is HTML safe
-    # according to Rails' XSS handling, if it's loaded.
-    #
-    # @param text [Object]
-    def assert_html_safe!(text)
-      return unless rails_xss_safe? && text && !text.to_s.html_safe?
-      raise Haml::Error.new("Expected #{text.inspect} to be HTML-safe.")
-    end
-
     # The class for the Rails SafeBuffer XSS protection class.
     # This varies depending on Rails version.
     #
