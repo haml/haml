@@ -191,7 +191,7 @@ HAML
   <div class="#{error_class}"><label for="post_error_field">Error field</label></div>
 </form>
 HTML
-= form_for #{form_for_calling_convention('post')}, :url => '' do |f|
+= form_for @post, :as => :post, :html => {:class => nil, :id => nil}, :url => '' do |f|
   = f.label 'error_field'
 HAML
   end

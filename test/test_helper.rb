@@ -60,15 +60,6 @@ class MiniTest::Unit::TestCase
     Haml::Util.silence_warnings(&block)
   end
 
-  def rails_block_helper_char
-    '='
-  end
-
-  def form_for_calling_convention(name)
-    return "@#{name}, :as => :#{name}, :html => {:class => nil, :id => nil}" if Haml::Util.ap_geq_3?
-    return ":#{name}, @#{name}"
-  end
-
   def rails_form_attr
     return 'accept-charset="UTF-8" ' if Haml::Util.ap_geq?("3.0.0.rc")
     return ''

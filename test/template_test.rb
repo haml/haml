@@ -285,7 +285,7 @@ END
   <input id="article_body" name="article[body]" size="30" type="text" value="World" />
 </form>
 HTML
-- form_for #{form_for_calling_convention(:article)}, :url => '' do |f|
+- form_for @article, :as => :article, :html => {:class => nil, :id => nil}, :url => '' do |f|
   Title:
   = f.text_field :title
   Body:
@@ -304,7 +304,7 @@ HAML
   </label>
 </form>
 HTML
-= form_for #{form_for_calling_convention(:article)}, :url => '' do |f|
+= form_for @article, :as => :article, :html => {:class => nil, :id => nil}, :url => '' do |f|
   = f.label :title do
     Block content
 HAML
@@ -408,7 +408,7 @@ HAML
   <input id="article_body" name="article[body]" size="30" type="text" value="World" />
 </form>
 HTML
-= form_for #{form_for_calling_convention(:article)}, :url => '' do |f|
+= form_for @article, :as => :article, :html => {:class => nil, :id => nil}, :url => '' do |f|
   Title:
   = f.text_field :title
   Body:
