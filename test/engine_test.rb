@@ -841,9 +841,9 @@ HAML
 foo
 HTML
 - var = if false
-- elsif 12
+- elsif 12 == 12
   - "foo"
-- elsif 14; "bar"
+- elsif 14 == 14; "bar"
 - else
   - "baz"
 = var
