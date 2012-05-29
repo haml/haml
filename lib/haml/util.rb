@@ -358,33 +358,6 @@ MSG
       return check_encoding(str, &block)
     end
 
-    unless ruby1_8?
-      # @private
-      def _enc(string, encoding)
-        string.encode(encoding).force_encoding("BINARY")
-      end
-
-      # We could automatically add in any non-ASCII-compatible encodings here,
-      # but there's not really a good way to do that
-      # without manually checking that each encoding
-      # encodes all ASCII characters properly,
-      # which takes long enough to affect the startup time of the CLI.
-      ENCODINGS_TO_CHECK = %w[UTF-8 UTF-16BE UTF-16LE UTF-32BE UTF-32LE]
-
-      CHARSET_REGEXPS = Hash.new do |h, e|
-        h[e] =
-          begin
-            # /\A(?:\uFEFF)?@charset "(.*?)"|\A(\uFEFF)/
-            Regexp.new(/\A(?:#{_enc("\uFEFF", e)})?#{
-              _enc('@charset "', e)}(.*?)#{_enc('"', e)}|\A(#{
-              _enc("\uFEFF", e)})/)
-          rescue
-            # /\A@charset "(.*?)"/
-            Regexp.new(/\A#{_enc('@charset "', e)}(.*?)#{_enc('"', e)}/)
-          end
-      end
-    end
-
     # Checks to see if a class has a given method.
     # For example:
     #
