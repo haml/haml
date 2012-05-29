@@ -61,16 +61,7 @@ class MiniTest::Unit::TestCase
   end
 
   def rails_form_opener
-    return '' unless Haml::Util.ap_geq?("3.0.0.rc")
-    if Haml::Util.ap_geq?("3.0.0.rc2")
-      encoding = 'utf8'
-      char = '&#x2713;'
-    else
-      encoding = '_snowman'
-      char = '&#9731;'
-    end
-    return '<div style="margin:0;padding:0;display:inline"><input name="' + encoding +
-      '" type="hidden" value="' + char + '" /></div>'
+    '<div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>'
   end
 
   def assert_raises_message(klass, message)
