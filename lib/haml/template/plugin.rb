@@ -20,20 +20,9 @@ module Haml
 
     def compile(template)
       options = Haml::Template.options.dup
-
       options[:mime_type] = template.mime_type if template.respond_to? :mime_type
-
-      # template is a template object in Rails >=2.1.0,
-      # a source string previously
-      if template.respond_to? :source
-        # Template has a generic identifier in Rails >=3.0.0
-        options[:filename] = template.respond_to?(:identifier) ? template.identifier : template.filename
-        source = template.source
-      else
-        source = template
-      end
-
-      Haml::Engine.new(source, options).send(:precompiled_with_ambles, [])
+      options[:filename] = template.identifier
+      Haml::Engine.new(template.source, options).send(:precompiled_with_ambles, [])
     end
 
     # In Rails 3.1+, #call takes the place of #compile
