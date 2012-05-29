@@ -273,7 +273,6 @@ END
     end
   end
 
-
   if ActionPack::VERSION::MAJOR >= 3
     # Rails 3's #label helper can take a block.
     def test_form_builder_label_with_block
