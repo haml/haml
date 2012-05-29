@@ -20,13 +20,8 @@ class FiltersTest < MiniTest::Unit::TestCase
       end
     ensure
       Haml::Filters.defined.delete "foo"
+      Haml::Filters.send :remove_const, :Foo
     end
-  end
-
-  test "ERB filter with multiline expressions" do
-    html = "foobarbaz\n"
-    haml = %Q{:erb\n  <%= "foo" +\n      "bar" +\n      "baz" %>}
-    assert_equal(html, render(haml))
   end
 
   test "should respect escaped newlines and interpolation" do
@@ -43,9 +38,49 @@ class FiltersTest < MiniTest::Unit::TestCase
     expectation = "foo\n"
     assert_equal(expectation, render(":plain\n  foo", :ugly => true))
   end
+
+  test "should pass options to Tilt filters that precompile" do
+    haml  = ":erb\n  <%= 'foo' %>"
+    refute_match('TEST_VAR', Haml::Engine.new(haml).precompiled)
+    Haml::Filters::Erb.options = {:outvar => 'TEST_VAR'}
+    assert_match('TEST_VAR', Haml::Engine.new(haml).precompiled)
+  end
+
+  test "should pass options to Tilt filters that don't precompile" do
+    begin
+      filter = Class.new(Tilt::Template) do
+        def self.name
+          "Foo"
+        end
+
+        def prepare
+          @engine = {:data => data, :options => options}
+        end
+
+        def evaluate(scope, locals, &block)
+          @output = @engine[:options].to_a.join
+        end
+      end
+      Haml::Filters.register_tilt_filter "Foo", :template_class => filter
+      Haml::Filters::Foo.options[:foo] = "bar"
+      haml = ":foo"
+      assert_equal "foobar\n", render(haml)
+    ensure
+      Haml::Filters.defined.delete "foo"
+      Haml::Filters.send :remove_const, :Foo
+    end
+  end
+
 end
 
 class ErbFilterTest < MiniTest::Unit::TestCase
+  test "multiline expressions should work" do
+    html = "foobarbaz\n"
+    haml = %Q{:erb\n  <%= "foo" +\n      "bar" +\n      "baz" %>}
+    assert_equal(html, render(haml))
+  end
+
+
   test "should evaluate in the same context as Haml" do
     haml  = ":erb\n  <%= foo %>"
     html  = "bar\n"

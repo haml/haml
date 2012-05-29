@@ -294,7 +294,7 @@ END
     # @private
     module TiltFilter
       extend self
-      attr_accessor :template_class, :tilt_extension
+      attr_accessor :template_class, :tilt_extension, :options
 
       def template_class
         @template_class or begin
@@ -306,11 +306,12 @@ END
       end
 
       def self.extended(base)
+        base.options = {}
         base.instance_eval do
           include Base
           def render(text)
             Haml::Util.silence_warnings do
-              template_class.new {text}.render
+              template_class.new(nil, 1, options) {text}.render
             end
           end
         end
@@ -320,7 +321,7 @@ END
     # @private
     module PrecompiledTiltFilter
       def precompiled(text)
-        template_class.new { text }.send(:precompiled, {}).first
+        template_class.new(nil, 1, options) { text }.send(:precompiled, {}).first
       end
 
       def compile(compiler, text)
