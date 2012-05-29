@@ -363,6 +363,10 @@ END
 end
 
 # These filters have been demoted to Haml Contrib but are still included by
-# default in Haml 3.2.
-require "haml/filters/maruku"
-require "haml/filters/textile"
+# default in Haml 3.2. Still, we rescue from load error if for some reason
+# haml-contrib is not installed.
+begin
+  require "haml/filters/maruku"
+  require "haml/filters/textile"
+rescue LoadError
+end
