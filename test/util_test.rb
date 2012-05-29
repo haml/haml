@@ -48,11 +48,6 @@ class UtilTest < MiniTest::Unit::TestCase
     assert(has?(:private_instance_method, Haml::Engine, :set_locals))
   end
 
-  def test_enum_with_index
-    assert_equal(%w[foo0 bar1 baz2],
-      enum_with_index(%w[foo bar baz]).map {|s, i| "#{s}#{i}"})
-  end
-
   def test_enum_cons
     assert_equal(%w[foobar barbaz],
       enum_cons(%w[foo bar baz], 2).map {|s1, s2| "#{s1}#{s2}"})

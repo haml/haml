@@ -332,14 +332,6 @@ MSG
       klass.send("#{attr}s").include?(ruby1_8? ? method.to_s : method.to_sym)
     end
 
-    # A version of `Enumerable#enum_with_index` that works in Ruby 1.8 and 1.9.
-    #
-    # @param enum [Enumerable] The enumerable to get the enumerator for
-    # @return [Enumerator] The with-index enumerator
-    def enum_with_index(enum)
-      ruby1_8? ? enum.enum_with_index : enum.each_with_index
-    end
-
     # A version of `Enumerable#enum_cons` that works in Ruby 1.8 and 1.9.
     #
     # @param enum [Enumerable] The enumerable to get the enumerator for
