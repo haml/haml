@@ -295,7 +295,6 @@ END
     module TiltFilter
       extend self
       attr_accessor :tilt_extension, :options
-      attr_accessor :tilt_extension
       attr_writer :template_class
 
       def template_class
