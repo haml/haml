@@ -84,14 +84,14 @@ class ErbFilterTest < MiniTest::Unit::TestCase
   test "should evaluate in the same context as Haml" do
     haml  = ":erb\n  <%= foo %>"
     html  = "bar\n"
-    scope = Object.new.instance_eval {foo = "bar"; binding}
+    scope = Object.new.instance_eval {foo = "bar"; nil if foo; binding}
     assert_equal(html, render(haml, :scope => scope))
   end
 end
 
 class JavascriptFilterTest < MiniTest::Unit::TestCase
   test "should interpolate" do
-    scope = Object.new.instance_eval {foo = "bar"; binding}
+    scope = Object.new.instance_eval {foo = "bar"; nil if foo; binding}
     haml  = ":javascript\n  \#{foo}"
     html  = render(haml, :scope => scope)
     assert_match(/bar/, html)

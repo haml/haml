@@ -1264,6 +1264,9 @@ HAML
     string.instance_variable_set("@var", "Instance variable")
     b = string.instance_eval do
       var = "Local variable"
+      # Silence unavoidable warning; Ruby doesn't know we're going to use this
+      # later.
+      nil if var
       binding
     end
 
