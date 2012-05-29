@@ -723,11 +723,11 @@ HAML
   end
 
   def test_silent_script_with_hyphen_case
-    assert_equal("", render("- 'foo-case-bar-case'"))
+    assert_equal("", render("- a = 'foo-case-bar-case'"))
   end
 
   def test_silent_script_with_hyphen_end
-    assert_equal("", render("- 'foo-end-bar-end'"))
+    assert_equal("", render("- a = 'foo-end-bar-end'"))
   end
 
   def test_silent_script_with_hyphen_end_and_block
