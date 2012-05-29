@@ -468,7 +468,8 @@ MESSAGE
       text = rest.shift.to_s unless [Symbol, Hash, NilClass].any? {|t| rest.first.is_a? t}
       flags = []
       flags << rest.shift while rest.first.is_a? Symbol
-      attrs = Haml::Util.map_keys(rest.shift || {}) {|key| key.to_s}
+      attrs = (rest.shift || {})
+      attrs.keys.each {|key| attrs[key.to_s] = attrs.delete(key)} unless attrs.empty?
       name, attrs = merge_name_and_attributes(name.to_s, attrs)
 
       attributes = Haml::Compiler.build_attributes(haml_buffer.html?,

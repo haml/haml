@@ -419,15 +419,15 @@ END
     end
 
     def self.build_data_keys(data_hash, hyphenate)
-      Haml::Util.map_keys(data_hash) do |name|
+      Hash[data_hash.map do |name, value|
         if name == nil
-          "data"
+          ["data", value]
         elsif hyphenate
-          "data-#{name.to_s.gsub(/_/, '-')}"
+          ["data-#{name.to_s.gsub(/_/, '-')}", value]
         else
-          "data-#{name}"
+          ["data-#{name}", value]
         end
-      end
+      end]
     end
 
     def self.flatten_data_attributes(data, key, join_char, seen = [])

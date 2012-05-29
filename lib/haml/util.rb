@@ -38,22 +38,6 @@ module Haml
       Hash[arr.compact]
     end
 
-    # Maps the keys in a hash according to a block.
-    #
-    # @example
-    #   map_keys({:foo => "bar", :baz => "bang"}) {|k| k.to_s}
-    #     #=> {"foo" => "bar", "baz" => "bang"}
-    # @param hash [Hash] The hash to map
-    # @yield [key] A block in which the keys are transformed
-    # @yieldparam key [Object] The key that should be mapped
-    # @yieldreturn [Object] The new value for the key
-    # @return [Hash] The mapped hash
-    # @see #map_vals
-    # @see #map_hash
-    def map_keys(hash)
-      to_hash(hash.map {|k, v| [yield(k), v]})
-    end
-
     # Computes the powerset of the given array.
     # This is the set of all subsets of the array.
     #
