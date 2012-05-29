@@ -25,7 +25,7 @@ module Haml
 end
 
 
-Haml::Template.options[:ugly] ||= Haml::Util.rails_env == "development"
+Haml::Template.options[:ugly] ||= Rails.env.development?
 Haml::Template.options[:escape_html] = true
 Haml::Template.options[:format] ||= :html5
 

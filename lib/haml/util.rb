@@ -125,17 +125,6 @@ module Haml
       return nil
     end
 
-    # Returns the environment of the Rails application,
-    # if this is running in a Rails context.
-    # Returns `nil` if no such environment is defined.
-    #
-    # @return [String, nil]
-    def rails_env
-      return ::Rails.env.to_s if defined?(::Rails.env)
-      return RAILS_ENV.to_s if defined?(RAILS_ENV)
-      return nil
-    end
-
     # Returns whether this environment is using ActionPack
     # version 3.0.0 or greater.
     #
