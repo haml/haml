@@ -54,23 +54,6 @@ module Haml
       to_hash(hash.map {|k, v| [yield(k), v]})
     end
 
-    # Maps the key-value pairs of a hash according to a block.
-    #
-    # @example
-    #   map_hash({:foo => "bar", :baz => "bang"}) {|k, v| [k.to_s, v.to_sym]}
-    #     #=> {"foo" => :bar, "baz" => :bang}
-    # @param hash [Hash] The hash to map
-    # @yield [key, value] A block in which the key-value pairs are transformed
-    # @yieldparam [key] The hash key
-    # @yieldparam [value] The hash value
-    # @yieldreturn [(Object, Object)] The new value for the `[key, value]` pair
-    # @return [Hash] The mapped hash
-    # @see #map_keys
-    # @see #map_vals
-    def map_hash(hash, &block)
-      to_hash(hash.map(&block))
-    end
-
     # Computes the powerset of the given array.
     # This is the set of all subsets of the array.
     #
