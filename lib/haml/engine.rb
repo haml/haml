@@ -88,6 +88,7 @@ module Haml
         :hyphenate_data_attrs => true,
       }
 
+      @index = nil # explicitily initialize to avoid warnings
 
       template = check_haml_encoding(template) do |msg, line|
         raise Haml::Error.new(msg, line)
