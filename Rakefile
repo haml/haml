@@ -126,4 +126,5 @@ namespace :test do
   task :rails_compatibility => 'test:bundles:install' do
     with_each_gemfile {sh "bundle exec rake test"}
   end
+  task :rc => :rails_compatibility
 end
