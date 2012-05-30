@@ -16,10 +16,6 @@ class UtilTest < MiniTest::Unit::TestCase
     def _after_load; @arr << :loaded; end
   end
 
-  def test_scope
-    assert(File.exist?(scope("Rakefile")))
-  end
-
   def test_powerset
     return unless Set[Set[]] == Set[Set[]] # There's a bug in Ruby 1.8.6 that breaks nested set equality
     assert_equal([[].to_set].to_set,
