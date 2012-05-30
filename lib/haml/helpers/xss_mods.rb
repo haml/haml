@@ -149,18 +149,15 @@ module ActionView
       alias_method :concat_without_haml_xss, :concat
       alias_method :concat, :concat_with_haml_xss
 
-      # safe_concat was introduced in Rails 3.0
-      if Haml::Util.has?(:instance_method, self, :safe_concat)
-        def safe_concat_with_haml_xss(string)
-          if is_haml?
-            haml_buffer.buffer.concat(string)
-          else
-            safe_concat_without_haml_xss(string)
-          end
+      def safe_concat_with_haml_xss(string)
+        if is_haml?
+          haml_buffer.buffer.concat(string)
+        else
+          safe_concat_without_haml_xss(string)
         end
-        alias_method :safe_concat_without_haml_xss, :safe_concat
-        alias_method :safe_concat, :safe_concat_with_haml_xss
       end
+      alias_method :safe_concat_without_haml_xss, :safe_concat
+      alias_method :safe_concat, :safe_concat_with_haml_xss
     end
   end
 end
