@@ -172,24 +172,6 @@ MSG
       end
     end
 
-    # Checks to see if a class has a given method.
-    # For example:
-    #
-    #     Haml::Util.has?(:public_instance_method, String, :gsub) #=> true
-    #
-    # Method collections like `Class#instance_methods`
-    # return strings in Ruby 1.8 and symbols in Ruby 1.9 and on,
-    # so this handles checking for them in a compatible way.
-    #
-    # @param attr [#to_s] The (singular) name of the method-collection method
-    #   (e.g. `:instance_methods`, `:private_methods`)
-    # @param klass [Module] The class to check the methods of which to check
-    # @param method [String, Symbol] The name of the method do check for
-    # @return [Boolean] Whether or not the given collection has the given method
-    def has?(attr, klass, method)
-      klass.send("#{attr}s").detect {|x| x.to_s == method.to_s}
-    end
-
     # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them under Ruby 1.9.2.
     # This is necessary so that the precompiled Haml template can be `#encode`d into `@options[:encoding]`
     # before being evaluated.

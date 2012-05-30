@@ -43,11 +43,6 @@ class UtilTest < MiniTest::Unit::TestCase
     $stderr = old_stderr
   end
 
-  def test_has
-    assert(has?(:instance_method, String, :chomp!))
-    assert(has?(:private_instance_method, Haml::Engine, :set_locals))
-  end
-
   def test_caller_info
     assert_equal(["/tmp/foo.rb", 12, "fizzle"], caller_info("/tmp/foo.rb:12: in `fizzle'"))
     assert_equal(["/tmp/foo.rb", 12, nil], caller_info("/tmp/foo.rb:12"))
