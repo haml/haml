@@ -2,6 +2,10 @@
 
 ## 3.2.0 (Unreleased)
 
+* Haml now supports only Rails 3 and above, and Ruby 1.8.7 and above. If you
+  still need support for Rails 2 and Ruby 1.8.6, please use Haml 3.1.x which
+  will continue to be maintained for bug fixes.
+
 * Haml now flattens deeply nested data attribute hashes. For example:
 
   `.foo{:data => {:a => "b", :c => {:d => "e", :f => "g"}}}`
