@@ -8,10 +8,6 @@ module Haml
   module Util
     extend self
 
-    # An array of ints representing the Ruby version number.
-    # @api public
-    RUBY_VERSION = ::RUBY_VERSION.split(".").map {|s| s.to_i}
-
     # Returns the path of a file relative to the Haml root directory.
     #
     # @param file [String] The filename relative to the Haml root
