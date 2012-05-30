@@ -191,26 +191,6 @@ class TemplateTest < MiniTest::Unit::TestCase
     assert_equal("2\n", render("= 1+1"))
   end
 
-  unless Haml::Util.ap_geq_3?
-    def test_form_for_error_return
-      assert_raises(Haml::Error) { render(<<HAML) }
-= form_for :article, @article, :url => '' do |f|
-  Title:
-  = f.text_field :title
-  Body:
-  = f.text_field :body
-HAML
-    end
-
-    def test_form_tag_error_return
-      assert_raises(Haml::Error) { render(<<HAML) }
-= form_tag '' do
-  Title:
-  Body:
-HAML
-    end
-  end
-
   def test_haml_options
     old_options = Haml::Template.options.dup
     Haml::Template.options[:suppress_eval] = true

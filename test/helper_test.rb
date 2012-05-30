@@ -185,10 +185,9 @@ HAML
 
   def test_content_tag_error_wrapping
     def @base.protect_against_forgery?; false; end
-    error_class = Haml::Util.ap_geq_3? ? "field_with_errors" : "fieldWithErrors"
     assert_equal(<<HTML, render(<<HAML, :action_view))
 <form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
-  <div class="#{error_class}"><label for="post_error_field">Error field</label></div>
+  <div class="field_with_errors"><label for="post_error_field">Error field</label></div>
 </form>
 HTML
 = form_for @post, :as => :post, :html => {:class => nil, :id => nil}, :url => '' do |f|
@@ -357,8 +356,7 @@ HAML
   end
 
   def test_indented_capture
-    prior = Haml::Util.ap_geq_3? ? "" : "  \n"
-    assert_equal("#{prior}  Foo\n  ", @base.render(:inline => "  <% res = capture do %>\n  Foo\n  <% end %><%= res %>"))
+    assert_equal("  Foo\n  ", @base.render(:inline => "  <% res = capture do %>\n  Foo\n  <% end %><%= res %>"))
   end
 
   def test_capture_deals_properly_with_collections
