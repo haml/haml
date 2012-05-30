@@ -1,7 +1,9 @@
+require File.expand_path("../lib/haml/version", __FILE__)
+
 Gem::Specification.new do |spec|
   spec.name        = 'haml'
   spec.summary     = "An elegant, structured (X)HTML/XML templating engine."
-  spec.version     = File.read(File.dirname(__FILE__) + '/VERSION').strip
+  spec.version     = Haml::VERSION
   spec.authors     = ['Nathan Weizenbaum', 'Hampton Catlin', 'Norman Clarke']
   spec.email       = ['haml@googlegroups.com', 'norman@njclarke.com']
 
