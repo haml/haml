@@ -103,109 +103,57 @@ module ActionView
       end
     end
 
-    if Haml::Util.ap_geq_3?
-      module FormTagHelper
-        def form_tag_with_haml(url_for_options = {}, options = {}, *parameters_for_url, &proc)
-          if is_haml?
-            wrap_block = block_given? && block_is_haml?(proc)
-            if wrap_block
-              oldproc = proc
-              proc = haml_bind_proc do |*args|
-                concat "\n"
-                with_tabs(1) {oldproc.call(*args)}
-              end
-            end
-            res = form_tag_without_haml(url_for_options, options, *parameters_for_url, &proc) + "\n"
-            res << "\n" if wrap_block
-            res
-          else
-            form_tag_without_haml(url_for_options, options, *parameters_for_url, &proc)
-          end
-        end
-        alias_method :form_tag_without_haml, :form_tag
-        alias_method :form_tag, :form_tag_with_haml
-      end
-
-      module FormHelper
-        def form_for_with_haml(object_name, *args, &proc)
-          wrap_block = block_given? && is_haml? && block_is_haml?(proc)
+    module FormTagHelper
+      def form_tag_with_haml(url_for_options = {}, options = {}, *parameters_for_url, &proc)
+        if is_haml?
+          wrap_block = block_given? && block_is_haml?(proc)
           if wrap_block
             oldproc = proc
-            proc = proc {|*subargs| with_tabs(1) {oldproc.call(*subargs)}}
+            proc = haml_bind_proc do |*args|
+              concat "\n"
+              with_tabs(1) {oldproc.call(*args)}
+            end
           end
-          res = form_for_without_haml(object_name, *args, &proc)
+          res = form_tag_without_haml(url_for_options, options, *parameters_for_url, &proc) + "\n"
           res << "\n" if wrap_block
           res
+        else
+          form_tag_without_haml(url_for_options, options, *parameters_for_url, &proc)
         end
-        alias_method :form_for_without_haml, :form_for
-        alias_method :form_for, :form_for_with_haml
       end
+      alias_method :form_tag_without_haml, :form_tag
+      alias_method :form_tag, :form_tag_with_haml
+    end
 
-      module CacheHelper
-        # This is a workaround for a Rails 3 bug
-        # that's present at least through beta 3.
-        # Their fragment_for assumes that the block
-        # will return its contents as a string,
-        # which is not always the case.
-        # Luckily, it only makes this assumption if caching is disabled,
-        # so we only override that case.
-        def fragment_for_with_haml(*args, &block)
-          return fragment_for_without_haml(*args, &block) if controller.perform_caching
-          capture(&block)
+    module FormHelper
+      def form_for_with_haml(object_name, *args, &proc)
+        wrap_block = block_given? && is_haml? && block_is_haml?(proc)
+        if wrap_block
+          oldproc = proc
+          proc = proc {|*subargs| with_tabs(1) {oldproc.call(*subargs)}}
         end
-        alias_method :fragment_for_without_haml, :fragment_for
-        alias_method :fragment_for, :fragment_for_with_haml
+        res = form_for_without_haml(object_name, *args, &proc)
+        res << "\n" if wrap_block
+        res
       end
-    else
-      module FormTagHelper
-        def form_tag_with_haml(url_for_options = {}, options = {}, *parameters_for_url, &proc)
-          if is_haml?
-            wrap_block = block_given? && block_is_haml?(proc)
-            if wrap_block
-              oldproc = proc
-              proc = haml_bind_proc do |*args|
-                concat "\n"
-                tab_up
-                oldproc.call(*args)
-                tab_down
-                concat haml_indent
-              end
-              concat haml_indent
-            end
-            res = form_tag_without_haml(url_for_options, options, *parameters_for_url, &proc) + "\n"
-            if block_given?
-              concat "\n"
-              return Haml::Helpers::ErrorReturn.new("form_tag")
-            end
-            res
-          else
-            form_tag_without_haml(url_for_options, options, *parameters_for_url, &proc)
-          end
-        end
-        alias_method :form_tag_without_haml, :form_tag
-        alias_method :form_tag, :form_tag_with_haml
-      end
+      alias_method :form_for_without_haml, :form_for
+      alias_method :form_for, :form_for_with_haml
+    end
 
-      module FormHelper
-        def form_for_with_haml(object_name, *args, &proc)
-          wrap_block = block_given? && is_haml? && block_is_haml?(proc)
-          if wrap_block
-            oldproc = proc
-            proc = haml_bind_proc do |*subargs|
-              tab_up
-              oldproc.call(*subargs)
-              tab_down
-              concat haml_indent
-            end
-            concat haml_indent
-          end
-          form_for_without_haml(object_name, *args, &proc)
-          concat "\n" if wrap_block
-          Haml::Helpers::ErrorReturn.new("form_for") if is_haml?
-        end
-        alias_method :form_for_without_haml, :form_for
-        alias_method :form_for, :form_for_with_haml
+    module CacheHelper
+      # This is a workaround for a Rails 3 bug
+      # that's present at least through beta 3.
+      # Their fragment_for assumes that the block
+      # will return its contents as a string,
+      # which is not always the case.
+      # Luckily, it only makes this assumption if caching is disabled,
+      # so we only override that case.
+      def fragment_for_with_haml(*args, &block)
+        return fragment_for_without_haml(*args, &block) if controller.perform_caching
+        capture(&block)
       end
+      alias_method :fragment_for_without_haml, :fragment_for
+      alias_method :fragment_for, :fragment_for_with_haml
     end
   end
 end
