@@ -116,30 +116,35 @@ module Haml
     #   Only yields if there is an encoding error
     # @yieldparam msg [String] The error message to be raised
     # @return [String] `str`, potentially with encoding gotchas like BOMs removed
-    def check_encoding(str)
-      if ruby1_8?
-        return str.gsub(/\A\xEF\xBB\xBF/, '') # Get rid of the UTF-8 BOM
-      elsif str.valid_encoding?
-        # Get rid of the Unicode BOM if possible
-        if str.encoding.name =~ /^UTF-(8|16|32)(BE|LE)?$/
-          return str.gsub(Regexp.new("\\A\uFEFF".encode(str.encoding.name)), '')
-        else
-          return str
-        end
+    if ruby1_8?
+      def check_encoding(str)
+        str.gsub(/\A\xEF\xBB\xBF/, '') # Get rid of the UTF-8 BOM
       end
+    else
 
-      encoding = str.encoding
-      newlines = Regexp.new("\r\n|\r|\n".encode(encoding).force_encoding("binary"))
-      str.force_encoding("binary").split(newlines).each_with_index do |line, i|
-        begin
-          line.encode(encoding)
-        rescue Encoding::UndefinedConversionError => e
-          yield <<MSG.rstrip, i + 1
+      def check_encoding(str)
+        if str.valid_encoding?
+          # Get rid of the Unicode BOM if possible
+          if str.encoding.name =~ /^UTF-(8|16|32)(BE|LE)?$/
+            return str.gsub(Regexp.new("\\A\uFEFF".encode(str.encoding.name)), '')
+          else
+            return str
+          end
+        end
+
+        encoding = str.encoding
+        newlines = Regexp.new("\r\n|\r|\n".encode(encoding).force_encoding("binary"))
+        str.force_encoding("binary").split(newlines).each_with_index do |line, i|
+          begin
+            line.encode(encoding)
+          rescue Encoding::UndefinedConversionError => e
+            yield <<MSG.rstrip, i + 1
 Invalid #{encoding.name} character #{e.error_char.dump}
 MSG
+          end
         end
+        return str
       end
-      return str
     end
 
     # Like {\#check\_encoding}, but also checks for a Ruby-style `-# coding:` comment

@@ -52,17 +52,22 @@ module Haml
       @options[:format] == :html5
     end
 
-    # The source code that is evaluated to produce the Haml document.
-    #
-    # In Ruby 1.9, this is automatically converted to the correct encoding
-    # (see {file:REFERENCE.md#encodings the `:encoding` option}).
-    #
-    # @return [String]
-    def precompiled
-      return @precompiled if ruby1_8?
-      encoding = Encoding.find(@options[:encoding])
-      return @precompiled.force_encoding(encoding) if encoding == Encoding::BINARY
-      return @precompiled.encode(encoding)
+    if RUBY_VERSION < "1.9"
+      # The source code that is evaluated to produce the Haml document.
+      #
+      # In Ruby 1.9, this is automatically converted to the correct encoding
+      # (see {file:REFERENCE.md#encodings the `:encoding` option}).
+      #
+      # @return [String]
+      def precompiled
+        @precompiled
+      end
+    else
+      def precompiled
+        encoding = Encoding.find(@options[:encoding])
+        return @precompiled.force_encoding(encoding) if encoding == Encoding::BINARY
+        return @precompiled.encode(encoding)
+      end
     end
 
     # Precompiles the Haml template.
