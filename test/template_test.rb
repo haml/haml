@@ -188,7 +188,6 @@ class TemplateTest < MiniTest::Unit::TestCase
   end
 
   def test_with_output_buffer_with_ugly
-    return unless Haml::Util.has?(:instance_method, ActionView::Base, :with_output_buffer)
     assert_equal(<<HTML, render(<<HAML, :ugly => true))
 <p>
 foo
