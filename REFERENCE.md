@@ -160,6 +160,12 @@ Available options are:
   Defaults to `true` in Rails production mode, and `false`
   everywhere else.
 
+{#always_nuke-option} `:always_nuke`
+: If set to `true`, all tags are treated as if
+  both [whitespace removal](#whitespace_removal__and_)
+  options were present.
+  Defaults to `false`.
+
 {#suppress_eval-option} `:suppress_eval`
 : Whether or not attribute hashes and Ruby scripts
   designated by `=` or `~` should be

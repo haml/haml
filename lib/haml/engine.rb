@@ -82,6 +82,7 @@ module Haml
         :filename             => '(haml)',
         :line                 => 1,
         :ugly                 => false,
+        :always_nuke          => false,
         :format               => :xhtml,
         :escape_html          => false,
         :escape_attrs         => true,
