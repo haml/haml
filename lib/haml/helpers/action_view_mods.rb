@@ -39,75 +39,28 @@ module ActionView
   end
 
   module Helpers
-    # In Rails <=2.1, we've got to override considerable capturing infrastructure.
-    # In Rails >2.1, we can make do with only overriding #capture
-    # (which no longer behaves differently in helper contexts).
-    unless Haml::Util.has?(:instance_method, ActionView::Base, :output_buffer)
-      module CaptureHelper
-        def capture_with_haml(*args, &block)
-          # Rails' #capture helper will just return the value of the block
-          # if it's not actually in the template context,
-          # as detected by the existance of an _erbout variable.
-          # We've got to do the same thing for compatibility.
-
-          if is_haml? && block_is_haml?(block)
-            value = nil
-            buffer = capture_haml(*args) { value = yield(*args) }
-            return buffer unless buffer.empty?
-            return value if value.is_a?(String)
-          else
-            capture_without_haml(*args, &block)
-          end
+    module CaptureHelper
+      def capture_with_haml(*args, &block)
+        if Haml::Helpers.block_is_haml?(block)
+          _hamlout = eval('_hamlout', block.binding) # Necessary since capture_haml checks _hamlout
+          value = nil
+          buffer = capture_haml(*args) { value = yield(*args) }
+          str =
+            if !buffer.empty?
+              buffer
+            elsif value.is_a?(String)
+              value
+            else
+              ''
+            end
+          return ActionView::NonConcattingString.new(str) if defined?(ActionView::NonConcattingString)
+          return str
+        else
+          capture_without_haml(*args, &block)
         end
-        alias_method :capture_without_haml, :capture
-        alias_method :capture, :capture_with_haml
-
-        def capture_erb_with_buffer_with_haml(buffer, *args, &block)
-          if is_haml?
-            capture_haml(*args, &block)
-          else
-            capture_erb_with_buffer_without_haml(buffer, *args, &block)
-          end
-        end
-        alias_method :capture_erb_with_buffer_without_haml, :capture_erb_with_buffer
-        alias_method :capture_erb_with_buffer, :capture_erb_with_buffer_with_haml
       end
-
-      module TextHelper
-        def concat_with_haml(string, binding = nil)
-          if is_haml?
-            haml_buffer.buffer.concat(string)
-          else
-            concat_without_haml(string, binding)
-          end
-        end
-        alias_method :concat_without_haml, :concat
-        alias_method :concat, :concat_with_haml
-      end
-    else
-      module CaptureHelper
-        def capture_with_haml(*args, &block)
-          if Haml::Helpers.block_is_haml?(block)
-            _hamlout = eval('_hamlout', block.binding) # Necessary since capture_haml checks _hamlout
-            value = nil
-            buffer = capture_haml(*args) { value = yield(*args) }
-            str =
-              if !buffer.empty?
-                buffer
-              elsif value.is_a?(String)
-                value
-              else
-                ''
-              end
-            return ActionView::NonConcattingString.new(str) if defined?(ActionView::NonConcattingString)
-            return str
-          else
-            capture_without_haml(*args, &block)
-          end
-        end
-        alias_method :capture_without_haml, :capture
-        alias_method :capture, :capture_with_haml
-      end
+      alias_method :capture_without_haml, :capture
+      alias_method :capture, :capture_with_haml
     end
 
     module TagHelper
