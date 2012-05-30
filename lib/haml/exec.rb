@@ -244,7 +244,7 @@ END
           @options[:load_paths] << path
         end
 
-        unless ::Haml::Util.ruby1_8?
+        unless RUBY_VERSION < "1.9"
           opts.on('-E ex[:in]', 'Specify the default external and internal character encodings.') do |encoding|
             external, internal = encoding.split(':')
             Encoding.default_external = external if external && !external.empty?
@@ -343,7 +343,7 @@ END
           @module_opts[:html_style_attributes] = true
         end
 
-        unless ::Haml::Util.ruby1_8?
+        unless RUBY_VERSION < "1.9"
           opts.on('-E ex[:in]', 'Specify the default external and internal character encodings.') do |encoding|
             external, internal = encoding.split(':')
             Encoding.default_external = external if external && !external.empty?

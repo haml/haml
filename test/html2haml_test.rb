@@ -301,7 +301,7 @@ HTML
 
   # Encodings
 
-  unless Haml::Util.ruby1_8?
+  unless RUBY_VERSION < "1.9"
     def test_encoding_error
       render("foo\nbar\nb\xFEaz".force_encoding("utf-8"))
       assert(false, "Expected exception")

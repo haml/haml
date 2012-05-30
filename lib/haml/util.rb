@@ -94,18 +94,6 @@ module Haml
       text.html_safe!
     end
 
-    # Whether or not this is running under Ruby 1.8 or lower.
-    #
-    # Note that IronRuby counts as Ruby 1.8,
-    # because it doesn't support the Ruby 1.9 encoding API.
-    #
-    # @return [Boolean]
-    def ruby1_8?
-      # IronRuby says its version is 1.9, but doesn't support any of the encoding APIs.
-      # We have to fall back to 1.8 behavior.
-      RUBY_VERSION < "1.9"
-    end
-
     # Checks that the encoding of a string is valid in Ruby 1.9
     # and cleans up potential encoding gotchas like the UTF-8 BOM.
     # If it's not, yields an error string describing the invalid character
@@ -116,7 +104,7 @@ module Haml
     #   Only yields if there is an encoding error
     # @yieldparam msg [String] The error message to be raised
     # @return [String] `str`, potentially with encoding gotchas like BOMs removed
-    if ruby1_8?
+    if RUBY_VERSION < "1.9"
       def check_encoding(str)
         str.gsub(/\A\xEF\xBB\xBF/, '') # Get rid of the UTF-8 BOM
       end
@@ -147,36 +135,41 @@ MSG
       end
     end
 
-    # Like {\#check\_encoding}, but also checks for a Ruby-style `-# coding:` comment
-    # at the beginning of the template and uses that encoding if it exists.
-    #
-    # The Haml encoding rules are simple.
-    # If a `-# coding:` comment exists,
-    # we assume that that's the original encoding of the document.
-    # Otherwise, we use whatever encoding Ruby has.
-    #
-    # Haml uses the same rules for parsing coding comments as Ruby.
-    # This means that it can understand Emacs-style comments
-    # (e.g. `-*- encoding: "utf-8" -*-`),
-    # and also that it cannot understand non-ASCII-compatible encodings
-    # such as `UTF-16` and `UTF-32`.
-    #
-    # @param str [String] The Haml template of which to check the encoding
-    # @yield [msg] A block in which an encoding error can be raised.
-    #   Only yields if there is an encoding error
-    # @yieldparam msg [String] The error message to be raised
-    # @return [String] The original string encoded properly
-    # @raise [ArgumentError] if the document declares an unknown encoding
-    def check_haml_encoding(str, &block)
-      return check_encoding(str, &block) if ruby1_8?
-      str = str.dup if str.frozen?
-
-      bom, encoding = parse_haml_magic_comment(str)
-      if encoding; str.force_encoding(encoding)
-      elsif bom; str.force_encoding("UTF-8")
+    if RUBY_VERSION < "1.9"
+      # Like {\#check\_encoding}, but also checks for a Ruby-style `-# coding:` comment
+      # at the beginning of the template and uses that encoding if it exists.
+      #
+      # The Haml encoding rules are simple.
+      # If a `-# coding:` comment exists,
+      # we assume that that's the original encoding of the document.
+      # Otherwise, we use whatever encoding Ruby has.
+      #
+      # Haml uses the same rules for parsing coding comments as Ruby.
+      # This means that it can understand Emacs-style comments
+      # (e.g. `-*- encoding: "utf-8" -*-`),
+      # and also that it cannot understand non-ASCII-compatible encodings
+      # such as `UTF-16` and `UTF-32`.
+      #
+      # @param str [String] The Haml template of which to check the encoding
+      # @yield [msg] A block in which an encoding error can be raised.
+      #   Only yields if there is an encoding error
+      # @yieldparam msg [String] The error message to be raised
+      # @return [String] The original string encoded properly
+      # @raise [ArgumentError] if the document declares an unknown encoding
+      def check_haml_encoding(str, &block)
+        check_encoding(str, &block)
       end
+    else
+      def check_haml_encoding(str, &block)
+        str = str.dup if str.frozen?
 
-      return check_encoding(str, &block)
+        bom, encoding = parse_haml_magic_comment(str)
+        if encoding; str.force_encoding(encoding)
+        elsif bom; str.force_encoding("UTF-8")
+        end
+
+        return check_encoding(str, &block)
+      end
     end
 
     # Checks to see if a class has a given method.
@@ -194,7 +187,7 @@ MSG
     # @param method [String, Symbol] The name of the method do check for
     # @return [Boolean] Whether or not the given collection has the given method
     def has?(attr, klass, method)
-      klass.send("#{attr}s").include?(ruby1_8? ? method.to_s : method.to_sym)
+      klass.send("#{attr}s").detect {|x| x.to_s == method.to_s}
     end
 
     # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them under Ruby 1.9.2.

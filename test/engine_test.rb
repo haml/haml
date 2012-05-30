@@ -117,13 +117,13 @@ MESSAGE
   end
 
   def setup
-    return if Haml::Util.ruby1_8?
+    return if RUBY_VERSION < "1.9"
     @old_default_internal = Encoding.default_internal
     silence_warnings{Encoding.default_internal = nil}
   end
 
   def teardown
-    return if Haml::Util.ruby1_8?
+    return if RUBY_VERSION < "1.9"
     silence_warnings{Encoding.default_internal = @old_default_internal}
   end
 
@@ -411,7 +411,7 @@ HAML
 
   # Regression tests
 
-  unless Haml::Util.ruby1_8?
+  unless RUBY_VERSION < "1.9"
     def test_indentation_after_dynamic_attr_hash
       assert_equal(<<HTML, render(<<HAML))
 <html>
@@ -1836,7 +1836,7 @@ HTML
 HAML
   end
 
-  unless Haml::Util.ruby1_8?
+  unless RUBY_VERSION < "1.9"
     def test_default_encoding
       assert_equal(Encoding.find("utf-8"), render(<<HAML.encode("us-ascii")).encoding)
 %p bar
