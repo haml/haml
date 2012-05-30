@@ -1,5 +1,6 @@
 require 'optparse'
 require 'fileutils'
+require 'rbconfig'
 
 module Haml
   # This module handles the various Haml executables (`haml` and `haml-convert`).
@@ -80,7 +81,11 @@ module Haml
         end
 
         opts.on('--unix-newlines', 'Use Unix-style newlines in written files.') do
-          @options[:unix_newlines] = true if ::Haml::Util.windows?
+          # Note that this is the preferred way to check for Windows, since
+          # JRuby and Rubinius also run there.
+          if RbConfig::CONFIG['host_os'] =~ /mswin|windows|mingw/i
+            @options[:unix_newlines] = true
+          end
         end
 
         opts.on_tail("-?", "-h", "--help", "Show this message") do

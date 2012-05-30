@@ -98,17 +98,6 @@ module Haml
       text.html_safe!
     end
 
-    ## Cross-OS Compatibility
-
-    # Whether or not this is running on Windows.
-    #
-    # @return [Boolean]
-    def windows?
-      RbConfig::CONFIG['host_os'] =~ /mswin|windows|mingw/i
-    end
-
-    ## Cross-Ruby-Version Compatibility
-
     # Whether or not this is running under Ruby 1.8 or lower.
     #
     # Note that IronRuby counts as Ruby 1.8,
