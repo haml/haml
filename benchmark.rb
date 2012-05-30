@@ -17,11 +17,6 @@ end
    action_view action_pack haml/template rbench].each {|dep| require(dep)}
 
 def view
-  unless Haml::Util.has?(:instance_method, ActionView::Base, :finder)
-    return ActionView::Base.new(File.dirname(__FILE__), {})
-  end
-
-  # Rails >=2.1.0
   base = ActionView::Base.new
   base.finder.append_view_path(File.dirname(__FILE__))
   base
