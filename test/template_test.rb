@@ -58,21 +58,7 @@ class TemplateTest < MiniTest::Unit::TestCase
   def create_base
     vars = { 'article' => Article.new, 'foo' => 'value one' }
 
-    unless Haml::Util.has?(:instance_method, ActionView::Base, :finder)
-      base = ActionView::Base.new(TEMPLATE_PATH, vars)
-    else
-      # Rails 2.1.0
-      base = ActionView::Base.new([], vars)
-      base.finder.append_view_path(TEMPLATE_PATH)
-    end
-
-    if Haml::Util.has?(:private_method, base, :evaluate_assigns)
-      # Rails < 3.0
-      base.send(:evaluate_assigns)
-    elsif Haml::Util.has?(:private_method, base, :_evaluate_assigns_and_ivars)
-      # Rails 2.2
-      base.send(:_evaluate_assigns_and_ivars)
-    end
+    base = ActionView::Base.new(TEMPLATE_PATH, vars)
 
     # This is needed by RJS in (at least) Rails 3
     base.instance_variable_set('@template', base)
