@@ -21,7 +21,6 @@ matrix:
     - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-3.1.x }
 
   allow_failures:
-    - { rvm: rbx-18mode, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
     - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
 
 branches:
