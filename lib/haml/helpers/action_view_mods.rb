@@ -14,28 +14,25 @@ module ActionView
     alias_method :render_without_haml, :render
     alias_method :render, :render_with_haml
 
-    # Rails >2.1
-    if Haml::Util.has?(:instance_method, self, :output_buffer)
-      def output_buffer_with_haml
-        return haml_buffer.buffer if is_haml?
-        output_buffer_without_haml
-      end
-      alias_method :output_buffer_without_haml, :output_buffer
-      alias_method :output_buffer, :output_buffer_with_haml
-
-      def set_output_buffer_with_haml(new_buffer)
-        if is_haml?
-          if Haml::Util.rails_xss_safe? && new_buffer.is_a?(ActiveSupport::SafeBuffer)
-            new_buffer = String.new(new_buffer)
-          end
-          haml_buffer.buffer = new_buffer
-        else
-          set_output_buffer_without_haml new_buffer
-        end
-      end
-      alias_method :set_output_buffer_without_haml, :output_buffer=
-      alias_method :output_buffer=, :set_output_buffer_with_haml
+    def output_buffer_with_haml
+      return haml_buffer.buffer if is_haml?
+      output_buffer_without_haml
     end
+    alias_method :output_buffer_without_haml, :output_buffer
+    alias_method :output_buffer, :output_buffer_with_haml
+
+    def set_output_buffer_with_haml(new_buffer)
+      if is_haml?
+        if Haml::Util.rails_xss_safe? && new_buffer.is_a?(ActiveSupport::SafeBuffer)
+          new_buffer = String.new(new_buffer)
+        end
+        haml_buffer.buffer = new_buffer
+      else
+        set_output_buffer_without_haml new_buffer
+      end
+    end
+    alias_method :set_output_buffer_without_haml, :output_buffer=
+    alias_method :output_buffer=, :set_output_buffer_with_haml
   end
 
   module Helpers
