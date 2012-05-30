@@ -110,14 +110,6 @@ module Haml
     end
 
     # Returns whether this environment is using ActionPack
-    # version 3.0.0 or greater.
-    #
-    # @return [Boolean]
-    def ap_geq_3?
-      ap_geq?("3.0.0.beta1")
-    end
-
-    # Returns whether this environment is using ActionPack
     # of a version greater than or equal to that specified.
     #
     # @param version [String] The string version number to check against.
