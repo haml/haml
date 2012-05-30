@@ -3,10 +3,9 @@ module ActionView
     def render_with_haml(*args, &block)
       options = args.first
 
-      # If render :layout is used with a block,
-      # it concats rather than returning a string
-      # so we need it to keep thinking it's Haml
-      # until it hits the sub-render
+      # If render :layout is used with a block, it concats rather than returning
+      # a string so we need it to keep thinking it's Haml until it hits the
+      # sub-render.
       if is_haml? && !(options.is_a?(Hash) && options[:layout] && block_given?)
         return non_haml { render_without_haml(*args, &block) }
       end
@@ -24,13 +23,14 @@ module ActionView
       alias_method :output_buffer_without_haml, :output_buffer
       alias_method :output_buffer, :output_buffer_with_haml
 
-      def set_output_buffer_with_haml(new)
+      def set_output_buffer_with_haml(new_buffer)
         if is_haml?
-          new = String.new(new) if Haml::Util.rails_xss_safe? &&
-            new.is_a?(ActiveSupport::SafeBuffer)
-          haml_buffer.buffer = new
+          if Haml::Util.rails_xss_safe? && new_buffer.is_a?(ActiveSupport::SafeBuffer)
+            new_buffer = String.new(new_buffer)
+          end
+          haml_buffer.buffer = new_buffer
         else
-          set_output_buffer_without_haml new
+          set_output_buffer_without_haml new_buffer
         end
       end
       alias_method :set_output_buffer_without_haml, :output_buffer=
