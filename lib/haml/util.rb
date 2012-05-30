@@ -168,18 +168,6 @@ module Haml
       text.html_safe!
     end
 
-    # The class for the Rails SafeBuffer XSS protection class.
-    # This varies depending on Rails version.
-    #
-    # @return [Class]
-    def rails_safe_buffer_class
-      # It's important that we check ActiveSupport first,
-      # because in Rails 2.3.6 ActionView::SafeBuffer exists
-      # but is a deprecated proxy object.
-      return ActiveSupport::SafeBuffer if defined?(ActiveSupport::SafeBuffer)
-      return ActionView::SafeBuffer
-    end
-
     ## Cross-OS Compatibility
 
     # Whether or not this is running on Windows.

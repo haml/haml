@@ -27,7 +27,7 @@ module ActionView
       def set_output_buffer_with_haml(new)
         if is_haml?
           new = String.new(new) if Haml::Util.rails_xss_safe? &&
-            new.is_a?(Haml::Util.rails_safe_buffer_class)
+            new.is_a?(ActiveSupport::SafeBuffer)
           haml_buffer.buffer = new
         else
           set_output_buffer_without_haml new
@@ -53,6 +53,8 @@ module ActionView
             else
               ''
             end
+          # NonCattingString is present in Rails less than 3.1.0. When support
+          # for 3.0 is dropped, this can be removed.
           return ActionView::NonConcattingString.new(str) if defined?(ActionView::NonConcattingString)
           return str
         else
