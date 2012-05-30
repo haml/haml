@@ -296,23 +296,6 @@ MSG
       klass.send("#{attr}s").include?(ruby1_8? ? method.to_s : method.to_sym)
     end
 
-    # A version of `Enumerable#enum_slice` that works in Ruby 1.8 and 1.9.
-    #
-    # @param enum [Enumerable] The enumerable to get the enumerator for
-    # @param n [Fixnum] The size of each slice
-    # @return [Enumerator] The consed enumerator
-    def enum_slice(enum, n)
-      ruby1_8? ? enum.enum_slice(n) : enum.each_slice(n)
-    end
-
-    # Returns the ASCII code of the given character.
-    #
-    # @param c [String] All characters but the first are ignored.
-    # @return [Fixnum] The ASCII code of `c`.
-    def ord(c)
-      ruby1_8? ? c[0] : c.ord
-    end
-
     # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them under Ruby 1.9.2.
     # This is necessary so that the precompiled Haml template can be `#encode`d into `@options[:encoding]`
     # before being evaluated.
