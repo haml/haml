@@ -17,8 +17,6 @@ module Haml
     # @api public
     RUBY_ENGINE = defined?(::RUBY_ENGINE) ? ::RUBY_ENGINE : "ruby"
 
-    @@version_comparison_cache = {}
-
     # Returns the path of a file relative to the Haml root directory.
     #
     # @param file [String] The filename relative to the Haml root
@@ -59,46 +57,6 @@ module Haml
       info
     end
 
-    # Returns whether one version string represents a more recent version than another.
-    #
-    # @param v1 [String] A version string.
-    # @param v2 [String] Another version string.
-    # @return [Boolean]
-    def version_gt(v1, v2)
-      # Construct an array to make sure the shorter version is padded with nil
-      Array.new([v1.length, v2.length].max).zip(v1.split("."), v2.split(".")) do |_, p1, p2|
-        p1 ||= "0"
-        p2 ||= "0"
-        release1 = p1 =~ /^[0-9]+$/
-        release2 = p2 =~ /^[0-9]+$/
-        if release1 && release2
-          # Integer comparison if both are full releases
-          p1, p2 = p1.to_i, p2.to_i
-          next if p1 == p2
-          return p1 > p2
-        elsif !release1 && !release2
-          # String comparison if both are prereleases
-          next if p1 == p2
-          return p1 > p2
-        else
-          # If only one is a release, that one is newer
-          return release1
-        end
-      end
-    end
-
-    # Returns whether one version string represents the same or a more
-    # recent version than another.
-    #
-    # @param v1 [String] A version string.
-    # @param v2 [String] Another version string.
-    # @return [Boolean]
-    def version_geq(v1, v2)
-      k = "#{v1}#{v2}"
-      return @@version_comparison_cache.fetch(k) if @@version_comparison_cache.key?(k)
-      @@version_comparison_cache[k] = version_gt(v1, v2) || !version_gt(v2, v1)
-    end
-
     # Silence all output to STDERR within a block.
     #
     # @yield A block in which no output will be printed to STDERR
@@ -107,21 +65,6 @@ module Haml
       yield
     ensure
       $stderr = the_real_stderr
-    end
-
-    # Returns whether this environment is using ActionPack
-    # of a version greater than or equal to that specified.
-    #
-    # @param version [String] The string version number to check against.
-    #   Should be greater than or equal to Rails 3,
-    #   because otherwise ActionPack::VERSION isn't autoloaded
-    # @return [Boolean]
-    def ap_geq?(version)
-      # The ActionPack module is always loaded automatically in Rails >= 3
-      return false unless defined?(ActionPack) && defined?(ActionPack::VERSION) &&
-        defined?(ActionPack::VERSION::STRING)
-
-      version_geq(ActionPack::VERSION::STRING, version)
     end
 
     # Returns an ActionView::Template* class.
@@ -283,7 +226,7 @@ MSG
     # @param obj {Object}
     # @return {String}
     def inspect_obj(obj)
-      return obj.inspect unless version_geq(::RUBY_VERSION, "1.9.2")
+      return obj.inspect unless (::RUBY_VERSION >= "1.9.2")
       return ':' + inspect_obj(obj.to_s) if obj.is_a?(Symbol)
       return obj.inspect unless obj.is_a?(String)
       '"' + obj.gsub(/[\x00-\x7F]+/) {|s| s.inspect[1...-1]} + '"'

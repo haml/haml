@@ -141,4 +141,4 @@ module ActionView
   end
 end
 
-require "haml/helpers/rails_323_textarea_fix" if Haml::Util.ap_geq?("3.2.3")
+require "haml/helpers/rails_323_textarea_fix" if Rails.version >= "3.2.3"
