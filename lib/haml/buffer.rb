@@ -88,10 +88,10 @@ module Haml
     # @param options [{Symbol => Object}] An options hash.
     #   See {Haml::Engine#options\_for\_buffer}
     def initialize(upper = nil, options = {})
-      @active = true
-      @upper = upper
-      @options = options
-      @buffer = ruby1_8? ? "" : "".encode(Encoding.find(options[:encoding]))
+      @active     = true
+      @upper      = upper
+      @options    = options
+      @buffer     = new_encoded_string
       @tabulation = 0
 
       # The number of tabs that Engine thinks we should have
@@ -262,6 +262,16 @@ RUBY
     end
 
     private
+
+    if RUBY_VERSION < "1.9"
+      def new_encoded_string
+        ""
+      end
+    else
+      def new_encoded_string
+        "".encode(Encoding.find(options[:encoding]))
+      end
+    end
 
     @@tab_cache = {}
     # Gets `count` tabs. Mostly for internal use.

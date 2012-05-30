@@ -99,10 +99,8 @@ module Haml
         raise Haml::Error.new(msg, line)
       end
 
-      unless ruby1_8?
-        @options[:encoding] = Encoding.default_internal || template.encoding
-        @options[:encoding] = "utf-8" if @options[:encoding].name == "US-ASCII"
-      end
+      set_up_encoding(options, template)
+
       @options.merge! options.reject {|k, v| v.nil?}
       @index = 0
 
@@ -110,12 +108,6 @@ module Haml
 
       unless [:xhtml, :html4, :html5].include?(@options[:format])
         raise Haml::Error, "Invalid output format #{@options[:format].inspect}"
-      end
-
-      unless ruby1_8?
-        if @options[:encoding] && @options[:encoding].is_a?(Encoding)
-          @options[:encoding] = @options[:encoding].name
-        end
       end
 
       # :eod is a special end-of-document marker
@@ -313,6 +305,20 @@ module Haml
     end
 
     private
+
+    if RUBY_VERSION < "1.9"
+      def set_up_encoding(options, template)
+        options
+      end
+    else
+      def set_up_encoding(options, template)
+        @options.tap do |ops|
+          ops[:encoding] = Encoding.default_internal || template.encoding
+          ops[:encoding] = "utf-8" if ops[:encoding].name == "US-ASCII"
+          ops[:encoding] = ops[:encoding].name if ops[:encoding].is_a?(Encoding)
+        end
+      end
+    end
 
     def set_locals(locals, scope, scope_object)
       scope_object.send(:instance_variable_set, '@_haml_locals', locals)
