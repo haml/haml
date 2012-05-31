@@ -89,6 +89,8 @@ module Haml
         :hyphenate_data_attrs => true,
       }
 
+      @options[:ugly] = true if @options[:remove_whitespace]
+
       @index = nil # explicitily initialize to avoid warnings
 
       template = check_haml_encoding(template) do |msg, line|
