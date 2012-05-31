@@ -319,6 +319,26 @@ METHOD
       "#{indentation.length} #{noun}#{'s' unless singular}#{was}"
     end
 
+    def contains_interpolation?(str)
+      str.include?('#{')
+    end
+
+    def unescape_interpolation(str, escape_html = nil)
+      res = ''
+      rest = Haml::Util.handle_interpolation str.dump do |scan|
+        escapes = (scan[2].size - 1) / 2
+        res << scan.matched[0...-3 - escapes]
+        if escapes % 2 == 1
+          res << '#{'
+        else
+          content = eval('"' + balance(scan, ?{, ?}, 1)[0][0...-1] + '"')
+          content = "Haml::Helpers.html_escape((#{content}))" if escape_html
+          res << '#{' + content + "}"# Use eval to get rid of string escapes
+        end
+      end
+      res + rest
+    end
+
     private
 
     # Parses a magic comment at the beginning of a Haml file.

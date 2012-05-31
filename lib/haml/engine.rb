@@ -16,7 +16,6 @@ module Haml
   #     output = haml_engine.render
   #     puts output
   class Engine
-    include Parser
     include Compiler
 
     # The options hash.
@@ -70,6 +69,23 @@ module Haml
       end
     end
 
+
+    DEFAULT_OPTIONS = {
+      :suppress_eval        => false,
+      :attr_wrapper         => "'",
+      # Don't forget to update the docs in doc-src/REFERENCE.md
+      # if you update these
+      :autoclose            => %w[meta img link br hr input area param col base],
+      :preserve             => %w[textarea pre code],
+      :filename             => '(haml)',
+      :line                 => 1,
+      :ugly                 => false,
+      :format               => :xhtml,
+      :escape_html          => false,
+      :escape_attrs         => true,
+      :hyphenate_data_attrs => true,
+    }
+
     # Precompiles the Haml template.
     #
     # @param template [String] The Haml template
@@ -77,31 +93,15 @@ module Haml
     #   see {file:REFERENCE.md#options the Haml options documentation}
     # @raise [Haml::Error] if there's a Haml syntax error in the template
     def initialize(template, options = {})
-      @options = {
-        :suppress_eval        => false,
-        :attr_wrapper         => "'",
-        # Don't forget to update the docs in doc-src/REFERENCE.md
-        # if you update these
-        :autoclose            => %w[meta img link br hr input area param col base],
-        :preserve             => %w[textarea pre code],
-        :filename             => '(haml)',
-        :line                 => 1,
-        :ugly                 => false,
-        :format               => :xhtml,
-        :escape_html          => false,
-        :escape_attrs         => true,
-        :hyphenate_data_attrs => true,
-      }
-
       @index = nil # explicitily initialize to avoid warnings
+      @options = DEFAULT_OPTIONS.dup.merge! options.reject {|k, v| v.nil?}
 
-      template = check_haml_encoding(template) do |msg, line|
+      @template = check_haml_encoding(template) do |msg, line|
         raise Haml::Error.new(msg, line)
       end
 
-      set_up_encoding(options, template)
+      set_up_encoding
 
-      @options.merge! options.reject {|k, v| v.nil?}
       @index = 0
 
       @options[:format] = :xhtml if @options[:mime_type] == 'text/xml'
@@ -110,19 +110,13 @@ module Haml
         raise Haml::Error, "Invalid output format #{@options[:format].inspect}"
       end
 
-      # :eod is a special end-of-document marker
-      @template = (template.rstrip).split(/\r\n|\r|\n/) + [:eod, :eod]
-      @template_index = 0
-      @to_close_stack = []
-      @output_tabs = 0
-      @template_tabs = 0
-      @flat = false
-      @newlines = 0
-      @precompiled = ''
-      @to_merge = []
-      @tab_change  = 0
+      @parser = Parser.new(@template, @options)
 
-      compile(parse)
+      @output_tabs = 0
+      @to_merge    = []
+      @precompiled = ''
+
+      compile(@parser.parse)
     rescue Haml::Error => e
       if @index || e.line
         e.backtrace.unshift "#{@options[:filename]}:#{(e.line ? e.line + 1 : @index) + @options[:line] - 1}"
@@ -307,15 +301,19 @@ module Haml
     private
 
     if RUBY_VERSION < "1.9"
-      def set_up_encoding(options, template)
-        options
+      def set_up_encoding
       end
     else
-      def set_up_encoding(options, template)
+      def set_up_encoding
         @options.tap do |ops|
-          ops[:encoding] = Encoding.default_internal || template.encoding
-          ops[:encoding] = "utf-8" if ops[:encoding].name == "US-ASCII"
-          ops[:encoding] = ops[:encoding].name if ops[:encoding].is_a?(Encoding)
+          ops[:encoding] ||= Encoding.default_internal || @template.encoding
+          if ops[:encoding].is_a?(Encoding)
+            if ops[:encoding].name == "US-ASCII"
+              ops[:encoding] = "utf-8"
+            else
+              ops[:encoding] = ops[:encoding].name
+            end
+          end
         end
       end
     end

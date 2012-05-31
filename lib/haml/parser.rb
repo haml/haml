@@ -1,7 +1,7 @@
 require 'strscan'
 
 module Haml
-  module Parser
+  class Parser
     include Haml::Util
 
     # Designates an XHTML/XML element.
@@ -75,6 +75,54 @@ module Haml
     # The Regex that matches a literal string or symbol value
     LITERAL_VALUE_REGEX = /:(\w*)|(["'])((?![\\#]|\2).|\\.)*\2/
 
+    def initialize(template, options)
+      # :eod is a special end-of-document marker
+      @template       = (template.rstrip).split(/\r\n|\r|\n/) + [:eod, :eod]
+      @options        = options
+      @flat           = false
+      @template_index = 0
+      @template_tabs  = 0
+    end
+
+    def parse
+      @root = @parent = ParseNode.new(:root)
+      @haml_comment = false
+      @indentation = nil
+      @line = next_line
+
+      raise SyntaxError.new("Indenting at the beginning of the document is illegal.", @line.index) if @line.tabs != 0
+
+      while next_line
+        process_indent(@line) unless @line.text.empty?
+
+        if flat?
+          text = @line.full.dup
+          text = "" unless text.gsub!(/^#{@flat_spaces}/, '')
+          @filter_buffer << "#{text}\n"
+          @line = @next_line
+          next
+        end
+
+        @tab_up = nil
+        process_line(@line.text, @line.index) unless @line.text.empty? || @haml_comment
+        if @parent.type != :haml_comment && (block_opened? || @tab_up)
+          @template_tabs += 1
+          @parent = @parent.children.last
+        end
+
+        if !@haml_comment && !flat? && @next_line.tabs - @line.tabs > 1
+          raise SyntaxError.new("The line was indented #{@next_line.tabs - @line.tabs} levels deeper than the previous line.", @next_line.index)
+        end
+
+        @line = @next_line
+      end
+
+      # Close all the open tags
+      close until @parent.type == :root
+      @root
+    end
+
+
     private
 
     # @private
@@ -122,44 +170,6 @@ END
         children.each {|c| text << "\n" << c.inspect.gsub(/^/, "  ")}
         text + ")"
       end
-    end
-
-    def parse
-      @root = @parent = ParseNode.new(:root)
-      @haml_comment = false
-      @indentation = nil
-      @line = next_line
-
-      raise SyntaxError.new("Indenting at the beginning of the document is illegal.", @line.index) if @line.tabs != 0
-
-      while next_line
-        process_indent(@line) unless @line.text.empty?
-
-        if flat?
-          text = @line.full.dup
-          text = "" unless text.gsub!(/^#{@flat_spaces}/, '')
-          @filter_buffer << "#{text}\n"
-          @line = @next_line
-          next
-        end
-
-        @tab_up = nil
-        process_line(@line.text, @line.index) unless @line.text.empty? || @haml_comment
-        if @parent.type != :haml_comment && (block_opened? || @tab_up)
-          @template_tabs += 1
-          @parent = @parent.children.last
-        end
-
-        if !@haml_comment && !flat? && @next_line.tabs - @line.tabs > 1
-          raise SyntaxError.new("The line was indented #{@next_line.tabs - @line.tabs} levels deeper than the previous line.", @next_line.index)
-        end
-
-        @line = @next_line
-      end
-
-      # Close all the open tags
-      close until @parent.type == :root
-      @root
     end
 
     # Processes and deals with lowering indentation.
@@ -673,26 +683,6 @@ END
     def is_ruby_multiline?(text)
       text && text.length > 1 && text[-1] == ?, &&
         !((text[-3..-2] =~ /\W\?/) || text[-3..-2] == "?\\")
-    end
-
-    def contains_interpolation?(str)
-      str.include?('#{')
-    end
-
-    def unescape_interpolation(str, escape_html = nil)
-      res = ''
-      rest = Haml::Util.handle_interpolation str.dump do |scan|
-        escapes = (scan[2].size - 1) / 2
-        res << scan.matched[0...-3 - escapes]
-        if escapes % 2 == 1
-          res << '#{'
-        else
-          content = eval('"' + balance(scan, ?{, ?}, 1)[0][0...-1] + '"')
-          content = "Haml::Helpers.html_escape((#{content}))" if escape_html
-          res << '#{' + content + "}"# Use eval to get rid of string escapes
-        end
-      end
-      res + rest
     end
 
     def balance(*args)

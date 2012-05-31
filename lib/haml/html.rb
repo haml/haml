@@ -78,7 +78,7 @@ module Hpricot
 
       text.split("\n").map do |line|
         line.strip!
-        "#{tabulate(tabs)}#{'\\' if Haml::Engine::SPECIAL_CHARACTERS.include?(line[0])}#{line}\n"
+        "#{tabulate(tabs)}#{'\\' if Haml::Parser::SPECIAL_CHARACTERS.include?(line[0])}#{line}\n"
       end.join
     end
   end
