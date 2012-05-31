@@ -163,7 +163,8 @@ Available options are:
 {#remove_whitespace-option} `:remove_whitespace`
 : If set to `true`, all tags are treated as if
   both [whitespace removal](#whitespace_removal__and_)
-  options were present.
+  options were present. Use with caution as this
+  may cause whitespace-related formatting errors.
   Defaults to `false`.
 
 {#suppress_eval-option} `:suppress_eval`
