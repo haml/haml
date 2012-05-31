@@ -8,14 +8,6 @@ module Haml
   module Util
     extend self
 
-    # Returns the path of a file relative to the Haml root directory.
-    #
-    # @param file [String] The filename relative to the Haml root
-    # @return [String] The filename relative to the the working directory
-    def scope(file)
-      File.expand_path("../../../#{file}", __FILE__)
-    end
-
     # Computes the powerset of the given array.
     # This is the set of all subsets of the array.
     #
