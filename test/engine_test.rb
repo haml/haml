@@ -1341,11 +1341,11 @@ HAML
                  render("%p= 's' * 75", :ugly => true))
   end
 
-  def test_always_nuke_true
+  def test_remove_whitespace_true
     html = "<div id='outer'><div id='inner'><p>hello world</p></div></div>"
     haml = "#outer\n  #inner\n    %p hello world"
-    assert_equal(html, render(haml, :always_nuke => true))
-    assert_equal(html, render(haml, :always_nuke => true, :ugly => true))
+    assert_equal(html, render(haml, :remove_whitespace => true))
+    assert_equal(html, render(haml, :remove_whitespace => true, :ugly => true))
     html = "<p>hello world<pre>foo   bar\nbaz</pre></p>"
     haml = <<HAML
 %p
@@ -1354,12 +1354,12 @@ HAML
     foo   bar
     baz
 HAML
-    assert_equal(html, render(haml, :always_nuke => true))
-    assert_equal(html, render(haml, :always_nuke => true, :ugly => true))
+    assert_equal(html, render(haml, :remove_whitespace => true))
+    assert_equal(html, render(haml, :remove_whitespace => true, :ugly => true))
     html = "<div><span>foo</span> <span>bar</span></div>"
     haml = '%div <span>foo</span> <span>bar</span>'
-    assert_equal(html, render(haml, :always_nuke => true))
-    assert_equal(html, render(haml, :always_nuke => true, :ugly => true))
+    assert_equal(html, render(haml, :remove_whitespace => true))
+    assert_equal(html, render(haml, :remove_whitespace => true, :ugly => true))
   end
 
   def test_auto_preserve_unless_ugly

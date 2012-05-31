@@ -492,7 +492,7 @@ END
         nuke_inner_whitespace = nuke_whitespace.include? '<'
       end
 
-      if @options[:always_nuke]
+      if @options[:remove_whitespace]
         nuke_outer_whitespace = true
         nuke_inner_whitespace = true
       end

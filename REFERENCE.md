@@ -160,7 +160,7 @@ Available options are:
   Defaults to `true` in Rails production mode, and `false`
   everywhere else.
 
-{#always_nuke-option} `:always_nuke`
+{#remove_whitespace-option} `:remove_whitespace`
 : If set to `true`, all tags are treated as if
   both [whitespace removal](#whitespace_removal__and_)
   options were present.
