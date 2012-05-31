@@ -1,8 +1,6 @@
 source :rubygems
 gemspec
 
-gem "haml-contrib", :path => "vendor/haml-contrib"
-
 platform :mri do
   gem "ruby-prof"
 end
