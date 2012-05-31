@@ -1327,6 +1327,27 @@ HAML
                  render("%p= 's' * 75", :ugly => true))
   end
 
+  def test_always_nuke_true
+    html = "<div id='outer'><div id='inner'><p>hello world</p></div></div>"
+    haml = "#outer\n  #inner\n    %p hello world"
+    assert_equal(html, render(haml, :always_nuke => true))
+    assert_equal(html, render(haml, :always_nuke => true, :ugly => true))
+    html = "<p>hello world<pre>foo   bar\nbaz</pre></p>"
+    haml = <<HAML
+%p
+  hello world
+  %pre
+    foo   bar
+    baz
+HAML
+    assert_equal(html, render(haml, :always_nuke => true))
+    assert_equal(html, render(haml, :always_nuke => true, :ugly => true))
+    html = "<div><span>foo</span> <span>bar</span></div>"
+    haml = '%div <span>foo</span> <span>bar</span>'
+    assert_equal(html, render(haml, :always_nuke => true))
+    assert_equal(html, render(haml, :always_nuke => true, :ugly => true))
+  end
+
   def test_auto_preserve_unless_ugly
     assert_equal("<pre>foo&#x000A;bar</pre>\n", render('%pre="foo\nbar"'))
     assert_equal("<pre>foo\nbar</pre>\n", render("%pre\n  foo\n  bar"))

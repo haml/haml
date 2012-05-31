@@ -491,6 +491,11 @@ END
         nuke_inner_whitespace = nuke_whitespace.include? '<'
       end
 
+      if @options[:always_nuke]
+        nuke_outer_whitespace = true
+        nuke_inner_whitespace = true
+      end
+
       value = value.to_s.strip
       [tag_name, attributes, attributes_hashes, object_ref, nuke_outer_whitespace,
        nuke_inner_whitespace, action, value, last_line || @index]
