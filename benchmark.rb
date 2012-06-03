@@ -13,12 +13,12 @@ END
   exit 1
 end
 
-%w[rubygems erb erubis active_support action_controller
+%w[rubygems erb erubis rails active_support action_controller
    action_view action_pack haml/template rbench].each {|dep| require(dep)}
 
 def view
   base = ActionView::Base.new
-  base.finder.append_view_path(File.dirname(__FILE__))
+  base.view_paths << File.join(File.dirname(__FILE__), '/test')
   base
 end
 
@@ -33,8 +33,8 @@ RBench.run(times) do
   column :erubis, :title => "Erubis"
 
   template_name = 'standard'
-  haml_template    = File.read("#{File.dirname(__FILE__)}/templates/#{template_name}.haml")
-  erb_template     = File.read("#{File.dirname(__FILE__)}/erb/#{template_name}.erb")
+  haml_template    = File.read("#{File.dirname(__FILE__)}/test/templates/#{template_name}.haml")
+  erb_template     = File.read("#{File.dirname(__FILE__)}/test/erb/#{template_name}.erb")
 
   report "Cached" do
     obj = Object.new
