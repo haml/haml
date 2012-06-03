@@ -15,7 +15,7 @@ end
 
 desc "Benchmark Haml against ERb. TIMES=n sets the number of runs, default is 1000."
 task :benchmark do
-  sh "ruby test/benchmark.rb #{ENV['TIMES']}"
+  sh "ruby benchmark.rb #{ENV['TIMES']}"
 end
 
 Rake::TestTask.new do |t|
