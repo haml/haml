@@ -1,3 +1,5 @@
+require 'forwardable'
+
 require 'haml/options'
 require 'haml/helpers'
 require 'haml/buffer'
@@ -17,6 +19,7 @@ module Haml
   #     output = haml_engine.render
   #     puts output
   class Engine
+    extend Forwardable
     include Haml::Util
 
     # The Haml::Options instance.
@@ -35,6 +38,12 @@ module Haml
     attr_accessor :compiler
     attr_accessor :parser
 
+    # Tilt currently depends on these moved methods, provide a stable API
+    def_delegators :compiler, :precompiled, :precompiled_method_return_value
+
+    def options_for_buffer
+      @options.for_buffer
+    end
 
     # Precompiles the Haml template.
     #
