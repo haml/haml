@@ -1,4 +1,5 @@
-require File.expand_path("../lib/haml/version", __FILE__)
+($LOAD_PATH << File.expand_path("../lib", __FILE__)).uniq!
+require "haml/version"
 
 Gem::Specification.new do |spec|
   spec.name        = 'haml'
