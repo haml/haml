@@ -11,7 +11,7 @@ module Haml
       preamble = <<END.gsub("\n", ";")
 begin
 extend Haml::Helpers
-_hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{options_for_buffer.inspect})
+_hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{options.for_buffer.inspect})
 _erbout = _hamlout.buffer
 END
       postamble = <<END.gsub("\n", ";")
@@ -154,10 +154,10 @@ END
         push_generated_script(
           "_hamlout.attributes(#{inspect_obj(t[:attributes])}, #{object_ref}#{attributes_hashes})")
         concat_merged_text(
-          if t[:self_closing] && xhtml?
+          if t[:self_closing] && @options.xhtml?
             " />" + (t[:nuke_outer_whitespace] ? "" : "\n")
           else
-            ">" + ((if t[:self_closing] && html?
+            ">" + ((if t[:self_closing] && @options.html?
                       t[:nuke_outer_whitespace]
                     else
                       !block_given? || t[:preserve_tag] || t[:nuke_inner_whitespace]
@@ -222,15 +222,15 @@ END
 
     def text_for_doctype
       if @node.value[:type] == "xml"
-        return nil if html?
+        return nil if @options.html?
         wrapper = @options[:attr_wrapper]
         return "<?xml version=#{wrapper}1.0#{wrapper} encoding=#{wrapper}#{@node.value[:encoding] || "utf-8"}#{wrapper} ?>"
       end
 
-      if html5?
+      if @options.html5?
         '<!DOCTYPE html>'
       else
-        if xhtml?
+        if @options.xhtml?
           if @node.value[:version] == "1.1"
             '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">'
           elsif @node.value[:version] == "5"
@@ -246,7 +246,7 @@ END
             end
           end
 
-        elsif html4?
+        elsif @options.html4?
           case @node.value[:type]
           when "strict";   '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'
           when "frameset"; '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">'
@@ -442,9 +442,10 @@ END
     end
 
     def prerender_tag(name, self_close, attributes)
+      # TODO: consider just passing in the damn options here
       attributes_string = Compiler.build_attributes(
-        html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:hyphenate_data_attrs], attributes)
-      "<#{name}#{attributes_string}#{self_close && xhtml? ? ' /' : ''}>"
+        @options.html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:hyphenate_data_attrs], attributes)
+      "<#{name}#{attributes_string}#{self_close && @options.xhtml? ? ' /' : ''}>"
     end
 
     def resolve_newlines

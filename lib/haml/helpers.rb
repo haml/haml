@@ -70,7 +70,7 @@ MESSAGE
     #     context.haml_tag :p, "Stuff"
     #
     def init_haml_helpers
-      @haml_buffer = Haml::Buffer.new(haml_buffer, Haml::Engine.new('').send(:options_for_buffer))
+      @haml_buffer = Haml::Buffer.new(haml_buffer, Options.new.for_buffer)
       nil
     end
 

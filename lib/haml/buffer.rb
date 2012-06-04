@@ -16,7 +16,7 @@ module Haml
     # The options hash passed in from {Haml::Engine}.
     #
     # @return [{String => Object}]
-    # @see Haml::Engine#options_for_buffer
+    # @see Haml::Options#for_buffer
     attr_accessor :options
 
     # The {Buffer} for the enclosing Haml document.
