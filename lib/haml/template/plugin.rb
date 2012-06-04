@@ -18,7 +18,7 @@ module Haml
       options = Haml::Template.options.dup
       options[:mime_type] = template.mime_type if template.respond_to? :mime_type
       options[:filename] = template.identifier
-      Haml::Engine.new(template.source, options).send(:precompiled_with_ambles, [])
+      Haml::Engine.new(template.source, options).compiler.precompiled_with_ambles([])
     end
 
     # In Rails 3.1+, #call takes the place of #compile

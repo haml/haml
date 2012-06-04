@@ -41,9 +41,9 @@ class FiltersTest < MiniTest::Unit::TestCase
 
   test "should pass options to Tilt filters that precompile" do
     haml  = ":erb\n  <%= 'foo' %>"
-    refute_match('TEST_VAR', Haml::Engine.new(haml).precompiled)
+    refute_match('TEST_VAR', Haml::Engine.new(haml).compiler.precompiled)
     Haml::Filters::Erb.options = {:outvar => 'TEST_VAR'}
-    assert_match('TEST_VAR', Haml::Engine.new(haml).precompiled)
+    assert_match('TEST_VAR', Haml::Engine.new(haml).compiler.precompiled)
   end
 
   test "should pass options to Tilt filters that don't precompile" do

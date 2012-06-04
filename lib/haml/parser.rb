@@ -80,6 +80,7 @@ module Haml
       @template       = (template.rstrip).split(/\r\n|\r|\n/) + [:eod, :eod]
       @options        = options
       @flat           = false
+      @index          = 0
       @template_index = 0
       @template_tabs  = 0
     end
@@ -120,6 +121,9 @@ module Haml
       # Close all the open tags
       close until @parent.type == :root
       @root
+    rescue Haml::Error => e
+      e.backtrace.unshift "#{@options[:filename]}:#{(e.line ? e.line + 1 : @index) + @options[:line] - 1}"
+      raise
     end
 
 

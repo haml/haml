@@ -1,10 +1,51 @@
 require 'cgi'
 
 module Haml
-  module Compiler
+  class Compiler
     include Haml::Util
 
-    private
+    attr_accessor :options
+
+    def initialize(options)
+      @options     = options
+      @output_tabs = 0
+      @to_merge    = []
+      @precompiled = ''
+    end
+
+    def compile(node)
+      parent = instance_variable_defined?('@node') ? @node : nil
+      @node = node
+      if node.children.empty?
+        send(:"compile_#{node.type}")
+      else
+        send(:"compile_#{node.type}") {node.children.each {|c| compile c}}
+      end
+    ensure
+      @node = parent
+    end
+
+    if RUBY_VERSION < "1.9"
+      # The source code that is evaluated to produce the Haml document.
+      #
+      # In Ruby 1.9, this is automatically converted to the correct encoding
+      # (see {file:REFERENCE.md#encodings the `:encoding` option}).
+      #
+      # @return [String]
+      def precompiled
+        @precompiled
+      end
+    else
+      def precompiled
+        encoding = Encoding.find(@options[:encoding])
+        return @precompiled.force_encoding(encoding) if encoding == Encoding::BINARY
+        return @precompiled.encode(encoding)
+      end
+    end
+
+    def precompiled_with_return_value
+      precompiled + ";" + precompiled_method_return_value
+    end
 
     # Returns the precompiled string with the preamble and postamble
     def precompiled_with_ambles(local_names)
@@ -22,6 +63,8 @@ end
 END
       preamble + locals_code(local_names) + precompiled + postamble
     end
+
+    private
 
     # Returns the string used as the return value of the precompiled method.
     # This method exists so it can be monkeypatched to return modified values.
@@ -260,7 +303,7 @@ END
     # does not output the result.
     def push_silent(text, can_suppress = false)
       flush_merged_text
-      return if can_suppress && options[:suppress_eval]
+      return if can_suppress && @options.suppress_eval?
       @precompiled << "#{resolve_newlines}#{text}\n"
       @output_line += text.count("\n") + 1
     end
@@ -321,7 +364,7 @@ END
     # If `opts[:preserve_script]` is true, Haml::Helpers#find_and_flatten is run on
     # the result before it is added to `@buffer`
     def push_script(text, opts = {})
-      return if options[:suppress_eval]
+      return if @options.suppress_eval?
 
       args = %w[preserve_script in_tag preserve_tag escape_html nuke_inner_whitespace]
       args.map! {|name| opts[name.to_sym]}
@@ -478,18 +521,6 @@ END
       else
         raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
       end
-    end
-
-    def compile(node)
-      parent = instance_variable_defined?('@node') ? @node : nil
-      @node = node
-      if node.children.empty?
-        send(:"compile_#{node.type}")
-      else
-        send(:"compile_#{node.type}") {node.children.each {|c| compile c}}
-      end
-    ensure
-      @node = parent
     end
   end
 end

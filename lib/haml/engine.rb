@@ -17,7 +17,7 @@ module Haml
   #     output = haml_engine.render
   #     puts output
   class Engine
-    include Compiler
+    include Haml::Util
 
     # The Haml::Options instance.
     # See {file:REFERENCE.md#options the Haml options documentation}.
@@ -32,23 +32,8 @@ module Haml
     # @return [String]
     attr_accessor :indentation
 
-    if RUBY_VERSION < "1.9"
-      # The source code that is evaluated to produce the Haml document.
-      #
-      # In Ruby 1.9, this is automatically converted to the correct encoding
-      # (see {file:REFERENCE.md#encodings the `:encoding` option}).
-      #
-      # @return [String]
-      def precompiled
-        @precompiled
-      end
-    else
-      def precompiled
-        encoding = Encoding.find(@options[:encoding])
-        return @precompiled.force_encoding(encoding) if encoding == Encoding::BINARY
-        return @precompiled.encode(encoding)
-      end
-    end
+    attr_accessor :compiler
+    attr_accessor :parser
 
 
     # Precompiles the Haml template.
@@ -58,7 +43,6 @@ module Haml
     #   see {file:REFERENCE.md#options the Haml options documentation}
     # @raise [Haml::Error] if there's a Haml syntax error in the template
     def initialize(template, options = {})
-      @index = nil # explicitily initialize to avoid warnings
       @options = Options.new(options)
 
       @template = check_haml_encoding(template) do |msg, line|
@@ -67,20 +51,10 @@ module Haml
 
       initialize_encoding options[:encoding]
 
-      @index = 0
+      @parser   = Parser.new(@template, @options)
+      @compiler = Compiler.new(@options)
 
-      @parser = Parser.new(@template, @options)
-
-      @output_tabs = 0
-      @to_merge    = []
-      @precompiled = ''
-
-      compile(@parser.parse)
-    rescue Haml::Error => e
-      if @index || e.line
-        e.backtrace.unshift "#{@options[:filename]}:#{(e.line ? e.line + 1 : @index) + @options[:line] - 1}"
-      end
-      raise
+      @compiler.compile(@parser.parse)
     end
 
     # Processes the template and returns the result as a string.
@@ -143,8 +117,7 @@ module Haml
         @haml_buffer = buffer
       end
 
-      eval(precompiled + ";" + precompiled_method_return_value,
-        scope, @options[:filename], @options[:line])
+      eval(@compiler.precompiled_with_return_value, scope, @options[:filename], @options[:line])
     ensure
       # Get rid of the current buffer
       scope_object.instance_eval do
@@ -186,7 +159,7 @@ module Haml
       end
 
       eval("Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {};" +
-           precompiled_with_ambles(local_names) + "}\n", scope, @options[:filename], @options[:line])
+           compiler.precompiled_with_ambles(local_names) + "}\n", scope, @options[:filename], @options[:line])
     end
 
     # Defines a method on `object` with the given name
@@ -230,7 +203,7 @@ module Haml
     def def_method(object, name, *local_names)
       method = object.is_a?(Module) ? :module_eval : :instance_eval
 
-      object.send(method, "def #{name}(_haml_locals = {}); #{precompiled_with_ambles(local_names)}; end",
+      object.send(method, "def #{name}(_haml_locals = {}); #{compiler.precompiled_with_ambles(local_names)}; end",
                   @options[:filename], @options[:line])
     end
 
