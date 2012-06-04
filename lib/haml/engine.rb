@@ -65,7 +65,7 @@ module Haml
         raise Haml::Error.new(msg, line)
       end
 
-      set_up_encoding
+      initialize_encoding options[:encoding]
 
       @index = 0
 
@@ -237,11 +237,11 @@ module Haml
     private
 
     if RUBY_VERSION < "1.9"
-      def set_up_encoding
+      def initialize_encoding(given_value)
       end
     else
-      def set_up_encoding
-        unless options[:encoding]
+      def initialize_encoding(given_value)
+        unless given_value
           @options.encoding = Encoding.default_internal || @template.encoding
         end
       end
