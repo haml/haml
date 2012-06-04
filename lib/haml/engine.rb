@@ -65,9 +65,7 @@ module Haml
         raise Haml::Error.new(msg, line)
       end
 
-      unless options[:encoding]
-        @options.encoding = Encoding.default_internal || @template.encoding
-      end
+      set_up_encoding
 
       @index = 0
 
@@ -237,6 +235,17 @@ module Haml
     end
 
     private
+
+    if RUBY_VERSION < "1.9"
+      def set_up_encoding
+      end
+    else
+      def set_up_encoding
+        unless options[:encoding]
+          @options.encoding = Encoding.default_internal || @template.encoding
+        end
+      end
+    end
 
     def set_locals(locals, scope, scope_object)
       scope_object.send(:instance_variable_set, '@_haml_locals', locals)
