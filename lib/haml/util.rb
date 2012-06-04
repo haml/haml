@@ -164,17 +164,22 @@ MSG
       end
     end
 
-    # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them under Ruby 1.9.2.
-    # This is necessary so that the precompiled Haml template can be `#encode`d into `@options[:encoding]`
-    # before being evaluated.
-    #
-    # @param obj {Object}
-    # @return {String}
-    def inspect_obj(obj)
-      return obj.inspect unless (::RUBY_VERSION >= "1.9.2")
-      return ':' + inspect_obj(obj.to_s) if obj.is_a?(Symbol)
-      return obj.inspect unless obj.is_a?(String)
-      '"' + obj.gsub(/[\x00-\x7F]+/) {|s| s.inspect[1...-1]} + '"'
+    if RUBY_VERSION < "1.9.2"
+      def inspect_obj(obj)
+        return obj.inspect
+      end
+    else
+      # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them under Ruby 1.9.2.
+      # This is necessary so that the precompiled Haml template can be `#encode`d into `@options[:encoding]`
+      # before being evaluated.
+      #
+      # @param obj {Object}
+      # @return {String}
+      def inspect_obj(obj)
+        return ':' + inspect_obj(obj.to_s) if obj.is_a?(Symbol)
+        return obj.inspect unless obj.is_a?(String)
+        '"' + obj.gsub(/[\x00-\x7F]+/) {|s| s.inspect[1...-1]} + '"'
+      end
     end
 
     ## Static Method Stuff
