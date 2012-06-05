@@ -13,6 +13,7 @@ module Haml
       :line                 => 1,
       :mime_type            => nil,
       :preserve             => %w(textarea pre code),
+      :remove_whitespace    => false,
       :suppress_eval        => false,
       :ugly                 => false
     }
@@ -49,6 +50,7 @@ module Haml
     attr_reader :encoding
     attr_reader :format
     attr_reader :mime_type
+    attr_reader :remove_whitespace
 
 
     def initialize(values = {}, &block)
@@ -64,7 +66,8 @@ module Haml
       send "#{key}=", value
     end
 
-    [:escape_attrs, :hyphenate_data_attrs, :suppress_eval, :ugly].each do |method|
+    [:escape_attrs, :hyphenate_data_attrs, :remove_whitespace, :suppress_eval, 
+      :ugly].each do |method|
       class_eval(<<-END)
         def #{method}?
           !! @#{method}
@@ -105,6 +108,11 @@ module Haml
         raise Haml::Error, "Invalid output format #{value.inspect}"
       end
       @format = value
+    end
+    
+    def remove_whitespace=(value)
+      @ugly = true if value
+      @remove_whitespace = value
     end
 
     if RUBY_VERSION < "1.9"
