@@ -74,13 +74,6 @@ class MiniTest::Unit::TestCase
     flunk "Expected exception #{klass}, none raised"
   end
 
-  def assert_raises_line(line)
-    yield
-  rescue Sass::SyntaxError => e
-    assert_equal(line, e.sass_line)
-  else
-    flunk "Expected exception on line #{line}, none raised"
-  end
 end
 
 $VERBOSE = true
