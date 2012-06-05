@@ -91,9 +91,11 @@ class TemplateTest < MiniTest::Unit::TestCase
       render_method ||= proc { |n| @base.render(:file => n) }
     end
 
-    load_result(name).split("\n").zip(render_method[name].split("\n")).each_with_index do |pair, line|
-      message = "template: #{name}\nline:     #{line}"
-      assert_equal(pair.first, pair.last, message)
+    silence_warnings do
+      load_result(name).split("\n").zip(render_method[name].split("\n")).each_with_index do |pair, line|
+        message = "template: #{name}\nline:     #{line}"
+        assert_equal(pair.first, pair.last, message)
+      end
     end
   rescue Haml::Util.av_template_class(:Error) => e
     if e.message =~ /Can't run [\w:]+ filter; required (one of|file) ((?:'\w+'(?: or )?)+)(, but none were found| not found)/

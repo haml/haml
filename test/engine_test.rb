@@ -731,7 +731,8 @@ HAML
   end
 
   def test_silent_script_with_hyphen_end_and_block
-    assert_equal(<<HTML, render(<<HAML))
+    silence_warnings do
+      assert_equal(<<HTML, render(<<HAML))
 <p>foo-end</p>
 <p>bar-end</p>
 HTML
@@ -1152,7 +1153,9 @@ HAML
   EXCEPTION_MAP.each do |key, value|
     define_method("test_exception (#{key.inspect})") do
       begin
-        render(key, :filename => "(test_exception (#{key.inspect}))")
+        silence_warnings do
+          render(key, :filename => "(test_exception (#{key.inspect}))")
+        end
       rescue Exception => err
         value = [value] unless value.is_a?(Array)
         expected_message, line_no = value
