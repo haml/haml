@@ -11,6 +11,7 @@ require 'minitest/autorun'
 require 'action_pack'
 require 'action_controller'
 require 'action_view'
+require 'hpricot'
 
 require 'rails'
 class TestApp < Rails::Application
@@ -81,3 +82,5 @@ class MiniTest::Unit::TestCase
     flunk "Expected exception on line #{line}, none raised"
   end
 end
+
+$VERBOSE = true
