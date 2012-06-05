@@ -740,6 +740,7 @@ HTML
   %p= s
 - end; nil)
 HAML
+    end
   end
 
   def test_if_without_content_and_else

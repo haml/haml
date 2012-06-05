@@ -166,7 +166,7 @@ HAML
 HTML
 - (foo = capture_haml(13) do |a|
   %p= a
-- end; nil)
+- end)
 = foo.inspect
 HAML
   end

@@ -197,7 +197,7 @@ HTML
     bar
     = "foo".gsub(/./) do |s|
       - "flup"
-  - end; nil)
+  - end)
   baz
 HAML
   end
