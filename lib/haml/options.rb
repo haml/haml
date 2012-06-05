@@ -54,7 +54,9 @@ module Haml
 
 
     def initialize(values = {}, &block)
-      self.class.defaults.merge(values).each {|key, value| send "#{key}=", value}
+      defaults.merge(values).each do |key, value|
+        send "#{key}=", value if defaults.has_key?(key)
+      end
       yield if block_given?
     end
 
@@ -66,7 +68,7 @@ module Haml
       send "#{key}=", value
     end
 
-    [:escape_attrs, :hyphenate_data_attrs, :remove_whitespace, :suppress_eval, 
+    [:escape_attrs, :hyphenate_data_attrs, :remove_whitespace, :suppress_eval,
       :ugly].each do |method|
       class_eval(<<-END)
         def #{method}?
@@ -109,7 +111,7 @@ module Haml
       end
       @format = value
     end
-    
+
     def remove_whitespace=(value)
       @ugly = true if value
       @remove_whitespace = value
@@ -137,6 +139,12 @@ module Haml
         hash[key] = send(key)
         hash
       end
+    end
+
+    private
+
+    def defaults
+      self.class.defaults
     end
 
   end
