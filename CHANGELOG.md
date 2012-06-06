@@ -2,6 +2,8 @@
 
 ## 3.2.0 (Unreleased)
 
+* HTML2Haml has been extracted to a separate gem, creatively named "html2haml".
+
 * Haml now supports only Rails 3 and above, and Ruby 1.8.7 and above. If you
   still need support for Rails 2 and Ruby 1.8.6, please use Haml 3.1.x which
   will continue to be maintained for bug fixes.
