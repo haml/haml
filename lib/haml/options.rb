@@ -228,7 +228,7 @@ module Haml
       end
     end
 
-    # Returns a subset of \{#options}: those that {Haml::Buffer} cares about.
+    # Returns a subset of options: those that {Haml::Buffer} cares about.
     # All of the values here are such that when `#inspect` is called on the hash,
     # it can be `Kernel#eval`ed to get the same result back.
     #

@@ -725,7 +725,7 @@ Thanks to [Josh Peek](http://joshpeek.com/).
 
 [Tagged on GitHub](http://github.com/nex3/haml/commit/2.2.21).
 
-* Fix a few bugs in the git-revision-reporting in {Haml::Version#version}.
+* Fix a few bugs in the git-revision-reporting in Haml::Version.
   In particular, it will still work if `git gc` has been called recently,
   or if various files are missing.
 
