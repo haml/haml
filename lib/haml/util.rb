@@ -82,8 +82,7 @@ module Haml
     # @return [String, nil] `text`, marked as HTML-safe
     def html_safe(text)
       return unless text
-      return text.html_safe if defined?(ActiveSupport::SafeBuffer)
-      text.html_safe!
+      text.html_safe
     end
 
     # Checks that the encoding of a string is valid in Ruby 1.9
