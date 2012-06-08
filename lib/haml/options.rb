@@ -1,4 +1,7 @@
 module Haml
+  # This class encapsulates all of the configuration options that Haml
+  # understands. Please see the {file:REFERENCE.md#options Haml Reference} to
+  # learn how to set the options.
   class Options
 
     @defaults = {
@@ -23,34 +26,126 @@ module Haml
     @buffer_option_keys = [:autoclose, :preserve, :attr_wrapper, :ugly, :format,
       :encoding, :escape_html, :escape_attrs, :hyphenate_data_attrs]
 
-
+    # The default option values.
+    # @return Hash
     def self.defaults
       @defaults
     end
 
+    # An array of valid values for the `:format` option.
+    # @return Array
     def self.valid_formats
       @valid_formats
     end
 
+    # An array of keys that will be used to provide a hash of options to
+    # {Haml::Buffer}.
+    # @return Hash
     def self.buffer_option_keys
       @buffer_option_keys
     end
 
-    attr_accessor :autoclose
-    attr_accessor :escape_attrs
-    attr_accessor :escape_html
-    attr_accessor :filename
-    attr_accessor :hyphenate_data_attrs
-    attr_accessor :line
-    attr_accessor :preserve
-    attr_accessor :suppress_eval
-    attr_accessor :ugly
-
+    # The character that should wrap element attributes. This defaults to `'`
+    # (an apostrophe). Characters of this type within the attributes will be
+    # escaped (e.g. by replacing them with `&apos;`) if the character is an
+    # apostrophe or a quotation mark.
     attr_reader :attr_wrapper
+
+    # A list of tag names that should be automatically self-closed if they have
+    # no content. This can also contain regular expressions that match tag names
+    # (or any object which responds to `#===`). Defaults to `['meta', 'img',
+    # 'link', 'br', 'hr', 'input', 'area', 'param', 'col', 'base']`.
+    attr_accessor :autoclose
+
+    # The encoding to use for the HTML output.
+    # Only available on Ruby 1.9 or higher.
+    # This can be a string or an `Encoding` Object. Note that Haml **does not**
+    # automatically re-encode Ruby values; any strings coming from outside the
+    # application should be converted before being passed into the Haml
+    # template. Defaults to `Encoding.default_internal`; if that's not set,
+    # defaults to the encoding of the Haml template; if that's `US-ASCII`,
+    # defaults to `"UTF-8"`.
     attr_reader :encoding
-    attr_reader :format
-    attr_reader :mime_type
+
+    # Sets whether or not to escape HTML-sensitive characters in attributes. If
+    # this is true, all HTML-sensitive characters in attributes are escaped. If
+    # it's set to false, no HTML-sensitive characters in attributes are escaped.
+    # If it's set to `:once`, existing HTML escape sequences are preserved, but
+    # other HTML-sensitive characters are escaped.
+    #
+    # Defaults to `true`.
+    attr_accessor :escape_attrs
+
+    # Sets whether or not to escape HTML-sensitive characters in script. If this
+    # is true, `=` behaves like {file:REFERENCE.md#escaping_html `&=`};
+    # otherwise, it behaves like {file:REFERENCE.md#unescaping_html `!=`}. Note
+    # that if this is set, `!=` should be used for yielding to subtemplates and
+    # rendering partials. See also {file:REFERENCE.md#escaping_html Escaping HTML} and
+    # {file:REFERENCE.md#unescaping_html Unescaping HTML}.
+    #
+    # Defaults to false.
+    attr_accessor :escape_html
+
+    # The name of the Haml file being parsed.
+    # This is only used as information when exceptions are raised. This is
+    # automatically assigned when working through ActionView, so it's really
+    # only useful for the user to assign when dealing with Haml programatically.
+    attr_accessor :filename
+
+    # If set to `true`, Haml will convert underscores to hyphens in all
+    # {file:REFERENCE.md#html5_custom_data_attributes Custom Data Attributes} As
+    # of Haml 3.2, this defaults to `true`.
+    attr_accessor :hyphenate_data_attrs
+
+    # The line offset of the Haml template being parsed. This is useful for
+    # inline templates, similar to the last argument to `Kernel#eval`.
+    attr_accessor :line
+
+    # Determines the output format. Normally the default is `:xhtml`, although
+    # under Rails 3 it's `:html5`, since that's the Rails 3's default format.
+    # Other options are `:html4` and `:html5`, which are identical to `:xhtml`
+    # except there are no self-closing tags, the XML prolog is ignored and
+    # correct DOCTYPEs are generated.
+    #
+    # If the mime_type of the template being rendered is `text/xml` then a
+    # format of `:xhtml` will be used even if the global output format is set to
+    # `:html4` or `:html5`.
+    attr :format
+
+    # The mime type that the rendered document will be served with. If this is
+    # set to `text/xml` then the format will be overridden to `:xhtml` even if
+    # it has set to `:html4` or `:html5`.
+    attr_accessor :mime_type
+
+    # A list of tag names that should automatically have their newlines
+    # preserved using the {Haml::Helpers#preserve} helper. This means that any
+    # content given on the same line as the tag will be preserved. For example,
+    # `%textarea= "Foo\nBar"` compiles to `<textarea>Foo&#x000A;Bar</textarea>`.
+    # Defaults to `['textarea', 'pre']`. See also
+    # {file:REFERENCE.md#whitespace_preservation Whitespace Preservation}.
+    attr_accessor :preserve
+
+    # If set to `true`, all tags are treated as if both
+    # {file:REFERENCE.md#whitespace_removal__and_ whitespace removal} options
+    # were present. Use with caution as this may cause whitespace-related
+    # formatting errors.
+    #
+    # Defaults to `false`.
     attr_reader :remove_whitespace
+
+    # Whether or not attribute hashes and Ruby scripts designated by `=` or `~`
+    # should be evaluated. If this is `true`, said scripts are rendered as empty
+    # strings.
+    #
+    # Defaults to `false`.
+    attr_accessor :suppress_eval
+
+    # If set to `true`, Haml makes no attempt to properly indent or format the
+    # HTML output. This significantly improves rendering performance but makes
+    # viewing the source unpleasant.
+    #
+    # Defaults to `true` in Rails production  mode, and `false` everywhere else.
+    attr_accessor :ugly
 
     def initialize(values = {}, &block)
       defaults.each {|k, v| instance_variable_set :"@#{k}", v}
@@ -58,10 +153,15 @@ module Haml
       yield if block_given?
     end
 
+    # Retrieve an option value.
+    # @param key The value to retrieve.
     def [](key)
       send key
     end
 
+    # Set an option value.
+    # @param key The key to set.
+    # @param value The value to set for the key.
     def []=(key, value)
       send "#{key}=", value
     end
@@ -75,6 +175,7 @@ module Haml
       END
     end
 
+    # @return [Boolean] Whether or not the format is XHTML.
     def xhtml?
       not html?
     end

@@ -34,25 +34,17 @@ To run Haml from the command line, just use
 
 Use `haml --help` for full documentation.
 
-### Rails/Merb Plugin {#plugin}
-
-To enable Haml in Rails versions before Rails 3,
-add the following line to `environment.rb`:
-
-    config.gem "haml"
-
-For Rails 3, instead add the following line to the Gemfile:
+To use Haml with Rails, add the following line to the Gemfile:
 
     gem "haml"
 
 Once it's installed, all view files with the `".html.haml"` extension
 will be compiled using Haml.
-Haml is enabled by default in Merb.
 
 You can access instance variables in Haml templates
 the same way you do in ERB templates.
 Helper methods are also available in Haml templates.
-For example (this example uses Rails, but the principle for Merb is the same):
+For example:
 
     # file: app/controllers/movies_controller.rb
 
@@ -62,7 +54,7 @@ For example (this example uses Rails, but the principle for Merb is the same):
       end
     end
 
-    -# file: app/views/movies/index.haml
+    -# file: app/views/movies/index.html.haml
 
     #content
      .title
@@ -112,124 +104,22 @@ and using {Haml::Engine} like so:
 
 ### Options
 
-Options can be set by setting the {Haml::Template#options Haml::Template.options} hash
-in `environment.rb` in Rails...
+Haml understands various configuration options that affect its performance and
+output.
 
+In Rails, options can be set by setting the {Haml::Template#options
+Haml::Template.options} hash in an initializer:
+
+    # config/initializers/haml.rb
     Haml::Template.options[:format] = :html5
 
-...or by setting the `Merb::Plugin.config[:haml]` hash in `init.rb` in Merb...
+You can also set them by configuring them globally in Haml::Options.defaults:
 
-    Merb::Plugin.config[:haml][:format] = :html5
+    Haml::Options.defaults[:format] = :html5
 
-...or by passing an options hash to {Haml::Engine#initialize}.
-Available options are:
-
-{#format-option} `:format`
-: Determines the output format. Normally the default is `:xhtml`,
-  although under Rails 3 it's `:html5`, since that's the Rails 3's default format.
-  Other options are `:html4` and `:html5`, which are
-  identical to `:xhtml` except there are no self-closing tags,
-  the XML prolog is ignored and correct DOCTYPEs are generated.
-  <br/><br/> <!-- There's no better way to do a paragraph break in a dl in Maruku -->
-  If the mime_type of the template being rendered is `text/xml` then
-  a format of `:xhtml` will be used even if the global output format
-  is set to `:html4` or `:html5`.
-
-{#escape_html-option} `:escape_html`
-: Sets whether or not to escape HTML-sensitive characters in script.
-  If this is true, `=` behaves like [`&=`](#escaping_html);
-  otherwise, it behaves like [`!=`](#unescaping_html).
-  Note that if this is set, `!=` should be used for yielding to subtemplates
-  and rendering partials.
-  See also [Escaping HTML](#escaping_html) and [Unescaping HTML](#unescaping_html)
-  Defaults to false.
-
-{#escape_attrs-option} `:escape_attrs`
-: Sets whether or not to escape HTML-sensitive characters in attributes.
-  If this is true, all HTML-sensitive characters in attributes are escaped.
-  If it's set to false, no HTML-sensitive characters in attributes are escaped.
-  If it's set to `:once`, existing HTML escape sequences are preserved,
-  but other HTML-sensitive characters are escaped.
-  Defaults to `:once`.
-
-{#ugly-option} `:ugly`
-: If set to `true`, Haml makes no attempt to properly
-  indent or format the HTML output.
-  This significantly improves rendering performance
-  but makes viewing the source unpleasant.
-  Defaults to `true` in Rails production mode, and `false`
-  everywhere else.
-
-{#remove_whitespace-option} `:remove_whitespace`
-: If set to `true`, all tags are treated as if
-  both [whitespace removal](#whitespace_removal__and_)
-  options were present. Use with caution as this
-  may cause whitespace-related formatting errors.
-  Defaults to `false`.
-
-{#suppress_eval-option} `:suppress_eval`
-: Whether or not attribute hashes and Ruby scripts
-  designated by `=` or `~` should be
-  evaluated. If this is `true`, said scripts are
-  rendered as empty strings. Defaults to `false`.
-
-{#attr_wrapper-option} `:attr_wrapper`
-: The character that should wrap element attributes.
-  This defaults to `'` (an apostrophe). Characters
-  of this type within the attributes will be escaped
-  (e.g. by replacing them with `&apos;`) if
-  the character is an apostrophe or a quotation mark.
-
-{#hyphenate_data_attrs} `:hyphenate_data_attrs`
-: If set to `true`, Haml will convert underscores to hyphens in all
-  [Custom Data Attributes](#html5_custom_data_attributes)
-  As of Haml 3.2, this defaults to `true`.
-
-{#filename-option} `:filename`
-: The name of the Haml file being parsed.
-  This is only used as information when exceptions are raised.
-  This is automatically assigned when working through ActionView,
-  so it's really only useful for the user to assign
-  when dealing with Haml programatically.
-
-{#line-option} `:line`
-: The line offset of the Haml template being parsed.
-  This is useful for inline templates,
-  similar to the last argument to `Kernel#eval`.
-
-{#autoclose-option} `:autoclose`
-: A list of tag names that should be automatically self-closed
-  if they have no content.
-  This can also contain regular expressions that match tag names
-  (or any object which responds to `#===`).
-  Defaults to `['meta', 'img', 'link', 'br', 'hr', 'input', 'area', 'param', 'col', 'base']`.
-
-{#preserve-option} `:preserve`
-: A list of tag names that should automatically have their newlines preserved
-  using the {Haml::Helpers#preserve} helper.
-  This means that any content given on the same line as the tag will be preserved.
-  For example, `%textarea= "Foo\nBar"` compiles to `<textarea>Foo&#x000A;Bar</textarea>`.
-  Defaults to `['textarea', 'pre']`.
-  See also [Whitespace Preservation](#whitespace_preservation).
-
-{#encoding-option} `:encoding`
-: The encoding to use for the HTML output.
-  Only available in Ruby 1.9 or higher.
-  This can be a string or an `Encoding` Object.
-  Note that Haml **does not** automatically re-encode Ruby values;
-  any strings coming from outside the application should be converted
-  before being passed into the Haml template.
-  Defaults to `Encoding.default_internal`; if that's not set,
-  defaults to the encoding of the Haml template;
-  if that's `us-ascii`, defaults to `"utf-8"`.
-  <br/><br/> <!-- There's no better way to do a paragraph break in a dl in Maruku -->
-  Many Ruby database drivers are not yet Ruby 1.9 compatible;
-  in particular, they return strings marked as ASCII-encoded
-  even when those strings contain non-ASCII characters (such as UTF-8).
-  **This will cause encoding errors** if the Haml encoding isn't set to `"ascii-8bit"`.
-  To solve this, either call `#force_encoding` on all the strings returned from the database,
-  set `:encoding` to `"ascii-8bit"`, or try to get the authors of the database drivers
-  to make them Ruby 1.9 compatible.
+Finally, you can also set them by passing an options hash to
+{Haml::Engine#initialize}. For the complete list of available options, please
+see {Haml::Options}.
 
 ### Encodings
 
