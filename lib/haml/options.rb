@@ -52,11 +52,9 @@ module Haml
     attr_reader :mime_type
     attr_reader :remove_whitespace
 
-
     def initialize(values = {}, &block)
-      defaults.merge(values).each do |key, value|
-        send "#{key}=", value if defaults.has_key?(key)
-      end
+      defaults.each {|k, v| instance_variable_set :"@#{k}", v}
+      values.reject {|k, v| !defaults.has_key?(k) || v.nil?}.each {|k, v| send("#{k}=", v)}
       yield if block_given?
     end
 
