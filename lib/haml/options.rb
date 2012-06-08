@@ -11,7 +11,7 @@ module Haml
       :format               => :xhtml,
       :hyphenate_data_attrs => true,
       :line                 => 1,
-      :mime_type            => nil,
+      :mime_type            => 'text/html',
       :preserve             => %w(textarea pre code),
       :remove_whitespace    => false,
       :suppress_eval        => false,
@@ -55,9 +55,6 @@ module Haml
     def initialize(values = {}, &block)
       defaults.each {|k, v| instance_variable_set :"@#{k}", v}
       values.reject {|k, v| !defaults.has_key?(k) || v.nil?}.each {|k, v| send("#{k}=", v)}
-      # Setting the mime type will override the :format option, so ensure it's
-      # called *after* the format option has been set.
-      self.mime_type = values[:mime_type] if values.has_key?(:mime_type)
       yield if block_given?
     end
 
@@ -89,21 +86,23 @@ module Haml
 
     # @return [Boolean] Whether or not the format is HTML4.
     def html4?
-      @format == :html4
+      format == :html4
     end
 
     # @return [Boolean] Whether or not the format is HTML5.
     def html5?
-      @format == :html5
+      format == :html5
     end
 
     def attr_wrapper=(value)
       @attr_wrapper = value || self.class.defaults[:attr_wrapper]
     end
 
-    def mime_type=(value)
-      @format = :xhtml if value == 'text/xml'
-      @mime_type = value
+    # Undef :format to suppress warning. It's defined above with the `:attr`
+    # macro in order to make it appear in Yard's list of instance attributes.
+    undef :format
+    def format
+      mime_type == "text/xml" ? "xhtml" : @format
     end
 
     def format=(value)
