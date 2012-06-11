@@ -104,13 +104,14 @@ You can then use it by including the "haml" gem in Ruby code, and using
 Haml understands various configuration options that affect its performance and
 output.
 
-In Rails, options can be set by setting the {Haml::Template#options Haml::Template.options} 
+In Rails, options can be set by setting the {Haml::Template#options Haml::Template.options}
 hash in an initializer:
 
     # config/initializers/haml.rb
     Haml::Template.options[:format] = :html5
 
-You can also set them by configuring them globally in Haml::Options.defaults:
+Outside Rails, you can set them by configuring them globally in
+Haml::Options.defaults:
 
     Haml::Options.defaults[:format] = :html5
 
@@ -258,7 +259,7 @@ could render as any of:
     <div class="sort descending">Contents</div>
     <div>Contents</div>
 
-depending on whether `@item.type` is `"numeric"` or `nil`, whether `@item == @sortcol`, 
+depending on whether `@item.type` is `"numeric"` or `nil`, whether `@item == @sortcol`,
 and whether `@sortdir` is `"ascending"` or `"descending"`.
 
 If a single value is specified and it evaluates to false it is ignored;
