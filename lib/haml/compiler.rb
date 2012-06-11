@@ -258,7 +258,12 @@ END
 
     def compile_filter
       unless filter = Filters.defined[@node.value[:name]]
-        raise Error.new("Filter \"#{@node.value[:name]}\" is not defined.", @node.line - 1)
+        name = @node.value[:name]
+        if ["maruku", "textile"].include?(name)
+          raise Error.new("To use the \"#{name}\" filter, please install the haml-contrib gem.", @node.line - 1)
+        else
+          raise Error.new("Filter \"#{name}\" is not defined.", @node.line - 1)
+        end
       end
       filter.internal_compile(self, @node.value[:text])
     end
