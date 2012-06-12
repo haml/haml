@@ -311,9 +311,7 @@ END
         base.instance_eval do
           include Base
           def render(text)
-            Haml::Util.silence_warnings do
-              template_class.new(nil, 1, options) {text}.render
-            end
+            template_class.new(nil, 1, options) {text}.render
           end
         end
       end
