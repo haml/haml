@@ -214,10 +214,8 @@ END
     end
   end
 
-  if ActionPack::VERSION::MAJOR >= 3
-    # Rails 3's #label helper can take a block.
-    def test_form_builder_label_with_block
-      assert_equal(<<HTML, render(<<HAML, :action_view))
+  def test_form_builder_label_with_block
+    assert_equal(<<HTML, render(<<HAML, :action_view))
 <form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
   <label for="article_title">Block content
   </label>
@@ -227,7 +225,6 @@ HTML
   = f.label :title do
     Block content
 HAML
-    end
   end
 
   ## XSS Protection Tests
