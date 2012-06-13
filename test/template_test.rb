@@ -44,9 +44,7 @@ class TemplateTest < MiniTest::Unit::TestCase
     whitespace_handling    original_engine   list        helpful
     silent_script          tag_parsing       just_stuff  partials
     nuke_outer_whitespace  nuke_inner_whitespace
-    render_layout }
-  # partial layouts were introduced in 2.0.0
-  TEMPLATES << 'partial_layout' unless ActionPack::VERSION::MAJOR < 2
+    render_layout partial_layout}
 
   def setup
     @base = create_base
