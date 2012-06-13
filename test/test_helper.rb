@@ -6,7 +6,6 @@ end
 require 'rubygems'
 gem "minitest"
 require 'bundler/setup'
-require 'test/unit' # On JRuby, tests won't run unless we include this. WTF?
 require 'minitest/autorun'
 require 'action_pack'
 require 'action_controller'
