@@ -44,9 +44,7 @@ class TemplateTest < MiniTest::Unit::TestCase
     whitespace_handling    original_engine   list        helpful
     silent_script          tag_parsing       just_stuff  partials
     nuke_outer_whitespace  nuke_inner_whitespace
-    render_layout }
-  # partial layouts were introduced in 2.0.0
-  TEMPLATES << 'partial_layout' unless ActionPack::VERSION::MAJOR < 2
+    render_layout partial_layout}
 
   def setup
     @base = create_base
@@ -129,23 +127,6 @@ class TemplateTest < MiniTest::Unit::TestCase
       engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"))
       engine.def_method(@base, "render_standard")
       @base.render_standard
-    end
-  end
-
-  if ActionPack::VERSION::MAJOR < 3
-    # Rails 3.0.0 deprecates the use of yield with a layout
-    # for calls to render :file
-    def test_action_view_templates_render_correctly
-      proc = lambda do
-        @base.content_for(:layout) {'Lorem ipsum dolor sit amet'}
-        assert_renders_correctly 'content_for_layout'
-      end
-
-      if @base.respond_to?(:with_output_buffer)
-        @base.with_output_buffer("", &proc)
-      else
-        proc.call
-      end
     end
   end
 
@@ -233,10 +214,8 @@ END
     end
   end
 
-  if ActionPack::VERSION::MAJOR >= 3
-    # Rails 3's #label helper can take a block.
-    def test_form_builder_label_with_block
-      assert_equal(<<HTML, render(<<HAML, :action_view))
+  def test_form_builder_label_with_block
+    assert_equal(<<HTML, render(<<HAML, :action_view))
 <form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
   <label for="article_title">Block content
   </label>
@@ -246,83 +225,78 @@ HTML
   = f.label :title do
     Block content
 HAML
-    end
   end
 
   ## XSS Protection Tests
 
-  # In order to enable these, either test against Rails 3.0
-  # or test against Rails 2.2.5+ with the rails_xss plugin
-  # (http://github.com/NZKoz/rails_xss) in test/plugins.
-  if Haml::Util.rails_xss_safe?
-    def test_escape_html_option_set
-      assert Haml::Template.options[:escape_html]
-    end
+  def test_escape_html_option_set
+    assert Haml::Template.options[:escape_html]
+  end
 
-    def test_xss_protection
-      assert_equal("Foo &amp; Bar\n", render('= "Foo & Bar"', :action_view))
-    end
+  def test_xss_protection
+    assert_equal("Foo &amp; Bar\n", render('= "Foo & Bar"', :action_view))
+  end
 
-    def test_xss_protection_with_safe_strings
-      assert_equal("Foo & Bar\n", render('= Haml::Util.html_safe("Foo & Bar")', :action_view))
-    end
+  def test_xss_protection_with_safe_strings
+    assert_equal("Foo & Bar\n", render('= Haml::Util.html_safe("Foo & Bar")', :action_view))
+  end
 
-    def test_xss_protection_with_bang
-      assert_equal("Foo & Bar\n", render('!= "Foo & Bar"', :action_view))
-    end
+  def test_xss_protection_with_bang
+    assert_equal("Foo & Bar\n", render('!= "Foo & Bar"', :action_view))
+  end
 
-    def test_xss_protection_in_interpolation
-      assert_equal("Foo &amp; Bar\n", render('Foo #{"&"} Bar', :action_view))
-    end
+  def test_xss_protection_in_interpolation
+    assert_equal("Foo &amp; Bar\n", render('Foo #{"&"} Bar', :action_view))
+  end
 
-    def test_xss_protection_in_attributes
-      assert_equal("<div data-html='&lt;foo&gt;bar&lt;/foo&gt;'></div>\n", render('%div{ "data-html" => "<foo>bar</foo>" }', :action_view))
-    end
+  def test_xss_protection_in_attributes
+    assert_equal("<div data-html='&lt;foo&gt;bar&lt;/foo&gt;'></div>\n", render('%div{ "data-html" => "<foo>bar</foo>" }', :action_view))
+  end
 
-    def test_xss_protection_in_attributes_with_safe_strings
-      assert_equal("<div data-html='<foo>bar</foo>'></div>\n", render('%div{ "data-html" => "<foo>bar</foo>".html_safe }', :action_view))
-    end
+  def test_xss_protection_in_attributes_with_safe_strings
+    assert_equal("<div data-html='<foo>bar</foo>'></div>\n", render('%div{ "data-html" => "<foo>bar</foo>".html_safe }', :action_view))
+  end
 
-    def test_xss_protection_with_bang_in_interpolation
-      assert_equal("Foo & Bar\n", render('! Foo #{"&"} Bar', :action_view))
-    end
+  def test_xss_protection_with_bang_in_interpolation
+    assert_equal("Foo & Bar\n", render('! Foo #{"&"} Bar', :action_view))
+  end
 
-    def test_xss_protection_with_safe_strings_in_interpolation
-      assert_equal("Foo & Bar\n", render('Foo #{Haml::Util.html_safe("&")} Bar', :action_view))
-    end
+  def test_xss_protection_with_safe_strings_in_interpolation
+    assert_equal("Foo & Bar\n", render('Foo #{Haml::Util.html_safe("&")} Bar', :action_view))
+  end
 
-    def test_xss_protection_with_mixed_strings_in_interpolation
-      assert_equal("Foo & Bar &amp; Baz\n", render('Foo #{Haml::Util.html_safe("&")} Bar #{"&"} Baz', :action_view))
-    end
+  def test_xss_protection_with_mixed_strings_in_interpolation
+    assert_equal("Foo & Bar &amp; Baz\n", render('Foo #{Haml::Util.html_safe("&")} Bar #{"&"} Baz', :action_view))
+  end
 
-    def test_rendered_string_is_html_safe
-      assert(render("Foo").html_safe?)
-    end
+  def test_rendered_string_is_html_safe
+    assert(render("Foo").html_safe?)
+  end
 
-    def test_rendered_string_is_html_safe_with_action_view
-      assert(render("Foo", :action_view).html_safe?)
-    end
+  def test_rendered_string_is_html_safe_with_action_view
+    assert(render("Foo", :action_view).html_safe?)
+  end
 
-    def test_xss_html_escaping_with_non_strings
-      assert_equal("4\n", render("= html_escape(4)"))
-    end
+  def test_xss_html_escaping_with_non_strings
+    assert_equal("4\n", render("= html_escape(4)"))
+  end
 
-    def test_xss_protection_with_concat
-      assert_equal("Foo &amp; Bar", render('- concat "Foo & Bar"', :action_view))
-    end
+  def test_xss_protection_with_concat
+    assert_equal("Foo &amp; Bar", render('- concat "Foo & Bar"', :action_view))
+  end
 
-    def test_xss_protection_with_concat_with_safe_string
-      assert_equal("Foo & Bar", render('- concat(Haml::Util.html_safe("Foo & Bar"))', :action_view))
-    end
+  def test_xss_protection_with_concat_with_safe_string
+    assert_equal("Foo & Bar", render('- concat(Haml::Util.html_safe("Foo & Bar"))', :action_view))
+  end
 
-    def test_xss_protection_with_safe_concat
-      assert_equal("Foo & Bar", render('- safe_concat "Foo & Bar"', :action_view))
-    end
+  def test_xss_protection_with_safe_concat
+    assert_equal("Foo & Bar", render('- safe_concat "Foo & Bar"', :action_view))
+  end
 
-    ## Regression
+  ## Regression
 
-    def test_xss_protection_with_nested_haml_tag
-      assert_equal(<<HTML, render(<<HAML, :action_view))
+  def test_xss_protection_with_nested_haml_tag
+    assert_equal(<<HTML, render(<<HAML, :action_view))
 <div>
   <ul>
     <li>Content!</li>
@@ -333,10 +307,10 @@ HTML
   - haml_tag :ul do
     - haml_tag :li, "Content!"
 HAML
-    end
+  end
 
-    def test_xss_protection_with_form_for
-      assert_equal(<<HTML, render(<<HAML, :action_view))
+  def test_xss_protection_with_form_for
+    assert_equal(<<HTML, render(<<HAML, :action_view))
 <form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
   Title:
   <input id="article_title" name="article[title]" size="30" type="text" value="Hello" />
@@ -350,28 +324,27 @@ HTML
   Body:
   = f.text_field :body
 HAML
-    end
+  end
 
-    if defined?(ActionView::Helpers::PrototypeHelper)
-      def test_rjs
-        assert_equal(<<HTML, render(<<HAML, :action_view))
+  if defined?(ActionView::Helpers::PrototypeHelper)
+    def test_rjs
+      assert_equal(<<HTML, render(<<HAML, :action_view))
 window.location.reload();
 HTML
 = update_page do |p|
   - p.reload
 HAML
-      end
     end
+  end
 
-    def test_cache
-      @base.controller = ActionController::Base.new
-      @base.controller.perform_caching = false
-      assert_equal(<<HTML, render(<<HAML, :action_view))
+  def test_cache
+    @base.controller = ActionController::Base.new
+    @base.controller.perform_caching = false
+    assert_equal(<<HTML, render(<<HAML, :action_view))
 Test
 HTML
 - cache do
   Test
 HAML
-    end
   end
 end
