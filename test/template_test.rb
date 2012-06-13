@@ -130,23 +130,6 @@ class TemplateTest < MiniTest::Unit::TestCase
     end
   end
 
-  if ActionPack::VERSION::MAJOR < 3
-    # Rails 3.0.0 deprecates the use of yield with a layout
-    # for calls to render :file
-    def test_action_view_templates_render_correctly
-      proc = lambda do
-        @base.content_for(:layout) {'Lorem ipsum dolor sit amet'}
-        assert_renders_correctly 'content_for_layout'
-      end
-
-      if @base.respond_to?(:with_output_buffer)
-        @base.with_output_buffer("", &proc)
-      else
-        proc.call
-      end
-    end
-  end
-
   def test_instance_variables_should_work_inside_templates
     @base.instance_variable_set("@content_for_layout", 'something')
     assert_equal("<p>something</p>", render("%p= @content_for_layout").chomp)
