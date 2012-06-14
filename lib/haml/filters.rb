@@ -31,6 +31,9 @@ module Haml
     #   engine when there are more than one.
     # @option options [String,Array<String>] :alias Any aliases for the filter.
     #   For example, :coffee is also available as :coffeescript.
+    # @option options [String] :extend The name of a module to extend when
+    #   defining the filter. Defaults to "Plain". This allows filters such as
+    #   Coffee to "inherit" from Javascript, wrapping its output in script tags.
     # @since 3.2.0
     def register_tilt_filter(name, options = {})
       if constants.map(&:to_s).include?(name.to_s)
@@ -38,8 +41,8 @@ module Haml
       end
 
       filter = const_set(name, Module.new)
+      filter.extend const_get(options[:extend] || "Plain")
       filter.extend TiltFilter
-
       filter.extend PrecompiledTiltFilter if options.has_key? :precompiled
 
       if options.has_key? :template_class
@@ -310,8 +313,10 @@ END
         base.options = {}
         base.instance_eval do
           include Base
-          def render(text)
-            template_class.new(nil, 1, options) {text}.render
+
+          def render_with_options(text, compiler_options)
+            text = template_class.new(nil, 1, options) {text}.render
+            super(text, compiler_options)
           end
         end
       end
@@ -330,13 +335,13 @@ END
     end
 
     # @!parse module Sass; end
-    register_tilt_filter "Sass"
+    register_tilt_filter "Sass", :extend => "Css"
 
     # @!parse module Scss; end
-    register_tilt_filter "Scss"
+    register_tilt_filter "Scss", :extend => "Css"
 
     # @!parse module Less; end
-    register_tilt_filter "Less"
+    register_tilt_filter "Less", :extend => "Css"
 
     # @!parse module Markdown; end
     register_tilt_filter "Markdown"
@@ -345,7 +350,7 @@ END
     register_tilt_filter "Erb", :precompiled => true
 
     # @!parse module Coffee; end
-    register_tilt_filter "Coffee", :alias => "coffeescript"
+    register_tilt_filter "Coffee", :alias => "coffeescript", :extend => "Javascript"
 
     # Parses the filtered text with ERB.
     # Not available if the {file:REFERENCE.md#suppress_eval-option
