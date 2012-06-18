@@ -486,7 +486,7 @@ MESSAGE
 
       if flags.include?(:/)
         raise Error.new("Self-closing tags can't have content.") if text
-        raise Error.new("Illegal nesting: nesting within a self-closing tag is illegal.") if block
+        raise Error.new(Error.message(:illegal_nesting_self_closing)) if block
       end
 
       tag = "<#{name}#{attributes}>"
@@ -506,7 +506,7 @@ MESSAGE
       end
 
       if text
-        raise Error.new("Illegal nesting: content can't be both given to haml_tag :#{name} and nested within it.")
+        raise Error.new(Error.message(:illegal_nesting_line, name))
       end
 
       if flags.include?(:<)

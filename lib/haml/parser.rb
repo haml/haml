@@ -91,7 +91,7 @@ module Haml
       @indentation = nil
       @line = next_line
 
-      raise SyntaxError.new("Indenting at the beginning of the document is illegal.", @line.index) if @line.tabs != 0
+      raise SyntaxError.new(Error.message(:indenting_at_start), @line.index) if @line.tabs != 0
 
       while next_line
         process_indent(@line) unless @line.text.empty?
@@ -238,7 +238,7 @@ END
 
     def plain(text, escape_html = nil)
       if block_opened?
-        raise SyntaxError.new("Illegal nesting: nesting within plain text is illegal.", @next_line.index)
+        raise SyntaxError.new(Error.message(:illegal_nesting_plain), @next_line.index)
       end
 
       unless contains_interpolation?(text)
@@ -250,7 +250,7 @@ END
     end
 
     def script(text, escape_html = nil, preserve = false)
-      raise SyntaxError.new("There's no Ruby code for = to evaluate.") if text.empty?
+      raise SyntaxError.new(Error.message(:no_ruby_code, '=')) if text.empty?
       text = handle_ruby_multiline(text)
       escape_html = @options[:escape_html] if escape_html.nil?
 
@@ -259,21 +259,14 @@ END
     end
 
     def flat_script(text, escape_html = nil)
-      raise SyntaxError.new("There's no Ruby code for ~ to evaluate.") if text.empty?
+      raise SyntaxError.new(Error.message(:no_ruby_code, '~')) if text.empty?
       script(text, escape_html, :preserve)
     end
 
     def silent_script(text)
       return haml_comment(text[2..-1]) if text[1] == SILENT_COMMENT
 
-      raise SyntaxError.new(<<END.rstrip, @index - 1) if text[1..-1].strip == "end"
-You don't need to use "- end" in Haml. Un-indent to close a block:
-- if foo?
-  %strong Foo!
-- else
-  Not foo.
-%p This line is un-indented, so it isn't part of the "if" block
-END
+      raise SyntaxError.new(Error.message(:no_end), @index - 1) if text[1..-1].strip == "end"
 
       text = handle_ruby_multiline(text)
       keyword = block_keyword(text)
@@ -346,12 +339,12 @@ END
 
       attributes_list.compact!
 
-      raise SyntaxError.new("Illegal nesting: nesting within a self-closing tag is illegal.", @next_line.index) if block_opened? && self_closing
-      raise SyntaxError.new("There's no Ruby code for #{action} to evaluate.", last_line - 1) if parse && value.empty?
-      raise SyntaxError.new("Self-closing tags can't have content.", last_line - 1) if self_closing && !value.empty?
+      raise SyntaxError.new(Error.message(:illegal_nesting_self_closing), @next_line.index) if block_opened? && self_closing
+      raise SyntaxError.new(Error.message(:no_ruby_code, action), last_line - 1) if parse && value.empty?
+      raise SyntaxError.new(Error.message(:self_closing_content), last_line - 1) if self_closing && !value.empty?
 
       if block_opened? && !value.empty? && !is_ruby_multiline?(value)
-        raise SyntaxError.new("Illegal nesting: content can't be both given on the same line as %#{tag_name} and nested within it.", @next_line.index)
+        raise SyntaxError.new(Error.message(:illegal_nesting_line, tag_name), @next_line.index)
       end
 
       self_closing ||= !!(!block_opened? && value.empty? && @options[:autoclose].any? {|t| t === tag_name})
@@ -379,7 +372,7 @@ END
       conditional << ">" if conditional
 
       if block_opened? && !line.empty?
-        raise SyntaxError.new('Illegal nesting: nesting within a tag that already has content is illegal.', @next_line.index)
+        raise SyntaxError.new(Haml::Error.message(:illegal_nesting_content), @next_line.index)
       end
 
       ParseNode.new(:comment, @index, :conditional => conditional, :text => line)
@@ -387,13 +380,13 @@ END
 
     # Renders an XHTML doctype or XML shebang.
     def doctype(line)
-      raise SyntaxError.new("Illegal nesting: nesting within a header command is illegal.", @next_line.index) if block_opened?
+      raise SyntaxError.new(Error.message(:illegal_nesting_header), @next_line.index) if block_opened?
       version, type, encoding = line[3..-1].strip.downcase.scan(DOCTYPE_REGEX)[0]
       ParseNode.new(:doctype, @index, :version => version, :type => type, :encoding => encoding)
     end
 
     def filter(name)
-      raise Error.new("Invalid filter name \":#{name}\".") unless name =~ /^\w+$/
+      raise Error.new(Error.message(:invalid_filter_name, name)) unless name =~ /^\w+$/
 
       @filter_buffer = String.new
 
@@ -473,10 +466,14 @@ END
 
     # Parses a line into tag_name, attributes, attributes_hash, object_ref, action, value
     def parse_tag(line)
-      raise SyntaxError.new("Invalid tag: \"#{line}\".") unless match = line.scan(/%([-:\w]+)([-:\w\.\#]*)(.*)/)[0]
+      match = line.scan(/%([-:\w]+)([-:\w\.\#]*)(.*)/)[0]
+      raise SyntaxError.new(Error.message(:invalid_tag, line)) unless match
 
       tag_name, attributes, rest = match
-      raise SyntaxError.new("Illegal element: classes and ids must have values.") if attributes =~ /[\.#](\.|#|\z)/
+
+      if attributes =~ /[\.#](\.|#|\z)/
+        raise SyntaxError.new(Error.message(:illegal_element))
+      end
 
       new_attributes_hash = old_attributes_hash = last_line = nil
       object_ref = "nil"
@@ -522,7 +519,7 @@ END
       begin
         attributes_hash, rest = balance(line, ?{, ?})
       rescue SyntaxError => e
-        if line.strip[-1] == ?, && e.message == "Unbalanced brackets."
+        if line.strip[-1] == ?, && e.message == Error.message(:unbalanced_brackets)
           line << "\n" << @next_line.text
           last_line += 1
           next_line
@@ -549,7 +546,7 @@ END
 
         if name == false
           text = (Haml::Util.balance(line, ?(, ?)) || [line]).first
-          raise Haml::SyntaxError.new("Invalid attribute list: #{text.inspect}.", last_line - 1)
+          raise Haml::SyntaxError.new(Error.message(:invalid_attribute_list, text.inspect), last_line - 1)
         end
         attributes[name] = value
         scanner.scan(/\s*/)
@@ -697,7 +694,7 @@ END
     def balance(*args)
       res = Haml::Util.balance(*args)
       return res if res
-      raise SyntaxError.new("Unbalanced brackets.")
+      raise SyntaxError.new(Error.message(:unbalanced_brackets))
     end
 
     def block_opened?

@@ -72,6 +72,10 @@ class MiniTest::Unit::TestCase
     flunk "Expected exception #{klass}, none raised"
   end
 
+  def self.error(*args)
+    Haml::Error.message(*args)
+  end
+
 end
 
 $VERBOSE = true
