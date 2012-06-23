@@ -203,7 +203,7 @@ module Haml
     # macro in order to make it appear in Yard's list of instance attributes.
     undef :format
     def format
-      mime_type == "text/xml" ? "xhtml" : @format
+      mime_type == "text/xml" ? :xhtml : @format
     end
 
     def format=(value)
