@@ -20,6 +20,9 @@ Rails.application = TestApp
 ActionController::Base.logger = Logger.new(nil)
 
 require 'fileutils'
+
+$VERBOSE = true
+
 require 'haml'
 require 'haml/template'
 
@@ -77,5 +80,3 @@ class MiniTest::Unit::TestCase
   end
 
 end
-
-$VERBOSE = true
