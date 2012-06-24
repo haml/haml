@@ -108,6 +108,24 @@ class JavascriptFilterTest < MiniTest::Unit::TestCase
     haml = ":javascript\n  foo bar"
     assert_equal(html, render(haml, :format => :html5))
   end
+
+  test "should always include CDATA when format is xhtml" do
+    html = "<script type='text/javascript'>\n  //<![CDATA[\n    foo bar\n  //]]>\n</script>\n"
+    haml = ":javascript\n  foo bar"
+    assert_equal(html, render(haml, :format => :xhtml, :cdata => false))
+  end
+
+  test "should omit CDATA when cdata option is false" do
+    html = "<script>\n  foo bar\n</script>\n"
+    haml = ":javascript\n  foo bar"
+    assert_equal(html, render(haml, :format => :html5, :cdata => false))
+  end
+
+  test "should include CDATA when cdata option is true" do
+    html = "<script>\n  //<![CDATA[\n    foo bar\n  //]]>\n</script>\n"
+    haml = ":javascript\n  foo bar"
+    assert_equal(html, render(haml, :format => :html5, :cdata => true))
+  end
 end
 
 class CSSFilterTest < MiniTest::Unit::TestCase

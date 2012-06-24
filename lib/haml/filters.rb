@@ -196,19 +196,20 @@ RUBY
 
       # @see Base#render_with_options
       def render_with_options(text, options)
+        indent = options[:cdata] ? '    ' : '  ' # 4 or 2 spaces
         if options[:format] == :html5
           type = ''
         else
           type = " type=#{options[:attr_wrapper]}text/javascript#{options[:attr_wrapper]}"
         end
 
-        <<END
-<script#{type}>
-  //<![CDATA[
-    #{text.rstrip.gsub("\n", "\n    ")}
-  //]]>
-</script>
-END
+        str = "<script#{type}>\n"
+        str << "  //<![CDATA[\n" if options[:cdata]
+        str << "#{indent}#{text.rstrip.gsub("\n", "\n#{indent}")}\n"
+        str << "  //]]>\n" if options[:cdata]
+        str << "</script>"
+
+        str
       end
     end
 

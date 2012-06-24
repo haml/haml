@@ -18,13 +18,14 @@ module Haml
       :preserve             => %w(textarea pre code),
       :remove_whitespace    => false,
       :suppress_eval        => false,
-      :ugly                 => false
+      :ugly                 => false,
+      :cdata                => true
     }
 
     @valid_formats = [:xhtml, :html4, :html5]
 
     @buffer_option_keys = [:autoclose, :preserve, :attr_wrapper, :ugly, :format,
-      :encoding, :escape_html, :escape_attrs, :hyphenate_data_attrs]
+      :encoding, :escape_html, :escape_attrs, :hyphenate_data_attrs, :cdata]
 
     # The default option values.
     # @return Hash
@@ -147,6 +148,11 @@ module Haml
     # Defaults to `true` in Rails production  mode, and `false` everywhere else.
     attr_accessor :ugly
 
+    # Whether to include CDATA sections around javascript blocks.
+    #
+    # Defaults to `true`. Can only be set to `false` if format is html.
+    attr_accessor :cdata
+
     def initialize(values = {}, &block)
       defaults.each {|k, v| instance_variable_set :"@#{k}", v}
       values.reject {|k, v| !defaults.has_key?(k) || v.nil?}.each {|k, v| send("#{k}=", v)}
@@ -211,6 +217,11 @@ module Haml
         raise Haml::Error, "Invalid output format #{value.inspect}"
       end
       @format = value
+    end
+    
+    undef :cdata
+    def cdata
+      xhtml? || @cdata
     end
 
     def remove_whitespace=(value)
