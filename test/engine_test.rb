@@ -10,7 +10,7 @@ class EngineTest < MiniTest::Unit::TestCase
     "!!!\n  a"                                             => error(:illegal_nesting_header),
     "a\n  b"                                               => error(:illegal_nesting_plain),
     "/ a\n  b"                                             => error(:illegal_nesting_content),
-    "% a"                                                  => error(:invalid_tag, 'a'),
+    "% a"                                                  => error(:invalid_tag, '% a'),
     "%p a\n  b"                                            => error(:illegal_nesting_line, 'p'),
     "%p="                                                  => error(:no_ruby_code, '='),
     "%p~"                                                  => error(:no_ruby_code, '~'),

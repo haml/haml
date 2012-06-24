@@ -7,7 +7,7 @@ module Haml
       :illegal_nesting_plain        => "Illegal nesting: nesting within plain text is illegal.",
       :illegal_nesting_content      => "Illegal nesting: nesting within a tag that already has content is illegal.",
       :illegal_nesting_self_closing => "Illegal nesting: nesting within a self-closing tag is illegal.",
-      :invalid_tag                  => 'Invalid tag: "%%s".',
+      :invalid_tag                  => 'Invalid tag: "%s".',
       :illegal_element              => "Illegal element: classes and ids must have values.",
       :no_ruby_code                 => "There's no Ruby code for %s to evaluate.",
       :self_closing_content         => "Self-closing tags can't have content.",
