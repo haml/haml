@@ -104,7 +104,7 @@ class JavascriptFilterTest < MiniTest::Unit::TestCase
   end
 
   test "should not include type in HTML 5 output" do
-    html = "<script>\n  //<![CDATA[\n    foo bar\n  //]]>\n</script>\n"
+    html = "<script>\n  foo bar\n</script>\n"
     haml = ":javascript\n  foo bar"
     assert_equal(html, render(haml, :format => :html5))
   end
@@ -125,6 +125,13 @@ class JavascriptFilterTest < MiniTest::Unit::TestCase
     html = "<script>\n  //<![CDATA[\n    foo bar\n  //]]>\n</script>\n"
     haml = ":javascript\n  foo bar"
     assert_equal(html, render(haml, :format => :html5, :cdata => true))
+  end
+
+  test "should default to no CDATA when format is html5" do
+    haml = ":javascript\n  foo bar"
+    out = render(haml, :format => :html5)
+    refute_match('//<![CDATA[', out)
+    refute_match('//]]>', out)
   end
 end
 

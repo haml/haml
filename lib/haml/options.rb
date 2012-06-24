@@ -19,7 +19,7 @@ module Haml
       :remove_whitespace    => false,
       :suppress_eval        => false,
       :ugly                 => false,
-      :cdata                => true
+      :cdata                => false
     }
 
     @valid_formats = [:xhtml, :html4, :html5]
@@ -150,7 +150,8 @@ module Haml
 
     # Whether to include CDATA sections around javascript blocks.
     #
-    # Defaults to `true`. Can only be set to `false` if format is html.
+    # Defaults to `false` for html, `true` for xhtml. Cannot be changed when using
+    # xhtml.
     attr_accessor :cdata
 
     def initialize(values = {}, &block)
