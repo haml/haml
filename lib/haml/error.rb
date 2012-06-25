@@ -55,5 +55,5 @@ END
   # ill-formatted document.
   # It's not particularly interesting,
   # except in that it's a subclass of {Haml::Error}.
-  class SyntaxError < Haml::Error; end
+  class SyntaxError < Error; end
 end
