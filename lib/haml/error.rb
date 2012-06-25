@@ -17,6 +17,9 @@ module Haml
       :illegal_nesting_line         => "Illegal nesting: content can't be both given on the same line as %%%s and nested within it.",
       :invalid_attribute_list       => 'Invalid attribute list: %s.',
       :unbalanced_brackets          => 'Unbalanced brackets.',
+      :install_haml_contrib         => 'To use the "%s" filter, please install the haml-contrib gem.',
+      :gem_install_filter_deps      => '"%s" filter\'s %s dependency missing: try installing it or adding it to your Gemfile',
+      :cant_run_filter              => 'Can\'t run "%s" filter; you must require its dependencies first',
       :no_end                       => <<-END
 You don't need to use "- end" in Haml. Un-indent to close a block:
 - if foo?

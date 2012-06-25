@@ -303,9 +303,10 @@ END
       def template_class
         (@template_class if defined? @template_class) or begin
           @template_class = Tilt["t.#{tilt_extension}"] or
-            raise "Can't run #{self} filter; you must require its dependencies first"
-        rescue LoadError
-          raise Error.new("Can't run #{self} filter; required dependencies not available")
+            raise Error.new(Error.message(:cant_run_filter, tilt_extension))
+        rescue LoadError => e
+          dep = e.message.split('--').last.strip
+          raise Error.new(Error.message(:gem_install_filter_deps, tilt_extension, dep))
         end
       end
 

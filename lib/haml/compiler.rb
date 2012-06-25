@@ -260,7 +260,7 @@ END
       unless filter = Filters.defined[@node.value[:name]]
         name = @node.value[:name]
         if ["maruku", "textile"].include?(name)
-          raise Error.new("To use the \"#{name}\" filter, please install the haml-contrib gem.", @node.line - 1)
+          raise Error.new(Error.message(:install_haml_contrib, name), @node.line - 1)
         else
           raise Error.new(Error.message(:filter_not_defined, name), @node.line - 1)
         end

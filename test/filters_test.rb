@@ -24,6 +24,48 @@ class FiltersTest < MiniTest::Unit::TestCase
     end
   end
 
+  test "should raise error when a Tilt filters dependencies are unavailable for extension" do
+    begin
+      assert_raises Haml::Error do
+        Haml::Filters.register_tilt_filter "Textile"
+        Haml::Filters.defined["textile"].template_class
+      end
+    ensure
+      Haml::Filters.defined.delete "textile"
+      Haml::Filters.send :remove_const, :Textile
+    end
+  end
+
+  test "should raise error when a Tilt filters dependencies are unavailable for filter without extension" do
+    begin
+      assert_raises Haml::Error do
+        Haml::Filters.register_tilt_filter "Maruku"
+        Haml::Filters.defined["maruku"].template_class
+      end
+    ensure
+      Haml::Filters.defined.delete "maruku"
+      Haml::Filters.send :remove_const, :Maruku
+    end
+  end
+
+  test "should raise informative error about Maruku being moved to haml-contrib" do
+    begin
+      render(":maruku\n  # foo")
+      flunk("Should have raised error with message about the haml-contrib gem.")
+    rescue Haml::Error => e
+      assert_equal e.message, Haml::Error.message(:install_haml_contrib, "maruku")
+    end
+  end
+
+  test "should raise informative error about Textile being moved to haml-contrib" do
+    begin
+      render(":textile\n  h1. foo")
+      flunk("Should have raised error with message about the haml-contrib gem.")
+    rescue Haml::Error => e
+      assert_equal e.message, Haml::Error.message(:install_haml_contrib, "textile")
+    end
+  end
+
   test "should respect escaped newlines and interpolation" do
     html = "\\n\n"
     haml = ":plain\n  \\n\#{""}"
