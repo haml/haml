@@ -112,7 +112,7 @@ module Haml
         end
 
         if !@haml_comment && !flat? && @next_line.tabs - @line.tabs > 1
-          raise SyntaxError.new("The line was indented #{@next_line.tabs - @line.tabs} levels deeper than the previous line.", @next_line.index)
+          raise SyntaxError.new(Error.message(:deeper_indenting, @next_line.tabs - @line.tabs), @next_line.index)
         end
 
         @line = @next_line
@@ -143,7 +143,7 @@ module Haml
             @indentation = whitespace
 
             if @indentation.include?(?\s) && @indentation.include?(?\t)
-              raise SyntaxError.new("Indentation can't use both tabs and spaces.", line.index)
+              raise SyntaxError.new(Error.message(:cant_use_tabs_and_spaces), line.index)
             end
 
             @flat_spaces = @indentation * (@template_tabs+1) if flat?

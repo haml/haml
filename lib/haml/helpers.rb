@@ -485,7 +485,7 @@ MESSAGE
       end
 
       if flags.include?(:/)
-        raise Error.new("Self-closing tags can't have content.") if text
+        raise Error.new(Error.message(:self_closing_content)) if text
         raise Error.new(Error.message(:illegal_nesting_self_closing)) if block
       end
 
