@@ -148,7 +148,11 @@ module Haml
     # Defaults to `true` in Rails production  mode, and `false` everywhere else.
     attr_accessor :ugly
 
-    # Whether to include CDATA sections around javascript blocks.
+    # Whether to include CDATA sections around javascript and css blocks when
+    # using the `:javascript` or `:css` filters.
+    #
+    # This option also affects the `:sass`, `:scss`, `:less` and `:coffeescript`
+    # filters.
     #
     # Defaults to `false` for html, `true` for xhtml. Cannot be changed when using
     # xhtml.
