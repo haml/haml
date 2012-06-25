@@ -1923,6 +1923,18 @@ HAML
     end
   end
 
+  def test_block_spacing
+    begin
+      assert render(<<-HAML)
+- foo = ["bar", "baz", "kni"]
+- foo.each do | item |
+  = item
+HAML
+    rescue SyntaxError => e
+      flunk("Should not have raised syntax error")
+    end
+  end
+
   private
 
   def assert_valid_encoding_comment(comment)

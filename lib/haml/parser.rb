@@ -63,6 +63,14 @@ module Haml
     # of a multiline string.
     MULTILINE_CHAR_VALUE = ?|
 
+    # Regex to check for blocks with spaces around arguments. Not to be confused
+    # with multiline script.
+    # For example:
+    #     foo.each do | bar |
+    #       = bar
+    #
+    BLOCK_WITH_SPACES = /do[\s]*\|[\s]*[^\|]*[\s]+\|\z/
+
     MID_BLOCK_KEYWORDS = %w[else elsif rescue ensure end when]
     START_BLOCK_KEYWORDS = %w[if begin case]
     # Try to parse assignments to block starters as best as possible
@@ -74,6 +82,7 @@ module Haml
 
     # The Regex that matches a literal string or symbol value
     LITERAL_VALUE_REGEX = /:(\w*)|(["'])((?![\\#]|\2).|\\.)*\2/
+
 
     def initialize(template, options)
       # :eod is a special end-of-document marker
@@ -664,7 +673,7 @@ module Haml
 
     # Checks whether or not `line` is in a multiline sequence.
     def is_multiline?(text)
-      text && text.length > 1 && text[-1] == MULTILINE_CHAR_VALUE && text[-2] == ?\s
+      text && text.length > 1 && text[-1] == MULTILINE_CHAR_VALUE && text[-2] == ?\s && text !~ BLOCK_WITH_SPACES
     end
 
     def handle_ruby_multiline(text)
