@@ -86,12 +86,15 @@ module Haml
 
     def initialize(template, options)
       # :eod is a special end-of-document marker
-      @template       = (template.rstrip).split(/\r\n|\r|\n/) + [:eod, :eod]
-      @options        = options
-      @flat           = false
-      @index          = 0
-      @template_index = 0
-      @template_tabs  = 0
+      @template           = (template.rstrip).split(/\r\n|\r|\n/) + [:eod, :eod]
+      @options            = options
+      @flat               = false
+      @index              = 0
+      # Record the indent levels of "if" statements to validate the subsequent
+      # elsif and else statements are indented at the appropriate level.
+      @script_level_stack = []
+      @template_index     = 0
+      @template_tabs      = 0
     end
 
     def parse
@@ -281,7 +284,18 @@ module Haml
       text = handle_ruby_multiline(text)
       keyword = block_keyword(text)
 
-      @tab_up = ["if", "case"].include?(keyword)
+      if ["if", "case"].include?(keyword)
+        @script_level_stack.push(@line.tabs)
+        @tab_up = true
+      end
+
+      if ["else", "elsif"].include?(keyword)
+        unless @script_level_stack.last == @line.tabs
+          message = Error.message(:bad_script_indent, keyword, @script_level_stack.last, @line.tabs)
+          raise Haml::Error.new(message, @line.index)
+        end
+      end
+
       ParseNode.new(:silent_script, @index,
         :text => text[1..-1], :keyword => keyword)
     end
@@ -426,6 +440,8 @@ module Haml
     end
 
     def close_silent_script(node)
+      @script_level_stack.pop if node.value[:keyword] == "if"
+
       # Post-process case statements to normalize the nesting of "when" clauses
       return unless node.value[:keyword] == "case"
       return unless first = node.children.first

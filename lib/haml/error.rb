@@ -3,6 +3,7 @@ module Haml
   class Error < StandardError
 
     MESSAGES = {
+      :bad_script_indent            => '"%s" is indented at wrong level: expected %d, but was at %d.',
       :cant_run_filter              => 'Can\'t run "%s" filter; you must require its dependencies first',
       :cant_use_tabs_and_spaces     => "Indentation can't use both tabs and spaces.",
       :deeper_indenting             => "The line was indented %d levels deeper than the previous line.",
