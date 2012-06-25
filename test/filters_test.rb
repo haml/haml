@@ -185,9 +185,34 @@ class CSSFilterTest < MiniTest::Unit::TestCase
   end
 
   test "should not include type in HTML 5 output" do
-    html = "<style>\n  /*<![CDATA[*/\n    foo bar\n  /*]]>*/\n</style>\n"
+    html = "<style>\n  foo bar\n</style>\n"
     haml = ":css\n  foo bar"
     assert_equal(html, render(haml, :format => :html5))
+  end
+
+  test "should always include CDATA when format is xhtml" do
+    html = "<style type='text/css'>\n  /*<![CDATA[*/\n    foo bar\n  /*]]>*/\n</style>\n"
+    haml = ":css\n  foo bar"
+    assert_equal(html, render(haml, :format => :xhtml, :cdata => false))
+  end
+
+  test "should omit CDATA when cdata option is false" do
+    html = "<style>\n  foo bar\n</style>\n"
+    haml = ":css\n  foo bar"
+    assert_equal(html, render(haml, :format => :html5, :cdata => false))
+  end
+
+  test "should include CDATA when cdata option is true" do
+    html = "<style>\n  /*<![CDATA[*/\n    foo bar\n  /*]]>*/\n</style>\n"
+    haml = ":css\n  foo bar"
+    assert_equal(html, render(haml, :format => :html5, :cdata => true))
+  end
+
+  test "should default to no CDATA when format is html5" do
+    haml = ":css\n  foo bar"
+    out = render(haml, :format => :html5)
+    refute_match('<![CDATA[', out)
+    refute_match(']]>', out)
   end
 end
 
