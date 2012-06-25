@@ -1092,8 +1092,9 @@ Tilt.
 
 {#css-filter}
 ### `:css`
-Surrounds the filtered text with `<style>` and CDATA tags. Useful for including
-inline CSS.
+Surrounds the filtered text with `<style>` and (optionally) CDATA tags. Useful
+for including inline CSS. Use the {Haml::Options#cdata `:cdata` option} to
+control when CDATA tags are added.
 
 {#erb-filter}
 ### `:erb`
@@ -1109,8 +1110,9 @@ before placing it in the document.
 
 {#javascript-filter}
 ### `:javascript`
-Surrounds the filtered text with `<script>` and CDATA tags.
-Useful for including inline Javascript.
+Surrounds the filtered text with `<script>` and (optionally) CDATA tags.
+Useful for including inline Javascript. Use the {Haml::Options#cdata `:cdata`
+option} to control when CDATA tags are added.
 
 {#less-filter}
 ### `:less`

@@ -2,6 +2,10 @@
 
 ## 3.2.0 (Unreleased)
 
+* The :javascript and :css filters no longer add CDATA tags when the format is
+  html4 or html5. This can be overridden by setting the `cdata` option to
+  `true`. CDATA tags are always added when the format is xhtml.
+
 * HTML2Haml has been extracted to a separate gem, creatively named "html2haml".
 
 * Haml's internals have been refactored to move the parser, compiler and options
