@@ -154,10 +154,11 @@ module Haml
           break tabs if whitespace == @indentation * tabs
           break @template_tabs + 1 if flat? && whitespace =~ /^#{@flat_spaces}/
 
-          raise SyntaxError.new(<<END.strip.gsub("\n", ' '), line.index)
-Inconsistent indentation: #{Haml::Util.human_indentation whitespace, true} used for indentation,
-but the rest of the document was indented using #{Haml::Util.human_indentation @indentation}.
-END
+          message = Error.message(:inconsistent_indentation,
+            Haml::Util.human_indentation(whitespace),
+            Haml::Util.human_indentation(@indentation)
+          )
+          raise SyntaxError.new(message, line.index)
         end
       end
     end

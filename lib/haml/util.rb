@@ -304,23 +304,17 @@ METHOD
     # @param was [Boolean] Whether or not to add `"was"` or `"were"`
     #   (depending on how many characters were in `indentation`)
     # @return [String] The name of the indentation (e.g. `"12 spaces"`, `"1 tab"`)
-    def human_indentation(indentation, was = false)
+    def human_indentation(indentation)
       if !indentation.include?(?\t)
         noun = 'space'
       elsif !indentation.include?(?\s)
         noun = 'tab'
       else
-        return indentation.inspect + (was ? ' was' : '')
+        return indentation.inspect
       end
 
       singular = indentation.length == 1
-      if was
-        was = singular ? ' was' : ' were'
-      else
-        was = ''
-      end
-
-      "#{indentation.length} #{noun}#{'s' unless singular}#{was}"
+      "#{indentation.length} #{noun}#{'s' unless singular}"
     end
 
     def contains_interpolation?(str)

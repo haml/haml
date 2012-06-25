@@ -20,6 +20,7 @@ module Haml
       :install_haml_contrib         => 'To use the "%s" filter, please install the haml-contrib gem.',
       :gem_install_filter_deps      => '"%s" filter\'s %s dependency missing: try installing it or adding it to your Gemfile',
       :cant_run_filter              => 'Can\'t run "%s" filter; you must require its dependencies first',
+      :inconsistent_indentation     => "Inconsistent indentation: %s used for indentation, but the rest of the document was indented using %s.",
       :no_end                       => <<-END
 You don't need to use "- end" in Haml. Un-indent to close a block:
 - if foo?
