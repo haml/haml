@@ -95,7 +95,7 @@ module Haml
         end
 
         opts.on_tail("-v", "--version", "Print version") do
-          puts("Haml #{::Haml.version[:string]}")
+          puts("Haml #{::Haml::VERSION}")
           exit
         end
       end
