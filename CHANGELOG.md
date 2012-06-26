@@ -2,6 +2,9 @@
 
 ## 3.2.0 (Unreleased)
 
+* HTML5 is now the default output format rather than XHTML. This was already
+  the default on Rails 3+, so many users will notice no difference.
+
 * The :javascript and :css filters no longer add CDATA tags when the format is
   html4 or html5. This can be overridden by setting the `cdata` option to
   `true`. CDATA tags are always added when the format is xhtml.

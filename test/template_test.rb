@@ -70,6 +70,7 @@ class TemplateTest < MiniTest::Unit::TestCase
 
   def render(text, opts = {})
     return @base.render(:inline => text, :type => :haml) if opts == :action_view
+    opts = opts.merge(:format => :xhtml)
     Haml::Engine.new(text, opts).to_html(@base)
   end
 
@@ -117,14 +118,14 @@ class TemplateTest < MiniTest::Unit::TestCase
 
   def test_templates_should_render_correctly_with_render_proc
     assert_renders_correctly("standard") do |name|
-      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"))
+      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
       engine.render_proc(@base).call
     end
   end
 
   def test_templates_should_render_correctly_with_def_method
     assert_renders_correctly("standard") do |name|
-      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"))
+      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
       engine.def_method(@base, "render_standard")
       @base.render_standard
     end

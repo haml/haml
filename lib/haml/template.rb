@@ -27,6 +27,5 @@ end
 
 Haml::Template.options[:ugly]        = !Rails.env.development?
 Haml::Template.options[:escape_html] = true
-Haml::Template.options[:format]      = :html5
 
 require 'haml/template/plugin'

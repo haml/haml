@@ -218,7 +218,7 @@ END
         end
 
         opts.on('-f', '--format NAME',
-                'Output format. Can be xhtml (default), html4, or html5.') do |name|
+                'Output format. Can be html5 (default), xhtml, or html4.') do |name|
           @options[:for_engine][:format] = name.to_sym
         end
 

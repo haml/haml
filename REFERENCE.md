@@ -1,7 +1,7 @@
 # Haml (XHTML Abstraction Markup Language)
 
-Haml is a markup language that's used to cleanly and simply describe the XHTML
-of any web document, without the use of inline code. Haml functions as a
+Haml is a markup language that's used to cleanly and simply describe the HTML of
+any web document, without the use of inline code. Haml functions as a
 replacement for inline page templating systems such as PHP, ERB, and ASP.
 However, Haml avoids the need for explicitly coding HTML into the template,
 because it is actually an abstract description of the HTML, with some code to
@@ -651,8 +651,8 @@ is compiled to:
     </html>
 
 You can also specify the specific doctype after the `!!!` When the
-[`:format`](#format-option) is set to `:xhtml` (the default except in Rails 3),
-the following doctypes are supported:
+[`:format`](#format-option) is set to `:xhtml`. The following doctypes are
+supported:
 
 `!!!`
 : XHTML 1.0 Transitional<br/>
@@ -1232,7 +1232,7 @@ For example, tags like `pre` and `textarea` are whitespace-sensitive;
 indenting the text makes them render wrong.
 
 Haml deals with this by "preserving" newlines before they're put into the document --
-converting them to the XHTML whitespace escape code, `&#x000A;`.
+converting them to the HTML whitespace escape code, `&#x000A;`.
 Then Haml won't try to re-format the indentation.
 
 Literal `textarea` and `pre` tags automatically preserve content given through `=`.

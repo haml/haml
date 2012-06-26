@@ -11,7 +11,7 @@ module Haml
       :escape_attrs         => true,
       :escape_html          => false,
       :filename             => '(haml)',
-      :format               => :xhtml,
+      :format               => :html5,
       :hyphenate_data_attrs => true,
       :line                 => 1,
       :mime_type            => 'text/html',
@@ -22,7 +22,7 @@ module Haml
       :cdata                => false
     }
 
-    @valid_formats = [:xhtml, :html4, :html5]
+    @valid_formats = [:html4, :html5, :xhtml]
 
     @buffer_option_keys = [:autoclose, :preserve, :attr_wrapper, :ugly, :format,
       :encoding, :escape_html, :escape_attrs, :hyphenate_data_attrs, :cdata]
@@ -102,11 +102,13 @@ module Haml
     # inline templates, similar to the last argument to `Kernel#eval`.
     attr_accessor :line
 
-    # Determines the output format. Normally the default is `:xhtml`, although
-    # under Rails 3 it's `:html5`, since that's the Rails 3's default format.
-    # Other options are `:html4` and `:html5`, which are identical to `:xhtml`
-    # except there are no self-closing tags, the XML prolog is ignored and
-    # correct DOCTYPEs are generated.
+    # Determines the output format. The default is `:html5`. The other options
+    # are `:html4` and `:xhtml`. If the output is set to XHTML, then Haml
+    # automatically generates self-closing tags and wraps the output of the
+    # Javascript and CSS-like filters inside CDATA. When the output is set to
+    # :html5 or :html4, XML prologs are ignored. In all cases, an appropriate
+    # doctype is generated from '!!!'.
+    #
     #
     # If the mime_type of the template being rendered is `text/xml` then a
     # format of `:xhtml` will be used even if the global output format is set to
@@ -223,7 +225,7 @@ module Haml
       end
       @format = value
     end
-    
+
     undef :cdata
     def cdata
       xhtml? || @cdata

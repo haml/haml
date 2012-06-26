@@ -140,7 +140,7 @@ class JavascriptFilterTest < MiniTest::Unit::TestCase
   end
 
   test "should never HTML-escape ampersands" do
-    html = "<script type='text/javascript'>\n  //<![CDATA[\n    & < > &\n  //]]>\n</script>\n"
+    html = "<script>\n  & < > &\n</script>\n"
     haml = %Q{:javascript\n  & < > \#{"&"}}
     assert_equal(html, render(haml, :escape_html => true))
   end
@@ -178,10 +178,10 @@ class JavascriptFilterTest < MiniTest::Unit::TestCase
 end
 
 class CSSFilterTest < MiniTest::Unit::TestCase
-  test "should wrap output in CDATA and a CSS tag" do
+  test "should wrap output in CDATA and a CSS tag when output is XHTML" do
     html = "<style type='text/css'>\n  /*<![CDATA[*/\n    foo\n  /*]]>*/\n</style>\n"
     haml = ":css\n  foo"
-    assert_equal(html, render(haml))
+    assert_equal(html, render(haml, :format => :xhtml))
   end
 
   test "should not include type in HTML 5 output" do

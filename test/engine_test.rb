@@ -173,11 +173,11 @@ class EngineTest < MiniTest::Unit::TestCase
   end
 
   def test_colon_in_class_attr
-    assert_equal("<p class='foo:bar' />\n", render("%p.foo:bar/"))
+    assert_equal("<p class='foo:bar'>\n", render("%p.foo:bar/"))
   end
 
   def test_colon_in_id_attr
-    assert_equal("<p id='foo:bar' />\n", render("%p#foo:bar/"))
+    assert_equal("<p id='foo:bar'>\n", render("%p#foo:bar/"))
   end
 
   def test_dynamic_attributes_with_no_content
@@ -258,17 +258,17 @@ HAML
   end
 
   def test_static_attributes_with_empty_attr
-    assert_equal("<img alt='' src='/foo.png' />\n", render("%img{:src => '/foo.png', :alt => ''}"))
+    assert_equal("<img alt='' src='/foo.png'>\n", render("%img{:src => '/foo.png', :alt => ''}"))
   end
 
   def test_dynamic_attributes_with_empty_attr
-    assert_equal("<img alt='' src='/foo.png' />\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
+    assert_equal("<img alt='' src='/foo.png'>\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
   end
 
   def test_attribute_hash_with_newlines
     assert_equal("<p a='b' c='d'>foop</p>\n", render("%p{:a => 'b',\n   :c => 'd'} foop"))
     assert_equal("<p a='b' c='d'>\n  foop\n</p>\n", render("%p{:a => 'b',\n   :c => 'd'}\n  foop"))
-    assert_equal("<p a='b' c='d' />\n", render("%p{:a => 'b',\n   :c => 'd'}/"))
+    assert_equal("<p a='b' c='d'>\n", render("%p{:a => 'b',\n   :c => 'd'}/"))
     assert_equal("<p a='b' c='d' e='f'></p>\n", render("%p{:a => 'b',\n   :c => 'd',\n   :e => 'f'}"))
   end
 
@@ -290,7 +290,7 @@ HAML
     assert_equal(<<HTML, render(<<HAML, :ugly => true))
 <p a='2'></p>
 <p a='2'>foo</p>
-<p a='2' />
+<p a='2'>
 <p a='2'>foo</p>
 <p a='2'>foo
 bar</p>
@@ -408,7 +408,7 @@ HAML
       assert_equal(<<HTML, render(<<HAML))
 <html>
   <body>
-    <img src='test' />
+    <img src='test'>
     foo
     bar
   </body>
@@ -909,7 +909,7 @@ HAML
   end
 
   def test_static_attributes_should_be_escaped
-    assert_equal("<img class='atlantis' style='ugly&amp;stupid' />\n",
+    assert_equal("<img class='atlantis' style='ugly&amp;stupid'>\n",
                  render("%img.atlantis{:style => 'ugly&stupid'}"))
     assert_equal("<div class='atlantis' style='ugly&amp;stupid'>foo</div>\n",
                  render(".atlantis{:style => 'ugly&stupid'} foo"))
@@ -920,13 +920,13 @@ HAML
   end
 
   def test_dynamic_attributes_should_be_escaped
-    assert_equal("<img alt='' src='&amp;foo.png' />\n",
+    assert_equal("<img alt='' src='&amp;foo.png'>\n",
                  render("%img{:width => nil, :src => '&foo.png', :alt => String.new}"))
     assert_equal("<p alt='' src='&amp;foo.png'>foo</p>\n",
                  render("%p{:width => nil, :src => '&foo.png', :alt => String.new} foo"))
     assert_equal("<div alt='' src='&amp;foo.png'>foo</div>\n",
                  render("%div{:width => nil, :src => '&foo.png', :alt => String.new}= 'foo'"))
-    assert_equal("<img alt='' src='foo&#x000A;.png' />\n",
+    assert_equal("<img alt='' src='foo&#x000A;.png'>\n",
                  render("%img{:width => nil, :src => \"foo\\n.png\", :alt => String.new}"))
   end
 
@@ -1027,9 +1027,9 @@ HAML
   def test_stop_eval
     assert_equal("", render("= 'Hello'", :suppress_eval => true))
     assert_equal("", render("- haml_concat 'foo'", :suppress_eval => true))
-    assert_equal("<div id='foo' yes='no' />\n", render("#foo{:yes => 'no'}/", :suppress_eval => true))
-    assert_equal("<div id='foo' />\n", render("#foo{:yes => 'no', :call => a_function() }/", :suppress_eval => true))
-    assert_equal("<div />\n", render("%div[1]/", :suppress_eval => true))
+    assert_equal("<div id='foo' yes='no'>\n", render("#foo{:yes => 'no'}/", :suppress_eval => true))
+    assert_equal("<div id='foo'>\n", render("#foo{:yes => 'no', :call => a_function() }/", :suppress_eval => true))
+    assert_equal("<div>\n", render("%div[1]/", :suppress_eval => true))
     assert_equal("", render(":ruby\n  Kernel.puts 'hello'", :suppress_eval => true))
   end
 
@@ -1038,17 +1038,17 @@ HAML
       render('!!!', :format => :html5).strip)
     assert_equal('<!DOCTYPE html>', render('!!! 5').strip)
     assert_equal('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
-      render('!!! strict').strip)
+      render('!!! strict', :format => :xhtml).strip)
     assert_equal('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">',
-      render('!!! frameset').strip)
+      render('!!! frameset', :format => :xhtml).strip)
     assert_equal('<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">',
-      render('!!! mobile').strip)
+      render('!!! mobile', :format => :xhtml).strip)
     assert_equal('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">',
-      render('!!! basic').strip)
+      render('!!! basic', :format => :xhtml).strip)
     assert_equal('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-      render('!!! transitional').strip)
+      render('!!! transitional', :format => :xhtml).strip)
     assert_equal('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-      render('!!!').strip)
+      render('!!!', :format => :xhtml).strip)
     assert_equal('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
       render('!!! strict', :format => :html4).strip)
     assert_equal('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">',
@@ -1064,14 +1064,14 @@ HAML
     assert_equal("<p escaped='quo\"te'></p>\n", render("%p{ :escaped => 'quo\"te'}", :attr_wrapper => '"'))
     assert_equal("<p escaped=\"quo'te\"></p>\n", render("%p{ :escaped => 'quo\\'te'}", :attr_wrapper => '"'))
     assert_equal("<p escaped=\"q'uo&#x0022;te\"></p>\n", render("%p{ :escaped => 'q\\'uo\"te'}", :attr_wrapper => '"'))
-    assert_equal("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n", render("!!! XML", :attr_wrapper => '"'))
+    assert_equal("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n", render("!!! XML", :attr_wrapper => '"', :format => :xhtml))
   end
 
   def test_autoclose_option
-    assert_equal("<flaz foo='bar' />\n", render("%flaz{:foo => 'bar'}", :autoclose => ["flaz"]))
+    assert_equal("<flaz foo='bar'>\n", render("%flaz{:foo => 'bar'}", :autoclose => ["flaz"]))
     assert_equal(<<HTML, render(<<HAML, :autoclose => [/^flaz/]))
-<flaz />
-<flaznicate />
+<flaz>
+<flaznicate>
 <flan></flan>
 HTML
 %flaz
@@ -1140,7 +1140,7 @@ HAML
   end
 
   def test_dynamic_attrs_with_self_closed_tag
-    assert_equal("<a b='2' />\nc\n", render("%a{'b' => 1 + 1}/\n= 'c'\n"))
+    assert_equal("<a b='2'>\nc\n", render("%a{'b' => 1 + 1}/\n= 'c'\n"))
   end
 
   EXCEPTION_MAP.each do |key, value|
@@ -1236,8 +1236,8 @@ HAML
   end
 
   def test_non_literal_attributes
-    assert_equal("<p a1='foo' a2='bar' a3='baz' />\n",
-                 render("%p{a2, a1, :a3 => 'baz'}/",
+    assert_equal("<p a1='foo' a2='bar' a3='baz'></p>\n",
+                 render("%p{a2, a1, :a3 => 'baz'}",
                         :locals => {:a1 => {:a1 => 'foo'}, :a2 => {:a2 => 'bar'}}))
   end
 
@@ -1553,9 +1553,9 @@ HAML
   end
 
   def test_truthy_new_attributes
-    assert_equal("<a href='href'>bar</a>\n", render("%a(href) bar"))
+    assert_equal("<a href='href'>bar</a>\n", render("%a(href) bar", :format => :xhtml))
     assert_equal("<a bar='baz' href>bar</a>\n", render("%a(href bar='baz') bar", :format => :html5))
-    assert_equal("<a href='href'>bar</a>\n", render("%a(href=true) bar"))
+    assert_equal("<a href>bar</a>\n", render("%a(href=true) bar"))
     assert_equal("<a>bar</a>\n", render("%a(href=false) bar"))
   end
 
