@@ -4,6 +4,8 @@ module Haml
   class Parser
     include Haml::Util
 
+    attr_reader :root
+
     # Designates an XHTML/XML element.
     ELEMENT         = ?%
 

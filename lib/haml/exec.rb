@@ -1,6 +1,7 @@
 require 'optparse'
 require 'fileutils'
 require 'rbconfig'
+require 'pp'
 
 module Haml
   # This module handles the various Haml executables (`haml` and `haml-convert`).
@@ -252,9 +253,14 @@ END
           end
         end
 
-        opts.on('--debug', "Print out the precompiled Ruby source.") do
+        opts.on('-d', '--debug', "Print out the precompiled Ruby source.") do
           @options[:debug] = true
         end
+
+        opts.on('-p', '--parse', "Print out Haml parse tree.") do
+          @options[:parse] = true
+        end
+
       end
 
       # Processes the options set by the command-line arguments,
@@ -272,9 +278,15 @@ END
         @options[:requires].each {|f| require f}
 
         begin
+
           engine = ::Haml::Engine.new(template, @options[:for_engine])
           if @options[:check_syntax]
             puts "Syntax OK"
+            return
+          end
+
+          if @options[:parse]
+            pp engine.parser.root
             return
           end
 
