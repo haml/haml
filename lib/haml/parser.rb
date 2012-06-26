@@ -74,7 +74,7 @@ module Haml
     BLOCK_WITH_SPACES = /do[\s]*\|[\s]*[^\|]*[\s]+\|\z/
 
     MID_BLOCK_KEYWORDS = %w[else elsif rescue ensure end when]
-    START_BLOCK_KEYWORDS = %w[if begin case]
+    START_BLOCK_KEYWORDS = %w[if begin case unless]
     # Try to parse assignments to block starters as best as possible
     START_BLOCK_KEYWORD_REGEX = /(?:\w+(?:,\s*\w+)*\s*=\s*)?(#{START_BLOCK_KEYWORDS.join('|')})/
     BLOCK_KEYWORD_REGEX = /^-\s*(?:(#{MID_BLOCK_KEYWORDS.join('|')})|#{START_BLOCK_KEYWORD_REGEX.source})\b/
@@ -286,13 +286,13 @@ module Haml
       text = handle_ruby_multiline(text)
       keyword = block_keyword(text)
 
-      if ["if", "case"].include?(keyword)
+      if ["if", "case", "unless"].include?(keyword)
         @script_level_stack.push(@line.tabs)
         @tab_up = true
       end
 
       if ["else", "elsif"].include?(keyword)
-        unless @script_level_stack.last.to_i == @line.tabs
+        unless @script_level_stack.empty? || @script_level_stack.last == @line.tabs
           message = Error.message(:bad_script_indent, keyword, @script_level_stack.last, @line.tabs)
           raise Haml::Error.new(message, @line.index)
         end
