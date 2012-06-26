@@ -290,7 +290,7 @@ module Haml
       end
 
       if ["else", "elsif"].include?(keyword)
-        unless @script_level_stack.last == @line.tabs
+        unless @script_level_stack.last.to_i == @line.tabs
           message = Error.message(:bad_script_indent, keyword, @script_level_stack.last, @line.tabs)
           raise Haml::Error.new(message, @line.index)
         end

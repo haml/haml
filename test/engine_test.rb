@@ -1930,8 +1930,14 @@ HAML
 - foo.each do | item |
   = item
 HAML
-    rescue SyntaxError => e
+    rescue ::SyntaxError => e
       flunk("Should not have raised syntax error")
+    end
+  end
+
+  def test_should_raise_syntax_error_for_else_with_no_if
+    assert_raises ::SyntaxError do
+      render("- else\n  'foo'")
     end
   end
 
