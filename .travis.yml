@@ -26,10 +26,13 @@ matrix:
 
   allow_failures:
     - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
+    - { rvm: jruby-18mode, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
     - { rvm: ruby-head, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
 
 branches:
   only:
     - master
     - stable
+    - 3-2-stable
+    - 3-1-stable
 script: "bundle exec rake submodules test"
