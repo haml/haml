@@ -237,6 +237,11 @@ END
           @options[:for_engine][:attr_wrapper] = '"'
         end
 
+        opts.on('--cdata',
+                'Always add CDATA sections to javascript and css blocks.') do
+          @options[:for_engine][:cdata] = true
+        end
+
         opts.on('-r', '--require FILE', "Same as 'ruby -r'.") do |file|
           @options[:requires] << file
         end
