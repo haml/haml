@@ -1935,18 +1935,6 @@ HAML
     end
   end
 
-  def test_should_raise_syntax_error_for_else_with_no_if
-    assert_raises ::SyntaxError do
-      render("- else\n  'foo'")
-    end
-  end
-
-  def test_should_raise_syntax_error_for_nested_else_with_no_if
-    assert_raises ::SyntaxError do
-      render("#foo\n  - else\n    'foo'")
-    end
-  end
-
   private
 
   def assert_valid_encoding_comment(comment)

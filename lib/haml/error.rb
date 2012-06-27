@@ -21,6 +21,7 @@ module Haml
       :invalid_attribute_list       => 'Invalid attribute list: %s.',
       :invalid_filter_name          => 'Invalid filter name ":%s".',
       :invalid_tag                  => 'Invalid tag: "%s".',
+      :missing_if                   => 'Got "%s" with no preceding "if"',
       :no_ruby_code                 => "There's no Ruby code for %s to evaluate.",
       :self_closing_content         => "Self-closing tags can't have content.",
       :unbalanced_brackets          => 'Unbalanced brackets.',

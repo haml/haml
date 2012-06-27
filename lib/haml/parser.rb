@@ -292,9 +292,11 @@ module Haml
       end
 
       if ["else", "elsif"].include?(keyword)
-        unless @script_level_stack.empty? || @script_level_stack.last == @line.tabs
+        if @script_level_stack.empty?
+          raise Haml::SyntaxError.new(Error.message(:missing_if, keyword), @line.index)
+        elsif @script_level_stack.last != @line.tabs
           message = Error.message(:bad_script_indent, keyword, @script_level_stack.last, @line.tabs)
-          raise Haml::Error.new(message, @line.index)
+          raise Haml::SyntaxError.new(message, @line.index)
         end
       end
 
