@@ -1,4 +1,4 @@
-# Haml (XHTML Abstraction Markup Language)
+# Haml (HTML Abstraction Markup Language)
 
 Haml is a markup language that's used to cleanly and simply describe the HTML of
 any web document, without the use of inline code. Haml functions as a
