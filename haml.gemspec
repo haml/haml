@@ -37,7 +37,7 @@ your application:
 
 * Support for Ruby 1.8.6 dropped
 * Support for Rails 2 dropped
-* Sass filter now always outputs <script> tags
+* Sass filter now always outputs <style> tags
 * Data attributes are now hyphenated, not underscored
 * html2haml utility moved to the html2haml gem
 * Textile and Maruku filters moved to the haml-contrib gem
