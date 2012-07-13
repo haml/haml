@@ -48,6 +48,25 @@ module Haml
       end
     end
 
+    test "else after if containing case is accepted" do
+      # see issue 572
+      begin
+        parse "- if true\n  - case @foo\n  - when 1\n    bar\n- else\n  bar"
+        assert true
+      rescue SyntaxError
+        flunk 'else clause after if containing case should be accepted'
+      end
+    end
+
+    test "else after if containing unless is accepted" do
+      begin
+        parse "- if true\n  - unless @foo\n  bar\n- else\n  bar"
+        assert true
+      rescue SyntaxError
+        flunk 'else clause after if containing unless should be accepted'
+      end
+    end
+
     private
 
     def parse(haml, options = nil)
