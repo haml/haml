@@ -308,7 +308,7 @@ RUBY
         id = "#{ prefix }_#{ id }"
       end
 
-      {'id' => id, 'class' => class_name}
+      {'id' => id, 'class' => class_name, 'data-id' => ref_id}
     end
 
     # Changes a word from camel case to underscores.
