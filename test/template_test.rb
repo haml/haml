@@ -68,10 +68,10 @@ class TemplateTest < MiniTest::Unit::TestCase
     base
   end
 
-  def render(text, opts = {})
-    return @base.render(:inline => text, :type => :haml) if opts == :action_view
-    opts = opts.merge(:format => :xhtml)
-    Haml::Engine.new(text, opts).to_html(@base)
+  def render(text, options = {})
+    return @base.render(:inline => text, :type => :haml) if options == :action_view
+    options = options.merge(:format => :xhtml)
+    super(text, options, @base)
   end
 
   def load_result(name)

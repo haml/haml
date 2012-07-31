@@ -43,12 +43,8 @@ class HelperTest < MiniTest::Unit::TestCase
   end
 
   def render(text, options = {})
-    if options == :action_view
-      @base.render :inline => text, :type => :haml
-    else
-      scope = options.delete :scope_object
-      Haml::Engine.new(text, options).to_html(scope ? scope : Object.new)
-    end
+    return @base.render :inline => text, :type => :haml if options == :action_view
+    super
   end
 
   def test_flatten
@@ -350,7 +346,7 @@ HAML
   def test_page_class
     controller = Struct.new(:controller_name, :action_name).new('troller', 'tion')
     scope = Struct.new(:controller).new(controller)
-    result = render("%div{:class => page_class} MyDiv", :scope_object => scope)
+    result = render("%div{:class => page_class} MyDiv", :scope => scope)
     expected = "<div class='troller tion'>MyDiv</div>\n"
     assert_equal expected, result
   end
