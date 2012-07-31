@@ -92,19 +92,23 @@ class EngineTest < MiniTest::Unit::TestCase
     end
   end
 
-  def render(text, options = {}, &block)
-    scope  = options.delete(:scope)  || Object.new
-    locals = options.delete(:locals) || {}
-    engine(text, options).to_html(scope, locals, &block)
-  end
-
-  def engine(text, options = {})
+  def use_test_tracing(options)
     unless options[:filename]
       # use caller method name as fake filename. useful for debugging
       i = -1
       caller[i+=1] =~ /`(.+?)'/ until $1 and $1.index('test_') == 0
       options[:filename] = "(#{$1})"
     end
+    options
+  end
+
+  def render(text, options = {}, &block)
+    options = use_test_tracing(options)
+    super
+  end
+
+  def engine(text, options = {})
+    options = use_test_tracing(options)
     Haml::Engine.new(text, options)
   end
 
