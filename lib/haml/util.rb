@@ -301,8 +301,6 @@ METHOD
     # Formats a string for use in error messages about indentation.
     #
     # @param indentation [String] The string used for indentation
-    # @param was [Boolean] Whether or not to add `"was"` or `"were"`
-    #   (depending on how many characters were in `indentation`)
     # @return [String] The name of the indentation (e.g. `"12 spaces"`, `"1 tab"`)
     def human_indentation(indentation)
       if !indentation.include?(?\t)
