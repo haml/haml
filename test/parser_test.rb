@@ -66,6 +66,15 @@ module Haml
         flunk 'else clause after if containing unless should be accepted'
       end
     end
+    
+    test "loud script with else is accepted" do
+      begin
+        parse "= if true\n  - 'A'\n-else\n  - 'B'"
+        assert true
+      rescue SyntaxError
+        flunk 'loud script (=) should allow else'
+      end
+    end
 
     private
 
