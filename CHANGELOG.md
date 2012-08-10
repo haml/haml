@@ -13,7 +13,8 @@
 
 * Haml's internals have been refactored to move the parser, compiler and options
   handling into independent classes, rather than including them all in the
-  Engine module.
+  Engine module. You can also specify your own custom Haml parser or compiler
+  class in Haml::Options in order to extend or modify Haml reasonably easily.
 
 * The :sass filter now wraps its output in a script tag, as do the new :less and
   :scss filters. The :coffee filter wraps its output in a script tag.

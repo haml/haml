@@ -19,7 +19,9 @@ module Haml
       :remove_whitespace    => false,
       :suppress_eval        => false,
       :ugly                 => false,
-      :cdata                => false
+      :cdata                => false,
+      :parser_class         => ::Haml::Parser,
+      :compiler_class       => ::Haml::Compiler
     }
 
     @valid_formats = [:html4, :html5, :xhtml]
@@ -159,6 +161,12 @@ module Haml
     # Defaults to `false` for html, `true` for xhtml. Cannot be changed when using
     # xhtml.
     attr_accessor :cdata
+
+    # The parser class to use. Defaults to Haml::Parser.
+    attr_accessor :parser_class
+
+    # The compiler class to use. Defaults to Haml::Compiler.
+    attr_accessor :compiler_class
 
     def initialize(values = {}, &block)
       defaults.each {|k, v| instance_variable_set :"@#{k}", v}

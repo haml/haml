@@ -1,10 +1,10 @@
 require 'forwardable'
 
+require 'haml/parser'
+require 'haml/compiler'
 require 'haml/options'
 require 'haml/helpers'
 require 'haml/buffer'
-require 'haml/parser'
-require 'haml/compiler'
 require 'haml/filters'
 require 'haml/error'
 
@@ -60,8 +60,8 @@ module Haml
 
       initialize_encoding options[:encoding]
 
-      @parser   = Parser.new(@template, @options)
-      @compiler = Compiler.new(@options)
+      @parser   = @options.parser_class.new(@template, @options)
+      @compiler = @options.compiler_class.new(@options)
 
       @compiler.compile(@parser.parse)
     end
