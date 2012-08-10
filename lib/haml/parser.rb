@@ -77,7 +77,7 @@ module Haml
     START_BLOCK_KEYWORDS = %w[if begin case unless]
     # Try to parse assignments to block starters as best as possible
     START_BLOCK_KEYWORD_REGEX = /(?:\w+(?:,\s*\w+)*\s*=\s*)?(#{START_BLOCK_KEYWORDS.join('|')})/
-    BLOCK_KEYWORD_REGEX = /^-\s*(?:(#{MID_BLOCK_KEYWORDS.join('|')})|#{START_BLOCK_KEYWORD_REGEX.source})\b/
+    BLOCK_KEYWORD_REGEX = /^[=-]?\s*(?:(#{MID_BLOCK_KEYWORDS.join('|')})|#{START_BLOCK_KEYWORD_REGEX.source})\b/
 
     # The Regex that matches a Doctype command.
     DOCTYPE_REGEX = /(\d(?:\.\d)?)?[\s]*([a-z]*)\s*([^ ]+)?/i
@@ -269,6 +269,8 @@ module Haml
       text = handle_ruby_multiline(text)
       escape_html = @options[:escape_html] if escape_html.nil?
 
+      check_push_script_stack(block_keyword(text))
+
       ParseNode.new(:script, @index, :text => text, :escape_html => escape_html,
         :preserve => preserve)
     end
@@ -286,10 +288,7 @@ module Haml
       text = handle_ruby_multiline(text)
       keyword = block_keyword(text)
 
-      if ["if", "case", "unless"].include?(keyword)
-        @script_level_stack.push(@line.tabs)
-        @tab_up = true
-      end
+      check_push_script_stack(keyword)
 
       if ["else", "elsif"].include?(keyword)
         if @script_level_stack.empty?
@@ -302,6 +301,13 @@ module Haml
 
       ParseNode.new(:silent_script, @index,
         :text => text[1..-1], :keyword => keyword)
+    end
+
+    def check_push_script_stack(keyword)
+      if ["if", "case", "unless"].include?(keyword)
+        @script_level_stack.push(@line.tabs)
+        @tab_up = true
+      end
     end
 
     def haml_comment(text)
