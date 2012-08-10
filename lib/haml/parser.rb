@@ -77,7 +77,7 @@ module Haml
     START_BLOCK_KEYWORDS = %w[if begin case unless]
     # Try to parse assignments to block starters as best as possible
     START_BLOCK_KEYWORD_REGEX = /(?:\w+(?:,\s*\w+)*\s*=\s*)?(#{START_BLOCK_KEYWORDS.join('|')})/
-    BLOCK_KEYWORD_REGEX = /^[=-]?\s*(?:(#{MID_BLOCK_KEYWORDS.join('|')})|#{START_BLOCK_KEYWORD_REGEX.source})\b/
+    BLOCK_KEYWORD_REGEX = /^-?\s*(?:(#{MID_BLOCK_KEYWORDS.join('|')})|#{START_BLOCK_KEYWORD_REGEX.source})\b/
 
     # The Regex that matches a Doctype command.
     DOCTYPE_REGEX = /(\d(?:\.\d)?)?[\s]*([a-z]*)\s*([^ ]+)?/i
