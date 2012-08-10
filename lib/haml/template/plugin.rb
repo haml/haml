@@ -8,7 +8,7 @@ module Haml
     # the ERB handler does.
 
     # In Rails 3.1+, we don't need to include Compilable.
-    if ::Rails.version < "3.1"
+    if ActionPack::VERSION::MAJOR < 3 || (ActionPack::VERSION::MAJOR == 3 && ActionPack::VERSION::MINOR < 1)
       include ActionView::Template::Handlers::Compilable
     end
 

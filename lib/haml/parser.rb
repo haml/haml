@@ -444,7 +444,7 @@ module Haml
     end
 
     def close_silent_script(node)
-      @script_level_stack.pop if %w{if unless case}.include? node.value[:keyword]
+      @script_level_stack.pop if ["if", "case", "unless"].include? node.value[:keyword]
 
       # Post-process case statements to normalize the nesting of "when" clauses
       return unless node.value[:keyword] == "case"

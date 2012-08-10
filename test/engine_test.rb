@@ -1930,7 +1930,7 @@ HAML
 - foo.each do | item |
   = item
 HAML
-    rescue ::SyntaxError => e
+    rescue ::SyntaxError
       flunk("Should not have raised syntax error")
     end
   end
