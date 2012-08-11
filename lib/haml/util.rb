@@ -347,7 +347,7 @@ module Haml
         require 'sass/version'
         loaded = Sass.respond_to?(:version) && Sass.version[:major] &&
           Sass.version[:minor] && ((Sass.version[:major] > 3 && Sass.version[:minor] > 1) ||
-          ((Sass.version[:major] == 3 && Sass.version[:minor] == 1) &&
+          ((Sass.version[:major] == 3 && Sass.version[:minor] >= 1) &&
             (Sass.version[:prerelease] || Sass.version[:name] != "Bleeding Edge")))
       rescue LoadError => e
         loaded = false
