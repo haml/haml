@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 3.1.7
+
+* Fix for compatibility with Sass 3.2.x.
+  (thanks [Michael Westbom](https://github.com/totallymike)).
+
 ## 3.1.6
 
 * In indented mode, don't reindent buffers that contain preserved tags, and
