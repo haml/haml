@@ -76,6 +76,15 @@ module Haml
       end
     end
 
+    test "else after nested loud script is accepted" do
+      begin
+        parse "-if true\n  =if true\n    - 'A'\n-else\n  B"
+        assert true
+      rescue SyntaxError
+        flunk 'else after nested loud script should be accepted'
+      end
+    end
+
     private
 
     def parse(haml, options = nil)
