@@ -269,10 +269,11 @@ module Haml
       text = handle_ruby_multiline(text)
       escape_html = @options[:escape_html] if escape_html.nil?
 
-      check_push_script_stack(block_keyword(text))
+      keyword = block_keyword(text)
+      check_push_script_stack(keyword)
 
       ParseNode.new(:script, @index, :text => text, :escape_html => escape_html,
-        :preserve => preserve)
+        :preserve => preserve, :keyword => keyword)
     end
 
     def flat_script(text, escape_html = nil)
@@ -463,6 +464,8 @@ module Haml
       node.children = [first, *first.children]
       first.children = []
     end
+
+    alias :close_script :close_silent_script
 
     # This is a class method so it can be accessed from {Haml::Helpers}.
     #
