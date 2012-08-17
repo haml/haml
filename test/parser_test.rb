@@ -85,6 +85,15 @@ module Haml
       end
     end
 
+    test "case with indented whens should allow else" do
+      begin
+        parse "- foo = 1\n-case foo\n  -when 1\n    A\n  -else\n    B"
+        assert true
+      rescue SyntaxError
+        flunk 'case with indented whens should allow else'
+      end
+    end
+
     private
 
     def parse(haml, options = nil)
