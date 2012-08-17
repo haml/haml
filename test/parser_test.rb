@@ -66,6 +66,33 @@ module Haml
         flunk 'else clause after if containing unless should be accepted'
       end
     end
+    
+    test "loud script with else is accepted" do
+      begin
+        parse "= if true\n  - 'A'\n-else\n  - 'B'"
+        assert true
+      rescue SyntaxError
+        flunk 'loud script (=) should allow else'
+      end
+    end
+
+    test "else after nested loud script is accepted" do
+      begin
+        parse "-if true\n  =if true\n    - 'A'\n-else\n  B"
+        assert true
+      rescue SyntaxError
+        flunk 'else after nested loud script should be accepted'
+      end
+    end
+
+    test "case with indented whens should allow else" do
+      begin
+        parse "- foo = 1\n-case foo\n  -when 1\n    A\n  -else\n    B"
+        assert true
+      rescue SyntaxError
+        flunk 'case with indented whens should allow else'
+      end
+    end
 
     private
 

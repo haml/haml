@@ -77,7 +77,7 @@ module Haml
     START_BLOCK_KEYWORDS = %w[if begin case unless]
     # Try to parse assignments to block starters as best as possible
     START_BLOCK_KEYWORD_REGEX = /(?:\w+(?:,\s*\w+)*\s*=\s*)?(#{START_BLOCK_KEYWORDS.join('|')})/
-    BLOCK_KEYWORD_REGEX = /^-\s*(?:(#{MID_BLOCK_KEYWORDS.join('|')})|#{START_BLOCK_KEYWORD_REGEX.source})\b/
+    BLOCK_KEYWORD_REGEX = /^-?\s*(?:(#{MID_BLOCK_KEYWORDS.join('|')})|#{START_BLOCK_KEYWORD_REGEX.source})\b/
 
     # The Regex that matches a Doctype command.
     DOCTYPE_REGEX = /(\d(?:\.\d)?)?[\s]*([a-z]*)\s*([^ ]+)?/i
@@ -269,8 +269,11 @@ module Haml
       text = handle_ruby_multiline(text)
       escape_html = @options[:escape_html] if escape_html.nil?
 
+      keyword = block_keyword(text)
+      check_push_script_stack(keyword)
+
       ParseNode.new(:script, @index, :text => text, :escape_html => escape_html,
-        :preserve => preserve)
+        :preserve => preserve, :keyword => keyword)
     end
 
     def flat_script(text, escape_html = nil)
@@ -286,22 +289,38 @@ module Haml
       text = handle_ruby_multiline(text)
       keyword = block_keyword(text)
 
-      if ["if", "case", "unless"].include?(keyword)
-        @script_level_stack.push(@line.tabs)
-        @tab_up = true
-      end
+      check_push_script_stack(keyword)
 
-      if ["else", "elsif"].include?(keyword)
+      if ["else", "elsif", "when"].include?(keyword)
         if @script_level_stack.empty?
           raise Haml::SyntaxError.new(Error.message(:missing_if, keyword), @line.index)
-        elsif @script_level_stack.last != @line.tabs
-          message = Error.message(:bad_script_indent, keyword, @script_level_stack.last, @line.tabs)
+        end
+
+        if keyword == 'when' and !@script_level_stack.last[2]
+          if @script_level_stack.last[1] + 1 == @line.tabs
+            @script_level_stack.last[1] += 1
+          end
+          @script_level_stack.last[2] = true
+        end
+
+        if @script_level_stack.last[1] != @line.tabs
+          message = Error.message(:bad_script_indent, keyword, @script_level_stack.last[1], @line.tabs)
           raise Haml::SyntaxError.new(message, @line.index)
         end
       end
 
       ParseNode.new(:silent_script, @index,
         :text => text[1..-1], :keyword => keyword)
+    end
+
+    def check_push_script_stack(keyword)
+      if ["if", "case", "unless"].include?(keyword)
+        # @script_level_stack contents are arrays of form
+        # [:keyword, stack_level, other_info]
+        @script_level_stack.push([keyword.to_sym, @line.tabs])
+        @script_level_stack.last << false if keyword == 'case'
+        @tab_up = true
+      end
     end
 
     def haml_comment(text)
@@ -457,6 +476,8 @@ module Haml
       node.children = [first, *first.children]
       first.children = []
     end
+
+    alias :close_script :close_silent_script
 
     # This is a class method so it can be accessed from {Haml::Helpers}.
     #
