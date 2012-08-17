@@ -291,11 +291,20 @@ module Haml
 
       check_push_script_stack(keyword)
 
-      if ["else", "elsif"].include?(keyword)
+      if ["else", "elsif", "when"].include?(keyword)
         if @script_level_stack.empty?
           raise Haml::SyntaxError.new(Error.message(:missing_if, keyword), @line.index)
-        elsif @script_level_stack.last != @line.tabs
-          message = Error.message(:bad_script_indent, keyword, @script_level_stack.last, @line.tabs)
+        end
+
+        if keyword == 'when' and !@script_level_stack.last[2]
+          if @script_level_stack.last[1] + 1 == @line.tabs
+            @script_level_stack.last[1] += 1
+          end
+          @script_level_stack.last[2] = true
+        end
+
+        if @script_level_stack.last[1] != @line.tabs
+          message = Error.message(:bad_script_indent, keyword, @script_level_stack.last[1], @line.tabs)
           raise Haml::SyntaxError.new(message, @line.index)
         end
       end
@@ -306,7 +315,10 @@ module Haml
 
     def check_push_script_stack(keyword)
       if ["if", "case", "unless"].include?(keyword)
-        @script_level_stack.push(@line.tabs)
+        # @script_level_stack contents are arrays of form
+        # [:keyword, stack_level, other_info]
+        @script_level_stack.push([keyword.to_sym, @line.tabs])
+        @script_level_stack.last << false if keyword == 'case'
         @tab_up = true
       end
     end
