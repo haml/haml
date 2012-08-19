@@ -122,13 +122,18 @@ class ErbFilterTest < MiniTest::Unit::TestCase
     assert_equal(html, render(haml))
   end
 
-
   test "should evaluate in the same context as Haml" do
     haml  = ":erb\n  <%= foo %>"
     html  = "bar\n"
     scope = Object.new.instance_eval {foo = "bar"; nil if foo; binding}
     assert_equal(html, render(haml, :scope => scope))
   end
+
+  test "should use Rails's XSS safety features" do
+    assert_equal("&lt;img&gt;\n", render(":erb\n  <%= '<img>' %>"))
+    assert_equal("<img>\n", render(":erb\n  <%= '<img>'.html_safe %>"))
+  end
+
 end
 
 class JavascriptFilterTest < MiniTest::Unit::TestCase
