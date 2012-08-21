@@ -6,7 +6,6 @@ require 'haml/version'
 # * {Haml::Compiler} is Haml's compiler.
 # * {Haml::Engine} is the class used to render Haml within Ruby code.
 # * {Haml::Options} is where Haml's runtime options are defined.
-# * {Haml::Engine} is the class used to render Haml within Ruby code.
 # * {Haml::Error} is raised when Haml encounters an error.
 #
 # Also see the {file:REFERENCE.md full Haml reference}.
