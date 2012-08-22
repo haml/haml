@@ -611,8 +611,8 @@ MESSAGE
     # @return [Proc] A new proc with the new variables bound
     def haml_bind_proc(&proc)
       _hamlout = haml_buffer
-      _erbout = _hamlout.buffer
-      _erbout.to_s #"use" the variable to silence warnings
+      #double assignment is to avoid warnings
+      _erbout = _erbout = _hamlout.buffer
       proc { |*args| proc.call(*args) }
     end
   end
