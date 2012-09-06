@@ -54,6 +54,7 @@ begin
 extend Haml::Helpers
 _hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{options.for_buffer.inspect})
 _erbout = _hamlout.buffer
+@output_buffer = output_buffer ||= nil || ActionView::OutputBuffer.new
 END
       postamble = <<END.gsub("\n", ";")
 #{precompiled_method_return_value}
