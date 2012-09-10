@@ -414,7 +414,7 @@ END
       	if value.is_a?(Hash)
         	data_attributes = attributes.delete(key)
         	data_attributes = flatten_data_attributes(data_attributes, '', join_char)
-        	data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs)
+        	data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs, key)
         	attributes = data_attributes.merge(attributes)
       	end
 			end
@@ -467,14 +467,14 @@ END
       return !value.empty? && value
     end
 
-    def self.build_data_keys(data_hash, hyphenate)
+    def self.build_data_keys(data_hash, hyphenate, attr_name="data")
       Hash[data_hash.map do |name, value|
         if name == nil
-          ["data", value]
+          [attr_name, value]
         elsif hyphenate
-          ["data-#{name.to_s.gsub(/_/, '-')}", value]
+          ["#{attr_name}-#{name.to_s.gsub(/_/, '-')}", value]
         else
-          ["data-#{name}", value]
+          ["#{attr_name}-#{name}", value]
         end
       end]
     end
