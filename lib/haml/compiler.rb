@@ -410,17 +410,15 @@ END
       other_quote_char = attr_wrapper == '"' ? "'" : '"'
       join_char        = hyphenate_data_attrs ? '-' : '_'
 
-			p attributes
-=begin
-      attributes.each do |attr|
-      	if attr.is_a?(Hash)
-        	data_attributes = attributes.delete('data')
+      attributes.each do |key, value|
+      	if value.is_a?(Hash)
+        	data_attributes = attributes.delete(key)
         	data_attributes = flatten_data_attributes(data_attributes, '', join_char)
         	data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs)
         	attributes = data_attributes.merge(attributes)
       	end
 			end
-=end
+
       result = attributes.collect do |attr, value|
         next if value.nil?
 

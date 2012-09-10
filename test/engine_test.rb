@@ -1434,6 +1434,13 @@ HAML
       render("%div{:data => {:foo_bar => 'blip', :baz => 'bang'}}"))
   end
 
+	def test_html5_arbitrary_hash_valued_attributes_with
+    assert_equal("<div aria-foo='blip'></div>\n",
+      render("%div{:aria => {:foo => 'blip'}}"))
+    assert_equal("<div foo-baz='bang'></div>\n",
+      render("%div{:foo => {:baz => 'bang'}}"))
+	end
+
   def test_html5_data_attributes_with_nested_hash
     assert_equal("<div data-a-b='c'></div>\n", render(<<-HAML))
 - hash = {:a => {:b => 'c'}}
