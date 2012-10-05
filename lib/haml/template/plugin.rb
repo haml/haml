@@ -16,7 +16,11 @@ module Haml
 
     def compile(template)
       options = Haml::Template.options.dup
-      options[:mime_type] = template.mime_type if template.respond_to? :mime_type
+      if template.respond_to? :type
+        options[:mime_type] = template.type
+      elsif template.respond_to? :mime_type
+        options[:mime_type] = template.mime_type
+      end
       options[:filename] = template.identifier
       Haml::Engine.new(template.source, options).compiler.precompiled_with_ambles([])
     end
