@@ -241,6 +241,11 @@ END
                 'Always add CDATA sections to javascript and css blocks.') do
           @options[:for_engine][:cdata] = true
         end
+        
+        opts.on('--suppress-eval',
+                'Don\'t evaluate Ruby scripts.') do
+          @options[:for_engine][:suppress_eval] = true
+        end
 
         opts.on('-r', '--require FILE', "Same as 'ruby -r'.") do |file|
           @options[:requires] << file
