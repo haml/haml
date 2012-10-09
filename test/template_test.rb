@@ -310,23 +310,6 @@ HTML
 HAML
   end
 
-  def test_xss_protection_with_form_for
-    assert_equal(<<HTML, render(<<HAML, :action_view))
-<form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
-  Title:
-  <input id="article_title" name="article[title]" size="30" type="text" value="Hello" />
-  Body:
-  <input id="article_body" name="article[body]" size="30" type="text" value="World" />
-</form>
-HTML
-= form_for @article, :as => :article, :html => {:class => nil, :id => nil}, :url => '' do |f|
-  Title:
-  = f.text_field :title
-  Body:
-  = f.text_field :body
-HAML
-  end
-
   if defined?(ActionView::Helpers::PrototypeHelper)
     def test_rjs
       assert_equal(<<HTML, render(<<HAML, :action_view))
