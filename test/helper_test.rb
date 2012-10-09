@@ -181,14 +181,12 @@ HAML
 
   def test_content_tag_error_wrapping
     def @base.protect_against_forgery?; false; end
-    assert_equal(<<HTML, render(<<HAML, :action_view))
-<form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
-  <div class="field_with_errors"><label for="post_error_field">Error field</label></div>
-</form>
-HTML
+    output = render(<<HAML, :action_view)
 = form_for @post, :as => :post, :html => {:class => nil, :id => nil}, :url => '' do |f|
   = f.label 'error_field'
 HAML
+    fragment = Nokogiri::HTML.fragment(output)
+    refute_nil fragment.css('form div.field_with_errors label[for=post_error_field]').first
   end
 
   def test_form_tag_in_helper_with_string_block

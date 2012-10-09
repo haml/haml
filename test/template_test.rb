@@ -216,16 +216,13 @@ END
   end
 
   def test_form_builder_label_with_block
-    assert_equal(<<HTML, render(<<HAML, :action_view))
-<form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
-  <label for="article_title">Block content
-  </label>
-</form>
-HTML
+    output = render(<<HAML, :action_view)
 = form_for @article, :as => :article, :html => {:class => nil, :id => nil}, :url => '' do |f|
   = f.label :title do
     Block content
 HAML
+    fragment = Nokogiri::HTML.fragment output
+    assert_equal "Block content", fragment.css('form label').first.content.strip
   end
 
   ## XSS Protection Tests
