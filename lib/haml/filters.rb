@@ -1,12 +1,61 @@
+require "tilt"
+
 module Haml
   # The module containing the default Haml filters,
   # as well as the base module, {Haml::Filters::Base}.
   #
   # @see Haml::Filters::Base
   module Filters
-    # @return [{String => Haml::Filters::Base}] a hash of filter names to classes
-    def self.defined
-      @defined ||= {}
+
+    extend self
+
+    # @return [{String => Haml::Filters::Base}] a hash mapping filter names to
+    #   classes.
+    attr_reader :defined
+    @defined = {}
+
+    # Loads an external template engine from
+    # [Tilt](https://github.com/rtomayko/tilt) as a filter. This method is used
+    # internally by Haml to set up filters for Sass, SCSS, Less, Coffeescript,
+    # and others. It's left public to make it easy for developers to add their
+    # own Tilt-based filters if they choose.
+    #
+    # @return [Module] The generated filter.
+    # @param [Hash] options Options for generating the filter module.
+    # @option options [Boolean] :precompiled Whether the filter should be
+    #   precompiled. Erb, Nokogiri and Builder use this, for example.
+    # @option options [Class] :template_class The Tilt template class to use,
+    #   in the event it can't be inferred from an extension.
+    # @option options [String] :extension The extension associated with the
+    #   content, for example "markdown". This lets Tilt choose the preferred
+    #   engine when there are more than one.
+    # @option options [String,Array<String>] :alias Any aliases for the filter.
+    #   For example, :coffee is also available as :coffeescript.
+    # @option options [String] :extend The name of a module to extend when
+    #   defining the filter. Defaults to "Plain". This allows filters such as
+    #   Coffee to "inherit" from Javascript, wrapping its output in script tags.
+    # @since 3.2.0
+    def register_tilt_filter(name, options = {})
+      if constants.map(&:to_s).include?(name.to_s)
+        raise "#{name} filter already defined"
+      end
+
+      filter = const_set(name, Module.new)
+      filter.extend const_get(options[:extend] || "Plain")
+      filter.extend TiltFilter
+      filter.extend PrecompiledTiltFilter if options.has_key? :precompiled
+
+      if options.has_key? :template_class
+        filter.template_class = options[:template_class]
+      else
+        filter.tilt_extension = options.fetch(:extension) { name.downcase }
+      end
+
+      # All ":coffeescript" as alias for ":coffee", etc.
+      if options.has_key?(:alias)
+        [options[:alias]].flatten.each {|x| Filters.defined[x.to_s] = filter}
+      end
+      filter
     end
 
     # The base module for Haml filters.
@@ -76,25 +125,26 @@ module Haml
       #
       # @see #compile
       def internal_compile(*args)
-        resolve_lazy_requires
         compile(*args)
       end
 
-      # This should be overridden when a filter needs to have access to the Haml evaluation context.
-      # Rather than applying a filter to a string at compile-time,
-      # \{#compile} uses the {Haml::Compiler} instance to compile the string to Ruby code
-      # that will be executed in the context of the active Haml template.
+      # This should be overridden when a filter needs to have access to the Haml
+      # evaluation context. Rather than applying a filter to a string at
+      # compile-time, \{#compile} uses the {Haml::Compiler} instance to compile
+      # the string to Ruby code that will be executed in the context of the
+      # active Haml template.
       #
       # Warning: the {Haml::Compiler} interface is neither well-documented
       # nor guaranteed to be stable.
-      # If you want to make use of it, you'll probably need to look at the source code
-      # and should test your filter when upgrading to new Haml versions.
+      # If you want to make use of it, you'll probably need to look at the
+      # source code and should test your filter when upgrading to new Haml
+      # versions.
       #
       # @param compiler [Haml::Compiler] The compiler instance
       # @param text [String] The text of the filter
-      # @raise [Haml::Error] if none of \{#compile}, \{#render}, and \{#render_with_options} are overridden
+      # @raise [Haml::Error] if none of \{#compile}, \{#render}, and
+      #   \{#render_with_options} are overridden
       def compile(compiler, text)
-        resolve_lazy_requires
         filter = self
         compiler.instance_eval do
           if contains_interpolation?(text)
@@ -120,74 +170,18 @@ RUBY
 
           rendered = Haml::Helpers::find_and_preserve(filter.render_with_options(text, compiler.options), compiler.options[:preserve])
 
-          if !options[:ugly]
-            push_text(rendered.rstrip.gsub("\n", "\n#{'  ' * @output_tabs}"))
-          else
+          if options[:ugly]
             push_text(rendered.rstrip)
-          end
-        end
-      end
-
-      # This becomes a class method of modules that include {Base}.
-      # It allows the module to specify one or more Ruby files
-      # that Haml should try to require when compiling the filter.
-      #
-      # The first file specified is tried first, then the second, etc.
-      # If none are found, the compilation throws an exception.
-      #
-      # For example:
-      #
-      #     module Haml::Filters::Markdown
-      #       lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth'
-      #
-      #       ...
-      #     end
-      #
-      # @param reqs [Array<String>] The requires to run
-      def lazy_require(*reqs)
-        @lazy_requires = reqs
-      end
-
-      private
-
-      def resolve_lazy_requires
-        return unless @lazy_requires
-
-        @lazy_requires[0...-1].each do |req|
-          begin
-            @required = req
-            require @required
-            return
-          rescue LoadError; end # RCov doesn't see this, but it is run
-        end
-
-        begin
-          @required = @lazy_requires[-1]
-          require @required
-        rescue LoadError => e
-          classname = self.name.match(/\w+$/)[0]
-
-          if @lazy_requires.size == 1
-            raise Error.new("Can't run #{classname} filter; required file '#{@lazy_requires.first}' not found")
           else
-            raise Error.new("Can't run #{classname} filter; required #{@lazy_requires.map { |r| "'#{r}'" }.join(' or ')}, but none were found")
+            push_text(rendered.rstrip.gsub("\n", "\n#{'  ' * @output_tabs}"))
           end
         end
       end
     end
-  end
-end
 
-begin
-  require 'rubygems'
-rescue LoadError; end
-
-module Haml
-  module Filters
     # Does not parse the filtered text.
-    # This is useful for large blocks of text without HTML tags,
-    # when you don't want lines starting with `.` or `-`
-    # to be parsed.
+    # This is useful for large blocks of text without HTML tags, when you don't
+    # want lines starting with `.` or `-` to be parsed.
     module Plain
       include Base
 
@@ -195,49 +189,51 @@ module Haml
       def render(text); text; end
     end
 
-    # Surrounds the filtered text with `<script>` and CDATA tags.
-    # Useful for including inline Javascript.
+    # Surrounds the filtered text with `<script>` and CDATA tags. Useful for
+    # including inline Javascript.
     module Javascript
       include Base
 
       # @see Base#render_with_options
       def render_with_options(text, options)
+        indent = options[:cdata] ? '    ' : '  ' # 4 or 2 spaces
         if options[:format] == :html5
           type = ''
         else
           type = " type=#{options[:attr_wrapper]}text/javascript#{options[:attr_wrapper]}"
         end
 
-        <<END
-<script#{type}>
-  //<![CDATA[
-    #{text.rstrip.gsub("\n", "\n    ")}
-  //]]>
-</script>
-END
+        str = "<script#{type}>\n"
+        str << "  //<![CDATA[\n" if options[:cdata]
+        str << "#{indent}#{text.rstrip.gsub("\n", "\n#{indent}")}\n"
+        str << "  //]]>\n" if options[:cdata]
+        str << "</script>"
+
+        str
       end
     end
 
-    # Surrounds the filtered text with `<style>` and CDATA tags.
-    # Useful for including inline CSS.
+    # Surrounds the filtered text with `<style>` and CDATA tags. Useful for
+    # including inline CSS.
     module Css
       include Base
 
       # @see Base#render_with_options
       def render_with_options(text, options)
+        indent = options[:cdata] ? '    ' : '  ' # 4 or 2 spaces
         if options[:format] == :html5
           type = ''
         else
           type = " type=#{options[:attr_wrapper]}text/css#{options[:attr_wrapper]}"
         end
 
-        <<END
-<style#{type}>
-  /*<![CDATA[*/
-    #{text.rstrip.gsub("\n", "\n    ")}
-  /*]]>*/
-</style>
-END
+        str = "<style#{type}>\n"
+        str << "  /*<![CDATA[*/\n" if options[:cdata]
+        str << "#{indent}#{text.rstrip.gsub("\n", "\n#{indent}")}\n"
+        str << "  /*]]>*/\n" if options[:cdata]
+        str << "</style>"
+
+        str
       end
     end
 
@@ -251,8 +247,8 @@ END
       end
     end
 
-    # Works the same as {Plain}, but HTML-escapes the text
-    # before placing it in the document.
+    # Works the same as {Plain}, but HTML-escapes the text before placing it in
+    # the document.
     module Escaped
       include Base
 
@@ -262,14 +258,14 @@ END
       end
     end
 
-    # Parses the filtered text with the normal Ruby interpreter.
-    # All output sent to `$stdout`, such as with `puts`,
-    # is output into the Haml document.
-    # Not available if the {file:HAML_REFERENCE.md#suppress_eval-option `:suppress_eval`} option is set to true.
-    # The Ruby code is evaluated in the same context as the Haml template.
+    # Parses the filtered text with the normal Ruby interpreter. All output sent
+    # to `$stdout`, such as with `puts`, is output into the Haml document. Not
+    # available if the {file:REFERENCE.md#suppress_eval-option `:suppress_eval`}
+    # option is set to true. The Ruby code is evaluated in the same context as
+    # the Haml template.
     module Ruby
       include Base
-      lazy_require 'stringio'
+      require 'stringio'
 
       # @see Base#compile
       def compile(compiler, text)
@@ -287,9 +283,8 @@ END
     end
 
     # Inserts the filtered text into the template with whitespace preserved.
-    # `preserve`d blocks of text aren't indented,
-    # and newlines are replaced with the HTML escape code for newlines,
-    # to preserve nice-looking output.
+    # `preserve`d blocks of text aren't indented, and newlines are replaced with
+    # the HTML escape code for newlines, to preserve nice-looking output.
     #
     # @see Haml::Helpers#preserve
     module Preserve
@@ -301,85 +296,84 @@ END
       end
     end
 
-    # Parses the filtered text with {Sass} to produce CSS output.
-    module Sass
-      include Base
-      lazy_require 'sass/plugin'
+    # @private
+    module TiltFilter
+      extend self
+      attr_accessor :tilt_extension, :options
+      attr_writer :template_class
 
-      # @see Base#render
-      def render(text)
-        ::Sass::Engine.new(text, ::Sass::Plugin.engine_options).render
+      def template_class
+        (@template_class if defined? @template_class) or begin
+          @template_class = Tilt["t.#{tilt_extension}"] or
+            raise Error.new(Error.message(:cant_run_filter, tilt_extension))
+        rescue LoadError => e
+          dep = e.message.split('--').last.strip
+          raise Error.new(Error.message(:gem_install_filter_deps, tilt_extension, dep))
+        end
+      end
+
+      def self.extended(base)
+        base.options = {}
+        base.instance_eval do
+          include Base
+
+          def render_with_options(text, compiler_options)
+            text = template_class.new(nil, 1, options) {text}.render
+            super(text, compiler_options)
+          end
+        end
       end
     end
 
-    # Parses the filtered text with ERB.
-    # Not available if the {file:HAML_REFERENCE.md#suppress_eval-option `:suppress_eval`} option is set to true.
-    # Embedded Ruby code is evaluated in the same context as the Haml template.
-    module ERB
-      include Base
-      lazy_require 'erb'
+    # @private
+    module PrecompiledTiltFilter
+      def precompiled(text)
+        template_class.new(nil, 1, options) { text }.send(:precompiled, {}).first
+      end
 
-      # @see Base#compile
       def compile(compiler, text)
         return if compiler.options[:suppress_eval]
-        src = ::ERB.new(text).src.sub(/^#coding:.*?\n/, '').
-          sub(/^_erbout = '';/, "")
-        compiler.send(:push_silent, src)
+        compiler.send(:push_script, precompiled(text))
       end
     end
 
-    # Parses the filtered text with [Textile](http://www.textism.com/tools/textile).
-    # Only works if [RedCloth](http://redcloth.org) is installed.
-    module Textile
-      include Base
-      lazy_require 'redcloth'
+    # @!parse module Sass; end
+    register_tilt_filter "Sass", :extend => "Css"
 
-      # @see Base#render
-      def render(text)
-        ::RedCloth.new(text).to_html(:textile)
-      end
-    end
-    # An alias for the Textile filter,
-    # since the only available Textile parser is RedCloth.
-    # @api public
-    RedCloth = Textile
-    Filters.defined['redcloth'] = RedCloth
+    # @!parse module Scss; end
+    register_tilt_filter "Scss", :extend => "Css"
 
-    # Parses the filtered text with [Markdown](http://daringfireball.net/projects/markdown).
-    # Only works if [RDiscount](http://github.com/rtomayko/rdiscount),
-    # [RPeg-Markdown](http://github.com/rtomayko/rpeg-markdown),
-    # [Maruku](http://maruku.rubyforge.org),
-    # or [BlueCloth](www.deveiate.org/projects/BlueCloth) are installed.
-    module Markdown
-      include Base
-      lazy_require 'rdiscount', 'peg_markdown', 'maruku', 'bluecloth'
+    # @!parse module Less; end
+    register_tilt_filter "Less", :extend => "Css"
 
-      # @see Base#render
-      def render(text)
-        engine = case @required
-                 when 'rdiscount'
-                   ::RDiscount
-                 when 'peg_markdown'
-                   ::PEGMarkdown
-                 when 'maruku'
-                   ::Maruku
-                 when 'bluecloth'
-                   ::BlueCloth
-                 end
-        engine.new(text).to_html
-      end
-    end
+    # @!parse module Markdown; end
+    register_tilt_filter "Markdown"
 
-    # Parses the filtered text with [Maruku](http://maruku.rubyforge.org),
-    # which has some non-standard extensions to Markdown.
-    module Maruku
-      include Base
-      lazy_require 'maruku'
+    # @!parse module Erb; end
+    register_tilt_filter "Erb", :precompiled => true
 
-      # @see Base#render
-      def render(text)
-        ::Maruku.new(text).to_html
+    # @!parse module Coffee; end
+    register_tilt_filter "Coffee", :alias => "coffeescript", :extend => "Javascript"
+
+    # Parses the filtered text with ERB.
+    # Not available if the {file:REFERENCE.md#suppress_eval-option
+    # `:suppress_eval`} option is set to true. Embedded Ruby code is evaluated
+    # in the same context as the Haml template.
+    module Erb
+      class << self
+        def precompiled(text)
+          super.sub(/^#coding:.*?\n/, '')
+        end
       end
     end
   end
+end
+
+# These filters have been demoted to Haml Contrib but are still included by
+# default in Haml 3.2. Still, we rescue from load error if for some reason
+# haml-contrib is not installed.
+begin
+  require "haml/filters/maruku"
+  require "haml/filters/textile"
+rescue LoadError
 end

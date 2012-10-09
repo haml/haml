@@ -1,16 +1,53 @@
-lib_dir = File.dirname(__FILE__) + '/../lib'
-require File.dirname(__FILE__) + '/linked_rails'
+if ENV["COVERAGE"]
+  require "simplecov"
+  SimpleCov.start
+end
 
-require 'test/unit'
+require 'rubygems'
+gem "minitest"
+require 'bundler/setup'
+require 'minitest/autorun'
+require 'action_pack'
+require 'action_controller'
+require 'action_view'
+require 'nokogiri'
+
+require 'rails'
+class TestApp < Rails::Application
+  config.root = ""
+end
+Rails.application = TestApp
+
+ActionController::Base.logger = Logger.new(nil)
+
 require 'fileutils'
-$:.unshift lib_dir unless $:.include?(lib_dir)
-require 'haml'
 
+$VERBOSE = true
+
+require 'haml'
 require 'haml/template'
-Haml::Template.options[:ugly] = false
+
+Haml::Template.options[:ugly]   = false
 Haml::Template.options[:format] = :xhtml
 
-class Test::Unit::TestCase
+module Declarative
+  def test(name, &block)
+    define_method("test #{name}", &block)
+  end
+end
+
+class MiniTest::Unit::TestCase
+
+  extend Declarative
+
+  def render(text, options = {}, base = nil, &block)
+    scope  = options.delete(:scope)  || Object.new
+    locals = options.delete(:locals) || {}
+    engine = Haml::Engine.new(text, options)
+    return engine.to_html(base) if base
+    engine.to_html(scope, locals, &block)
+  end
+
   def assert_warning(message)
     the_real_stderr, $stderr = $stderr, StringIO.new
     yield
@@ -28,35 +65,11 @@ class Test::Unit::TestCase
     Haml::Util.silence_warnings(&block)
   end
 
-  def rails_block_helper_char
-    return '=' if Haml::Util.ap_geq_3?
-    return '-'
-  end
-
-  def form_for_calling_convention(name)
-    return "@#{name}, :as => :#{name}, :html => {:class => nil, :id => nil}" if Haml::Util.ap_geq_3?
-    return ":#{name}, @#{name}"
-  end
-
-  def rails_form_attr
-    return 'accept-charset="UTF-8" ' if Haml::Util.ap_geq?("3.0.0.rc")
-    return ''
-  end
-
   def rails_form_opener
-    return '' unless Haml::Util.ap_geq?("3.0.0.rc")
-    if Haml::Util.ap_geq?("3.0.0.rc2")
-      encoding = 'utf8'
-      char = '&#x2713;'
-    else
-      encoding = '_snowman'
-      char = '&#9731;'
-    end
-    return '<div style="margin:0;padding:0;display:inline"><input name="' + encoding +
-      '" type="hidden" value="' + char + '" /></div>'
+    '<div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>'
   end
 
-  def assert_raise_message(klass, message)
+  def assert_raises_message(klass, message)
     yield
   rescue Exception => e
     assert_instance_of(klass, e)
@@ -65,11 +78,8 @@ class Test::Unit::TestCase
     flunk "Expected exception #{klass}, none raised"
   end
 
-  def assert_raise_line(line)
-    yield
-  rescue Sass::SyntaxError => e
-    assert_equal(line, e.sass_line)
-  else
-    flunk "Expected exception on line #{line}, none raised"
+  def self.error(*args)
+    Haml::Error.message(*args)
   end
+
 end

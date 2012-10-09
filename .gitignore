@@ -3,6 +3,13 @@
 /doc
 /pkg
 /test/rails
+/test/gemfiles/*.lock
 /.haml
 /site
 *.rbc
+.rbenv-version
+Gemfile.lock
+.rvmrc
+.rbx
+tmp
+.sass-cache

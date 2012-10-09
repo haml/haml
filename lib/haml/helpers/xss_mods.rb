@@ -63,7 +63,8 @@ module Haml
 
       # Input is escaped
       def haml_concat_with_haml_xss(text = "")
-        haml_concat_without_haml_xss(@_haml_concat_raw ? text : haml_xss_html_escape(text))
+        raw = instance_variable_defined?('@_haml_concat_raw') ? @_haml_concat_raw : false
+        haml_concat_without_haml_xss(raw ? text : haml_xss_html_escape(text))
       end
 
       # Output is always HTML safe
@@ -148,18 +149,15 @@ module ActionView
       alias_method :concat_without_haml_xss, :concat
       alias_method :concat, :concat_with_haml_xss
 
-      # safe_concat was introduced in Rails 3.0
-      if Haml::Util.has?(:instance_method, self, :safe_concat)
-        def safe_concat_with_haml_xss(string)
-          if is_haml?
-            haml_buffer.buffer.concat(string)
-          else
-            safe_concat_without_haml_xss(string)
-          end
+      def safe_concat_with_haml_xss(string)
+        if is_haml?
+          haml_buffer.buffer.concat(string)
+        else
+          safe_concat_without_haml_xss(string)
         end
-        alias_method :safe_concat_without_haml_xss, :safe_concat
-        alias_method :safe_concat, :safe_concat_with_haml_xss
       end
+      alias_method :safe_concat_without_haml_xss, :safe_concat
+      alias_method :safe_concat, :safe_concat_with_haml_xss
     end
   end
 end

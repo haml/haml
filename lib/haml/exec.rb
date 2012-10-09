@@ -1,5 +1,7 @@
 require 'optparse'
 require 'fileutils'
+require 'rbconfig'
+require 'pp'
 
 module Haml
   # This module handles the various Haml executables (`haml` and `haml-convert`).
@@ -80,7 +82,11 @@ module Haml
         end
 
         opts.on('--unix-newlines', 'Use Unix-style newlines in written files.') do
-          @options[:unix_newlines] = true if ::Haml::Util.windows?
+          # Note that this is the preferred way to check for Windows, since
+          # JRuby and Rubinius also run there.
+          if RbConfig::CONFIG['host_os'] =~ /mswin|windows|mingw/i
+            @options[:unix_newlines] = true
+          end
         end
 
         opts.on_tail("-?", "-h", "--help", "Show this message") do
@@ -89,7 +95,7 @@ module Haml
         end
 
         opts.on_tail("-v", "--version", "Print version") do
-          puts("Haml #{::Haml.version[:string]}")
+          puts("Haml #{::Haml::VERSION}")
           exit
         end
       end
@@ -128,9 +134,9 @@ module Haml
         printf color(color, "%11s %s\n"), name, arg
       end
 
-      # Same as \{Kernel.puts}, but doesn't print anything if the `--quiet` option is set.
+      # Same as `Kernel.puts`, but doesn't print anything if the `--quiet` option is set.
       #
-      # @param args [Array] Passed on to \{Kernel.puts}
+      # @param args [Array] Passed on to `Kernel.puts`
       def puts(*args)
         return if @options[:for_engine][:quiet]
         Kernel.puts(*args)
@@ -212,7 +218,7 @@ END
         end
 
         opts.on('-f', '--format NAME',
-                'Output format. Can be xhtml (default), html4, or html5.') do |name|
+                'Output format. Can be html5 (default), xhtml, or html4.') do |name|
           @options[:for_engine][:format] = name.to_sym
         end
 
@@ -231,6 +237,16 @@ END
           @options[:for_engine][:attr_wrapper] = '"'
         end
 
+        opts.on('--cdata',
+                'Always add CDATA sections to javascript and css blocks.') do
+          @options[:for_engine][:cdata] = true
+        end
+        
+        opts.on('--suppress-eval',
+                'Don\'t evaluate Ruby scripts.') do
+          @options[:for_engine][:suppress_eval] = true
+        end
+
         opts.on('-r', '--require FILE', "Same as 'ruby -r'.") do |file|
           @options[:requires] << file
         end
@@ -239,7 +255,7 @@ END
           @options[:load_paths] << path
         end
 
-        unless ::Haml::Util.ruby1_8?
+        unless RUBY_VERSION < "1.9"
           opts.on('-E ex[:in]', 'Specify the default external and internal character encodings.') do |encoding|
             external, internal = encoding.split(':')
             Encoding.default_external = external if external && !external.empty?
@@ -247,9 +263,14 @@ END
           end
         end
 
-        opts.on('--debug', "Print out the precompiled Ruby source.") do
+        opts.on('-d', '--debug', "Print out the precompiled Ruby source.") do
           @options[:debug] = true
         end
+
+        opts.on('-p', '--parse', "Print out Haml parse tree.") do
+          @options[:parse] = true
+        end
+
       end
 
       # Processes the options set by the command-line arguments,
@@ -267,9 +288,15 @@ END
         @options[:requires].each {|f| require f}
 
         begin
+
           engine = ::Haml::Engine.new(template, @options[:for_engine])
           if @options[:check_syntax]
             puts "Syntax OK"
+            return
+          end
+
+          if @options[:parse]
+            pp engine.parser.root
             return
           end
 
@@ -291,71 +318,6 @@ END
 
         output.write(result)
         output.close() if output.is_a? File
-      end
-    end
-
-    # The `html2haml` executable.
-    class HTML2Haml < Generic
-      # @param args [Array<String>] The command-line arguments
-      def initialize(args)
-        super
-        @module_opts = {}
-      end
-
-      # Tells optparse how to parse the arguments.
-      #
-      # @param opts [OptionParser]
-      def set_opts(opts)
-        opts.banner = <<END
-Usage: html2haml [options] [INPUT] [OUTPUT]
-
-Description: Transforms an HTML file into corresponding Haml code.
-
-Options:
-END
-
-        opts.on('-e', '--erb', 'Parse ERb tags.') do
-          @module_opts[:erb] = true
-        end
-
-        opts.on('--no-erb', "Don't parse ERb tags.") do
-          @options[:no_erb] = true
-        end
-
-        opts.on('-r', '--rhtml', 'Deprecated; same as --erb.') do
-          @module_opts[:erb] = true
-        end
-
-        opts.on('--no-rhtml', "Deprecated; same as --no-erb.") do
-          @options[:no_erb] = true
-        end
-
-        opts.on('-x', '--xhtml', 'Parse the input using the more strict XHTML parser.') do
-          @module_opts[:xhtml] = true
-        end
-
-        super
-      end
-
-      # Processes the options set by the command-line arguments,
-      # and runs the HTML compiler appropriately.
-      def process_result
-        super
-
-        require 'haml/html'
-
-        input = @options[:input]
-        output = @options[:output]
-
-        @module_opts[:erb] ||= input.respond_to?(:path) && input.path =~ /\.(rhtml|erb)$/
-        @module_opts[:erb] &&= @options[:no_erb] != false
-
-        output.write(::Haml::HTML.new(input, @module_opts).render)
-      rescue ::Haml::Error => e
-        raise "#{e.is_a?(::Haml::SyntaxError) ? "Syntax error" : "Error"} on line " +
-          "#{get_line e}: #{e.message}"
-      rescue LoadError => err
-        handle_load_error(err)
       end
     end
   end

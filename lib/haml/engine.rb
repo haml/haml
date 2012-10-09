@@ -1,7 +1,10 @@
-require 'haml/helpers'
-require 'haml/buffer'
+require 'forwardable'
+
 require 'haml/parser'
 require 'haml/compiler'
+require 'haml/options'
+require 'haml/helpers'
+require 'haml/buffer'
 require 'haml/filters'
 require 'haml/error'
 
@@ -16,13 +19,13 @@ module Haml
   #     output = haml_engine.render
   #     puts output
   class Engine
-    include Parser
-    include Compiler
+    extend Forwardable
+    include Haml::Util
 
-    # The options hash.
-    # See {file:HAML_REFERENCE.md#haml_options the Haml options documentation}.
+    # The Haml::Options instance.
+    # See {file:REFERENCE.md#options the Haml options documentation}.
     #
-    # @return [{Symbol => Object}]
+    # @return Haml::Options
     attr_accessor :options
 
     # The indentation used in the Haml document,
@@ -32,101 +35,35 @@ module Haml
     # @return [String]
     attr_accessor :indentation
 
-    # @return [Boolean] Whether or not the format is XHTML.
-    def xhtml?
-      not html?
-    end
+    attr_accessor :compiler
+    attr_accessor :parser
 
-    # @return [Boolean] Whether or not the format is any flavor of HTML.
-    def html?
-      html4? or html5?
-    end
+    # Tilt currently depends on these moved methods, provide a stable API
+    def_delegators :compiler, :precompiled, :precompiled_method_return_value
 
-    # @return [Boolean] Whether or not the format is HTML4.
-    def html4?
-      @options[:format] == :html4
-    end
-
-    # @return [Boolean] Whether or not the format is HTML5.
-    def html5?
-      @options[:format] == :html5
-    end
-
-    # The source code that is evaluated to produce the Haml document.
-    #
-    # In Ruby 1.9, this is automatically converted to the correct encoding
-    # (see {file:HAML_REFERENCE.md#encoding-option the `:encoding` option}).
-    #
-    # @return [String]
-    def precompiled
-      return @precompiled if ruby1_8?
-      encoding = Encoding.find(@options[:encoding])
-      return @precompiled.force_encoding(encoding) if encoding == Encoding::BINARY
-      return @precompiled.encode(encoding)
+    def options_for_buffer
+      @options.for_buffer
     end
 
     # Precompiles the Haml template.
     #
     # @param template [String] The Haml template
     # @param options [{Symbol => Object}] An options hash;
-    #   see {file:HAML_REFERENCE.md#haml_options the Haml options documentation}
+    #   see {file:REFERENCE.md#options the Haml options documentation}
     # @raise [Haml::Error] if there's a Haml syntax error in the template
     def initialize(template, options = {})
-      @options = {
-        :suppress_eval => false,
-        :attr_wrapper => "'",
+      @options = Options.new(options)
 
-        # Don't forget to update the docs in doc-src/HAML_REFERENCE.md
-        # if you update these
-        :autoclose => %w[meta img link br hr input area param col base],
-        :preserve => %w[textarea pre code],
-
-        :filename => '(haml)',
-        :line => 1,
-        :ugly => false,
-        :format => :xhtml,
-        :escape_html => false,
-        :escape_attrs => true,
-      }
-
-
-      template = check_haml_encoding(template) do |msg, line|
+      @template = check_haml_encoding(template) do |msg, line|
         raise Haml::Error.new(msg, line)
       end
 
-      unless ruby1_8?
-        @options[:encoding] = Encoding.default_internal || template.encoding
-        @options[:encoding] = "utf-8" if @options[:encoding].name == "US-ASCII"
-      end
-      @options.merge! options.reject {|k, v| v.nil?}
-      @index = 0
+      initialize_encoding options[:encoding]
 
-      unless [:xhtml, :html4, :html5].include?(@options[:format])
-        raise Haml::Error, "Invalid output format #{@options[:format].inspect}"
-      end
+      @parser   = @options.parser_class.new(@template, @options)
+      @compiler = @options.compiler_class.new(@options)
 
-      if @options[:encoding] && @options[:encoding].is_a?(Encoding)
-        @options[:encoding] = @options[:encoding].name
-      end
-
-      # :eod is a special end-of-document marker
-      @template = (template.rstrip).split(/\r\n|\r|\n/) + [:eod, :eod]
-      @template_index = 0
-      @to_close_stack = []
-      @output_tabs = 0
-      @template_tabs = 0
-      @flat = false
-      @newlines = 0
-      @precompiled = ''
-      @to_merge = []
-      @tab_change  = 0
-
-      compile(parse)
-    rescue Haml::Error => e
-      if @index || e.line
-        e.backtrace.unshift "#{@options[:filename]}:#{(e.line ? e.line + 1 : @index) + @options[:line] - 1}"
-      end
-      raise
+      @compiler.compile(@parser.parse)
     end
 
     # Processes the template and returns the result as a string.
@@ -171,7 +108,8 @@ module Haml
     # @param block [#to_proc] A block that can be yielded to within the template
     # @return [String] The rendered template
     def render(scope = Object.new, locals = {}, &block)
-      buffer = Haml::Buffer.new(scope.instance_variable_get('@haml_buffer'), options_for_buffer)
+      parent = scope.instance_variable_defined?('@haml_buffer') ? scope.instance_variable_get('@haml_buffer') : nil
+      buffer = Haml::Buffer.new(parent, @options.for_buffer)
 
       if scope.is_a?(Binding) || scope.is_a?(Proc)
         scope_object = eval("self", scope)
@@ -188,8 +126,7 @@ module Haml
         @haml_buffer = buffer
       end
 
-      eval(precompiled + ";" + precompiled_method_return_value,
-        scope, @options[:filename], @options[:line])
+      eval(@compiler.precompiled_with_return_value, scope, @options[:filename], @options[:line])
     ensure
       # Get rid of the current buffer
       scope_object.instance_eval do
@@ -231,7 +168,7 @@ module Haml
       end
 
       eval("Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {};" +
-           precompiled_with_ambles(local_names) + "}\n", scope, @options[:filename], @options[:line])
+           compiler.precompiled_with_ambles(local_names) + "}\n", scope, @options[:filename], @options[:line])
     end
 
     # Defines a method on `object` with the given name
@@ -275,33 +212,22 @@ module Haml
     def def_method(object, name, *local_names)
       method = object.is_a?(Module) ? :module_eval : :instance_eval
 
-      object.send(method, "def #{name}(_haml_locals = {}); #{precompiled_with_ambles(local_names)}; end",
+      object.send(method, "def #{name}(_haml_locals = {}); #{compiler.precompiled_with_ambles(local_names)}; end",
                   @options[:filename], @options[:line])
     end
 
-    protected
-
-    # Returns a subset of \{#options}: those that {Haml::Buffer} cares about.
-    # All of the values here are such that when `#inspect` is called on the hash,
-    # it can be `Kernel#eval`ed to get the same result back.
-    #
-    # See {file:HAML_REFERENCE.md#haml_options the Haml options documentation}.
-    #
-    # @return [{Symbol => Object}] The options hash
-    def options_for_buffer
-      {
-        :autoclose => @options[:autoclose],
-        :preserve => @options[:preserve],
-        :attr_wrapper => @options[:attr_wrapper],
-        :ugly => @options[:ugly],
-        :format => @options[:format],
-        :encoding => @options[:encoding],
-        :escape_html => @options[:escape_html],
-        :escape_attrs => @options[:escape_attrs],
-      }
-    end
-
     private
+
+    if RUBY_VERSION < "1.9"
+      def initialize_encoding(given_value)
+      end
+    else
+      def initialize_encoding(given_value)
+        unless given_value
+          @options.encoding = Encoding.default_internal || @template.encoding
+        end
+      end
+    end
 
     def set_locals(locals, scope, scope_object)
       scope_object.send(:instance_variable_set, '@_haml_locals', locals)

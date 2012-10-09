@@ -16,7 +16,7 @@ module Haml
     # The options hash passed in from {Haml::Engine}.
     #
     # @return [{String => Object}]
-    # @see Haml::Engine#options_for_buffer
+    # @see Haml::Options#for_buffer
     attr_accessor :options
 
     # The {Buffer} for the enclosing Haml document.
@@ -88,10 +88,10 @@ module Haml
     # @param options [{Symbol => Object}] An options hash.
     #   See {Haml::Engine#options\_for\_buffer}
     def initialize(upper = nil, options = {})
-      @active = true
-      @upper = upper
-      @options = options
-      @buffer = ruby1_8? ? "" : "".encode(Encoding.find(options[:encoding]))
+      @active     = true
+      @upper      = upper
+      @options    = options
+      @buffer     = new_encoded_string
       @tabulation = 0
 
       # The number of tabs that Engine thinks we should have
@@ -143,7 +143,9 @@ module Haml
           @tabulation = 0
         <% end %>
 
+        <% if !(in_tag && preserve_tag && !nuke_inner_whitespace) %>
         tabulation = @real_tabs
+        <% end %>
         result = <%= result_name %>.<% if nuke_inner_whitespace %>strip<% else %>rstrip<% end %>
       <% else %>
         result = <%= result_name %><% if nuke_inner_whitespace %>.strip<% end %>
@@ -161,7 +163,10 @@ module Haml
 
         return result if self.instance_variable_get(:@preserve_pattern).match(result)
 
+        <% if !(in_tag && preserve_tag && !nuke_inner_whitespace) %>
         has_newline = result.include?("\\n")
+        <% end %>
+
         <% if in_tag && !nuke_inner_whitespace %>
           <% unless preserve_tag %> if !has_newline <% end %>
           @real_tabs -= 1
@@ -170,6 +175,7 @@ module Haml
           <% unless preserve_tag %> end <% end %>
         <% end %>
 
+        <% if !(in_tag && preserve_tag && !nuke_inner_whitespace) %>
         # Precompiled tabulation may be wrong
         <% if !interpolated && !in_tag %>
           result = tabs + result if @tabulation > 0
@@ -188,17 +194,18 @@ module Haml
         <% end %>
         <% if interpolated %> @tabulation = old_tabulation <% end %>
         result
+        <% end %>
       <% end %>
 RUBY
 
     def attributes(class_id, obj_ref, *attributes_hashes)
       attributes = class_id
       attributes_hashes.each do |old|
-        self.class.merge_attrs(attributes, to_hash(old.map {|k, v| [k.to_s, v]}))
+        self.class.merge_attrs(attributes, Hash[old.map {|k, v| [k.to_s, v]}])
       end
       self.class.merge_attrs(attributes, parse_object_ref(obj_ref)) if obj_ref
       Compiler.build_attributes(
-        html?, @options[:attr_wrapper], @options[:escape_attrs], attributes)
+        html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:hyphenate_data_attrs], attributes)
     end
 
     # Remove the whitespace from the right side of the buffer string.
@@ -241,20 +248,30 @@ RUBY
         from['class'] ||= to['class']
       end
 
-      from_data = from['data'].is_a?(Hash)
-      to_data = to['data'].is_a?(Hash)
-      if from_data && to_data
-        to['data'] = to['data'].merge(from['data'])
-      elsif to_data
-        to = Haml::Util.map_keys(to.delete('data')) {|name| "data-#{name}"}.merge(to)
-      elsif from_data
-        from = Haml::Util.map_keys(from.delete('data')) {|name| "data-#{name}"}.merge(from)
-      end
+      from_data = from.delete('data') || {}
+      to_data = to.delete('data') || {}
 
+      # forces to_data & from_data into a hash
+      from_data = { nil => from_data } unless from_data.is_a?(Hash)
+      to_data = { nil => to_data } unless to_data.is_a?(Hash)
+
+      merged_data = to_data.merge(from_data)
+
+      to['data'] = merged_data unless merged_data.empty?
       to.merge!(from)
     end
 
     private
+
+    if RUBY_VERSION < "1.9"
+      def new_encoded_string
+        ""
+      end
+    else
+      def new_encoded_string
+        "".encode(Encoding.find(options[:encoding]))
+      end
+    end
 
     @@tab_cache = {}
     # Gets `count` tabs. Mostly for internal use.
@@ -278,7 +295,14 @@ RUBY
         else
           underscore(ref.class)
         end
-      id = "#{class_name}_#{ref.id || 'new'}"
+      ref_id =
+        if ref.respond_to?(:to_key)
+          key = ref.to_key
+          key.join('_') unless key.nil?
+        else
+          ref.id
+        end
+      id = "#{class_name}_#{ref_id || 'new'}"
       if prefix
         class_name = "#{ prefix }_#{ class_name}"
         id = "#{ prefix }_#{ id }"
