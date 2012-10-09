@@ -30,6 +30,12 @@
   a language change from 3.1 and is enabled by default.
   (thanks to [Andrew Smith](https://github.com/fullsailor))
 
+* All Hash attribute values are now treated as HTML5 data, regardless of key.
+  Previously only the "data" key was treated this way. Allowing arbitrary keys
+  means you can now easily use this feauture for Aria attributes, among other
+  uses.
+  (thanks to [Elvin Efendi](https://github.com/ElvinEfendi))
+
 * Added `remove_whitespace` option to always remove all whitespace around Haml
   tags. (thanks to [Tim van der Horst](https://github.com/vdh))
 
@@ -85,6 +91,11 @@
 
 * Fix multiline silent comments: Haml previously did not allow free indentation
   inside multline silent comments.
+
+* Fix ordering bug with partial layouts on Rails.
+  (thanks [Sam Pohlenz](https://github.com/spohlenz))
+
+* Add command-line option to suppress script evaluation.
 
 ## 3.1.6
 

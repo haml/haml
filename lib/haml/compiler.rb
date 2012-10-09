@@ -47,13 +47,18 @@ module Haml
       precompiled + ";" + precompiled_method_return_value
     end
 
-    # Returns the precompiled string with the preamble and postamble
+    # Returns the precompiled string with the preamble and postamble.
+    #
+    # Initializes to ActionView::OutputBuffer when available; this is necessary
+    # to avoid ordering issues with partial layouts in Rails. If not available,
+    # initializes to nil.
     def precompiled_with_ambles(local_names)
       preamble = <<END.gsub("\n", ";")
 begin
 extend Haml::Helpers
 _hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{options.for_buffer.inspect})
 _erbout = _hamlout.buffer
+@output_buffer = output_buffer ||= ActionView::OutputBuffer.new rescue nil
 END
       postamble = <<END.gsub("\n", ";")
 #{precompiled_method_return_value}
@@ -410,12 +415,14 @@ END
       other_quote_char = attr_wrapper == '"' ? "'" : '"'
       join_char        = hyphenate_data_attrs ? '-' : '_'
 
-      if attributes['data'].is_a?(Hash)
-        data_attributes = attributes.delete('data')
-        data_attributes = flatten_data_attributes(data_attributes, '', join_char)
-        data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs)
-        attributes = data_attributes.merge(attributes)
-      end
+      attributes.each do |key, value|
+      	if value.is_a?(Hash)
+        	data_attributes = attributes.delete(key)
+        	data_attributes = flatten_data_attributes(data_attributes, '', join_char)
+        	data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs, key)
+        	attributes = data_attributes.merge(attributes)
+      	end
+			end
 
       result = attributes.collect do |attr, value|
         next if value.nil?
@@ -465,14 +472,14 @@ END
       return !value.empty? && value
     end
 
-    def self.build_data_keys(data_hash, hyphenate)
+    def self.build_data_keys(data_hash, hyphenate, attr_name="data")
       Hash[data_hash.map do |name, value|
         if name == nil
-          ["data", value]
+          [attr_name, value]
         elsif hyphenate
-          ["data-#{name.to_s.gsub(/_/, '-')}", value]
+          ["#{attr_name}-#{name.to_s.gsub(/_/, '-')}", value]
         else
-          ["data-#{name}", value]
+          ["#{attr_name}-#{name}", value]
         end
       end]
     end

@@ -44,7 +44,7 @@ class TemplateTest < MiniTest::Unit::TestCase
     whitespace_handling    original_engine   list        helpful
     silent_script          tag_parsing       just_stuff  partials
     nuke_outer_whitespace  nuke_inner_whitespace
-    render_layout partial_layout}
+    render_layout partial_layout partial_layout_erb}
 
   def setup
     @base = create_base
@@ -68,10 +68,10 @@ class TemplateTest < MiniTest::Unit::TestCase
     base
   end
 
-  def render(text, opts = {})
-    return @base.render(:inline => text, :type => :haml) if opts == :action_view
-    opts = opts.merge(:format => :xhtml)
-    Haml::Engine.new(text, opts).to_html(@base)
+  def render(text, options = {})
+    return @base.render(:inline => text, :type => :haml) if options == :action_view
+    options = options.merge(:format => :xhtml)
+    super(text, options, @base)
   end
 
   def load_result(name)
@@ -216,16 +216,13 @@ END
   end
 
   def test_form_builder_label_with_block
-    assert_equal(<<HTML, render(<<HAML, :action_view))
-<form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
-  <label for="article_title">Block content
-  </label>
-</form>
-HTML
+    output = render(<<HAML, :action_view)
 = form_for @article, :as => :article, :html => {:class => nil, :id => nil}, :url => '' do |f|
   = f.label :title do
     Block content
 HAML
+    fragment = Nokogiri::HTML.fragment output
+    assert_equal "Block content", fragment.css('form label').first.content.strip
   end
 
   ## XSS Protection Tests
@@ -307,23 +304,6 @@ HTML
 - haml_tag :div do
   - haml_tag :ul do
     - haml_tag :li, "Content!"
-HAML
-  end
-
-  def test_xss_protection_with_form_for
-    assert_equal(<<HTML, render(<<HAML, :action_view))
-<form accept-charset="UTF-8" action="" method="post">#{rails_form_opener}
-  Title:
-  <input id="article_title" name="article[title]" size="30" type="text" value="Hello" />
-  Body:
-  <input id="article_body" name="article[body]" size="30" type="text" value="World" />
-</form>
-HTML
-= form_for @article, :as => :article, :html => {:class => nil, :id => nil}, :url => '' do |f|
-  Title:
-  = f.text_field :title
-  Body:
-  = f.text_field :body
 HAML
   end
 
