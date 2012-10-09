@@ -86,6 +86,11 @@
 * Fix multiline silent comments: Haml previously did not allow free indentation
   inside multline silent comments.
 
+* Fix ordering bug with partial layouts on Rails.
+  (thanks [Sam Pohlenz](https://github.com/spohlenz))
+
+* Add command-line option to suppress script evaluation.
+
 ## 3.1.6
 
 * In indented mode, don't reindent buffers that contain preserved tags, and
