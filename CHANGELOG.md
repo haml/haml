@@ -30,6 +30,12 @@
   a language change from 3.1 and is enabled by default.
   (thanks to [Andrew Smith](https://github.com/fullsailor))
 
+* All Hash attribute values are now treated as HTML5 data, regardless of key.
+  Previously only the "data" key was treated this way. Allowing arbitrary keys
+  means you can now easily use this feauture for Aria attributes, among other
+  uses.
+  (thanks to [Elvin Efendi](https://github.com/ElvinEfendi))
+
 * Added `remove_whitespace` option to always remove all whitespace around Haml
   tags. (thanks to [Tim van der Horst](https://github.com/vdh))
 
