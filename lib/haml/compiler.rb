@@ -47,14 +47,18 @@ module Haml
       precompiled + ";" + precompiled_method_return_value
     end
 
-    # Returns the precompiled string with the preamble and postamble
+    # Returns the precompiled string with the preamble and postamble.
+    #
+    # Initializes to ActionView::OutputBuffer when available; this is necessary
+    # to avoid ordering issues with partial layouts in Rails. If not available,
+    # initializes to nil.
     def precompiled_with_ambles(local_names)
       preamble = <<END.gsub("\n", ";")
 begin
 extend Haml::Helpers
 _hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{options.for_buffer.inspect})
 _erbout = _hamlout.buffer
-@output_buffer = output_buffer ||= nil || ActionView::OutputBuffer.new
+@output_buffer = output_buffer ||= ActionView::OutputBuffer.new rescue nil
 END
       postamble = <<END.gsub("\n", ";")
 #{precompiled_method_return_value}
