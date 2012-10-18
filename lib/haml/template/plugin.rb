@@ -16,7 +16,7 @@ module Haml
 
     def compile(template)
       options = Haml::Template.options.dup
-      if template.respond_to? :type
+      if (ActionPack::VERSION::MAJOR >= 4) && template.respond_to?(:type)
         options[:mime_type] = template.type
       elsif template.respond_to? :mime_type
         options[:mime_type] = template.mime_type
