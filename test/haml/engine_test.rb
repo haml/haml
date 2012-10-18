@@ -87,6 +87,9 @@ MESSAGE
     "foo\n:plain\n  1\n  2\n  \#{raise 'foo'}" => ["foo", 5],
     "= raise 'foo'\nfoo\nbar\nbaz\nbang" => ["foo", 1],
     "- case 1\n\n- when 1\n  - raise 'foo'" => ["foo", 4],
+    "- tap do\n  - tap do\n    text\n- raise 'foo'" => ["foo", 4],
+    "- tap do\n  - tap do\n    text\n  - raise 'foo'" => ["foo", 4],
+    "- tap do\n  - tap do\n    text\n  text\n- raise 'foo'" => ["foo", 5],
   }
 
   User = Struct.new('User', :id)
