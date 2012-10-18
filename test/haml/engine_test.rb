@@ -1212,17 +1212,20 @@ HAML
           assert_equal(expected_message, err.message, "Line: #{key}")
         end
 
-        if Haml::Util.ruby1_8?
-          # Sometimes, the first backtrace entry is *only* in the message.
-          # No idea why.
-          bt =
-            if expected_message == :compile && err.message.include?("\n")
-              err.message.split("\n", 2)[1]
-            else
-              err.backtrace[0]
-            end
-          assert_match(/^#{Regexp.escape(__FILE__)}:#{line_no}/, bt, "Line: #{key}")
+        if expected_message == :compile && err.message.include?("\n")
+          if Haml::Util.ruby1_8?
+            # Sometimes, the first backtrace entry is *only* in the message.
+            # No idea why.
+            bt = err.message.split("\n", 2)[1]
+          else
+            bt = err.message.split("\n", 2)[0]
+          end
+        else
+          bt = err.backtrace[0]
         end
+
+        source_location = bt.split(":", 3).first(2).join(":")
+        assert_equal("#{__FILE__}:#{line_no}", source_location, "Line: #{key}")
       else
         assert(false, "Exception not raised for\n#{key}")
       end
