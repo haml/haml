@@ -314,14 +314,14 @@ RUBY
 
       def self.extended(base)
         base.options = {}
-        base.instance_eval do
+        base.instance_eval %Q{
           include Base
 
           def render_with_options(text, compiler_options)
             text = template_class.new(nil, 1, options) {text}.render
             super(text, compiler_options)
           end
-        end
+        }
       end
     end
 
