@@ -314,6 +314,10 @@ RUBY
 
       def self.extended(base)
         base.options = {}
+        # There's a bug in 1.9.2 where the same parse tree cannot be shared
+        # across several singleton classes -- this bug is fixed in 1.9.3.
+        # We work around this by using a string eval instead of a block eval
+        # so that a new parse tree is created for each singleton class.
         base.instance_eval %Q{
           include Base
 
