@@ -241,7 +241,12 @@ END
                 'Always add CDATA sections to javascript and css blocks.') do
           @options[:for_engine][:cdata] = true
         end
-        
+
+        opts.on('--autoclose LIST',
+                'Comma separated list of elements to be automatically self-closed.') do |list|
+          @options[:for_engine][:autoclose] = list.split(',')
+        end
+
         opts.on('--suppress-eval',
                 'Don\'t evaluate Ruby scripts.') do
           @options[:for_engine][:suppress_eval] = true
