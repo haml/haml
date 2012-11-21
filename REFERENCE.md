@@ -343,7 +343,7 @@ left to right. For example, if you defined
 
 then
 
-    %sandwich{hash1, hash2, :delicious => true}/
+    %sandwich{hash1, hash2, :delicious => 'true'}/
 
 would compile to:
 
