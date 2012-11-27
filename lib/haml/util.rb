@@ -1,4 +1,8 @@
-require 'erb'
+begin
+  require 'erubis'
+rescue LoadError
+  require 'erb'
+end
 require 'set'
 require 'stringio'
 require 'strscan'
@@ -236,10 +240,12 @@ MSG
       info = caller_info
       powerset(vars).each do |set|
         context = StaticConditionalContext.new(set).instance_eval {binding}
+        method_content = (defined?(Erubis::Eruby) && Erubis::Eruby || ERB).new(erb).result(context)
+
         klass.class_eval(<<METHOD, info[0], info[1])
-def #{static_method_name(name, *vars.map {|v| set.include?(v)})}(#{args.join(', ')})
-  #{ERB.new(erb).result(context)}
-end
+          def #{static_method_name(name, *vars.map {|v| set.include?(v)})}(#{args.join(', ')})
+            #{method_content}
+          end
 METHOD
       end
     end
@@ -250,7 +256,7 @@ METHOD
     # @param vars [Array<Boolean>] The static variable assignment
     # @return [String] The real name of the static method
     def static_method_name(name, *vars)
-      "#{name}_#{vars.map {|v| !!v}.join('_')}"
+      :"#{name}_#{vars.map {|v| !!v}.join('_')}"
     end
 
     # Scans through a string looking for the interoplation-opening `#{`
