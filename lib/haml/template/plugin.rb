@@ -8,7 +8,7 @@ module Haml
     # the ERB handler does.
 
     # In Rails 3.1+, we don't need to include Compilable.
-    if ActionPack::VERSION::MAJOR < 3 || (ActionPack::VERSION::MAJOR == 3 && ActionPack::VERSION::MINOR < 1)
+    if (ActionPack::VERSION::MAJOR == 3) && (ActionPack::VERSION::MINOR < 1)
       include ActionView::Template::Handlers::Compilable
     end
 
@@ -16,7 +16,7 @@ module Haml
 
     def compile(template)
       options = Haml::Template.options.dup
-      if template.respond_to? :type
+      if (ActionPack::VERSION::MAJOR >= 4) && template.respond_to?(:type)
         options[:mime_type] = template.type
       elsif template.respond_to? :mime_type
         options[:mime_type] = template.mime_type

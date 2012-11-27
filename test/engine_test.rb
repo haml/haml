@@ -1316,6 +1316,18 @@ HAML
     assert_nil(scope.send(:haml_buffer))
   end
 
+  def test_render_proc_should_raise_haml_syntax_error_not_ruby_syntax_error
+    assert_raises(Haml::SyntaxError) do
+      Haml::Engine.new("%p{:foo => !}").render_proc(Object.new, :foo).call
+    end
+  end
+
+  def test_render_should_raise_haml_syntax_error_not_ruby_syntax_error
+    assert_raises(Haml::SyntaxError) do
+      Haml::Engine.new("%p{:foo => !}").render
+    end
+  end
+
   def test_ugly_true
     assert_equal("<div id='outer'>\n<div id='inner'>\n<p>hello world</p>\n</div>\n</div>\n",
                  render("#outer\n  #inner\n    %p hello world", :ugly => true))

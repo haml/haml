@@ -108,9 +108,8 @@ module Haml
     # are `:html4` and `:xhtml`. If the output is set to XHTML, then Haml
     # automatically generates self-closing tags and wraps the output of the
     # Javascript and CSS-like filters inside CDATA. When the output is set to
-    # :html5 or :html4, XML prologs are ignored. In all cases, an appropriate
-    # doctype is generated from '!!!'.
-    #
+    # `:html5` or `:html4`, XML prologs are ignored. In all cases, an appropriate
+    # doctype is generated from `!!!`.
     #
     # If the mime_type of the template being rendered is `text/xml` then a
     # format of `:xhtml` will be used even if the global output format is set to
