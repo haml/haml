@@ -1,5 +1,5 @@
 begin
-  require 'erubis'
+  require 'erubis/tiny'
 rescue LoadError
   require 'erb'
 end
@@ -240,7 +240,7 @@ MSG
       info = caller_info
       powerset(vars).each do |set|
         context = StaticConditionalContext.new(set).instance_eval {binding}
-        method_content = (defined?(Erubis::Eruby) && Erubis::Eruby || ERB).new(erb).result(context)
+        method_content = (defined?(Erubis::TinyEruby) && Erubis::TinyEruby || ERB).new(erb).result(context)
 
         klass.class_eval(<<METHOD, info[0], info[1])
           def #{static_method_name(name, *vars.map {|v| set.include?(v)})}(#{args.join(', ')})
