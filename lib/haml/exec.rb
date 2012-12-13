@@ -241,7 +241,12 @@ END
                 'Always add CDATA sections to javascript and css blocks.') do
           @options[:for_engine][:cdata] = true
         end
-        
+
+        opts.on('--autoclose LIST',
+                'Comma separated list of elements to be automatically self-closed.') do |list|
+          @options[:for_engine][:autoclose] = list.split(',')
+        end
+
         opts.on('--suppress-eval',
                 'Don\'t evaluate Ruby scripts.') do
           @options[:for_engine][:suppress_eval] = true
@@ -312,7 +317,7 @@ END
           case e
           when ::Haml::SyntaxError; raise "Syntax error on line #{get_line e}: #{e.message}"
           when ::Haml::Error;       raise "Haml error on line #{get_line e}: #{e.message}"
-          else raise "Exception on line #{get_line e}: #{e.message}\n  Use --trace for backtrace."
+          else raise "Exception on line #{get_line e}: #{e.message}"
           end
         end
 

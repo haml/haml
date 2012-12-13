@@ -125,8 +125,11 @@ module Haml
         extend Haml::Helpers
         @haml_buffer = buffer
       end
-
-      eval(@compiler.precompiled_with_return_value, scope, @options[:filename], @options[:line])
+      begin
+        eval(@compiler.precompiled_with_return_value, scope, @options[:filename], @options[:line])
+      rescue ::SyntaxError => e
+        raise SyntaxError, e.message
+      end
     ensure
       # Get rid of the current buffer
       scope_object.instance_eval do
@@ -167,8 +170,12 @@ module Haml
         scope = scope_object.instance_eval{binding}
       end
 
-      eval("Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {};" +
-           compiler.precompiled_with_ambles(local_names) + "}\n", scope, @options[:filename], @options[:line])
+      begin
+        eval("Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {};" +
+             compiler.precompiled_with_ambles(local_names) + "}\n", scope, @options[:filename], @options[:line])
+      rescue ::SyntaxError => e
+        raise SyntaxError, e.message
+      end
     end
 
     # Defines a method on `object` with the given name
