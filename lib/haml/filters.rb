@@ -266,18 +266,21 @@ RUBY
     module Ruby
       include Base
       require 'stringio'
-
+      
+      @@mutex = Mutex.new
       # @see Base#compile
       def compile(compiler, text)
         return if compiler.options[:suppress_eval]
-        compiler.instance_eval do
-          push_silent <<-FIRST.gsub("\n", ';') + text + <<-LAST.gsub("\n", ';')
-            _haml_old_stdout = $stdout
-            $stdout = StringIO.new(_hamlout.buffer, 'a')
-          FIRST
-            _haml_old_stdout, $stdout = $stdout, _haml_old_stdout
-            _haml_old_stdout.close
-          LAST
+        @@mutex.synchronize do 
+          compiler.instance_eval do
+            push_silent <<-FIRST.gsub("\n", ';') + text + <<-LAST.gsub("\n", ';')
+              _haml_old_stdout = $stdout
+              $stdout = StringIO.new(_hamlout.buffer, 'a')
+            FIRST
+              _haml_old_stdout, $stdout = $stdout, _haml_old_stdout
+              _haml_old_stdout.close
+            LAST
+          end
         end
       end
     end
