@@ -2,6 +2,9 @@
 
 ## 3.2.0 (Unreleased)
 
+* The Haml exectutable now accepts an `--autoclose` option. You can now
+  specify a list of tags that should be autoclosed
+
 * The `:ruby` filter now runs the generated code with a exclusive lock, to
   prevent issues with sharing `$stdout` across threads.
 
