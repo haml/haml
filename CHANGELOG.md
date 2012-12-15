@@ -2,6 +2,9 @@
 
 ## 3.2.0 (Unreleased)
 
+* The `:ruby` filter now runs the generated code with a exclusive lock, to
+  prevent issues with sharing `$stdout` across threads.
+
 * HTML5 is now the default output format rather than XHTML. This was already
   the default on Rails 3+, so many users will notice no difference.
 
