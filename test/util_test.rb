@@ -3,19 +3,6 @@ require 'test_helper'
 class UtilTest < MiniTest::Unit::TestCase
   include Haml::Util
 
-  class Dumpable
-    attr_reader :arr
-    def initialize; @arr = []; end
-    def _before_dump; @arr << :before; end
-    def _after_dump; @arr << :after; end
-    def _around_dump
-      @arr << :around_before
-      yield
-      @arr << :around_after
-    end
-    def _after_load; @arr << :loaded; end
-  end
-
   def test_powerset
     return unless Set[Set[]] == Set[Set[]] # There's a bug in Ruby 1.8.6 that breaks nested set equality
     assert_equal([[].to_set].to_set,
