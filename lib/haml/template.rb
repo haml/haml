@@ -1,5 +1,4 @@
 require 'haml/template/options'
-require 'haml/engine'
 require 'haml/helpers/action_view_mods'
 require 'haml/helpers/action_view_extensions'
 require 'haml/helpers/xss_mods'
