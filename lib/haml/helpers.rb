@@ -537,7 +537,13 @@ MESSAGE
     # @param text [String] The string to sanitize
     # @return [String] The sanitized string
     def html_escape(text)
-      Haml::Util.silence_warnings {text.to_s.gsub(/[\"><&]/n) {|s| HTML_ESCAPE[s]}}
+      if RUBY_VERSION > '1.8.7'
+        orig_encoding = text.encoding
+        text.force_encoding 'BINARY'
+      end
+      result = text.to_s.gsub(/[\"><&]/n) {|s| HTML_ESCAPE[s]}
+      result.force_encoding(orig_encoding) if RUBY_VERSION > '1.8.7'
+      result
     end
 
     # Escapes HTML entities in `text`, but without escaping an ampersand
@@ -546,9 +552,13 @@ MESSAGE
     # @param text [String] The string to sanitize
     # @return [String] The sanitized string
     def escape_once(text)
-      Haml::Util.silence_warnings do
-        text.to_s.gsub(/[\"><]|&(?!(?:[a-zA-Z]+|(#\d+));)/n) {|s| HTML_ESCAPE[s]}
+      if RUBY_VERSION > '1.8.7'
+        orig_encoding = text.encoding
+        text.force_encoding 'BINARY'
       end
+      result = text.to_s.gsub(/[\"><]|&(?!(?:[a-zA-Z]+|(#\d+));)/n) {|s| HTML_ESCAPE[s]}
+      result.force_encoding(orig_encoding) if RUBY_VERSION > '1.8.7'
+      result
     end
 
     # Returns whether or not the current template is a Haml template.
