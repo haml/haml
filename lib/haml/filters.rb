@@ -258,9 +258,13 @@ RUBY
       end
     end
 
-    # Parses the filtered text with the normal Ruby interpreter. All output sent
-    # to `$stdout`, such as with `puts`, is output into the Haml document. Not
-    # available if the {file:REFERENCE.md#suppress_eval-option `:suppress_eval`}
+    # Parses the filtered text with the normal Ruby interpreter. Creates an IO
+    # object named `haml_io`, anything written to it is output into the Haml
+    # document. In previous version this filter redirected any output to `$stdout`
+    # to the Haml document, this was not threadsafe and has been removed, you
+    # should use `haml_io` instead.
+    #
+    # Not available if the {file:REFERENCE.md#suppress_eval-option `:suppress_eval`}
     # option is set to true. The Ruby code is evaluated in the same context as
     # the Haml template.
     module Ruby
@@ -272,11 +276,13 @@ RUBY
         return if compiler.options[:suppress_eval]
         compiler.instance_eval do
           push_silent <<-FIRST.gsub("\n", ';') + text + <<-LAST.gsub("\n", ';')
-            _haml_old_stdout = $stdout
-            $stdout = StringIO.new(_hamlout.buffer, 'a')
+            begin
+              haml_io = StringIO.new(_hamlout.buffer, 'a')
           FIRST
-            _haml_old_stdout, $stdout = $stdout, _haml_old_stdout
-            _haml_old_stdout.close
+            ensure
+              haml_io.close
+              haml_io = nil
+            end
           LAST
         end
       end

@@ -5,8 +5,9 @@
 * The Haml exectutable now accepts an `--autoclose` option. You can now
   specify a list of tags that should be autoclosed
 
-* The `:ruby` filter now runs the generated code with a exclusive lock, to
-  prevent issues with sharing `$stdout` across threads.
+* The `:ruby` filter no longer redirects $stdout to the Haml document, as this
+  is not thread safe. Instead it provides a `haml_io` local variable, which is
+  an IO object that writes to the document.
 
 * HTML5 is now the default output format rather than XHTML. This was already
   the default on Rails 3+, so many users will notice no difference.

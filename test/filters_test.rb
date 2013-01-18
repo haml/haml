@@ -236,3 +236,23 @@ class EscapedFilterTest < MiniTest::Unit::TestCase
     assert_equal(html, render(haml))
   end
 end
+
+class RubyFilterTest < MiniTest::Unit::TestCase
+  test "can write to haml_io" do
+    haml = ":ruby\n  haml_io.puts 'hello'\n"
+    html = "hello\n"
+    assert_equal(html, render(haml))
+  end
+
+  test "haml_io appends to output" do
+    haml = "hello\n:ruby\n  haml_io.puts 'hello'\n"
+    html = "hello\nhello\n"
+    assert_equal(html, render(haml))
+  end
+
+  test "can create local variables" do
+    haml = ":ruby\n  a = 7\n=a"
+    html = "7\n"
+    assert_equal(html, render(haml))
+  end
+end
