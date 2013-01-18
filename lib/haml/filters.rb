@@ -263,9 +263,6 @@ RUBY
     # available if the {file:REFERENCE.md#suppress_eval-option `:suppress_eval`}
     # option is set to true. The Ruby code is evaluated in the same context as
     # the Haml template.
-    #
-    # The code in the filter has an exclusive lock (using `Thread.exlusive`) when
-    # it runs, to prevent issues from sharing the global `$stdout`.
     module Ruby
       include Base
       require 'stringio'
@@ -275,16 +272,11 @@ RUBY
         return if compiler.options[:suppress_eval]
         compiler.instance_eval do
           push_silent <<-FIRST.gsub("\n", ';') + text + <<-LAST.gsub("\n", ';')
-            Thread.exclusive do
-              begin
-                _haml_old_stdout = $stdout
-                $stdout = StringIO.new(_hamlout.buffer, 'a')
+            _haml_old_stdout = $stdout
+            $stdout = StringIO.new(_hamlout.buffer, 'a')
           FIRST
-              ensure
-                _haml_old_stdout, $stdout = $stdout, _haml_old_stdout
-                _haml_old_stdout.close
-              end
-            end
+            _haml_old_stdout, $stdout = $stdout, _haml_old_stdout
+            _haml_old_stdout.close
           LAST
         end
       end
