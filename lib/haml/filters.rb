@@ -58,6 +58,19 @@ module Haml
       filter
     end
 
+    # Removes a filter from Haml. If the filter was removed, it returns
+    # the that was remove Module upon success, or nil on failure. If you try
+    # to redefine a filter, Haml will raise an error. Use this method first to
+    # explicitly remove the filter before redefining it.
+    # @return Module The filter module that has been removed
+    # @since 3.2.0
+    def remove_filter(name)
+      defined.delete name.downcase
+      if constants.map(&:to_s).include?(name.to_s)
+        remove_const name.to_sym
+      end
+    end
+
     # The base module for Haml filters.
     # User-defined filters should be modules including this module.
     # The name of the filter is taken by downcasing the module name.

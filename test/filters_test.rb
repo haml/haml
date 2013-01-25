@@ -7,7 +7,7 @@ class FiltersTest < MiniTest::Unit::TestCase
       Module.new {def self.name; "Foo::Bar"; end; include Haml::Filters::Base}
       assert Haml::Filters.defined.has_key? "bar"
     ensure
-      Haml::Filters.defined.delete "bar"
+      Haml::Filters.remove_filter "Bar"
     end
   end
 
@@ -19,8 +19,7 @@ class FiltersTest < MiniTest::Unit::TestCase
         end
       end
     ensure
-      Haml::Filters.defined.delete "foo"
-      Haml::Filters.send :remove_const, :Foo
+      Haml::Filters.remove_filter "Foo"
     end
   end
 
@@ -31,8 +30,7 @@ class FiltersTest < MiniTest::Unit::TestCase
         Haml::Filters.defined["textile"].template_class
       end
     ensure
-      Haml::Filters.defined.delete "textile"
-      Haml::Filters.send :remove_const, :Textile
+      Haml::Filters.remove_filter "Textile"
     end
   end
 
@@ -43,8 +41,7 @@ class FiltersTest < MiniTest::Unit::TestCase
         Haml::Filters.defined["maruku"].template_class
       end
     ensure
-      Haml::Filters.defined.delete "maruku"
-      Haml::Filters.send :remove_const, :Maruku
+      Haml::Filters.remove_filter "Maruku"
     end
   end
 
@@ -108,8 +105,7 @@ class FiltersTest < MiniTest::Unit::TestCase
       haml = ":foo"
       assert_equal "foobar\n", render(haml)
     ensure
-      Haml::Filters.defined.delete "foo"
-      Haml::Filters.send :remove_const, :Foo
+      Haml::Filters.remove_filter "Foo"
     end
   end
 

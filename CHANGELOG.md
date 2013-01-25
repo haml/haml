@@ -104,6 +104,9 @@
 
 * Add command-line option to suppress script evaluation.
 
+* It's now possible to use Rails's asset helpers inside the Sass and SCSS
+  filters.
+
 ## 3.1.6
 
 * In indented mode, don't reindent buffers that contain preserved tags, and
