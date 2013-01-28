@@ -58,6 +58,19 @@ module Haml
       filter
     end
 
+    # Removes a filter from Haml. If the filter was removed, it returns
+    # the that was remove Module upon success, or nil on failure. If you try
+    # to redefine a filter, Haml will raise an error. Use this method first to
+    # explicitly remove the filter before redefining it.
+    # @return Module The filter module that has been removed
+    # @since 3.2.0
+    def remove_filter(name)
+      defined.delete name.downcase
+      if constants.map(&:to_s).include?(name.to_s)
+        remove_const name.to_sym
+      end
+    end
+
     # The base module for Haml filters.
     # User-defined filters should be modules including this module.
     # The name of the filter is taken by downcasing the module name.
@@ -258,29 +271,32 @@ RUBY
       end
     end
 
-    # Parses the filtered text with the normal Ruby interpreter. All output sent
-    # to `$stdout`, such as with `puts`, is output into the Haml document. Not
-    # available if the {file:REFERENCE.md#suppress_eval-option `:suppress_eval`}
+    # Parses the filtered text with the normal Ruby interpreter. Creates an IO
+    # object named `haml_io`, anything written to it is output into the Haml
+    # document. In previous version this filter redirected any output to `$stdout`
+    # to the Haml document, this was not threadsafe and has been removed, you
+    # should use `haml_io` instead.
+    #
+    # Not available if the {file:REFERENCE.md#suppress_eval-option `:suppress_eval`}
     # option is set to true. The Ruby code is evaluated in the same context as
     # the Haml template.
     module Ruby
       include Base
       require 'stringio'
-      
-      @@mutex = Mutex.new
+
       # @see Base#compile
       def compile(compiler, text)
         return if compiler.options[:suppress_eval]
-        @@mutex.synchronize do 
-          compiler.instance_eval do
-            push_silent <<-FIRST.gsub("\n", ';') + text + <<-LAST.gsub("\n", ';')
-              _haml_old_stdout = $stdout
-              $stdout = StringIO.new(_hamlout.buffer, 'a')
-            FIRST
-              _haml_old_stdout, $stdout = $stdout, _haml_old_stdout
-              _haml_old_stdout.close
-            LAST
-          end
+        compiler.instance_eval do
+          push_silent <<-FIRST.gsub("\n", ';') + text + <<-LAST.gsub("\n", ';')
+            begin
+              haml_io = StringIO.new(_hamlout.buffer, 'a')
+          FIRST
+            ensure
+              haml_io.close
+              haml_io = nil
+            end
+          LAST
         end
       end
     end

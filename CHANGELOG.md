@@ -2,6 +2,13 @@
 
 ## 3.2.0 (Unreleased)
 
+* The Haml exectutable now accepts an `--autoclose` option. You can now
+  specify a list of tags that should be autoclosed
+
+* The `:ruby` filter no longer redirects $stdout to the Haml document, as this
+  is not thread safe. Instead it provides a `haml_io` local variable, which is
+  an IO object that writes to the document.
+
 * HTML5 is now the default output format rather than XHTML. This was already
   the default on Rails 3+, so many users will notice no difference.
 
@@ -96,6 +103,9 @@
   (thanks [Sam Pohlenz](https://github.com/spohlenz))
 
 * Add command-line option to suppress script evaluation.
+
+* It's now possible to use Rails's asset helpers inside the Sass and SCSS
+  filters.
 
 ## 3.1.6
 

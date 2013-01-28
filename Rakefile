@@ -94,7 +94,7 @@ def gemfiles
   @gemfiles ||= begin
     Dir[File.dirname(__FILE__) + '/test/gemfiles/Gemfile.*'].
       reject {|f| f =~ /\.lock$/}.
-      reject {|f| RUBY_VERSION >= '1.9' && f =~ /2\.[0-2]/}
+      reject {|f| RUBY_VERSION < '1.9.3' && f =~ /master/}
   end
 end
 

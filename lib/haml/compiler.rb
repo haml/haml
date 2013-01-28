@@ -314,8 +314,9 @@ END
     def push_silent(text, can_suppress = false)
       flush_merged_text
       return if can_suppress && @options.suppress_eval?
-      @precompiled << "#{resolve_newlines}#{text}\n"
-      @output_line += text.count("\n") + 1
+      newline = (text == "end") ? ";" : "\n"
+      @precompiled << "#{resolve_newlines}#{text}#{newline}"
+      @output_line += (text + newline).count("\n")
     end
 
     # Adds `text` to `@buffer` with appropriate tabulation
