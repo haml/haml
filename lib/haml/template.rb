@@ -3,6 +3,7 @@ require 'haml/engine'
 require 'haml/helpers/action_view_mods'
 require 'haml/helpers/action_view_extensions'
 require 'haml/helpers/xss_mods'
+require 'haml/helpers/action_view_xss_mods'
 
 module Haml
   class Compiler
