@@ -78,7 +78,7 @@ END
     end
 
     def locals_code(names)
-      names = names.keys if Hash == names
+      names = names.keys if Hash === names
 
       names.map do |name|
         # Can't use || because someone might explicitly pass in false with a symbol
