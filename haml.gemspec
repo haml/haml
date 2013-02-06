@@ -15,6 +15,7 @@ Gem::Specification.new do |spec|
   spec.homepage    = 'http://haml.info/'
   spec.has_rdoc    = false
   spec.test_files  = Dir["test/**/*_test.rb"]
+  spec.license     = "MIT"
 
   spec.add_dependency "tilt"
 
