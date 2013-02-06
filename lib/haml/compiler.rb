@@ -44,7 +44,7 @@ module Haml
     end
 
     def precompiled_with_return_value
-      precompiled + ";" + precompiled_method_return_value
+      "#{precompiled};#{precompiled_method_return_value}"
     end
 
     # Returns the precompiled string with the preamble and postamble.
@@ -66,7 +66,7 @@ ensure
 @haml_buffer = @haml_buffer.upper if @haml_buffer
 end
 END
-      preamble + locals_code(local_names) + precompiled + postamble
+      "#{preamble}#{locals_code(local_names)}#{precompiled}#{postamble}"
     end
 
     private
@@ -203,17 +203,13 @@ END
           "_hamlout.attributes(#{inspect_obj(t[:attributes])}, #{object_ref}#{attributes_hashes})")
         concat_merged_text(
           if t[:self_closing] && @options.xhtml?
-            " />" + (t[:nuke_outer_whitespace] ? "" : "\n")
+            " />#{"\n" unless t[:nuke_outer_whitespace]}"
           else
-            ">" + ((if t[:self_closing] && @options.html?
-                      t[:nuke_outer_whitespace]
-                    else
-                      !block_given? || t[:preserve_tag] || t[:nuke_inner_whitespace]
-                    end) ? "" : "\n")
+            ">#{"\n" unless (t[:self_closing] && @options.html?) ? t[:nuke_outer_whitespace] : (!block_given? || t[:preserve_tag] || t[:nuke_inner_whitespace])}"
           end)
 
         if value && !parse
-          concat_merged_text("#{value}</#{t[:name]}>#{t[:nuke_outer_whitespace] ? "" : "\n"}")
+          concat_merged_text("#{value}</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
         elsif !t[:nuke_inner_whitespace] && !t[:self_closing]
           @to_merge << [:text, '', 1]
         end
@@ -228,7 +224,7 @@ END
         yield if block_given?
         @output_tabs -= 1 unless t[:nuke_inner_whitespace]
         rstrip_buffer! if t[:nuke_inner_whitespace]
-        push_merged_text("</#{t[:name]}>" + (t[:nuke_outer_whitespace] ? "" : "\n"),
+        push_merged_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}",
           t[:nuke_inner_whitespace] ? 0 : -1, !t[:nuke_inner_whitespace])
         @dont_indent_next_line = t[:nuke_outer_whitespace]
         return
@@ -236,7 +232,7 @@ END
 
       if parse
         push_script(value, t.merge(:in_tag => true))
-        concat_merged_text("</#{t[:name]}>" + (t[:nuke_outer_whitespace] ? "" : "\n"))
+        concat_merged_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
       end
     end
 

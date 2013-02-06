@@ -32,7 +32,7 @@ module Haml
       #
       # @return [String] The class name for the current page
       def page_class
-        controller.controller_name + " " + controller.action_name
+        "#{controller.controller_name} #{controller.action_name}"
       end
       alias_method :generate_content_class_names, :page_class
 

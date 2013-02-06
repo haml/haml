@@ -186,8 +186,8 @@ module Haml
 
       def inspect
         text = "(#{type} #{value.inspect}"
-        children.each {|c| text << "\n" << c.inspect.gsub(/^/, "  ")}
-        text + ")"
+        children.each {|c| text << "\n#{c.inspect.gsub!(/^/, '  ')}"}
+        "#{text})"
       end
     end
 
@@ -571,7 +571,7 @@ module Haml
         attributes_hash, rest = balance(line, ?{, ?})
       rescue SyntaxError => e
         if line.strip[-1] == ?, && e.message == Error.message(:unbalanced_brackets)
-          line << "\n" << @next_line.text
+          line << "\n#{@next_line.text}"
           last_line += 1
           next_line
           retry
@@ -603,7 +603,7 @@ module Haml
         scanner.scan(/\s*/)
 
         if scanner.eos?
-          line << " " << @next_line.text
+          line << " #{@next_line.text}"
           last_line += 1
           next_line
           scanner.scan(/\s*/)
@@ -616,7 +616,7 @@ module Haml
         if type == :static
           static_attributes[name] = val
         else
-          dynamic_attributes << inspect_obj(name) << " => " << val << ","
+          dynamic_attributes << "#{inspect_obj(name)} => #{val},"
         end
       end
       dynamic_attributes << "}"
@@ -651,7 +651,7 @@ module Haml
 
       return name, [:static, content.first[1]] if content.size == 1
       return name, [:dynamic,
-        '"' + content.map {|(t, v)| t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}"}.join + '"']
+        %!"#{content.map {|(t, v)| t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}"}.join}"!]
     end
 
     def raw_next_line
@@ -726,7 +726,7 @@ module Haml
         break if new_line == :eod
         new_line.strip!
         next if new_line.empty?
-        text << ' ' << new_line
+        text << " #{new_line.strip}"
       end while is_ruby_multiline?(new_line)
       next_line
       text

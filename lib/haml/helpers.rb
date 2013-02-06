@@ -397,10 +397,9 @@ MESSAGE
     # @param text [#to_s] The text to output
     def haml_concat(text = "")
       unless haml_buffer.options[:ugly] || haml_indent == 0
-        haml_buffer.buffer << haml_indent <<
-          text.to_s.gsub("\n", "\n" + haml_indent) << "\n"
+        haml_buffer.buffer << %[#{haml_indent}#{text.to_s.gsub("\n", "\n#{haml_indent}")}\n]
       else
-        haml_buffer.buffer << text.to_s << "\n"
+        haml_buffer.buffer << "#{text}\n"
       end
       ErrorReturn.new("haml_concat")
     end
@@ -503,7 +502,7 @@ MESSAGE
           tab_down
           haml_concat "</#{name}>"
         else
-          tag << text << "</#{name}>"
+          tag << "#{text}</#{name}>"
           haml_concat tag
         end
         return ret
@@ -514,7 +513,7 @@ MESSAGE
       end
 
       if flags.include?(:<)
-        tag << capture_haml(&block).strip << "</#{name}>"
+        tag << "#{capture_haml(&block).strip}</#{name}>"
         haml_concat tag
         return ret
       end

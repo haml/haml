@@ -166,7 +166,7 @@ module Haml
             text = unescape_interpolation(text).gsub(/(\\+)n/) do |s|
               escapes = $1.size
               next s if escapes % 2 == 0
-              ("\\" * (escapes - 1)) + "\n"
+              "#{'\\' * (escapes - 1)}\n"
             end
             # We need to add a newline at the beginning to get the
             # filter lines to line up (since the Haml filter contains
@@ -174,7 +174,7 @@ module Haml
             # filter name). Then we need to escape the trailing
             # newline so that the whole filter block doesn't take up
             # too many.
-            text = "\n" + text.sub(/\n"\Z/, "\\n\"")
+            text = %[\n#{text.sub(/\n"\Z/, "\\n\"")}]
             push_script <<RUBY.rstrip, :escape_html => false
 find_and_preserve(#{filter.inspect}.render_with_options(#{text}, _hamlout.options))
 RUBY
@@ -213,13 +213,10 @@ RUBY
           type = " type=#{options[:attr_wrapper]}text/javascript#{options[:attr_wrapper]}"
         end
 
-        str = "<script#{type}>\n"
-        str << "  //<![CDATA[\n" if options[:cdata]
-        str << "#{indent}#{text.rstrip.gsub("\n", "\n#{indent}")}\n"
-        str << "  //]]>\n" if options[:cdata]
-        str << "</script>"
+        text = text.rstrip
+        text.gsub!("\n", "\n#{indent}")
 
-        str
+        %!<script#{type}>\n#{"  //<![CDATA[\n" if options[:cdata]}#{indent}#{text}\n#{"  //]]>\n" if options[:cdata]}</script>!
       end
     end
 
@@ -237,13 +234,10 @@ RUBY
           type = " type=#{options[:attr_wrapper]}text/css#{options[:attr_wrapper]}"
         end
 
-        str = "<style#{type}>\n"
-        str << "  /*<![CDATA[*/\n" if options[:cdata]
-        str << "#{indent}#{text.rstrip.gsub("\n", "\n#{indent}")}\n"
-        str << "  /*]]>*/\n" if options[:cdata]
-        str << "</style>"
+        text = text.rstrip
+        text.gsub!("\n", "\n#{indent}")
 
-        str
+        %(<style#{type}>\n#{"  /*<![CDATA[*/\n" if options[:cdata]}#{indent}#{text}\n#{"  /*]]>*/\n" if options[:cdata]}</style>)
       end
     end
 
@@ -253,7 +247,10 @@ RUBY
 
       # @see Base#render
       def render(text)
-        "<![CDATA[#{("\n" + text).rstrip.gsub("\n", "\n    ")}\n]]>"
+        text = "\n#{text}"
+        text.rstrip!
+        text.gsub!("\n", "\n    ")
+        "<![CDATA[#{text}\n]]>"
       end
     end
 
