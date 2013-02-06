@@ -316,7 +316,7 @@ END
       return if can_suppress && @options.suppress_eval?
       newline = (text == "end") ? ";" : "\n"
       @precompiled << "#{resolve_newlines}#{text}#{newline}"
-      @output_line += (text + newline).count("\n")
+      @output_line = @output_line + text.count("\n") + newline.count("\n")
     end
 
     # Adds `text` to `@buffer` with appropriate tabulation
