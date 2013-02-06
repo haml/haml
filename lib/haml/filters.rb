@@ -288,7 +288,7 @@ RUBY
       def compile(compiler, text)
         return if compiler.options[:suppress_eval]
         compiler.instance_eval do
-          push_silent <<-FIRST.gsub("\n", ';') + text + <<-LAST.gsub("\n", ';')
+          push_silent <<-FIRST.tr("\n", ';') + text + <<-LAST.tr("\n", ';')
             begin
               haml_io = StringIO.new(_hamlout.buffer, 'a')
           FIRST

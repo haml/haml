@@ -53,14 +53,14 @@ module Haml
     # to avoid ordering issues with partial layouts in Rails. If not available,
     # initializes to nil.
     def precompiled_with_ambles(local_names)
-      preamble = <<END.gsub("\n", ";")
+      preamble = <<END.tr("\n", ';')
 begin
 extend Haml::Helpers
 _hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{options.for_buffer.inspect})
 _erbout = _hamlout.buffer
 @output_buffer = output_buffer ||= ActionView::OutputBuffer.new rescue nil
 END
-      postamble = <<END.gsub("\n", ";")
+      postamble = <<END.tr("\n", ';')
 #{precompiled_method_return_value}
 ensure
 @haml_buffer = @haml_buffer.upper if @haml_buffer
@@ -478,7 +478,7 @@ END
         if name == nil
           [attr_name, value]
         elsif hyphenate
-          ["#{attr_name}-#{name.to_s.gsub(/_/, '-')}", value]
+          ["#{attr_name}-#{name.to_s.tr('_', '-')}", value]
         else
           ["#{attr_name}-#{name}", value]
         end
