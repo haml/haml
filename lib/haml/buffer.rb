@@ -315,11 +315,13 @@ RUBY
     # Based on the method of the same name in Rails' Inflector,
     # but copied here so it'll run properly without Rails.
     def underscore(camel_cased_word)
-      camel_cased_word.to_s.gsub(/::/, '_').
-        gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-        gsub(/([a-z\d])([A-Z])/,'\1_\2').
-        tr("-", "_").
-        downcase
+      word = camel_cased_word.to_s.dup
+      word.gsub!(/::/, '_')
+      word.gsub!(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+      word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
+      word.tr!('-', '_')
+      word.downcase!
+      word
     end
   end
 end
