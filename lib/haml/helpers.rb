@@ -127,7 +127,7 @@ MESSAGE
     #   @yield The block within which to escape newlines
     def preserve(input = nil, &block)
       return preserve(capture_haml(&block)) if block
-      input.to_s.chomp("\n").gsub(/\n/, '&#x000A;').gsub(/\r/, '')
+      input.to_s.chomp("\n").gsub(/\n/, '&#x000A;').delete("\r")
     end
     alias_method :flatten, :preserve
 
