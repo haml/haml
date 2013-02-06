@@ -38,7 +38,7 @@ module Haml
     else
       def precompiled
         encoding = Encoding.find(@options[:encoding])
-        return @precompiled.force_encoding(encoding) if encoding == Encoding::BINARY
+        return @precompiled.force_encoding(encoding) if encoding == Encoding::ASCII_8BIT
         return @precompiled.encode(encoding)
       end
     end

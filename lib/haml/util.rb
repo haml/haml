@@ -116,8 +116,8 @@ module Haml
         end
 
         encoding = str.encoding
-        newlines = Regexp.new("\r\n|\r|\n".encode(encoding).force_encoding("binary"))
-        str.force_encoding("binary").split(newlines).each_with_index do |line, i|
+        newlines = Regexp.new("\r\n|\r|\n".encode(encoding).force_encoding(Encoding::ASCII_8BIT))
+        str.force_encoding(Encoding::ASCII_8BIT).split(newlines).each_with_index do |line, i|
           begin
             line.encode(encoding)
           rescue Encoding::UndefinedConversionError => e
@@ -350,7 +350,7 @@ METHOD
     #   Whether the document begins with a UTF-8 BOM,
     #   and the declared encoding of the document (or nil if none is declared)
     def parse_haml_magic_comment(str)
-      scanner = StringScanner.new(str.dup.force_encoding("BINARY"))
+      scanner = StringScanner.new(str.dup.force_encoding(Encoding::ASCII_8BIT))
       bom = scanner.scan(/\xEF\xBB\xBF/n)
       return bom unless scanner.scan(/-\s*#\s*/n)
       if coding = try_parse_haml_emacs_magic_comment(scanner)
