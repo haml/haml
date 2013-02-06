@@ -160,7 +160,7 @@ MSG
 
         bom, encoding = parse_haml_magic_comment(str)
         if encoding; str.force_encoding(encoding)
-        elsif bom; str.force_encoding("UTF-8")
+        elsif bom; str.force_encoding(Encoding::UTF_8)
         end
 
         return check_encoding(str, &block)
