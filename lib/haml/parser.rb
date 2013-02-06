@@ -214,7 +214,7 @@ module Haml
       when ELEMENT; push tag(text)
       when COMMENT; push comment(text[1..-1].strip)
       when SANITIZE
-        return push plain(text[3..-1].strip, :escape_html) if text[1..2] == "=="
+        return push plain(text[3..-1].strip, :escape_html) if text[1, 2] == '=='
         return push script(text[2..-1].strip, :escape_html) if text[1] == SCRIPT
         return push flat_script(text[2..-1].strip, :escape_html) if text[1] == FLAT_SCRIPT
         return push plain(text[1..-1].strip, :escape_html) if text[1] == ?\s
@@ -226,8 +226,8 @@ module Haml
       when SILENT_SCRIPT; push silent_script(text)
       when FILTER; push filter(text[1..-1].downcase)
       when DOCTYPE
-        return push doctype(text) if text[0...3] == '!!!'
-        return push plain(text[3..-1].strip, false) if text[1..2] == "=="
+        return push doctype(text) if text[0, 3] == '!!!'
+        return push plain(text[3..-1].strip, false) if text[1, 2] == '=='
         return push script(text[2..-1].strip, false) if text[1] == SCRIPT
         return push flat_script(text[2..-1].strip, false) if text[1] == FLAT_SCRIPT
         return push plain(text[1..-1].strip, false) if text[1] == ?\s
@@ -739,7 +739,7 @@ module Haml
     #
     def is_ruby_multiline?(text)
       text && text.length > 1 && text[-1] == ?, &&
-        !((text[-3..-2] =~ /\W\?/) || text[-3..-2] == "?\\")
+        !((text[-3, 2] =~ /\W\?/) || text[-3, 2] == "?\\")
     end
 
     def balance(*args)
