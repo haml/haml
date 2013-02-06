@@ -65,7 +65,7 @@ module Haml
     # @return Module The filter module that has been removed
     # @since 3.2.0
     def remove_filter(name)
-      defined.delete name.downcase
+      defined.delete name.to_s.downcase
       if constants.map(&:to_s).include?(name.to_s)
         remove_const name.to_sym
       end
