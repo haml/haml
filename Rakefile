@@ -21,6 +21,7 @@ end
 Rake::TestTask.new do |t|
   t.libs << 'lib' << 'test'
   t.test_files = Dir["test/**/*_test.rb"]
+  t.warning = true
   t.verbose = true
 end
 
