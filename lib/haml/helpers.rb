@@ -127,7 +127,10 @@ MESSAGE
     #   @yield The block within which to escape newlines
     def preserve(input = nil, &block)
       return preserve(capture_haml(&block)) if block
-      input.to_s.chomp("\n").gsub(/\n/, '&#x000A;').delete("\r")
+      s = input.to_s.chomp("\n")
+      s.gsub!(/\n/, '&#x000A;')
+      s.delete!("\r")
+      s
     end
     alias_method :flatten, :preserve
 
@@ -195,7 +198,7 @@ MESSAGE
         result = capture_haml(i, &block)
 
         if result.count("\n") > 1
-          result = result.gsub("\n", "\n  ")
+          result.gsub!("\n", "\n  ")
           result = "\n  #{result.strip}\n"
         else
           result = result.strip
@@ -371,7 +374,8 @@ MESSAGE
         return captured if haml_buffer.options[:ugly]
         # Note that the "reject" is needed for rbx 1.2.4, which includes empty
         # strings in the returned array when splitting by /^/.
-        captured = captured.split(/^/).reject {|x| x == ""}
+        captured = captured.split(/^/)
+        captured.delete('')
 
         min_tabs = nil
         captured.each do |line|

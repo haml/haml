@@ -722,11 +722,12 @@ module Haml
       return text unless is_ruby_multiline?(text)
       un_next_line @next_line.full
       begin
-        new_line = raw_next_line.first
+        new_line = raw_next_line.first.dup
         break if new_line == :eod
-        next if new_line.strip.empty?
-        text << " " << new_line.strip
-      end while is_ruby_multiline?(new_line.strip)
+        new_line.strip!
+        next if new_line.empty?
+        text << ' ' << new_line
+      end while is_ruby_multiline?(new_line)
       next_line
       text
     end

@@ -182,7 +182,7 @@ module Haml
         <% end %>
 
         if has_newline
-          result = result.gsub "\\n", "\\n" + tabs(tabulation)
+          result.gsub! "\\n", "\\n" + tabs(tabulation)
 
           # Add tabulation if it wasn't precompiled
           <% if in_tag && !nuke_inner_whitespace %> result = tabs(tabulation) + result <% end %>

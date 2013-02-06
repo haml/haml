@@ -449,11 +449,12 @@ END
         value = Haml::Helpers.preserve(escaped)
         if escape_attrs
           # We want to decide whether or not to escape quotes
-          value = value.gsub('&quot;', '"').gsub('&#x0022;', '"')
+          value.gsub!('&quot;', '"')
+          value.gsub!('&#x0022;', '"')
           this_attr_wrapper = attr_wrapper
           if value.include? attr_wrapper
             if value.include? other_quote_char
-              value = value.gsub(attr_wrapper, quote_escape)
+              value.gsub!(attr_wrapper, quote_escape)
             else
               this_attr_wrapper = other_quote_char
             end
@@ -463,14 +464,19 @@ END
         end
         " #{attr}=#{this_attr_wrapper}#{value}#{this_attr_wrapper}"
       end
-      result.compact.sort.join
+      result.compact!
+      result.sort!
+      result.join
     end
 
     def self.filter_and_join(value, separator)
       return "" if value == ""
       value = [value] unless value.is_a?(Array)
-      value = value.flatten.collect {|item| item ? item.to_s : nil}.compact.join(separator)
-      return !value.empty? && value
+      value.flatten!
+      value.map! {|item| item ? item.to_s : nil}
+      value.compact!
+      value = value.join(separator)
+      !value.empty? && value
     end
 
     def self.build_data_keys(data_hash, hyphenate, attr_name="data")

@@ -182,12 +182,9 @@ RUBY
           end
 
           rendered = Haml::Helpers::find_and_preserve(filter.render_with_options(text, compiler.options), compiler.options[:preserve])
-
-          if options[:ugly]
-            push_text(rendered.rstrip)
-          else
-            push_text(rendered.rstrip.gsub("\n", "\n#{'  ' * @output_tabs}"))
-          end
+          rendered.rstrip!
+          rendered.gsub!("\n", "\n#{'  ' * @output_tabs}") unless options[:ugly]
+          push_text(rendered)
         end
       end
     end
