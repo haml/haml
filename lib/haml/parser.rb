@@ -562,7 +562,11 @@ module Haml
         nuke_inner_whitespace = true
       end
 
-      value = value.to_s.strip
+      if value.nil?
+        value = ''
+      else
+        value.strip!
+      end
       [tag_name, attributes, attributes_hashes, object_ref, nuke_outer_whitespace,
        nuke_inner_whitespace, action, value, last_line || @index]
     end

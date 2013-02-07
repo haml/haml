@@ -169,7 +169,7 @@ module Haml
 
     def initialize(values = {}, &block)
       defaults.each {|k, v| instance_variable_set :"@#{k}", v}
-      values.reject {|k, v| !defaults.has_key?(k) || v.nil?}.each {|k, v| send("#{k}=", v)}
+      values.each {|k, v| send("#{k}=", v) if defaults.has_key?(k) && !v.nil?}
       yield if block_given?
     end
 
@@ -272,6 +272,5 @@ module Haml
     def defaults
       self.class.defaults
     end
-
   end
 end
