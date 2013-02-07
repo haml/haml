@@ -486,7 +486,7 @@ module Haml
     # that can then be merged with another attributes hash.
     def self.parse_class_and_id(list)
       attributes = {}
-      return attributes if list == ''
+      return attributes if list.empty?
 
       list.scan(/([#.])([-:_a-zA-Z0-9]+)/) do |type, property|
         case type
@@ -505,7 +505,7 @@ module Haml
 
     def parse_static_hash(text)
       attributes = {}
-      return attributes if text == ''
+      return attributes if text.empty?
 
       scanner = StringScanner.new(text)
       scanner.scan(/\s+/)
@@ -550,7 +550,7 @@ module Haml
         end
       end
 
-      if rest
+      if rest && !rest.empty?
         nuke_whitespace, action, value = rest.scan(/(<>|><|[><])?([=\/\~&!])?(.*)?/)[0]
         nuke_whitespace ||= ''
         nuke_outer_whitespace = nuke_whitespace.include? '>'
