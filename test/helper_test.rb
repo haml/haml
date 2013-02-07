@@ -132,7 +132,7 @@ HTML
 HAML
   end
 
-  if (ActionPack::VERSION::MAJOR == 3) && (ActionPack::VERSION::MINOR >= 2) && (ActionPack::VERSION::TINY >= 3)
+  if ((ActionPack::VERSION::MAJOR == 3) && (ActionPack::VERSION::MINOR >= 2) && (ActionPack::VERSION::TINY >= 3) || (ActionPack::VERSION::MAJOR == 4))
     def test_text_area
       assert_equal(%(<textarea id="body" name="body">\nFoo&#x000A;Bar&#x000A; Baz&#x000A;   Boom</textarea>\n),
                    render('= text_area_tag "body", "Foo\nBar\n Baz\n   Boom"', :action_view))
