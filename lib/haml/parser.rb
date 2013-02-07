@@ -486,6 +486,8 @@ module Haml
     # that can then be merged with another attributes hash.
     def self.parse_class_and_id(list)
       attributes = {}
+      return attributes if list == ''
+
       list.scan(/([#.])([-:_a-zA-Z0-9]+)/) do |type, property|
         case type
         when '.'
@@ -503,6 +505,8 @@ module Haml
 
     def parse_static_hash(text)
       attributes = {}
+      return attributes if text == ''
+
       scanner = StringScanner.new(text)
       scanner.scan(/\s+/)
       until scanner.eos?
