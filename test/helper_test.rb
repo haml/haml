@@ -132,7 +132,18 @@ HTML
 HAML
   end
 
-  if ((ActionPack::VERSION::MAJOR == 3) && (ActionPack::VERSION::MINOR >= 2) && (ActionPack::VERSION::TINY >= 3) || (ActionPack::VERSION::MAJOR == 4))
+  if ActionPack::VERSION::MAJOR == 4
+    def test_text_area
+      assert_equal(%(<textarea id="body" name="body">\nFoo&#x000A;Bar&#x000A; Baz&#x000A;   Boom</textarea>\n),
+                   render('= text_area_tag "body", "Foo\nBar\n Baz\n   Boom"', :action_view))
+
+      assert_equal(%(<textarea id="post_body" name="post[body]">\nFoo bar&#x000A;baz</textarea>\n),
+                   render('= text_area :post, :body', :action_view))
+
+      assert_equal(%(<pre>Foo bar&#x000A;   baz</pre>\n),
+                   render('= content_tag "pre", "Foo bar\n   baz"', :action_view))
+    end
+  elsif (ActionPack::VERSION::MAJOR == 3) && (ActionPack::VERSION::MINOR >= 2) && (ActionPack::VERSION::TINY >= 3)
     def test_text_area
       assert_equal(%(<textarea id="body" name="body">\nFoo&#x000A;Bar&#x000A; Baz&#x000A;   Boom</textarea>\n),
                    render('= text_area_tag "body", "Foo\nBar\n Baz\n   Boom"', :action_view))
