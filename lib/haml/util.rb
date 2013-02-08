@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 begin
   require 'erubis/tiny'
 rescue LoadError
@@ -109,12 +111,13 @@ module Haml
       def check_encoding(str)
         if str.valid_encoding?
           # Get rid of the Unicode BOM if possible
-          if str.encoding.name =~ /^UTF-(8|16|32)(BE|LE)?$/
+          # Shortcut for UTF-8 which might be the majority case
+          if str.encoding == Encoding::UTF_8
+            str.gsub!(/\A\uFEFF/, '')
+          elsif str.encoding.name =~ /^UTF-(16|32)(BE|LE)?$/
             str.gsub!(Regexp.new("\\A\uFEFF".encode(str.encoding)), '')
-            return str
-          else
-            return str
           end
+          return str
         end
 
         encoding = str.encoding
