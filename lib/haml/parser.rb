@@ -185,7 +185,7 @@ module Haml
       end
 
       def inspect
-        %Q[(#{type} #{value.inspect}\n#{children.map {|c| c.inspect.gsub!(/^/, '  ')}.join("\n")} #{text})]
+        %Q[(#{type} #{value.inspect}#{children.map {|c| "\n#{c.inspect.gsub!(/^/, '  ')}"}.join})]
       end
     end
 
