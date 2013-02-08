@@ -136,7 +136,7 @@ module Haml
       close until @parent.type == :root
       @root
     rescue Haml::Error => e
-      e.backtrace.unshift "#{@options[:filename]}:#{(e.line ? e.line + 1 : @index) + @options[:line] - 1}"
+      e.backtrace.unshift "#{@options.filename}:#{(e.line ? e.line + 1 : @index) + @options.line - 1}"
       raise
     end
 
@@ -260,14 +260,14 @@ module Haml
         return ParseNode.new(:plain, @index, :text => text)
       end
 
-      escape_html = @options[:escape_html] if escape_html.nil?
+      escape_html = @options.escape_html if escape_html.nil?
       script(unescape_interpolation(text, escape_html), false)
     end
 
     def script(text, escape_html = nil, preserve = false)
       raise SyntaxError.new(Error.message(:no_ruby_code, '=')) if text.empty?
       text = handle_ruby_multiline(text)
-      escape_html = @options[:escape_html] if escape_html.nil?
+      escape_html = @options.escape_html if escape_html.nil?
 
       keyword = block_keyword(text)
       check_push_script_stack(keyword)
@@ -332,10 +332,10 @@ module Haml
       tag_name, attributes, attributes_hashes, object_ref, nuke_outer_whitespace,
         nuke_inner_whitespace, action, value, last_line = parse_tag(line)
 
-      preserve_tag = @options[:preserve].include?(tag_name)
+      preserve_tag = @options.preserve.include?(tag_name)
       nuke_inner_whitespace ||= preserve_tag
-      preserve_tag = false if @options[:ugly]
-      escape_html = (action == '&' || (action != '!' && @options[:escape_html]))
+      preserve_tag = false if @options.ugly
+      escape_html = (action == '&' || (action != '!' && @options.escape_html))
 
       case action
       when '/'; self_closing = true
@@ -381,7 +381,7 @@ module Haml
       if attributes_hashes[:old]
         static_attributes = parse_static_hash(attributes_hashes[:old])
         Buffer.merge_attrs(attributes, static_attributes) if static_attributes
-        attributes_list << attributes_hashes[:old] unless static_attributes || @options[:suppress_eval]
+        attributes_list << attributes_hashes[:old] unless static_attributes || @options.suppress_eval
       end
 
       attributes_list.compact!
@@ -394,7 +394,7 @@ module Haml
         raise SyntaxError.new(Error.message(:illegal_nesting_line, tag_name), @next_line.index)
       end
 
-      self_closing ||= !!(!block_opened? && value.empty? && @options[:autoclose].any? {|t| t === tag_name})
+      self_closing ||= !!(!block_opened? && value.empty? && @options.autoclose.any? {|t| t === tag_name})
       value = nil if value.empty? && (block_opened? || self_closing)
       value = handle_ruby_multiline(value) if parse
 
@@ -557,7 +557,7 @@ module Haml
         nuke_inner_whitespace = nuke_whitespace.include? '<'
       end
 
-      if @options[:remove_whitespace]
+      if @options.remove_whitespace
         nuke_outer_whitespace = true
         nuke_inner_whitespace = true
       end

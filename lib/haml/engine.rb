@@ -126,7 +126,7 @@ module Haml
         @haml_buffer = buffer
       end
       begin
-        eval(@compiler.precompiled_with_return_value, scope, @options[:filename], @options[:line])
+        eval(@compiler.precompiled_with_return_value, scope, @options.filename, @options.line)
       rescue ::SyntaxError => e
         raise SyntaxError, e.message
       end
@@ -172,7 +172,7 @@ module Haml
 
       begin
         eval("Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {};" +
-             compiler.precompiled_with_ambles(local_names) + "}\n", scope, @options[:filename], @options[:line])
+             compiler.precompiled_with_ambles(local_names) + "}\n", scope, @options.filename, @options.line)
       rescue ::SyntaxError => e
         raise SyntaxError, e.message
       end
@@ -220,7 +220,7 @@ module Haml
       method = object.is_a?(Module) ? :module_eval : :instance_eval
 
       object.send(method, "def #{name}(_haml_locals = {}); #{compiler.precompiled_with_ambles(local_names)}; end",
-                  @options[:filename], @options[:line])
+                  @options.filename, @options.line)
     end
 
     private

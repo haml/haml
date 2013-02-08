@@ -37,7 +37,7 @@ module Haml
       end
     else
       def precompiled
-        encoding = Encoding.find(@options[:encoding])
+        encoding = Encoding.find(@options.encoding)
         return @precompiled.force_encoding(encoding) if encoding == Encoding::ASCII_8BIT
         return @precompiled.encode(encoding)
       end
@@ -119,7 +119,7 @@ END
     end
 
     def compile_silent_script
-      return if @options[:suppress_eval]
+      return if @options.suppress_eval
       push_silent(@node.value[:text])
       keyword = @node.value[:keyword]
 
@@ -156,7 +156,7 @@ END
         (t[:nuke_outer_whitespace] && !block_given?) ||
         (t[:nuke_inner_whitespace] && block_given?)
 
-      if @options[:suppress_eval]
+      if @options.suppress_eval
         object_ref = "nil"
         parse = false
         value = t[:parse] ? nil : t[:value]
@@ -272,7 +272,7 @@ END
     def text_for_doctype
       if @node.value[:type] == "xml"
         return nil if @options.html?
-        wrapper = @options[:attr_wrapper]
+        wrapper = @options.attr_wrapper
         return "<?xml version=#{wrapper}1.0#{wrapper} encoding=#{wrapper}#{@node.value[:encoding] || "utf-8"}#{wrapper} ?>"
       end
 
@@ -318,7 +318,7 @@ END
     # Adds `text` to `@buffer` with appropriate tabulation
     # without parsing it.
     def push_merged_text(text, tab_change = 0, indent = true)
-      text = !indent || @dont_indent_next_line || @options[:ugly] ? text : "#{'  ' * @output_tabs}#{text}"
+      text = !indent || @dont_indent_next_line || @options.ugly ? text : "#{'  ' * @output_tabs}#{text}"
       @to_merge << [:text, text, tab_change]
       @dont_indent_next_line = false
     end
@@ -343,7 +343,7 @@ END
           str << inspect_obj(val)[1...-1]
           mtabs += tabs
         when :script
-          if mtabs != 0 && !@options[:ugly]
+          if mtabs != 0 && !@options.ugly
             val = "_hamlout.adjust_tabs(#{mtabs}); " + val
           end
           str << "\#{#{val}}"
@@ -355,7 +355,7 @@ END
 
       unless str.empty?
         @precompiled <<
-          if @options[:ugly]
+          if @options.ugly
             "_hamlout.buffer << \"#{str}\";"
           else
             "_hamlout.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"
@@ -375,9 +375,9 @@ END
 
       args = %w[preserve_script in_tag preserve_tag escape_html nuke_inner_whitespace]
       args.map! {|name| opts[name.to_sym]}
-      args << !block_given? << @options[:ugly]
+      args << !block_given? << @options.ugly
 
-      no_format = @options[:ugly] &&
+      no_format = @options.ugly &&
         !(opts[:preserve_script] || opts[:preserve_tag] || opts[:escape_html])
       output_expr = "(#{text}\n)"
       static_method = "_hamlout.#{static_method_name(:format_script, *args)}"
@@ -396,7 +396,7 @@ END
       yield
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
       @precompiled << "_hamlout.buffer << #{no_format ? "haml_temp.to_s;" : "#{static_method}(haml_temp);"}"
-      concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace] || @options[:ugly]
+      concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace] || @options.ugly
     end
 
     def push_generated_script(text)
@@ -502,7 +502,7 @@ END
     def prerender_tag(name, self_close, attributes)
       # TODO: consider just passing in the damn options here
       attributes_string = Compiler.build_attributes(
-        @options.html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:hyphenate_data_attrs], attributes)
+        @options.html?, @options.attr_wrapper, @options.escape_attrs, @options.hyphenate_data_attrs, attributes)
       "<#{name}#{attributes_string}#{self_close && @options.xhtml? ? ' /' : ''}>"
     end
 
