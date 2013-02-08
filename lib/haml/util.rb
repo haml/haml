@@ -184,9 +184,14 @@ MSG
       # @param obj {Object}
       # @return {String}
       def inspect_obj(obj)
-        return ':' + inspect_obj(obj.to_s) if obj.is_a?(Symbol)
-        return obj.inspect unless obj.is_a?(String)
-        '"' + obj.gsub(/[\x00-\x7F]+/) {|s| s.inspect[1...-1]} + '"'
+        case obj
+        when String
+          %Q!"#{obj.gsub(/[\x00-\x7F]+/) {|s| s.inspect[1...-1]}}"!
+        when Symbol
+          ":#{inspect_obj(obj.to_s)}"
+        else
+          obj.inspect
+        end
       end
     end
 

@@ -466,13 +466,17 @@ END
     end
 
     def self.filter_and_join(value, separator)
-      return "" if value == ""
-      value = [value] unless value.is_a?(Array)
-      value.flatten!
-      value.map! {|item| item ? item.to_s : nil}
-      value.compact!
-      value = value.join(separator)
-      !value.empty? && value
+      return '' if (value.respond_to?(:empty?) && value.empty?)
+
+      if value.is_a?(Array)
+        value.flatten!
+        value.map! {|item| item ? item.to_s : nil}
+        value.compact!
+        value = value.join(separator)
+      else
+        value = value ? value.to_s : nil
+      end
+      !value.nil? && !value.empty? && value
     end
 
     def self.build_data_keys(data_hash, hyphenate, attr_name="data")
