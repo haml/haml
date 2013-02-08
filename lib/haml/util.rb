@@ -101,7 +101,8 @@ module Haml
     # @return [String] `str`, potentially with encoding gotchas like BOMs removed
     if RUBY_VERSION < "1.9"
       def check_encoding(str)
-        str.gsub(/\A\xEF\xBB\xBF/, '') # Get rid of the UTF-8 BOM
+        str.gsub!(/\A\xEF\xBB\xBF/, '') # Get rid of the UTF-8 BOM
+        str
       end
     else
 
@@ -109,7 +110,8 @@ module Haml
         if str.valid_encoding?
           # Get rid of the Unicode BOM if possible
           if str.encoding.name =~ /^UTF-(8|16|32)(BE|LE)?$/
-            return str.gsub(Regexp.new("\\A\uFEFF".encode(str.encoding)), '')
+            str.gsub!(Regexp.new("\\A\uFEFF".encode(str.encoding)), '')
+            return str
           else
             return str
           end
