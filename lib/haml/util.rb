@@ -109,7 +109,7 @@ module Haml
         if str.valid_encoding?
           # Get rid of the Unicode BOM if possible
           if str.encoding.name =~ /^UTF-(8|16|32)(BE|LE)?$/
-            return str.gsub(Regexp.new("\\A\uFEFF".encode(str.encoding.name)), '')
+            return str.gsub(Regexp.new("\\A\uFEFF".encode(str.encoding)), '')
           else
             return str
           end
