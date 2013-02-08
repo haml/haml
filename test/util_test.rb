@@ -60,4 +60,15 @@ RUBY
       c.send(static_method_name(:static_method, false, false),
         "brush your teeth", "play with fire"))
   end
+
+  def test_check_encoding_does_not_destoy_the_given_string
+    string_with_bom = if RUBY_VERSION > '1.9'
+      File.read(File.dirname(__FILE__) + '/templates/with_bom.haml', :encoding => Encoding::UTF_8)
+    else
+      File.read(File.dirname(__FILE__) + '/templates/with_bom.haml')
+    end
+    original = string_with_bom.dup
+    check_encoding(string_with_bom)
+    assert_equal(original, string_with_bom)
+  end
 end
