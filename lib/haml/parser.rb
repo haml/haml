@@ -144,13 +144,13 @@ module Haml
     private
 
     # @private
-    class Line < Struct.new(:text, :full, :index, :compiler, :eod)
+    class Line < Struct.new(:text, :full, :index, :parser, :eod)
       alias_method :eod?, :eod
 
       # @private
       def tabs
         line = self
-        @tabs ||= compiler.instance_eval do
+        @tabs ||= parser.instance_eval do
           break 0 if line.text.empty? || !(whitespace = line.full[/^\s+/])
 
           if @indentation.nil?
