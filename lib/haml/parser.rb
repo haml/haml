@@ -140,6 +140,30 @@ module Haml
       raise
     end
 
+    def compute_tabs(line)
+      return 0 if line.text.empty? || !(whitespace = line.full[/^\s+/])
+
+      if @indentation.nil?
+        @indentation = whitespace
+
+        if @indentation.include?(?\s) && @indentation.include?(?\t)
+          raise SyntaxError.new(Error.message(:cant_use_tabs_and_spaces), line.index)
+        end
+
+        @flat_spaces = @indentation * (@template_tabs+1) if flat?
+        return 1
+      end
+
+      tabs = whitespace.length / @indentation.length
+      return tabs if whitespace == @indentation * tabs
+      return @template_tabs + 1 if flat? && whitespace =~ /^#{@flat_spaces}/
+
+      message = Error.message(:inconsistent_indentation,
+        Haml::Util.human_indentation(whitespace),
+        Haml::Util.human_indentation(@indentation)
+      )
+      raise SyntaxError.new(message, line.index)
+    end
 
     private
 
@@ -149,31 +173,7 @@ module Haml
 
       # @private
       def tabs
-        line = self
-        @tabs ||= parser.instance_eval do
-          break 0 if line.text.empty? || !(whitespace = line.full[/^\s+/])
-
-          if @indentation.nil?
-            @indentation = whitespace
-
-            if @indentation.include?(?\s) && @indentation.include?(?\t)
-              raise SyntaxError.new(Error.message(:cant_use_tabs_and_spaces), line.index)
-            end
-
-            @flat_spaces = @indentation * (@template_tabs+1) if flat?
-            break 1
-          end
-
-          tabs = whitespace.length / @indentation.length
-          break tabs if whitespace == @indentation * tabs
-          break @template_tabs + 1 if flat? && whitespace =~ /^#{@flat_spaces}/
-
-          message = Error.message(:inconsistent_indentation,
-            Haml::Util.human_indentation(whitespace),
-            Haml::Util.human_indentation(@indentation)
-          )
-          raise SyntaxError.new(message, line.index)
-        end
+        @tabs ||= parser.compute_tabs(self)
       end
     end
 
