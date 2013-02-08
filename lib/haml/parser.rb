@@ -144,7 +144,7 @@ module Haml
     private
 
     # @private
-    class Line < Struct.new(:text, :unstripped, :full, :index, :compiler, :eod)
+    class Line < Struct.new(:text, :full, :index, :compiler, :eod)
       alias_method :eod?, :eod
 
       # @private
@@ -677,9 +677,9 @@ module Haml
       # :eod is a special end-of-document marker
       line =
         if text == :eod
-          Line.new '-#', '-#', '-#', index, self, true
+          Line.new '-#', '-#', index, self, true
         else
-          Line.new text.strip, text.lstrip.chomp, text, index, self, false
+          Line.new text.strip, text, index, self, false
         end
 
       # `flat?' here is a little outdated,
