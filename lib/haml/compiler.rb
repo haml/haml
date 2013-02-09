@@ -496,8 +496,7 @@ END
       seen << data.object_id
 
       return {key => data} unless data.is_a?(Hash)
-      data.sort {|x, y| x[0].to_s <=> y[0].to_s}.inject({}) do |hash, array|
-        k, v = array
+      data.sort {|x, y| x[0].to_s <=> y[0].to_s}.inject({}) do |hash, (k, v)|
         joined = key == '' ? k : [key, k].join(join_char)
         hash.merge! flatten_data_attributes(v, joined, join_char, seen)
       end
@@ -514,7 +513,7 @@ END
       diff = @node.line - @output_line
       return "" if diff <= 0
       @output_line = @node.line
-      "\n" * [diff, 0].max
+      "\n" * diff
     end
 
     # Get rid of and whitespace at the end of the buffer

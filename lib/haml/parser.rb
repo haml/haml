@@ -88,7 +88,7 @@ module Haml
 
     def initialize(template, options)
       # :eod is a special end-of-document marker
-      @template           = (template.rstrip).split(/\r\n|\r|\n/) + [:eod, :eod]
+      @template           = template.rstrip.split(/\r\n|\r|\n/) + [:eod, :eod]
       @options            = options
       @flat               = false
       @index              = 0

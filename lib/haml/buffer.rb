@@ -235,7 +235,7 @@ RUBY
     def self.merge_attrs(to, from)
       from['id'] = Compiler.filter_and_join(from['id'], '_') if from['id']
       if to['id'] && from['id']
-        to['id'] << '_' << from.delete('id').to_s
+        to['id'] << "_#{from.delete('id')}"
       elsif to['id'] || from['id']
         from['id'] ||= to['id']
       end
