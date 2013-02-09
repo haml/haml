@@ -233,7 +233,7 @@ module Haml
     end
 
     def set_locals(locals, scope, scope_object)
-      scope_object.send(:instance_variable_set, '@_haml_locals', locals)
+      scope_object.instance_variable_set '@_haml_locals', locals
       set_locals = locals.keys.map { |k| "#{k} = @_haml_locals[#{k.inspect}]" }.join("\n")
       eval(set_locals, scope)
     end
