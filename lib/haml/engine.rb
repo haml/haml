@@ -121,10 +121,8 @@ module Haml
 
       set_locals(locals.merge(:_hamlout => buffer, :_erbout => buffer.buffer), scope, scope_object)
 
-      scope_object.instance_eval do
-        extend Haml::Helpers
-        @haml_buffer = buffer
-      end
+      scope_object.extend(Haml::Helpers)
+      scope_object.instance_variable_set(:'@haml_buffer', buffer)
       begin
         eval(@compiler.precompiled_with_return_value, scope, @options.filename, @options.line)
       rescue ::SyntaxError => e
@@ -132,9 +130,7 @@ module Haml
       end
     ensure
       # Get rid of the current buffer
-      scope_object.instance_eval do
-        @haml_buffer = buffer.upper if buffer
-      end
+      scope_object.instance_variable_set(:'@haml_buffer', buffer.upper) if buffer
     end
     alias_method :to_html, :render
 
