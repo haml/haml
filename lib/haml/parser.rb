@@ -529,7 +529,7 @@ module Haml
       end
 
       new_attributes_hash = old_attributes_hash = last_line = nil
-      object_ref = "nil"
+      object_ref = :nil
       attributes_hashes = {}
       while rest
         case rest[0]
@@ -542,7 +542,7 @@ module Haml
           new_attributes_hash, rest, last_line = parse_new_attributes(rest)
           attributes_hashes[:new] = new_attributes_hash
         when ?[
-          break unless object_ref == "nil"
+          break unless object_ref == :nil
           object_ref, rest = balance(rest, ?[, ?])
         else; break
         end

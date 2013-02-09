@@ -157,7 +157,7 @@ END
         (t[:nuke_inner_whitespace] && block_given?)
 
       if @options.suppress_eval
-        object_ref = "nil"
+        object_ref = :nil
         parse = false
         value = t[:parse] ? nil : t[:value]
         attributes_hashes = {}
@@ -171,7 +171,7 @@ END
       end
 
       # Check if we can render the tag directly to text and not process it in the buffer
-      if object_ref == "nil" && attributes_hashes.empty? && !preserve_script
+      if (object_ref == :nil) && attributes_hashes.empty? && !preserve_script
         tag_closed = !block_given? && !t[:self_closing] && !parse
 
         open_tag = prerender_tag(t[:name], t[:self_closing], t[:attributes])
