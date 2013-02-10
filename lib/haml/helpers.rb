@@ -541,12 +541,15 @@ MESSAGE
     # @return [String] The sanitized string
     def html_escape(text)
       pattern = '[\"><&]'
-      regex = if RUBY_VERSION >= '1.9'
-        Regexp.new(pattern.force_encoding(text.encoding), Regexp::FIXEDENCODING)
+      text = text.to_s
+      if RUBY_VERSION >= '1.9'
+        regex = Regexp.new(pattern.force_encoding(text.encoding), Regexp::FIXEDENCODING)
+        text.gsub!(regex, HTML_ESCAPE)
       else
-        Regexp.new(pattern)
+        regex = Regexp.new(pattern)
+        text.gsub!(regex) {|s| HTML_ESCAPE[s]}
       end
-      text.to_s.gsub(regex) {|s| HTML_ESCAPE[s]}
+      text
     end
 
     # Escapes HTML entities in `text`, but without escaping an ampersand
@@ -556,12 +559,15 @@ MESSAGE
     # @return [String] The sanitized string
     def escape_once(text)
       pattern = '[\"><]|&(?!(?:[a-zA-Z]+|(#\d+));)'
-      regex = if RUBY_VERSION >= '1.9'
-        Regexp.new(pattern.force_encoding(text.encoding), Regexp::FIXEDENCODING)
+      text = text.to_s
+      if RUBY_VERSION >= '1.9'
+        regex = Regexp.new(pattern.force_encoding(text.encoding), Regexp::FIXEDENCODING)
+        text.gsub!(regex, HTML_ESCAPE)
       else
-        Regexp.new(pattern)
+        regex = Regexp.new(pattern)
+        text.gsub!(regex) {|s| HTML_ESCAPE[s]}
       end
-      text.to_s.gsub(regex) {|s| HTML_ESCAPE[s]}
+      text
     end
 
     # Returns whether or not the current template is a Haml template.
