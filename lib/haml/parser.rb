@@ -119,7 +119,7 @@ module Haml
         end
 
         @tab_up = nil
-        process_line(@line.text, @line.index) unless @line.text.empty? || @haml_comment
+        process_line(@line) unless @line.text.empty? || @haml_comment
         if @parent.type != :haml_comment && (block_opened? || @tab_up)
           @template_tabs += 1
           @parent = @parent.children.last
@@ -201,8 +201,8 @@ module Haml
     #
     # This method doesn't return anything; it simply processes the line and
     # adds the appropriate code to `@precompiled`.
-    def process_line(text, index)
-      @index = index + 1
+    def process_line(line)
+      text, @index = line.text, line.index + 1
 
       case text[0]
       when DIV_CLASS; push div(text)
@@ -679,7 +679,8 @@ module Haml
         if text == :eod
           Line.new '-#', '-#', index, self, true
         else
-          Line.new text.strip, text, index, self, false
+          text =~ /^(\s+)?(.*?)\s*$/
+          Line.new $2, text, index, self, false
         end
 
       # `flat?' here is a little outdated,
