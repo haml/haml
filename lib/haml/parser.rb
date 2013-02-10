@@ -601,7 +601,8 @@ module Haml
         break if name.nil?
 
         if name == false
-          text = (Haml::Util.balance(line, ?(, ?)) || [line]).first
+          scanned = Haml::Util.balance(line, ?(, ?))
+          text = scanned ? scanned.first : line
           raise Haml::SyntaxError.new(Error.message(:invalid_attribute_list, text.inspect), last_line - 1)
         end
         attributes[name] = value

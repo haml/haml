@@ -335,23 +335,23 @@ END
     def flush_merged_text
       return if @to_merge.empty?
 
-      str = ""
       mtabs = 0
-      @to_merge.each do |type, val, tabs|
+      @to_merge.map! do |type, val, tabs|
         case type
         when :text
-          str << inspect_obj(val)[1...-1]
           mtabs += tabs
+          inspect_obj(val)[1...-1]
         when :script
           if mtabs != 0 && !@options.ugly
             val = "_hamlout.adjust_tabs(#{mtabs}); " + val
           end
-          str << "\#{#{val}}"
           mtabs = 0
+          "\#{#{val}}"
         else
           raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
         end
       end
+      str = @to_merge.join
 
       unless str.empty?
         @precompiled <<
