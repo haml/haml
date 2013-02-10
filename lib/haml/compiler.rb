@@ -373,8 +373,8 @@ END
     def push_script(text, opts = {})
       return if @options.suppress_eval?
 
-      args = %w[preserve_script in_tag preserve_tag escape_html nuke_inner_whitespace]
-      args.map! {|name| opts[name.to_sym]}
+      args = [:preserve_script, :in_tag, :preserve_tag, :escape_html, :nuke_inner_whitespace]
+      args.map! {|name| opts[name]}
       args << !block_given? << @options.ugly
 
       no_format = @options.ugly &&
