@@ -591,7 +591,6 @@ module Haml
     end
 
     def parse_new_attributes(line)
-      line = line.dup
       scanner = StringScanner.new(line)
       last_line = @index
       attributes = {}
