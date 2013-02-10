@@ -87,8 +87,6 @@ module Haml
 
 
     def initialize(template, options)
-      # :eod is a special end-of-document marker
-      @template           = template.rstrip.split(/\r\n|\r|\n/) + [:eod, :eod]
       @options            = options
       @flat               = false
       @index              = 0
@@ -97,6 +95,13 @@ module Haml
       @script_level_stack = []
       @template_index     = 0
       @template_tabs      = 0
+
+      @template = template.rstrip.split(/\r\n|\r|\n/).each_with_index.map do |text, index|
+        text =~ /^(\s+)?(.*?)\s*$/
+        Line.new $2, text, index, self, false
+      end
+      # Append special end-of-document markers
+      2.times { @template << Line.new('-#', '-#', @template.size, self, true) }
     end
 
     def parse
@@ -107,7 +112,9 @@ module Haml
 
       raise SyntaxError.new(Error.message(:indenting_at_start), @line.index) if @line.tabs != 0
 
-      while next_line
+      loop do
+        next_line
+
         process_indent(@line) unless @line.text.empty?
 
         if flat?
@@ -131,7 +138,6 @@ module Haml
 
         @line = @next_line
       end
-
       # Close all the open tags
       close until @parent.type == :root
       @root
@@ -202,36 +208,68 @@ module Haml
     # This method doesn't return anything; it simply processes the line and
     # adds the appropriate code to `@precompiled`.
     def process_line(line)
-      text, @index = line.text, line.index + 1
+      @index = line.index + 1
 
-      case text[0]
-      when DIV_CLASS; push div(text)
+      case line.text[0]
+      when DIV_CLASS; push div(line)
       when DIV_ID
-        return push plain(text) if text[1] == ?{
-        push div(text)
-      when ELEMENT; push tag(text)
-      when COMMENT; push comment(text[1..-1].lstrip)
+        return push plain(line) if line.text[1] == ?{
+        push div(line)
+      when ELEMENT; push tag(line)
+      when COMMENT; push comment(line.text[1..-1].lstrip)
       when SANITIZE
-        return push plain(text[3..-1].lstrip, :escape_html) if text[1, 2] == '=='
-        return push script(text[2..-1].lstrip, :escape_html) if text[1] == SCRIPT
-        return push flat_script(text[2..-1].lstrip, :escape_html) if text[1] == FLAT_SCRIPT
-        return push plain(text[1..-1].lstrip, :escape_html) if text[1] == ?\s
-        push plain(text)
+        if line.text[1, 2] == '=='
+          line.text = line.text[3..-1].lstrip
+          return push plain(line, :escape_html)
+        end
+        if line.text[1] == SCRIPT
+          line.text = line.text[2..-1].lstrip
+          return push script(line, :escape_html)
+        end
+        if line.text[1] == FLAT_SCRIPT
+          line.text = line.text[2..-1].lstrip
+          return push flat_script(line, :escape_html)
+        end
+        if line.text[1] == ?\s
+          line.text = line.text[1..-1].lstrip
+          return push plain(line, :escape_html)
+        end
+        push plain(line)
       when SCRIPT
-        return push plain(text[2..-1].lstrip) if text[1] == SCRIPT
-        push script(text[1..-1])
-      when FLAT_SCRIPT; push flat_script(text[1..-1])
-      when SILENT_SCRIPT; push silent_script(text)
-      when FILTER; push filter(text[1..-1].downcase)
+        if line.text[1] == SCRIPT
+          line.text = line.text[2..-1].lstrip
+          return push plain(line)
+        end
+        line.text = line.text[1..-1]
+        push script(line)
+      when FLAT_SCRIPT
+        line.text = line.text[1..-1]
+        push flat_script(line)
+      when SILENT_SCRIPT; push silent_script(line)
+      when FILTER; push filter(line.text[1..-1].downcase)
       when DOCTYPE
-        return push doctype(text) if text[0, 3] == '!!!'
-        return push plain(text[3..-1].lstrip, false) if text[1, 2] == '=='
-        return push script(text[2..-1].lstrip, false) if text[1] == SCRIPT
-        return push flat_script(text[2..-1].lstrip, false) if text[1] == FLAT_SCRIPT
-        return push plain(text[1..-1].lstrip, false) if text[1] == ?\s
-        push plain(text)
-      when ESCAPE; push plain(text[1..-1])
-      else; push plain(text)
+        return push doctype(line.text) if line.text[0, 3] == '!!!'
+        if line.text[1, 2] == '=='
+          line.text = line.text[3..-1].lstrip
+          return push plain(line, false)
+        end
+        if line.text[1] == SCRIPT
+          line.text = line.text[2..-1].lstrip
+          return push script(line, false)
+        end
+        if line.text[1] == FLAT_SCRIPT
+          line.text = line.text[2..-1].lstrip
+          return push flat_script(line, false)
+        end
+        if line.text[1] == ?\s
+          line.text = line.text[1..-1].lstrip
+          return push plain(line, false)
+        end
+        push plain(line)
+      when ESCAPE
+        line.text = line.text[1..-1]
+        push plain(line)
+      else; push plain(line)
       end
     end
 
@@ -249,43 +287,44 @@ module Haml
       node.parent = @parent
     end
 
-    def plain(text, escape_html = nil)
+    def plain(line, escape_html = nil)
       if block_opened?
         raise SyntaxError.new(Error.message(:illegal_nesting_plain), @next_line.index)
       end
 
-      unless contains_interpolation?(text)
-        return ParseNode.new(:plain, @index, :text => text)
+      unless contains_interpolation?(line.text)
+        return ParseNode.new(:plain, @index, :text => line.text)
       end
 
       escape_html = @options.escape_html if escape_html.nil?
-      script(unescape_interpolation(text, escape_html), false)
+      line.text = unescape_interpolation(line.text, escape_html)
+      script(line, false)
     end
 
-    def script(text, escape_html = nil, preserve = false)
-      raise SyntaxError.new(Error.message(:no_ruby_code, '=')) if text.empty?
-      text = handle_ruby_multiline(text)
+    def script(line, escape_html = nil, preserve = false)
+      raise SyntaxError.new(Error.message(:no_ruby_code, '=')) if line.text.empty?
+      line = handle_ruby_multiline(line)
       escape_html = @options.escape_html if escape_html.nil?
 
-      keyword = block_keyword(text)
+      keyword = block_keyword(line.text)
       check_push_script_stack(keyword)
 
-      ParseNode.new(:script, @index, :text => text, :escape_html => escape_html,
+      ParseNode.new(:script, @index, :text => line.text, :escape_html => escape_html,
         :preserve => preserve, :keyword => keyword)
     end
 
-    def flat_script(text, escape_html = nil)
-      raise SyntaxError.new(Error.message(:no_ruby_code, '~')) if text.empty?
-      script(text, escape_html, :preserve)
+    def flat_script(line, escape_html = nil)
+      raise SyntaxError.new(Error.message(:no_ruby_code, '~')) if line.text.empty?
+      script(line, escape_html, :preserve)
     end
 
-    def silent_script(text)
-      return haml_comment(text[2..-1]) if text[1] == SILENT_COMMENT
+    def silent_script(line)
+      return haml_comment(line.text[2..-1]) if line.text[1] == SILENT_COMMENT
 
-      raise SyntaxError.new(Error.message(:no_end), @index - 1) if text[1..-1].strip == "end"
+      raise SyntaxError.new(Error.message(:no_end), @index - 1) if line.text[1..-1].strip == 'end'
 
-      text = handle_ruby_multiline(text)
-      keyword = block_keyword(text)
+      line = handle_ruby_multiline(line)
+      keyword = block_keyword(line.text)
 
       check_push_script_stack(keyword)
 
@@ -308,7 +347,7 @@ module Haml
       end
 
       ParseNode.new(:silent_script, @index,
-        :text => text[1..-1], :keyword => keyword)
+        :text => line.text[1..-1], :keyword => keyword)
     end
 
     def check_push_script_stack(keyword)
@@ -326,9 +365,9 @@ module Haml
       ParseNode.new(:haml_comment, @index, :text => text)
     end
 
-    def tag(text)
+    def tag(line)
       tag_name, attributes, attributes_hashes, object_ref, nuke_outer_whitespace,
-        nuke_inner_whitespace, action, value, last_line = parse_tag(text)
+        nuke_inner_whitespace, action, value, last_line = parse_tag(line.text)
 
       preserve_tag = @options.preserve.include?(tag_name)
       nuke_inner_whitespace ||= preserve_tag
@@ -388,26 +427,28 @@ module Haml
       raise SyntaxError.new(Error.message(:no_ruby_code, action), last_line - 1) if parse && value.empty?
       raise SyntaxError.new(Error.message(:self_closing_content), last_line - 1) if self_closing && !value.empty?
 
-      if block_opened? && !value.empty? && !is_ruby_multiline?(value)
+      if block_opened? && !value.empty? && !is_ruby_multiline?(line.text)
         raise SyntaxError.new(Error.message(:illegal_nesting_line, tag_name), @next_line.index)
       end
 
       self_closing ||= !!(!block_opened? && value.empty? && @options.autoclose.any? {|t| t === tag_name})
       value = nil if value.empty? && (block_opened? || self_closing)
-      value = handle_ruby_multiline(value) if parse
+      line.text = value
+      line = handle_ruby_multiline(line) if parse
 
       ParseNode.new(:tag, @index, :name => tag_name, :attributes => attributes,
         :attributes_hashes => attributes_list, :self_closing => self_closing,
         :nuke_inner_whitespace => nuke_inner_whitespace,
         :nuke_outer_whitespace => nuke_outer_whitespace, :object_ref => object_ref,
         :escape_html => escape_html, :preserve_tag => preserve_tag,
-        :preserve_script => preserve_script, :parse => parse, :value => value)
+        :preserve_script => preserve_script, :parse => parse, :value => line.text)
     end
 
     # Renders a line that creates an XHTML tag and has an implicit div because of
     # `.` or `#`.
-    def div(text)
-      tag('%div' + text)
+    def div(line)
+      line.text = "%div#{line.text}"
+      tag(line)
     end
 
     # Renders an XHTML comment.
@@ -660,28 +701,8 @@ module Haml
         %!"#{content.map {|(t, v)| t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}"}.join}"!]
     end
 
-    def raw_next_line
-      text = @template.shift
-      return unless text
-
-      index = @template_index
-      @template_index += 1
-
-      return text, index
-    end
-
     def next_line
-      text, index = raw_next_line
-      return unless text
-
-      # :eod is a special end-of-document marker
-      line =
-        if text == :eod
-          Line.new '-#', '-#', index, self, true
-        else
-          text =~ /^(\s+)?(.*?)\s*$/
-          Line.new $2, text, index, self, false
-        end
+      line = @template.shift || raise(StopIteration)
 
       # `flat?' here is a little outdated,
       # so we have to manually check if either the previous or current line
@@ -702,21 +723,17 @@ module Haml
       line && !line.text.empty? && line.full !~ /^#{@flat_spaces}/
     end
 
-    def un_next_line(text)
-      @template.unshift text
-      @template_index -= 1
-    end
-
     def handle_multiline(line)
       return unless is_multiline?(line.text)
       line.text.slice!(-1)
-      while new_line = raw_next_line.first
-        break if new_line == :eod
-        next if new_line.strip.empty?
-        break unless is_multiline?(new_line.strip)
-        line.text << new_line.strip[0...-1]
+      loop do
+        new_line = @template.first
+        break if new_line.eod?
+        next @template.shift if new_line.text.strip.empty?
+        break unless is_multiline?(new_line.text.strip)
+        line.text << new_line.text.strip[0...-1]
+        @template.shift
       end
-      un_next_line new_line
     end
 
     # Checks whether or not `line` is in a multiline sequence.
@@ -724,19 +741,18 @@ module Haml
       text && text.length > 1 && text[-1] == MULTILINE_CHAR_VALUE && text[-2] == ?\s && text !~ BLOCK_WITH_SPACES
     end
 
-    def handle_ruby_multiline(text)
-      text = text.rstrip
-      return text unless is_ruby_multiline?(text)
-      un_next_line @next_line.full
+    def handle_ruby_multiline(line)
+      line.text.rstrip!
+      return line unless is_ruby_multiline?(line.text)
       begin
-        new_line = raw_next_line.first.dup
-        break if new_line == :eod
-        new_line.strip!
-        next if new_line.empty?
-        text << " #{new_line}"
-      end while is_ruby_multiline?(new_line)
+        # Use already fetched @next_line in the first loop. Otherwise, fetch next
+        new_line = new_line.nil? ? @next_line : @template.shift
+        break if new_line.eod?
+        next if new_line.text.empty?
+        line.text << " #{new_line.text.rstrip}"
+      end while is_ruby_multiline?(new_line.text)
       next_line
-      text
+      line
     end
 
     # `text' is a Ruby multiline block if it:
@@ -744,7 +760,6 @@ module Haml
     # - but not "?," which is a character literal
     #   (however, "x?," is a method call and not a literal)
     # - and not "?\," which is a character literal
-    #
     def is_ruby_multiline?(text)
       text && text.length > 1 && text[-1] == ?, &&
         !((text[-3, 2] =~ /\W\?/) || text[-3, 2] == "?\\")
