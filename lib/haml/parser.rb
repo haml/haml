@@ -210,25 +210,25 @@ module Haml
         return push plain(text) if text[1] == ?{
         push div(text)
       when ELEMENT; push tag(text)
-      when COMMENT; push comment(text[1..-1].strip)
+      when COMMENT; push comment(text[1..-1].lstrip)
       when SANITIZE
-        return push plain(text[3..-1].strip, :escape_html) if text[1, 2] == '=='
-        return push script(text[2..-1].strip, :escape_html) if text[1] == SCRIPT
-        return push flat_script(text[2..-1].strip, :escape_html) if text[1] == FLAT_SCRIPT
-        return push plain(text[1..-1].strip, :escape_html) if text[1] == ?\s
+        return push plain(text[3..-1].lstrip, :escape_html) if text[1, 2] == '=='
+        return push script(text[2..-1].lstrip, :escape_html) if text[1] == SCRIPT
+        return push flat_script(text[2..-1].lstrip, :escape_html) if text[1] == FLAT_SCRIPT
+        return push plain(text[1..-1].lstrip, :escape_html) if text[1] == ?\s
         push plain(text)
       when SCRIPT
-        return push plain(text[2..-1].strip) if text[1] == SCRIPT
+        return push plain(text[2..-1].lstrip) if text[1] == SCRIPT
         push script(text[1..-1])
       when FLAT_SCRIPT; push flat_script(text[1..-1])
       when SILENT_SCRIPT; push silent_script(text)
       when FILTER; push filter(text[1..-1].downcase)
       when DOCTYPE
         return push doctype(text) if text[0, 3] == '!!!'
-        return push plain(text[3..-1].strip, false) if text[1, 2] == '=='
-        return push script(text[2..-1].strip, false) if text[1] == SCRIPT
-        return push flat_script(text[2..-1].strip, false) if text[1] == FLAT_SCRIPT
-        return push plain(text[1..-1].strip, false) if text[1] == ?\s
+        return push plain(text[3..-1].lstrip, false) if text[1, 2] == '=='
+        return push script(text[2..-1].lstrip, false) if text[1] == SCRIPT
+        return push flat_script(text[2..-1].lstrip, false) if text[1] == FLAT_SCRIPT
+        return push plain(text[1..-1].lstrip, false) if text[1] == ?\s
         push plain(text)
       when ESCAPE; push plain(text[1..-1])
       else; push plain(text)
@@ -732,7 +732,7 @@ module Haml
         break if new_line == :eod
         new_line.strip!
         next if new_line.empty?
-        text << " #{new_line.strip}"
+        text << " #{new_line}"
       end while is_ruby_multiline?(new_line)
       next_line
       text
