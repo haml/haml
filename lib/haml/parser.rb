@@ -326,9 +326,9 @@ module Haml
       ParseNode.new(:haml_comment, @index, :text => text)
     end
 
-    def tag(line)
+    def tag(text)
       tag_name, attributes, attributes_hashes, object_ref, nuke_outer_whitespace,
-        nuke_inner_whitespace, action, value, last_line = parse_tag(line)
+        nuke_inner_whitespace, action, value, last_line = parse_tag(text)
 
       preserve_tag = @options.preserve.include?(tag_name)
       nuke_inner_whitespace ||= preserve_tag
@@ -406,27 +406,27 @@ module Haml
 
     # Renders a line that creates an XHTML tag and has an implicit div because of
     # `.` or `#`.
-    def div(line)
-      tag('%div' + line)
+    def div(text)
+      tag('%div' + text)
     end
 
     # Renders an XHTML comment.
-    def comment(line)
-      conditional, line = balance(line, ?[, ?]) if line[0] == ?[
-      line.strip!
+    def comment(text)
+      conditional, text = balance(text, ?[, ?]) if text[0] == ?[
+      text.strip!
       conditional << ">" if conditional
 
-      if block_opened? && !line.empty?
+      if block_opened? && !text.empty?
         raise SyntaxError.new(Haml::Error.message(:illegal_nesting_content), @next_line.index)
       end
 
-      ParseNode.new(:comment, @index, :conditional => conditional, :text => line)
+      ParseNode.new(:comment, @index, :conditional => conditional, :text => text)
     end
 
     # Renders an XHTML doctype or XML shebang.
-    def doctype(line)
+    def doctype(text)
       raise SyntaxError.new(Error.message(:illegal_nesting_header), @next_line.index) if block_opened?
-      version, type, encoding = line[3..-1].strip.downcase.scan(DOCTYPE_REGEX)[0]
+      version, type, encoding = text[3..-1].strip.downcase.scan(DOCTYPE_REGEX)[0]
       ParseNode.new(:doctype, @index, :version => version, :type => type, :encoding => encoding)
     end
 
@@ -518,9 +518,9 @@ module Haml
     end
 
     # Parses a line into tag_name, attributes, attributes_hash, object_ref, action, value
-    def parse_tag(line)
-      match = line.scan(/%([-:\w]+)([-:\w\.\#]*)(.*)/)[0]
-      raise SyntaxError.new(Error.message(:invalid_tag, line)) unless match
+    def parse_tag(text)
+      match = text.scan(/%([-:\w]+)([-:\w\.\#]*)(.*)/)[0]
+      raise SyntaxError.new(Error.message(:invalid_tag, text)) unless match
 
       tag_name, attributes, rest = match
 
@@ -569,15 +569,15 @@ module Haml
        nuke_inner_whitespace, action, value, last_line || @index]
     end
 
-    def parse_old_attributes(line)
-      line = line.dup
+    def parse_old_attributes(text)
+      text = text.dup
       last_line = @index
 
       begin
-        attributes_hash, rest = balance(line, ?{, ?})
+        attributes_hash, rest = balance(text, ?{, ?})
       rescue SyntaxError => e
-        if line.strip[-1] == ?, && e.message == Error.message(:unbalanced_brackets)
-          line << "\n#{@next_line.text}"
+        if text.strip[-1] == ?, && e.message == Error.message(:unbalanced_brackets)
+          text << "\n#{@next_line.text}"
           last_line += 1
           next_line
           retry
@@ -590,8 +590,8 @@ module Haml
       return attributes_hash, rest, last_line
     end
 
-    def parse_new_attributes(line)
-      scanner = StringScanner.new(line)
+    def parse_new_attributes(text)
+      scanner = StringScanner.new(text)
       last_line = @index
       attributes = {}
 
@@ -601,15 +601,15 @@ module Haml
         break if name.nil?
 
         if name == false
-          scanned = Haml::Util.balance(line, ?(, ?))
-          text = scanned ? scanned.first : line
+          scanned = Haml::Util.balance(text, ?(, ?))
+          text = scanned ? scanned.first : text
           raise Haml::SyntaxError.new(Error.message(:invalid_attribute_list, text.inspect), last_line - 1)
         end
         attributes[name] = value
         scanner.scan(/\s*/)
 
         if scanner.eos?
-          line << " #{@next_line.text}"
+          text << " #{@next_line.text}"
           last_line += 1
           next_line
           scanner.scan(/\s*/)
@@ -701,8 +701,8 @@ module Haml
       line && !line.text.empty? && line.full !~ /^#{@flat_spaces}/
     end
 
-    def un_next_line(line)
-      @template.unshift line
+    def un_next_line(text)
+      @template.unshift text
       @template_index -= 1
     end
 
