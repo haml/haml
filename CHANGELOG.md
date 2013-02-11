@@ -1,6 +1,6 @@
 # Haml Changelog
 
-## 3.2.0 (Unreleased)
+## 4.0.0 (Unreleased)
 
 * The Haml exectutable now accepts an `--autoclose` option. You can now
   specify a list of tags that should be autoclosed
@@ -106,6 +106,8 @@
 
 * It's now possible to use Rails's asset helpers inside the Sass and SCSS
   filters.
+
+* The Haml project now uses [semantic versioning](http://semver.org/).
 
 ## 3.1.6
 
