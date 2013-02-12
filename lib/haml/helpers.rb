@@ -530,6 +530,8 @@ MESSAGE
     # Characters that need to be escaped to HTML entities from user input
     HTML_ESCAPE = { '&'=>'&amp;', '<'=>'&lt;', '>'=>'&gt;', '"'=>'&quot;', "'"=>'&#039;', }
 
+    HTML_ESCAPE_REGEX = /[\"><&]/
+
     # Returns a copy of `text` with ampersands, angle brackets and quotes
     # escaped into HTML entities.
     #
@@ -539,35 +541,39 @@ MESSAGE
     #
     # @param text [String] The string to sanitize
     # @return [String] The sanitized string
-    def html_escape(text)
-      pattern = '[\"><&]'
-      text = text.to_s
-      if RUBY_VERSION >= '1.9'
-        regex = Regexp.new(pattern.force_encoding(text.encoding), Regexp::FIXEDENCODING)
-        text.gsub!(regex, HTML_ESCAPE)
-      else
-        regex = Regexp.new(pattern)
-        text.gsub!(regex) {|s| HTML_ESCAPE[s]}
+    if RUBY_VERSION >= '1.9'
+      def html_escape(text)
+        text = text.to_s
+        text.gsub!(HTML_ESCAPE_REGEX, HTML_ESCAPE)
+        text
       end
-      text
+    else
+      def html_escape(text)
+        text = text.to_s
+        text.gsub!(HTML_ESCAPE_REGEX) {|s| HTML_ESCAPE[s]}
+        text
+      end
     end
+
+    HTML_ESCAPE_ONCE_REGEX = /[\"><]|&(?!(?:[a-zA-Z]+|(#\d+));)/
 
     # Escapes HTML entities in `text`, but without escaping an ampersand
     # that is already part of an escaped entity.
     #
     # @param text [String] The string to sanitize
     # @return [String] The sanitized string
-    def escape_once(text)
-      pattern = '[\"><]|&(?!(?:[a-zA-Z]+|(#\d+));)'
-      text = text.to_s
-      if RUBY_VERSION >= '1.9'
-        regex = Regexp.new(pattern.force_encoding(text.encoding), Regexp::FIXEDENCODING)
-        text.gsub!(regex, HTML_ESCAPE)
-      else
-        regex = Regexp.new(pattern)
-        text.gsub!(regex) {|s| HTML_ESCAPE[s]}
+    if RUBY_VERSION >= '1.9'
+      def escape_once(text)
+        text = text.to_s
+        text.gsub!(HTML_ESCAPE_ONCE_REGEX, HTML_ESCAPE)
+        text
       end
-      text
+    else
+      def escape_once(text)
+        text = text.to_s
+        text.gsub!(HTML_ESCAPE_ONCE_REGEX){|s| HTML_ESCAPE[s]}
+        text
+      end
     end
 
     # Returns whether or not the current template is a Haml template.
