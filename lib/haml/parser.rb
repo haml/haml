@@ -89,7 +89,6 @@ module Haml
     def initialize(template, options)
       @options            = options
       @flat               = false
-      @index              = 0
       # Record the indent levels of "if" statements to validate the subsequent
       # elsif and else statements are indented at the appropriate level.
       @script_level_stack = []
@@ -142,7 +141,7 @@ module Haml
       close until @parent.type == :root
       @root
     rescue Haml::Error => e
-      e.backtrace.unshift "#{@options.filename}:#{(e.line ? e.line + 1 : @index) + @options.line - 1}"
+      e.backtrace.unshift "#{@options.filename}:#{(e.line ? e.line + 1 : @line.index + 1) + @options.line - 1}"
       raise
     end
 
@@ -214,8 +213,6 @@ module Haml
     # This method doesn't return anything; it simply processes the line and
     # adds the appropriate code to `@precompiled`.
     def process_line(line)
-      @index = line.index + 1
-
       case line.text[0]
       when DIV_CLASS; push div(line)
       when DIV_ID
@@ -268,7 +265,7 @@ module Haml
       end
 
       unless contains_interpolation?(line.text)
-        return ParseNode.new(:plain, @index, :text => line.text)
+        return ParseNode.new(:plain, line.index + 1, :text => line.text)
       end
 
       escape_html = @options.escape_html if escape_html.nil?
@@ -284,7 +281,7 @@ module Haml
       keyword = block_keyword(line.text)
       check_push_script_stack(keyword)
 
-      ParseNode.new(:script, @index, :text => line.text, :escape_html => escape_html,
+      ParseNode.new(:script, line.index + 1, :text => line.text, :escape_html => escape_html,
         :preserve => preserve, :keyword => keyword)
     end
 
@@ -296,7 +293,7 @@ module Haml
     def silent_script(line)
       return haml_comment(line.text[2..-1]) if line.text[1] == SILENT_COMMENT
 
-      raise SyntaxError.new(Error.message(:no_end), @index - 1) if line.text[1..-1].strip == 'end'
+      raise SyntaxError.new(Error.message(:no_end), line.index) if line.text[1..-1].strip == 'end'
 
       line = handle_ruby_multiline(line)
       keyword = block_keyword(line.text)
@@ -321,7 +318,7 @@ module Haml
         end
       end
 
-      ParseNode.new(:silent_script, @index,
+      ParseNode.new(:silent_script, @line.index + 1,
         :text => line.text[1..-1], :keyword => keyword)
     end
 
@@ -337,7 +334,7 @@ module Haml
 
     def haml_comment(text)
       @haml_comment = block_opened?
-      ParseNode.new(:haml_comment, @index, :text => text)
+      ParseNode.new(:haml_comment, @line.index + 1, :text => text)
     end
 
     def tag(line)
@@ -411,7 +408,7 @@ module Haml
       line.text = value
       line = handle_ruby_multiline(line) if parse
 
-      ParseNode.new(:tag, @index, :name => tag_name, :attributes => attributes,
+      ParseNode.new(:tag, line.index + 1, :name => tag_name, :attributes => attributes,
         :attributes_hashes => attributes_list, :self_closing => self_closing,
         :nuke_inner_whitespace => nuke_inner_whitespace,
         :nuke_outer_whitespace => nuke_outer_whitespace, :object_ref => object_ref,
@@ -436,14 +433,14 @@ module Haml
         raise SyntaxError.new(Haml::Error.message(:illegal_nesting_content), @next_line.index)
       end
 
-      ParseNode.new(:comment, @index, :conditional => conditional, :text => text)
+      ParseNode.new(:comment, @line.index + 1, :conditional => conditional, :text => text)
     end
 
     # Renders an XHTML doctype or XML shebang.
     def doctype(text)
       raise SyntaxError.new(Error.message(:illegal_nesting_header), @next_line.index) if block_opened?
       version, type, encoding = text[3..-1].strip.downcase.scan(DOCTYPE_REGEX)[0]
-      ParseNode.new(:doctype, @index, :version => version, :type => type, :encoding => encoding)
+      ParseNode.new(:doctype, @line.index + 1, :version => version, :type => type, :encoding => encoding)
     end
 
     def filter(name)
@@ -457,7 +454,7 @@ module Haml
         @flat_spaces = @indentation * (@template_tabs+1) if @indentation
       end
 
-      ParseNode.new(:filter, @index, :name => name, :text => @filter_buffer)
+      ParseNode.new(:filter, @line.index + 1, :name => name, :text => @filter_buffer)
     end
 
     def close
@@ -582,12 +579,12 @@ module Haml
         value.strip!
       end
       [tag_name, attributes, attributes_hashes, object_ref, nuke_outer_whitespace,
-       nuke_inner_whitespace, action, value, last_line || @index]
+       nuke_inner_whitespace, action, value, last_line || @line.index + 1]
     end
 
     def parse_old_attributes(text)
       text = text.dup
-      last_line = @index
+      last_line = @line.index + 1
 
       begin
         attributes_hash, rest = balance(text, ?{, ?})
@@ -608,7 +605,7 @@ module Haml
 
     def parse_new_attributes(text)
       scanner = StringScanner.new(text)
-      last_line = @index
+      last_line = @line.index + 1
       attributes = {}
 
       scanner.scan(/\(\s*/)
