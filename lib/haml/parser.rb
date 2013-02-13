@@ -519,19 +519,19 @@ module Haml
 
     # Parses a line into tag_name, attributes, attributes_hash, object_ref, action, value
     def parse_tag(text)
-      match = text.scan(/%([-:\w]+)([-:\w\.\#]*)(.*)/)[0]
+      match = text.scan(/%([-:\w]+)([-:\w\.\#]*)(.+)?/)[0]
       raise SyntaxError.new(Error.message(:invalid_tag, text)) unless match
 
       tag_name, attributes, rest = match
 
-      if attributes =~ /[\.#](\.|#|\z)/
+      if !attributes.empty? && (attributes =~ /[\.#](\.|#|\z)/)
         raise SyntaxError.new(Error.message(:illegal_element))
       end
 
       new_attributes_hash = old_attributes_hash = last_line = nil
       object_ref = :nil
       attributes_hashes = {}
-      while rest
+      while rest && !rest.empty?
         case rest[0]
         when ?{
           break if old_attributes_hash
