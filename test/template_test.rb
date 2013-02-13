@@ -83,12 +83,7 @@ class TemplateTest < MiniTest::Unit::TestCase
   def assert_renders_correctly(name, &render_method)
     old_options = Haml::Template.options.dup
     Haml::Template.options[:escape_html] = false
-    if ActionPack::VERSION::MAJOR < 2 ||
-        (ActionPack::VERSION::MAJOR == 2 && ActionPack::VERSION::MINOR < 2)
-      render_method ||= proc { |n| @base.render(n) }
-    else
-      render_method ||= proc { |n| @base.render(:file => n) }
-    end
+    render_method ||= proc { |n| @base.render(:file => n) }
 
     silence_warnings do
       load_result(name).split("\n").zip(render_method[name].split("\n")).each_with_index do |pair, line|
