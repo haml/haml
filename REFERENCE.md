@@ -1131,7 +1131,7 @@ implemented using Tilt.
 Parses the filtered text with [Maruku](https://github.com/nex3/maruku), which
 has some non-standard extensions to Markdown.
 
-As of Haml 3.2, this filter is defined in [Haml
+As of Haml 4.0, this filter is defined in [Haml
 contrib](https://github.com/haml/haml-contrib) but is loaded automatically for
 historical reasons. In future versions of Haml it will likely not be loaded by
 default. This filter is implemented using Tilt.
@@ -1171,7 +1171,7 @@ SCSS syntax to produce CSS output. This filter is implemented using Tilt.
 Parses the filtered text with [Textile](http://www.textism.com/tools/textile).
 Only works if [RedCloth](http://redcloth.org) is installed.
 
-As of Haml 3.2, this filter is defined in [Haml
+As of Haml 4.0, this filter is defined in [Haml
 contrib](https://github.com/haml/haml-contrib) but is loaded automatically for
 historical reasons. In future versions of Haml it will likely not be loaded by
 default. This filter is implemented using Tilt.

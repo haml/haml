@@ -97,7 +97,7 @@ module Haml
 
     # If set to `true`, Haml will convert underscores to hyphens in all
     # {file:REFERENCE.md#html5_custom_data_attributes Custom Data Attributes} As
-    # of Haml 3.2, this defaults to `true`.
+    # of Haml 4.0, this defaults to `true`.
     attr_accessor :hyphenate_data_attrs
 
     # The line offset of the Haml template being parsed. This is useful for

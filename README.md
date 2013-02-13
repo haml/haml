@@ -129,20 +129,23 @@ on a specific area:
 Haml supports Ruby 1.8.7 and higher, so please make sure your changes run on
 both 1.9 and 1.8.
 
-## Authors
+## Team
+
+### Current Maintainers
+
+* [Norman Clarke](http://github.com/norman)
+* [Matt Wildig](http://github.com/mattwildig)
+* [Akira Matsuda](https://github.com/amatsuda)
+
+### Alumni
 
 Haml was created by [Hampton Catlin](http://hamptoncatlin.com), the author of
-the original implementation. However, Hampton doesn't even know his way around
-the code anymore and now just occasionally consults on the language issues.
+the original implementation. Hampton is no longer involved in day-to-day coding,
+but still consults on language issues.
 
 [Nathan Weizenbaum](http://nex-3.com) was for many years the primary developer
-and architect of the "modern" Ruby implementation of Haml. His hard work
-endlessly answering forum posts, fixing bugs, refactoring, finding speed
-improvements, writing documentation, and implementing new features is what has
-kept the project alive.
+and architect of the "modern" Ruby implementation of Haml.
 
-[Norman Clarke](http://github.com/norman), the author of Haml Spec and the Haml
-implementation in Lua, took over as maintainer in April 2012.
 
 ## License
 
@@ -150,7 +153,7 @@ Some of Nathan's work on Haml was supported by Unspace Interactive.
 
 Beyond that, the implementation is licensed under the MIT License.
 
-Copyright (c) 2006-2009 Hampton Catlin and Nathan Weizenbaum
+Copyright (c) 2006-2013 Hampton Catlin, Nathan Weizenbaum and the Haml team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
