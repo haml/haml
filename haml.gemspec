@@ -15,6 +15,7 @@ Gem::Specification.new do |spec|
   spec.homepage    = 'http://haml.info/'
   spec.has_rdoc    = false
   spec.test_files  = Dir["test/**/*_test.rb"]
+  spec.license     = "MIT"
 
   spec.add_dependency "tilt"
 
@@ -33,7 +34,7 @@ END
 
   spec.post_install_message = <<-END
 
-HEADS UP! Haml 3.2 has many improvements, but also has changes that may break
+HEADS UP! Haml 4.0 has many improvements, but also has changes that may break
 your application:
 
 * Support for Ruby 1.8.6 dropped

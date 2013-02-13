@@ -1894,7 +1894,7 @@ HAML
       assert(false, "Expected exception")
     rescue Haml::Error => e
       assert_equal(3, e.line)
-      assert_equal('Invalid UTF-8 character "\xFE"', e.message)
+      assert_match(/Invalid .* character/, e.message)
     end
 
     def test_ascii_incompatible_encoding_error
@@ -1904,7 +1904,7 @@ HAML
       assert(false, "Expected exception")
     rescue Haml::Error => e
       assert_equal(3, e.line)
-      assert_equal('Invalid UTF-16LE character "\xFE"', e.message)
+      assert_match(/Invalid .* character/, e.message)
     end
 
     def test_same_coding_comment_as_encoding
