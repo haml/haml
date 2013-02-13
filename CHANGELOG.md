@@ -115,6 +115,16 @@
 The Haml 3.2 series was released only as far as 3.2.0.rc.4, but then was
 renamed to Haml 4.0 when the project adopted semantic versioning.
 
+## 3.1.8
+
+* Fix for line numbers reported from exceptions in nested blocks
+  (thanks to Grant Hutchins & Sabrina Staedt).
+
+## 3.1.7
+
+* Fix for compatibility with Sass 3.2.x.
+  (thanks [Michael Westbom](https://github.com/totallymike)).
+
 ## 3.1.6
 
 * In indented mode, don't reindent buffers that contain preserved tags, and
