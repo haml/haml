@@ -95,9 +95,11 @@ module Haml
       @template_index     = 0
       @template_tabs      = 0
 
-      @template = template.rstrip.split(/\r\n|\r|\n/).each_with_index.map do |text, index|
-        text =~ /^(\s+)?(.*?)\s*$/
-        Line.new $1, $2, text, index, self, false
+      match = template.rstrip.scan(/(([ \t]+)?(.*?))(?:\Z|\r\n|\r|\n)/m)
+      # discard the last match which is always blank
+      match.pop
+      @template = match.each_with_index.map do |(full, whitespace, text), index|
+        Line.new(whitespace, text.rstrip, full, index, self, false)
       end
       # Append special end-of-document markers
       2.times { @template << Line.new(nil, '-#', '-#', @template.size, self, true) }
