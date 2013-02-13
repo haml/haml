@@ -97,10 +97,10 @@ module Haml
 
       @template = template.rstrip.split(/\r\n|\r|\n/).each_with_index.map do |text, index|
         text =~ /^(\s+)?(.*?)\s*$/
-        Line.new $2, text, index, self, false
+        Line.new $1, $2, text, index, self, false
       end
       # Append special end-of-document markers
-      2.times { @template << Line.new('-#', '-#', @template.size, self, true) }
+      2.times { @template << Line.new(nil, '-#', '-#', @template.size, self, true) }
     end
 
     def parse
@@ -146,10 +146,10 @@ module Haml
     end
 
     def compute_tabs(line)
-      return 0 if line.text.empty? || !(whitespace = line.full[/^\s+/])
+      return 0 if line.text.empty? || !line.whitespace
 
       if @indentation.nil?
-        @indentation = whitespace
+        @indentation = line.whitespace
 
         if @indentation.include?(?\s) && @indentation.include?(?\t)
           raise SyntaxError.new(Error.message(:cant_use_tabs_and_spaces), line.index)
@@ -159,12 +159,12 @@ module Haml
         return 1
       end
 
-      tabs = whitespace.length / @indentation.length
-      return tabs if whitespace == @indentation * tabs
-      return @template_tabs + 1 if flat? && whitespace =~ /^#{@flat_spaces}/
+      tabs = line.whitespace.length / @indentation.length
+      return tabs if line.whitespace == @indentation * tabs
+      return @template_tabs + 1 if flat? && line.whitespace =~ /^#{@flat_spaces}/
 
       message = Error.message(:inconsistent_indentation,
-        Haml::Util.human_indentation(whitespace),
+        Haml::Util.human_indentation(line.whitespace),
         Haml::Util.human_indentation(@indentation)
       )
       raise SyntaxError.new(message, line.index)
@@ -173,7 +173,7 @@ module Haml
     private
 
     # @private
-    class Line < Struct.new(:text, :full, :index, :parser, :eod)
+    class Line < Struct.new(:whitespace, :text, :full, :index, :parser, :eod)
       alias_method :eod?, :eod
 
       # @private
