@@ -34,7 +34,7 @@ module Haml
     # @option options [String] :extend The name of a module to extend when
     #   defining the filter. Defaults to "Plain". This allows filters such as
     #   Coffee to "inherit" from Javascript, wrapping its output in script tags.
-    # @since 3.2.0
+    # @since 4.0
     def register_tilt_filter(name, options = {})
       if constants.map(&:to_s).include?(name.to_s)
         raise "#{name} filter already defined"
@@ -63,7 +63,7 @@ module Haml
     # to redefine a filter, Haml will raise an error. Use this method first to
     # explicitly remove the filter before redefining it.
     # @return Module The filter module that has been removed
-    # @since 3.2.0
+    # @since 4.0
     def remove_filter(name)
       defined.delete name.to_s.downcase
       if constants.map(&:to_s).include?(name.to_s)
@@ -387,7 +387,7 @@ RUBY
 end
 
 # These filters have been demoted to Haml Contrib but are still included by
-# default in Haml 3.2. Still, we rescue from load error if for some reason
+# default in Haml 4.0. Still, we rescue from load error if for some reason
 # haml-contrib is not installed.
 begin
   require "haml/filters/maruku"

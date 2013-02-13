@@ -34,7 +34,7 @@ END
 
   spec.post_install_message = <<-END
 
-HEADS UP! Haml 3.2 has many improvements, but also has changes that may break
+HEADS UP! Haml 4.0 has many improvements, but also has changes that may break
 your application:
 
 * Support for Ruby 1.8.6 dropped

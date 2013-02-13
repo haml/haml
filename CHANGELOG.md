@@ -1,6 +1,6 @@
 # Haml Changelog
 
-## 3.2.0 (Unreleased)
+## 4.0.0
 
 * The Haml exectutable now accepts an `--autoclose` option. You can now
   specify a list of tags that should be autoclosed
@@ -64,7 +64,7 @@
   with a helper method that makes adding support for other Tilt-based template
   engines trivial.
 
-  As of 3.2, Haml will also ship with a "haml-contrib" gem that includes useful
+  As of 4.0, Haml will also ship with a "haml-contrib" gem that includes useful
   but less-frequently used filters and helpers. This includes several additional
   filters such as Nokogiri, Yajl, Markaby, and others.
 
@@ -105,7 +105,15 @@
 * Add command-line option to suppress script evaluation.
 
 * It's now possible to use Rails's asset helpers inside the Sass and SCSS
-  filters.
+  filters. Note that to do so, you must make sure sass-rails is loaded in
+  production, usually by moving it out of the assets gem group.
+
+* The Haml project now uses [semantic versioning](http://semver.org/).
+
+## 3.2.0
+
+The Haml 3.2 series was released only as far as 3.2.0.rc.4, but then was
+renamed to Haml 4.0 when the project adopted semantic versioning.
 
 ## 3.1.6
 

@@ -41,6 +41,6 @@ branches:
   only:
     - master
     - stable
-    - 3-2-stable
+    - 4-0-stable
     - 3-1-stable
 script: "bundle exec rake submodules test"
