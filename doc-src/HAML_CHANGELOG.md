@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 3.1.8
+
+* Fix for line numbers reported from exceptions in nested blocks
+  (thanks to Grant Hutchins & Sabrina Staedt).
+
 ## 3.1.7
 
 * Fix for compatibility with Sass 3.2.x.
