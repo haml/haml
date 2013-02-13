@@ -12,7 +12,7 @@
 * HTML5 is now the default output format rather than XHTML. This was already
   the default on Rails 3+, so many users will notice no difference.
 
-* The :sass filter now wraps its output in a script tag, as do the new :less and
+* The :sass filter now wraps its output in a style tag, as do the new :less and
   :scss filters. The :coffee filter wraps its output in a script tag.
 
 * Haml now supports only Rails 3 and above, and Ruby 1.8.7 and above. If you
