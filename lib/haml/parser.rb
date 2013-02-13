@@ -181,6 +181,12 @@ module Haml
       def tabs
         @tabs ||= parser.compute_tabs(self)
       end
+
+      def strip!(from)
+        self.text = text[from..-1]
+        self.text.lstrip!
+        self
+      end
     end
 
     # @private
@@ -218,57 +224,26 @@ module Haml
       when ELEMENT; push tag(line)
       when COMMENT; push comment(line.text[1..-1].lstrip)
       when SANITIZE
-        if line.text[1, 2] == '=='
-          line.text = line.text[3..-1].lstrip
-          return push plain(line, :escape_html)
-        end
-        if line.text[1] == SCRIPT
-          line.text = line.text[2..-1].lstrip
-          return push script(line, :escape_html)
-        end
-        if line.text[1] == FLAT_SCRIPT
-          line.text = line.text[2..-1].lstrip
-          return push flat_script(line, :escape_html)
-        end
-        if line.text[1] == ?\s
-          line.text = line.text[1..-1].lstrip
-          return push plain(line, :escape_html)
-        end
+        return push plain(line.strip!(3), :escape_html) if line.text[1, 2] == '=='
+        return push script(line.strip!(2), :escape_html) if line.text[1] == SCRIPT
+        return push flat_script(line.strip!(2), :escape_html) if line.text[1] == FLAT_SCRIPT
+        return push plain(line.strip!(1), :escape_html) if line.text[1] == ?\s
         push plain(line)
       when SCRIPT
-        if line.text[1] == SCRIPT
-          line.text = line.text[2..-1].lstrip
-          return push plain(line)
-        end
+        return push plain(line.strip!(2)) if line.text[1] == SCRIPT
         line.text = line.text[1..-1]
         push script(line)
-      when FLAT_SCRIPT
-        line.text = line.text[1..-1]
-        push flat_script(line)
+      when FLAT_SCRIPT; push flat_script(line.strip!(1))
       when SILENT_SCRIPT; push silent_script(line)
       when FILTER; push filter(line.text[1..-1].downcase)
       when DOCTYPE
         return push doctype(line.text) if line.text[0, 3] == '!!!'
-        if line.text[1, 2] == '=='
-          line.text = line.text[3..-1].lstrip
-          return push plain(line, false)
-        end
-        if line.text[1] == SCRIPT
-          line.text = line.text[2..-1].lstrip
-          return push script(line, false)
-        end
-        if line.text[1] == FLAT_SCRIPT
-          line.text = line.text[2..-1].lstrip
-          return push flat_script(line, false)
-        end
-        if line.text[1] == ?\s
-          line.text = line.text[1..-1].lstrip
-          return push plain(line, false)
-        end
+        return push plain(line.strip!(3), false) if line.text[1, 2] == '=='
+        return push script(line.strip!(2), false) if line.text[1] == SCRIPT
+        return push flat_script(line.strip!(2), false) if line.text[1] == FLAT_SCRIPT
+        return push plain(line.strip!(1), false) if line.text[1] == ?\s
         push plain(line)
-      when ESCAPE
-        line.text = line.text[1..-1]
-        push plain(line)
+      when ESCAPE; push plain(line.strip!(1))
       else; push plain(line)
       end
     end
