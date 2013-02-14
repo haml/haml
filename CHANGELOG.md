@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 4.0.1 (Unreleased)
+
+* Fix support for sass-rails 4.0 beta.
+(thanks [Ryunosuke SATO](https://github.com/tricknotes))
+
 ## 4.0.0
 
 * The Haml exectutable now accepts an `--autoclose` option. You can now
