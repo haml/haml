@@ -11,11 +11,11 @@ module Haml
       @output_tabs = 0
       @to_merge    = []
       @precompiled = ''
+      @node        = nil
     end
 
     def compile(node)
-      parent = instance_variable_defined?('@node') ? @node : nil
-      @node = node
+      parent, @node = @node, node
       if node.children.empty?
         send(:"compile_#{node.type}")
       else
