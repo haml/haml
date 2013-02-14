@@ -69,8 +69,7 @@ module Haml
     # Processes the template and returns the result as a string.
     #
     # `scope` is the context in which the template is evaluated.
-    # If it's a `Binding` or `Proc` object,
-    # Haml uses it as the second argument to `Kernel#eval`;
+    # If it's a `Binding`, Haml uses it as the second argument to `Kernel#eval`;
     # otherwise, Haml just uses its `#instance_eval` context.
     #
     # Note that Haml modifies the evaluation context
@@ -95,14 +94,14 @@ module Haml
     # within the template.
     #
     # Due to some Ruby quirks,
-    # if `scope` is a `Binding` or `Proc` object and a block is given,
+    # if `scope` is a `Binding` object and a block is given,
     # the evaluation context may not be quite what the user expects.
     # In particular, it's equivalent to passing `eval("self", scope)` as `scope`.
     # This won't have an effect in most cases,
     # but if you're relying on local variables defined in the context of `scope`,
     # they won't work.
     #
-    # @param scope [Binding, Proc, Object] The context in which the template is evaluated
+    # @param scope [Binding, Object] The context in which the template is evaluated
     # @param locals [{Symbol => Object}] Local variables that will be made available
     #   to the template
     # @param block [#to_proc] A block that can be yielded to within the template
@@ -111,7 +110,7 @@ module Haml
       parent = scope.instance_variable_defined?('@haml_buffer') ? scope.instance_variable_get('@haml_buffer') : nil
       buffer = Haml::Buffer.new(parent, @options.for_buffer)
 
-      if scope.is_a?(Binding) || scope.is_a?(Proc)
+      if scope.is_a?(Binding)
         scope_object = eval("self", scope)
         scope = scope_object.instance_eval{binding} if block_given?
       else
@@ -155,11 +154,11 @@ module Haml
     #
     # The proc doesn't take a block; any yields in the template will fail.
     #
-    # @param scope [Binding, Proc, Object] The context in which the template is evaluated
+    # @param scope [Binding, Object] The context in which the template is evaluated
     # @param local_names [Array<Symbol>] The names of the locals that can be passed to the proc
     # @return [Proc] The proc that will run the template
     def render_proc(scope = Object.new, *local_names)
-      if scope.is_a?(Binding) || scope.is_a?(Proc)
+      if scope.is_a?(Binding)
         scope_object = eval("self", scope)
       else
         scope_object = scope
