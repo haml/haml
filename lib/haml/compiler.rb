@@ -92,7 +92,7 @@ END
       @dont_indent_next_line = @dont_tab_up_next_text = false
       @output_line = 1
       @indentation = nil
-      yield
+      yield if block_given?
       flush_merged_text
     end
 

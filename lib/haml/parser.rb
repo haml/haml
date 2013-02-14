@@ -101,8 +101,8 @@ module Haml
       @template = match.each_with_index.map do |(full, whitespace, text), index|
         Line.new(whitespace, text.rstrip, full, index, self, false)
       end
-      # Append special end-of-document markers
-      2.times { @template << Line.new(nil, '-#', '-#', @template.size, self, true) }
+      # Append special end-of-document marker
+      @template << Line.new(nil, '-#', '-#', @template.size, self, true)
     end
 
     def parse
