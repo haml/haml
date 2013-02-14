@@ -59,7 +59,7 @@ module Haml
     # Returns an ActionView::Template* class.
     # In pre-3.0 versions of Rails, most of these classes
     # were of the form `ActionView::TemplateFoo`,
-    # while afterwards they were of the form `ActionView;:Template::Foo`.
+    # while afterwards they were of the form `ActionView::Template::Foo`.
     #
     # @param name [#to_s] The name of the class to get.
     #   For example, `:Error` will return `ActionView::TemplateError`
