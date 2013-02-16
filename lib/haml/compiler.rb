@@ -84,8 +84,8 @@ END
         # Can't use || because someone might explicitly pass in false with a symbol
         sym_local = "_haml_locals[#{inspect_obj(name.to_sym)}]"
         str_local = "_haml_locals[#{inspect_obj(name.to_s)}]"
-        "#{name} = #{sym_local}.nil? ? #{str_local} : #{sym_local}"
-      end.join(';') + ';'
+        "#{name} = #{sym_local}.nil? ? #{str_local} : #{sym_local};"
+      end.join
     end
 
     def compile_root
