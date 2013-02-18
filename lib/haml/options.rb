@@ -261,7 +261,8 @@ module Haml
     #
     # @return [{Symbol => Object}] The options hash
     def for_buffer
-      self.class.buffer_option_keys.inject({}) do |hash, key|
+      options_for_buffer = {:preserve_pattern => /<[\s]*#{preserve.join("|")}/i}
+      self.class.buffer_option_keys.inject(options_for_buffer) do |hash, key|
         hash[key] = send(key)
         hash
       end
