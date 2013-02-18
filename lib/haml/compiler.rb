@@ -406,20 +406,20 @@ END
 
     # This is a class method so it can be accessed from Buffer.
     def self.build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
-      # @TODO this is an absolutely ridiculous amount of arguments. At least
+        # @TODO this is an absolutely ridiculous amount of arguments. At least
       # some of this needs to be moved into an instance method.
       quote_escape     = attr_wrapper == '"' ? "&#x0022;" : "&#x0027;"
       other_quote_char = attr_wrapper == '"' ? "'" : '"'
       join_char        = hyphenate_data_attrs ? '-' : '_'
 
       attributes.each do |key, value|
-      	if value.is_a?(Hash)
-        	data_attributes = attributes.delete(key)
-        	data_attributes = flatten_data_attributes(data_attributes, '', join_char)
-        	data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs, key)
-        	attributes = data_attributes.merge(attributes)
-      	end
-			end
+        if value.is_a?(Hash)
+          data_attributes = attributes.delete(key)
+          data_attributes = flatten_data_attributes(data_attributes, '', join_char)
+          data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs, key)
+          attributes = data_attributes.merge(attributes)
+        end
+      end
 
       result = attributes.collect do |attr, value|
         next if value.nil?
