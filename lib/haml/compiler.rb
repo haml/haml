@@ -410,7 +410,7 @@ END
 
     # This is a class method so it can be accessed from Buffer.
     def self.build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
-        # @TODO this is an absolutely ridiculous amount of arguments. At least
+      # @TODO this is an absolutely ridiculous amount of arguments. At least
       # some of this needs to be moved into an instance method.
       quote_escape     = attr_wrapper == '"' ? "&#x0022;" : "&#x0027;"
       other_quote_char = attr_wrapper == '"' ? "'" : '"'
@@ -449,11 +449,11 @@ END
         value = Haml::Helpers.preserve(escaped)
         if escape_attrs
           # We want to decide whether or not to escape quotes
-          value = value.gsub('&quot;', '"').gsub('&#x0022;', '"')
+          value.gsub!(/&quot;|&#x0022;/, '"')
           this_attr_wrapper = attr_wrapper
           if value.include? attr_wrapper
             if value.include? other_quote_char
-              value = value.gsub(attr_wrapper, quote_escape)
+              value.gsub!(attr_wrapper, quote_escape)
             else
               this_attr_wrapper = other_quote_char
             end
