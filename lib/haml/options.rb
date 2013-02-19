@@ -261,7 +261,8 @@ module Haml
     #
     # @return [{Symbol => Object}] The options hash
     def for_buffer
-      options_for_buffer = {:preserve_pattern => /<[\s]*#{preserve.join("|")}/i}
+      options_for_buffer = {}
+      options_for_buffer[:retab_pattern] = /([ ]*)<(#{preserve.map(&Regexp.method(:escape)).join('|')})([^>]*)>(\n|&#x000A;)(.*?)(<\/\2>)/im
       self.class.buffer_option_keys.inject(options_for_buffer) do |hash, key|
         hash[key] = send(key)
         hash

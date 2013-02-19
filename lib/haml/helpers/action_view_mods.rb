@@ -141,7 +141,3 @@ module ActionView
     end
   end
 end
-
-if ((ActionPack::VERSION::MAJOR == 3) && (ActionPack::VERSION::MINOR >= 2) && (ActionPack::VERSION::TINY >= 3) || (ActionPack::VERSION::MAJOR == 4))
-  require "haml/helpers/rails_323_textarea_fix"
-end

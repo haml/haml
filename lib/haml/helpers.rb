@@ -113,6 +113,33 @@ MESSAGE
       end
     end
 
+    # Works like #{find_and_preserve}, but allows the first newline after a
+    # preserved opening tag to remain unencoded, and then outdents the content.
+    # This change was motivated primarily by the change in Rails 3.2.3 to emit
+    # a newline after textarea helpers.
+    #
+    # There's no reason this should be part of the public API provided by Haml
+    # and is here only for uniformity with the other helpers' locations. In a
+    # future version of Haml this will likely be moved into Haml::Buffer, so
+    # use it at your own risk.
+    #
+    # @param input [String] The text to process
+    # @param tabs [String] The tabs provided by the Haml::Buffer
+    # @param options [Hash] The options hash provided by the Haml::Buffer
+    # @since Haml 4.0.1
+    # @private
+    def fix_preserved_whitespace(input, tabs, options)
+      input.gsub(options[:retab_pattern]) do |s|
+        match = options[:retab_pattern].match(s)
+        content = match[5]
+        unless tabs.nil?
+          content.sub!(match[1].to_s, '')
+          content.sub!(tabs, '')
+        end
+        "#{match[1]}<#{match[2]}#{match[3]}>\n#{content}</#{match[2]}>"
+      end
+    end
+
     # Takes any string, finds all the newlines, and converts them to
     # HTML entities so they'll render correctly in
     # whitespace-sensitive tags without screwing up the indentation.

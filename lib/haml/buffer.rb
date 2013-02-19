@@ -97,8 +97,6 @@ module Haml
       # The number of tabs that Engine thinks we should have
       # @real_tabs + @tabulation is the number of tabs actually output
       @real_tabs = 0
-
-      @preserve_pattern = @options[:preserve_pattern]
     end
 
     # Appends text to the buffer, properly tabulated.
@@ -158,11 +156,11 @@ module Haml
       <% end %>
 
       <% if ugly %>
+        if toplevel?
+          result = Haml::Helpers.fix_preserved_whitespace(result, nil, options)
+        end
         return result
       <% else %>
-
-        return result if self.instance_variable_get(:@preserve_pattern).match(result)
-
         <% if !(in_tag && preserve_tag && !nuke_inner_whitespace) %>
         has_newline = result.include?("\\n")
         <% end %>
@@ -186,6 +184,10 @@ module Haml
 
           # Add tabulation if it wasn't precompiled
           <% if in_tag && !nuke_inner_whitespace %> result = tabs(tabulation) + result <% end %>
+        end
+
+        if toplevel?
+          result = Haml::Helpers.fix_preserved_whitespace(result, tabs(tabulation), options)
         end
 
         <% if in_tag && !nuke_inner_whitespace %>
