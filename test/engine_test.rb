@@ -214,6 +214,11 @@ HAML
                  render(".no_attributes{:nil => nil}").chomp)
   end
 
+  def test_attribute_method_with_both_attrib_styles_and_non_static_hashes
+    assert_equal("<div baz='qux' foo='bar' zig='zag'></div>",
+                render("%div{{:foo => 'bar'}, :baz => 'qux'}(zig = val)", :locals => {:val => 'zag'}).chomp)
+  end
+
   def test_strings_should_get_stripped_inside_tags
     assert_equal("<div class='stripped'>This should have no spaces in front of it</div>",
                  render(".stripped    This should have no spaces in front of it").chomp)
