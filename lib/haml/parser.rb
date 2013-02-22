@@ -85,6 +85,9 @@ module Haml
     # The Regex that matches a literal string or symbol value
     LITERAL_VALUE_REGEX = /:(\w*)|(["'])((?!\\|\#{|\#@|\#\$|\2).|\\.)*\2/
 
+    ID_KEY    = 'id'.freeze
+    CLASS_KEY = 'class'.freeze
+
     def initialize(template, options)
       @options            = options
       @flat               = false
@@ -509,13 +512,13 @@ module Haml
       list.scan(/([#.])([-:_a-zA-Z0-9]+)/) do |type, property|
         case type
         when '.'
-          if attributes['class']
-            attributes['class'] += " "
+          if attributes[CLASS_KEY]
+            attributes[CLASS_KEY] += " "
           else
-            attributes['class'] = ""
+            attributes[CLASS_KEY] = ""
           end
-          attributes['class'] += property
-        when '#'; attributes['id'] = property
+          attributes[CLASS_KEY] += property
+        when '#'; attributes[ID_KEY] = property
         end
       end
       attributes
