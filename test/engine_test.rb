@@ -1498,6 +1498,11 @@ HAML
       render("%div{data_val, :data => {:foo => 'blip', :brat => 'wurst'}}"))
   end
 
+  def test_html5_data_attributes_with_identical_attribute_values
+    assert_equal("<div data-x='50' data-y='50'></div>\n",
+      render("%div{:data => {:x => 50, :y => 50}}"))
+  end
+
   def test_xml_doc_using_html5_format_and_mime_type
     assert_equal(<<XML, render(<<HAML, { :format => :html5, :mime_type => 'text/xml' }))
 <?xml version='1.0' encoding='utf-8' ?>
