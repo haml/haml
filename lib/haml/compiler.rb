@@ -491,10 +491,11 @@ END
     end
 
     def self.flatten_data_attributes(data, key, join_char, seen = [])
+      return {key => data} unless data.is_a?(Hash)
+
       return {key => nil} if seen.include? data.object_id
       seen << data.object_id
 
-      return {key => data} unless data.is_a?(Hash)
       data.sort {|x, y| x[0].to_s <=> y[0].to_s}.inject({}) do |hash, (k, v)|
         joined = key == '' ? k : [key, k].join(join_char)
         hash.merge! flatten_data_attributes(v, joined, join_char, seen)
