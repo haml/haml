@@ -59,7 +59,8 @@ For example,
 will be compiled to
 
     <p>
-      <textarea>Foo&#x000A;Bar</textarea>
+      <textarea>
+    Foo&#x000A;Bar</textarea>
     </p>
 
 However, if a helper is generating the tag,
