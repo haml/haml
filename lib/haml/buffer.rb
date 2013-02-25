@@ -156,9 +156,7 @@ module Haml
       <% end %>
 
       <% if ugly %>
-        if toplevel?
-          result = Haml::Helpers.fix_preserved_whitespace(result, nil, options)
-        end
+        fix_textareas!(result, nil) if toplevel? && result.include?('<textarea')
         return result
       <% else %>
         <% if !(in_tag && preserve_tag && !nuke_inner_whitespace) %>
@@ -181,14 +179,12 @@ module Haml
 
         if has_newline
           result = result.gsub "\\n", "\\n" + tabs(tabulation)
-          
+
           # Add tabulation if it wasn't precompiled
           <% if in_tag && !nuke_inner_whitespace %> result = tabs(tabulation) + result <% end %>
         end
 
-        if toplevel?
-          result = Haml::Helpers.fix_preserved_whitespace(result, tabs(tabulation), options)
-        end
+        fix_textareas!(result, tabs(tabulation)) if toplevel? && result.include?('<textarea')
 
         <% if in_tag && !nuke_inner_whitespace %>
           result = "\\n\#{result}\\n\#{tabs(tabulation-1)}"
@@ -264,6 +260,29 @@ RUBY
     end
 
     private
+
+    # Works like #{find_and_preserve}, but allows the first newline after a
+    # preserved opening tag to remain unencoded, and then outdents the content.
+    # This change was motivated primarily by the change in Rails 3.2.3 to emit
+    # a newline after textarea helpers.
+    #
+    # @param input [String] The text to process
+    # @param tabs [String] The tabs provided by the Haml::Buffer
+    # @param options [Hash] The options hash provided by the Haml::Buffer
+    # @since Haml 4.0.1
+    # @private
+    def fix_textareas!(input, tabs)
+      pattern = /([ ]*)<(textarea)([^>]*)>(\n|&#x000A;)(.*?)(<\/\2>)/im
+      input.gsub!(pattern) do |s|
+        match = pattern.match(s)
+        content = match[5]
+        unless tabs.nil?
+          content.sub!(match[1].to_s, '')
+          content.sub!(tabs, '')
+        end
+        "#{match[1]}<#{match[2]}#{match[3]}>\n#{content}</#{match[2]}>"
+      end
+    end
 
     if RUBY_VERSION < "1.9"
       def new_encoded_string
