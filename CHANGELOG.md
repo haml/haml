@@ -1,5 +1,15 @@
 # Haml Changelog
 
+## 4.1.0 (Unreleased)
+
+* Fix for attribute merging. When an attribute method (or literal nested hash)
+  was used in an old style attribute hash and there is also a (non-static) new
+  style hash there is an error. The fix can result in different behavior in
+  some circumstances. See the [commit message](https://github.com/haml/haml/tree/e475b015d3171fb4c4f140db304f7970c787d6e3)
+  for detailed info. (Matt Wildig)
+* Make escape_once respect hexadecimal references. (Matt Wildig)
+* General performance and memory usage improvements. (Akira Matsuda)
+
 ## 4.0.1 (Unreleased)
 
 * Remove Rails 3.2.3+ textarea hack in favor of a more general solution.
