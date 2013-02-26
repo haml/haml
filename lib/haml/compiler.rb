@@ -195,7 +195,7 @@ END
         elsif attributes_hashes.size == 1
           attributes_hashes = ", #{attributes_hashes.first}"
         else
-          attributes_hashes = ", (#{attributes_hashes.join(").merge(")})"
+          attributes_hashes = ", #{attributes_hashes.join(", ")}"
         end
 
         push_merged_text "<#{t[:name]}", 0, !t[:nuke_outer_whitespace]
