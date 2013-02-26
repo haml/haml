@@ -2,6 +2,11 @@
 
 ## 4.0.1 (Unreleased)
 
+* Remove Rails 3.2.3+ textarea hack in favor of a more general solution.
+* Fix some performance regressions.
+* Fix support for Rails 4 `text_area` helper method.
+* Fix data attribute flattening with singleton objects.
+(thanks [Alisdair McDiarmid](https://github.com/alisdair))
 * Fix support for sass-rails 4.0 beta.
 (thanks [Ryunosuke SATO](https://github.com/tricknotes))
 
@@ -62,7 +67,7 @@
   (thanks to [Péter Pál Koszta](https://github.com/koszta))
 
 * Filters that rely on third-party template engines are now implemented using
-  [Tilt](github.com/rtomayko/tilt). Several new filters have been added, namely
+  [Tilt](http://github.com/rtomayko/tilt). Several new filters have been added, namely
   SCSS (:scss), LessCSS, (:less), and Coffeescript (:coffee/:coffeescript).
 
   Though the list of "official" filters is kept intentionally small, Haml comes
