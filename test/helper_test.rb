@@ -132,39 +132,27 @@ HTML
 HAML
   end
 
-  if ActionPack::VERSION::MAJOR == 4
-    def test_text_area
-      assert_equal(%(<textarea id="body" name="body">\nFoo&#x000A;Bar&#x000A; Baz&#x000A;   Boom</textarea>\n),
-                   render('= text_area_tag "body", "Foo\nBar\n Baz\n   Boom"', :action_view))
+  def test_pre
+    assert_equal(%(<pre>Foo bar&#x000A;   baz</pre>\n),
+                 render('= content_tag "pre", "Foo bar\n   baz"', :action_view))
+  end
 
-      assert_equal(%(<textarea id="post_body" name="post[body]">\nFoo bar&#x000A;baz</textarea>\n),
-                   render('= text_area :post, :body', :action_view))
+  def test_text_area
+    regex = /<(textarea)[^>]*>(.*?)<\/\1>/im
 
-      assert_equal(%(<pre>Foo bar&#x000A;   baz</pre>\n),
-                   render('= content_tag "pre", "Foo bar\n   baz"', :action_view))
+    # Rails >= 3.2.3 adds a newline after opening textarea tags.
+    major, minor, tiny = ActionPack::VERSION::MAJOR, ActionPack::VERSION::MINOR, ActionPack::VERSION::TINY
+    if major == 4 || ((major == 3) && (minor >= 2) && (tiny >= 3))
+      regex = /<(textarea)[^>]*>\n(.*?)<\/\1>/im
     end
-  elsif (ActionPack::VERSION::MAJOR == 3) && (ActionPack::VERSION::MINOR >= 2) && (ActionPack::VERSION::TINY >= 3)
-    def test_text_area
-      assert_equal(%(<textarea id="body" name="body">\nFoo&#x000A;Bar&#x000A; Baz&#x000A;   Boom</textarea>\n),
-                   render('= text_area_tag "body", "Foo\nBar\n Baz\n   Boom"', :action_view))
 
-      assert_equal(%(<textarea cols="40" id="post_body" name="post[body]" rows="20">\nFoo bar&#x000A;baz</textarea>\n),
-                   render('= text_area :post, :body', :action_view))
+    output = render('= text_area_tag "body", "Foo\nBar\n Baz\n   Boom"', :action_view)
+    match_data = output.match(regex)
+    assert_equal "Foo&#x000A;Bar&#x000A; Baz&#x000A;   Boom", match_data[2]
 
-      assert_equal(%(<pre>Foo bar&#x000A;   baz</pre>\n),
-                   render('= content_tag "pre", "Foo bar\n   baz"', :action_view))
-    end
-  else
-    def test_text_area
-      assert_equal(%(<textarea id="body" name="body">Foo&#x000A;Bar&#x000A; Baz&#x000A;   Boom</textarea>\n),
-                   render('= text_area_tag "body", "Foo\nBar\n Baz\n   Boom"', :action_view))
-
-      assert_equal(%(<textarea cols="40" id="post_body" name="post[body]" rows="20">Foo bar&#x000A;baz</textarea>\n),
-                   render('= text_area :post, :body', :action_view))
-
-      assert_equal(%(<pre>Foo bar&#x000A;   baz</pre>\n),
-                   render('= content_tag "pre", "Foo bar\n   baz"', :action_view))
-    end
+    output = render('= text_area :post, :body', :action_view)
+    match_data = output.match(regex)
+    assert_equal "Foo bar&#x000A;baz", match_data[2]
   end
 
   def test_capture_haml
