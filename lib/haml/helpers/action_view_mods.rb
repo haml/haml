@@ -82,8 +82,7 @@ module ActionView
       alias_method :content_tag, :content_tag_with_haml
     end
 
-    class InstanceTag
-      # Already includes TagHelper
+    module HamlSupport
       include Haml::Helpers
 
       def haml_buffer
@@ -93,6 +92,18 @@ module ActionView
       def is_haml?
         @template_object.send :is_haml?
       end
+    end
+
+    if ActionPack::VERSION::MAJOR == 4
+      module Tags
+        class TextArea
+          include HamlSupport
+        end
+      end
+    end
+
+    class InstanceTag
+      include HamlSupport
 
       def content_tag(*args, &block)
         html_tag = content_tag_with_haml(*args, &block)
