@@ -363,6 +363,9 @@ RUBY
     # @!parse module Less; end
     register_tilt_filter "Less", :extend => "Css"
 
+    # @!parse module AsciiDoc; end
+    register_tilt_filter "AsciiDoc"
+
     # @!parse module Markdown; end
     register_tilt_filter "Markdown"
 
