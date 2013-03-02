@@ -251,4 +251,12 @@ class RubyFilterTest < MiniTest::Unit::TestCase
     html = "7\n"
     assert_equal(html, render(haml))
   end
+
+class AsciiDocFilterTest < MiniTest::Unit::TestCase
+  test 'wip can render AsciiDoc content' do
+    haml = ":asciidoc\n  hello\n"
+    html = "<div class=\"paragraph\">\n<p>hello</p>\n</div>"
+    assert_equal(html, render(haml).strip.gsub(/^ *(\n|(?=[^ ]))/, ''))
+  end
+end
 end
