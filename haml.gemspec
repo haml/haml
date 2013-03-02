@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rbench'
   spec.add_development_dependency 'minitest'
   spec.add_development_dependency 'nokogiri'
+  spec.add_development_dependency 'asciidoctor'
 
   spec.description = <<-END
 Haml (HTML Abstraction Markup Language) is a layer on top of HTML or XML that's
