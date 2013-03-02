@@ -33,6 +33,7 @@ class HelperTest < MiniTest::Unit::TestCase
   def setup
     @base = ActionView::Base.new
     @base.controller = ActionController::Base.new
+    @base.view_paths << File.expand_path("../templates", __FILE__)
 
     if defined?(ActionController::Response)
       # This is needed for >=3.0.0
@@ -153,6 +154,24 @@ HAML
     output = render('= text_area :post, :body', :action_view)
     match_data = output.match(regex)
     assert_equal "Foo bar&#x000A;baz", match_data[2]
+
+    # non-indentation of textareas rendered inside partials
+    @base.instance_variable_set('@post', Post.new("Foo", nil, PostErrors.new))
+    output = render(".foo\n  .bar\n    = render 'text_area_helper'", :action_view)
+    match_data = output.match(regex)
+    assert_equal 'Foo', match_data[2]
+
+    # leading whitespace preservation
+    @base.instance_variable_set('@post', Post.new("    Foo", nil, PostErrors.new))
+    output = render(".foo\n  = text_area :post, :body", :action_view)
+    match_data = output.match(regex)
+    assert_equal '&#x0020;   Foo', match_data[2]
+
+    # leading whitespace in textareas rendered inside partials
+    output = render(".foo\n  .bar\n    = render 'text_area_helper'", :action_view)
+    match_data = output.match(regex)
+    assert_equal '&#x0020;   Foo', match_data[2]
+
   end
 
   def test_capture_haml
