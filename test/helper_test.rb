@@ -167,7 +167,7 @@ HAML
   def test_partials_should_not_cause_textareas_to_be_indented
     # non-indentation of textareas rendered inside partials
     @base.instance_variable_set('@post', Post.new("Foo", nil, PostErrors.new))
-    output = render(".foo\n  .bar\n    = render 'text_area_helper'", :action_view)
+    output = render(".foo\n  .bar\n    = render '/text_area_helper'", :action_view)
     match_data = output.match(text_area_content_regex)
     assert_equal 'Foo', match_data[2]
   end
@@ -184,7 +184,7 @@ HAML
     def test_textareas_should_prerve_leading_whitespace_in_partials
       # leading whitespace in textareas rendered inside partials
       @base.instance_variable_set('@post', Post.new("    Foo", nil, PostErrors.new))
-      output = render(".foo\n  .bar\n    = render 'text_area_helper'", :action_view)
+      output = render(".foo\n  .bar\n    = render '/text_area_helper'", :action_view)
       match_data = output.match(text_area_content_regex)
       assert_equal '&#x0020;   Foo', match_data[2]
     end
