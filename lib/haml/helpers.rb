@@ -527,6 +527,49 @@ MESSAGE
       ret
     end
 
+    # Conditionally wrap a block in an element. If `condition` is `true` then
+    # this method renders the tag described by the argumants in `tag` (using
+    # \{#haml_tag}) with the given block inside, otherwise it just renders the block.
+    #
+    # For example,
+    #
+    #     - haml_tag_if important, '.important' do
+    #       %p
+    #         A (possibly) important paragraph.
+    #
+    # will produce
+    #
+    #     <div class='important'>
+    #       <p>
+    #         A (possibly) important paragraph.
+    #       </p>
+    #     </div>
+    #
+    # if `important` is truthy, and just
+    #
+    #     <p>
+    #       A (possibly) important paragraph.
+    #     </p>
+    #
+    # otherwise.
+    #
+    # Like \{#haml_tag}, `haml_tag_if` outputs directly to the buffer and its
+    # return value should not be used. Use \{#capture_haml} if you need to use
+    # its results as a string.
+    #
+    # @param condition The condition to test to determine whether to render
+    #   the enclosing tag
+    # @param tag Definition of the enclosing tag. See \{#haml_tag} for details
+    #   (specifically the form that takes a block)
+    def haml_tag_if(condition, *tag)
+      if condition
+        haml_tag(*tag){ yield }
+      else
+        yield
+      end
+      ErrorReturn.new("haml_tag_if")
+    end
+
     # Characters that need to be escaped to HTML entities from user input
     HTML_ESCAPE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#039;' }
 
