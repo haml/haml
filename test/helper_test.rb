@@ -332,6 +332,41 @@ HTML
 HAML
   end
 
+  def test_haml_tag_if_positive
+    assert_equal(<<HTML, render(<<HAML))
+<div class='conditional'>
+  <p>A para</p>
+</div>
+HTML
+- haml_tag_if true, '.conditional' do
+  %p A para
+HAML
+  end
+
+  def test_haml_tag_if_positive_with_attributes
+    assert_equal(<<HTML, render(<<HAML))
+<div class='conditional' foo='bar'>
+  <p>A para</p>
+</div>
+HTML
+- haml_tag_if true, '.conditional',  {:foo => 'bar'} do
+  %p A para
+HAML
+  end
+
+  def test_haml_tag_if_negative
+    assert_equal(<<HTML, render(<<HAML))
+<p>A para</p>
+HTML
+- haml_tag_if false, '.conditional' do
+  %p A para
+HAML
+  end
+
+  def test_haml_tag_if_error_return
+    assert_raises(Haml::Error) { render("= haml_tag_if false, '.conditional' do\n  %p Hello") }
+  end
+
   def test_is_haml
     assert(!ActionView::Base.new.is_haml?)
     assert_equal("true\n", render("= is_haml?"))
