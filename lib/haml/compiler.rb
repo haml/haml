@@ -1,5 +1,3 @@
-require 'cgi'
-
 module Haml
   class Compiler
     include Haml::Util
