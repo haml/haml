@@ -541,14 +541,12 @@ MESSAGE
     if RUBY_VERSION >= '1.9'
       def html_escape(text)
         text = text.to_s
-        text.gsub!(HTML_ESCAPE_REGEX, HTML_ESCAPE)
-        text
+        text.gsub(HTML_ESCAPE_REGEX, HTML_ESCAPE)
       end
     else
       def html_escape(text)
         text = text.to_s
-        text.gsub!(HTML_ESCAPE_REGEX) {|s| HTML_ESCAPE[s]}
-        text
+        text.gsub(HTML_ESCAPE_REGEX) {|s| HTML_ESCAPE[s]}
       end
     end
 

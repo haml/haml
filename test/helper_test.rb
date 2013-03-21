@@ -497,6 +497,14 @@ HAML
     assert_equal "&quot;&gt;&lt;&amp;", Haml::Helpers.html_escape('"><&')
   end
 
+  def test_html_escape_should_work_on_frozen_strings
+    begin
+      assert Haml::Helpers.html_escape('foo'.freeze)
+    rescue => e
+      flunk e.message
+    end
+  end
+
   def test_html_escape_encoding
     old_stderr, $stderr = $stderr, StringIO.new
     string = "\"><&\u00e9" # if you're curious, u00e9 is "LATIN SMALL LETTER E WITH ACUTE"
