@@ -98,7 +98,7 @@ module Haml
       # @real_tabs + @tabulation is the number of tabs actually output
       @real_tabs = 0
 
-      @preserve_pattern = /<[\s]*#{@options[:preserve].join("|")}/i
+      @preserve_pattern = /<[\s]*(?:#{@options[:preserve].join("|")})/i
     end
 
     # Appends text to the buffer, properly tabulated.
