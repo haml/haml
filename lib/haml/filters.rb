@@ -385,6 +385,8 @@ RUBY
     module Erb
       class << self
         def precompiled(text)
+          #workaround for https://github.com/rtomayko/tilt/pull/183
+          require 'erubis' if (defined?(::Erubis) && !defined?(::Erubis::Eruby))
           super.sub(/^#coding:.*?\n/, '')
         end
       end
