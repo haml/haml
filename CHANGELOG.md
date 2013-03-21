@@ -1,6 +1,8 @@
 # Haml Changelog
 
-## 4.0.1 (Unreleased)
+## 4.0.1
+
+Released March 21, 2013 ([diff](https://github.com/haml/haml/compare/4.0.0...4.0.1)).
 
 * Remove Rails 3.2.3+ textarea hack in favor of a more general solution.
 * Fix some performance regressions.
@@ -9,6 +11,10 @@
 (thanks [Alisdair McDiarmid](https://github.com/alisdair))
 * Fix support for sass-rails 4.0 beta.
 (thanks [Ryunosuke SATO](https://github.com/tricknotes))
+* Load "haml/template" in Railtie in order to prevent user options set in a
+  Rails initializer from being overwritten
+* Don't depend on Rails in haml/template to allow using Haml with ActionView
+  but without Rails itself. (thanks [Hunter Haydel](https://github.com/wedgex))
 
 ## 4.0.0
 
