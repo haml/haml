@@ -1,5 +1,4 @@
 require 'optparse'
-require 'fileutils'
 require 'rbconfig'
 require 'pp'
 
