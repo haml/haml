@@ -20,7 +20,11 @@ end
 
 Rake::TestTask.new do |t|
   t.libs << 'lib' << 'test'
-  t.test_files = Dir["test/**/*_test.rb"]
+  # haml-spec tests are explicitly added after other tests so they don't
+  # interfere with the Haml loading process which can cause test failures
+  files = Dir["test/*_test.rb"]
+  files.concat(Dir['test/haml-spec/*_test.rb'])
+  t.test_files = files
   t.warning = true
   t.verbose = true
 end
