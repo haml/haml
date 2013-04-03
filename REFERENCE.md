@@ -492,31 +492,32 @@ and is compiled to:
       </div>
     </div>
 
-### Self-Closing Tags: `/`
+### Empty (void) Tags: `/`
 
 The forward slash character, when placed at the end of a tag definition, causes
-the tag to be self-closed. For example:
+Haml to treat it as being an empty (or void) element. Depending on the format,
+the tag will be rendered either without a closing tag (`:html4` or `:html5`), or
+as a self-closing tag (`:xhtml`). For example:
 
     %br/
     %meta{'http-equiv' => 'Content-Type', :content => 'text/html'}/
 
 is compiled to:
 
-    <br />
-    <meta http-equiv='Content-Type' content='text/html' />
+    <br>
+    <meta content='text/html' http-equiv='Content-Type'>
 
-Some tags are automatically closed, as long as they have no content. `meta`,
-`img`, `link`, `script`, `br`, and `hr` tags are closed by default. This list
-can be customized by setting the [`:autoclose`](#autoclose-option) option. For
-example:
-
-    %br
-    %meta{'http-equiv' => 'Content-Type', :content => 'text/html'}
-
-is also compiled to:
+when the format is `:html4` or `:html5`, and to
 
     <br />
-    <meta http-equiv='Content-Type' content='text/html' />
+    <meta content='text/html' http-equiv='Content-Type' />
+
+when the format is `:xhtml`.
+
+Some tags are automatically treated as being empty, as long as they have no
+content in the Haml source. `meta`, `img`, `link`, `script`, `br`, and `hr` tags
+are treated as empty by default. This list can be customized by setting the
+[`:autoclose`](#autoclose-option) option.
 
 ### Whitespace Removal: `>` and `<`
 
