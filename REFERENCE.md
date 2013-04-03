@@ -517,7 +517,7 @@ when the format is `:xhtml`.
 Some tags are automatically treated as being empty, as long as they have no
 content in the Haml source. `meta`, `img`, `link`, `script`, `br`, and `hr` tags
 are treated as empty by default. This list can be customized by setting the
-[`:autoclose`](#autoclose-option) option.
+{Haml::Options#autoclose `:autoclose`} option.
 
 ### Whitespace Removal: `>` and `<`
 
