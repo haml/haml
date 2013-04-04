@@ -186,7 +186,6 @@ is compiled to:
 
 ## HTML Elements
 
-
 ### Element Name: `%`
 
 The percent character is placed at the beginning of a line. It's followed
@@ -620,7 +619,6 @@ is compiled to:
     <div class='a_crazy_user' id='a_crazy_user_15'>
       Hello!
     </div>
-
 
 ## Doctype: `!!!`
 
@@ -1119,7 +1117,6 @@ option} to control when CDATA tags are added.
 Parses the filtered text with [Less](http://lesscss.org/) to produce CSS output.
 This filter is implemented using Tilt.
 
-
 {#markdown-filter}
 ### `:markdown`
 Parses the filtered text with
@@ -1232,14 +1229,15 @@ Sometimes you don't want Haml to indent all your text.
 For example, tags like `pre` and `textarea` are whitespace-sensitive;
 indenting the text makes them render wrong.
 
-Haml deals with this by "preserving" newlines before they're put into the document --
-converting them to the HTML whitespace escape code, `&#x000A;`.
-Then Haml won't try to re-format the indentation.
+Haml deals with this by "preserving" newlines before they're put into the
+document -- converting them to the HTML whitespace escape code, `&#x000A;`. Then
+Haml won't try to re-format the indentation.
 
-Literal `textarea` and `pre` tags automatically preserve content given through `=`.
-Dynamically-generated `textarea`s and `pre`s can't be preserved automatically,
-and so should be passed through {Haml::Helpers#find\_and\_preserve} or the [`~` command](#tilde),
-which has the same effect.
+Literal `textarea` and `pre` tags automatically preserve content given through
+`=`. Dynamically-generated `textarea`s and `pre`s can't be preserved
+automatically, and so should be passed through
+{Haml::Helpers#find\_and\_preserve} or the [`~` command](#tilde), which has the
+same effect.
 
 Blocks of literal text can be preserved using the [`:preserve` filter](#preserve-filter).
 
