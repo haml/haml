@@ -267,8 +267,6 @@ RUBY
     # a newline after textarea helpers.
     #
     # @param input [String] The text to process
-    # @param tabs [String] The tabs provided by the Haml::Buffer
-    # @param options [Hash] The options hash provided by the Haml::Buffer
     # @since Haml 4.0.1
     # @private
     def fix_textareas!(input)
