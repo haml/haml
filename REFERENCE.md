@@ -1151,10 +1151,11 @@ HTML escape code for newlines, to preserve nice-looking output. See also
 
 {#ruby-filter}
 ### `:ruby`
-Parses the filtered text with the normal Ruby interpreter. All output sent to
-`$stdout`, like with `puts`, is output into the Haml document. Not available if
-the {Haml::Options#suppress_eval `:suppress_eval`} option is set to true. The
-Ruby code is evaluated in the same context as the Haml template.
+Parses the filtered text with the normal Ruby interpreter. Creates an `IO`
+object named `haml_io`, anything written to it is output into the Haml document.
+Not available if the {Haml::Options#suppress_eval `:suppress_eval`} option is
+set to true. The Ruby code is evaluated in the same context as the Haml
+template.
 
 {#sass-filter}
 ### `:sass`
