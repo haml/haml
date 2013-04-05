@@ -1,6 +1,8 @@
 # Haml Changelog
 
-## 4.0.2 (Unreleased)
+## 4.0.2
+
+Released April 5, 2013 ([diff](https://github.com/haml/haml/compare/4.0.1...4.0.2)).
 
 * Explicitly require Erubis to work around bug in older versions of Tilt.
 * Fix :erb filter printing duplicate content in Rails views.
