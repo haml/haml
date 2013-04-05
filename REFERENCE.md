@@ -496,22 +496,22 @@ and is compiled to:
 The forward slash character, when placed at the end of a tag definition, causes
 Haml to treat it as being an empty (or void) element. Depending on the format,
 the tag will be rendered either without a closing tag (`:html4` or `:html5`), or
-as a self-closing tag (`:xhtml`). For example:
+as a self-closing tag (`:xhtml`).
+
+Taking the following as an example:
 
     %br/
     %meta{'http-equiv' => 'Content-Type', :content => 'text/html'}/
 
-is compiled to:
+When the format is `:html4` or `:html5` this is compiled to:
 
     <br>
     <meta content='text/html' http-equiv='Content-Type'>
 
-when the format is `:html4` or `:html5`, and to
+and when the format is `:xhtml` it is compiled to:
 
     <br />
     <meta content='text/html' http-equiv='Content-Type' />
-
-when the format is `:xhtml`.
 
 Some tags are automatically treated as being empty, as long as they have no
 content in the Haml source. `meta`, `img`, `link`, `script`, `br`, and `hr` tags
