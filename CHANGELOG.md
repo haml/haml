@@ -1,5 +1,11 @@
 # Haml Changelog
 
+## 4.0.2 (Unreleased)
+
+* Replace range with slice to reduce objects created by `capture_haml`.
+(thanks [Tieg Zaharia](https://github.com/tiegz))
+* Correct/improve some documentation.
+
 ## 4.0.1
 
 Released March 21, 2013 ([diff](https://github.com/haml/haml/compare/4.0.0...4.0.1)).
