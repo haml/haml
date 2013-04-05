@@ -10,7 +10,7 @@ module Haml
     end
 
     def precompiled_preamble(locals)
-      [super, "@output_buffer = output_buffer ||= nil || ActionView::OutputBuffer.new;"]
+      [super, "@output_buffer = ActionView::OutputBuffer.new"]
     end
 
     def precompiled_postamble(locals)
