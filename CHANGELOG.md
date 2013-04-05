@@ -2,7 +2,8 @@
 
 ## 4.0.2 (Unreleased)
 
-* Fix :erb filter putting duplicate content in Rails views.
+* Explicitly require Erubis to work around bug in older versions of Tilt.
+* Fix :erb filter printing duplicate content in Rails views.
 (thanks [Jori Hardman](https://github.com/jorihardman))
 * Replace range with slice to reduce objects created by `capture_haml`.
 (thanks [Tieg Zaharia](https://github.com/tiegz))
