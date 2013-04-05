@@ -11,7 +11,8 @@ gemfile:
   - test/gemfiles/Gemfile.rails-4.0.x
 matrix:
   exclude:
-    # Don't kill Travis: just test against the latest version on Head, JRuby and rbx.
+    # Don't kill Travis: just test against the latest version on 2.0, JRuby
+    # and Rubinius.
     - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-3.0.x }
     - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-3.1.x }
     - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
@@ -29,6 +30,7 @@ matrix:
 
   allow_failures:
      - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
+     - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
 
 branches:
   only:

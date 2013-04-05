@@ -10,6 +10,17 @@
 * Make escape_once respect hexadecimal references. (Matt Wildig)
 * General performance and memory usage improvements. (Akira Matsuda)
 
+## 4.0.2
+
+Released April 5, 2013 ([diff](https://github.com/haml/haml/compare/4.0.1...4.0.2)).
+
+* Explicitly require Erubis to work around bug in older versions of Tilt.
+* Fix :erb filter printing duplicate content in Rails views.
+(thanks [Jori Hardman](https://github.com/jorihardman))
+* Replace range with slice to reduce objects created by `capture_haml`.
+(thanks [Tieg Zaharia](https://github.com/tiegz))
+* Correct/improve some documentation.
+
 ## 4.0.1
 
 Released March 21, 2013 ([diff](https://github.com/haml/haml/compare/4.0.0...4.0.1)).
