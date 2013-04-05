@@ -2,6 +2,8 @@
 
 ## 4.0.2 (Unreleased)
 
+* Fix :erb filter putting duplicate content in Rails views.
+(thanks [Jori Hardman](https://github.com/jorihardman))
 * Replace range with slice to reduce objects created by `capture_haml`.
 (thanks [Tieg Zaharia](https://github.com/tiegz))
 * Correct/improve some documentation.
