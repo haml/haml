@@ -176,6 +176,12 @@ class JavascriptFilterTest < MiniTest::Unit::TestCase
     refute_match('//<![CDATA[', out)
     refute_match('//]]>', out)
   end
+
+  test "should escape </script> close tags" do
+    html = "<script>\n  \"<\\/script>\"\n</script>\n"
+    haml = ":javascript\n \"</script>\""
+    assert_equal(html, render(haml, :format => :html5))
+  end
 end
 
 class CSSFilterTest < MiniTest::Unit::TestCase
