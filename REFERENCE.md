@@ -1180,6 +1180,42 @@ default. This filter is implemented using Tilt.
 
 You can also define your own filters. See {Haml::Filters} for details.
 
+## Helper Methods {#helper-methods}
+
+Sometimes you need to manipulate whitespace in a more precise fashion than what
+the whitespace removal methods allow. There are a few helper methods that are
+useful when dealing with inline content. All these methods take a Haml block to
+modify.
+
+{#surround}
+### surround
+Surrounds a Haml block with text. Expects 1 or 2 string arguments used to
+surround the Haml block. If a second argument is not provided, the first
+argument is used as the second.
+
+    = surround "(", ")" do
+      = link_to "learn more", "#"
+
+{#precede}
+### precede
+Prepends a Haml block with text. Expects 1 argument.
+
+    = precede "*" do
+      %span Required
+
+{#succeed}
+### succeed
+Appends a Haml block with text. Expects 1 argument.
+
+    Begin by
+    = succeed "," do
+      = link_to "filling out your profile", "#"
+    = succeed "," do
+      = link_to "adding a bio", "#"
+    and
+    = succeed "." do
+      = link_to "inviting friends", "#"
+
 ## Multiline: `|` {#multiline}
 
 The pipe character designates a multiline string.
