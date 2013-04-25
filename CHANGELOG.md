@@ -9,6 +9,10 @@
   for detailed info. (Matt Wildig)
 * Make escape_once respect hexadecimal references. (Matt Wildig)
 * General performance and memory usage improvements. (Akira Matsuda)
+* Added new filter `jqready` which behaves like the `javascript` filter but
+  additionaly wraps the code in a `jQuery(document).ready(function() { ... }`-
+  block for the code to be executed when the document is ready.
+  (thanks [Remo Fritzsche](https://github.com/remofritzsche)).
 
 ## 4.0.2
 

@@ -220,6 +220,31 @@ RUBY
       end
     end
 
+    # Surrounds the filtered text with '<script>' and CDATA tags as well as
+    # a jQuery(document).ready(function() { ... }); which is useful for inline
+    # Javascript that gets executed when the document is ready in conjunction
+    # with the jQuery library.
+    module JqReady
+      include Base
+
+      # @see Base#render_with_options
+      def render_with_options(text, options)
+        text_indent = options[:cdata] ? '      ' : '    ' # 6 or 4 spaces
+        jq_indent = options[:cdata] ? '    ' : '  ' # 4 or 2 spaces
+
+        if options[:format] == :html5
+          type = ''
+        else
+          type = " type=#{options[:attr_wrapper]}text/javascript#{options[:attr_wrapper]}"
+        end
+
+        text = text.rstrip
+        text.gsub!("\n", "\n#{text_indent}")
+
+        %!<script#{type}>\n#{"  //<![CDATA[\n" if options[:cdata]}#{jq_indent}jQuery(document).ready(function() {\n#{text_indent}#{text}\n#{jq_indent}});\n#{"  //]]>\n" if options[:cdata]}</script>!
+      end
+    end
+
     # Surrounds the filtered text with `<style>` and CDATA tags. Useful for
     # including inline CSS.
     module Css

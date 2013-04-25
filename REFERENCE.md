@@ -1114,6 +1114,14 @@ Surrounds the filtered text with `<script>` and (optionally) CDATA tags.
 Useful for including inline Javascript. Use the {Haml::Options#cdata `:cdata`
 option} to control when CDATA tags are added.
 
+{#jqready-filter}
+### `:jqready`
+Surrounds the filtered text with `<script>`, (optionally) CDATA tags as well as
+with `jQuery(document).ready(function() { ... });` for your code to be executed
+when the document is ready. Useful for including inline Javascript in
+conjunction with the jQuery library. Use the {Haml::Options#cdata `:cdata`
+option} to control when CDATA tags are added.
+
 {#less-filter}
 ### `:less`
 Parses the filtered text with [Less](http://lesscss.org/) to produce CSS output.
