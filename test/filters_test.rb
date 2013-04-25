@@ -178,6 +178,58 @@ class JavascriptFilterTest < MiniTest::Unit::TestCase
   end
 end
 
+class JqReadyFilterTest < MiniTest::Unit::TestCase
+  test "should interpolate" do
+    scope = Object.new.instance_eval {foo = "bar"; nil if foo; binding}
+    haml  = ":javascript\n  \#{foo}"
+    html  = render(haml, :scope => scope)
+    assert_match(/bar/, html)
+  end
+
+  test "should never HTML-escape ampersands" do
+    html = "<script>\n  & < > &\n</script>\n"
+    haml = %Q{:javascript\n  & < > \#{"&"}}
+    assert_equal(html, render(haml, :escape_html => true))
+  end
+
+  test "should not include type in HTML 5 output" do
+    html = "<script>\n  foo bar\n</script>\n"
+    haml = ":javascript\n  foo bar"
+    assert_equal(html, render(haml, :format => :html5))
+  end
+
+  test "should always include CDATA when format is xhtml" do
+    html = "<script type='text/javascript'>\n  //<![CDATA[\n    foo bar\n  //]]>\n</script>\n"
+    haml = ":javascript\n  foo bar"
+    assert_equal(html, render(haml, :format => :xhtml, :cdata => false))
+  end
+
+  test "should omit CDATA when cdata option is false" do
+    html = "<script>\n  foo bar\n</script>\n"
+    haml = ":javascript\n  foo bar"
+    assert_equal(html, render(haml, :format => :html5, :cdata => false))
+  end
+
+  test "should include CDATA when cdata option is true" do
+    html = "<script>\n  //<![CDATA[\n    foo bar\n  //]]>\n</script>\n"
+    haml = ":javascript\n  foo bar"
+    assert_equal(html, render(haml, :format => :html5, :cdata => true))
+  end
+
+  test "should default to no CDATA when format is html5" do
+    haml = ":javascript\n  foo bar"
+    out = render(haml, :format => :html5)
+    refute_match('//<![CDATA[', out)
+    refute_match('//]]>', out)
+  end
+
+  test "should always include jQuery wrapping" do
+    html = "<script>\n  //<![CDATA[\n    jQuery(document).ready(function() {\n      foo bar\n    });\n  //]]>\n</script>\n"
+    haml = ":jqready\n  foo bar"
+    assert_equal(html, render(haml, :format => :html5, :cdata => true))
+  end
+end
+
 class CSSFilterTest < MiniTest::Unit::TestCase
   test "should wrap output in CDATA and a CSS tag when output is XHTML" do
     html = "<style type='text/css'>\n  /*<![CDATA[*/\n    foo\n  /*]]>*/\n</style>\n"
