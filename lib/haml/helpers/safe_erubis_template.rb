@@ -1,11 +1,20 @@
 module Haml
+
+  class ErubisTemplateHandler < ActionView::Template::Handlers::Erubis
+
+    def initialize(*args, &blk)
+      @newline_pending = 0
+      super
+    end
+  end
+
   class SafeErubisTemplate < Tilt::ErubisTemplate
 
     def initialize_engine
     end
 
     def prepare
-      @options.merge! :engine_class => ActionView::Template::Handlers::Erubis
+      @options.merge! :engine_class => Haml::ErubisTemplateHandler
       super
     end
 
