@@ -10,11 +10,11 @@ module Haml
     end
 
     def precompiled_preamble(locals)
-      [super, "@output_buffer = ActionView::OutputBuffer.new;"]
+      [super, "@output_buffer = ActionView::OutputBuffer.new;"].join("\n")
     end
 
     def precompiled_postamble(locals)
-      [super, '@output_buffer.to_s']
+      [super, '@output_buffer.to_s'].join("\n")
     end
   end
 end
