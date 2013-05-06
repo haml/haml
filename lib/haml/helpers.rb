@@ -575,16 +575,18 @@ MESSAGE
 
     HTML_ESCAPE_REGEX = /[\"><&]/
 
-    # Returns a copy of `text` with ampersands, angle brackets and quotes
-    # escaped into HTML entities.
-    #
-    # Note that if ActionView is loaded and XSS protection is enabled
-    # (as is the default for Rails 3.0+, and optional for version 2.3.5+),
-    # this won't escape text declared as "safe".
-    #
-    # @param text [String] The string to sanitize
-    # @return [String] The sanitized string
     if RUBY_VERSION >= '1.9'
+      # Include docs here so they are picked up by Yard
+
+      # Returns a copy of `text` with ampersands, angle brackets and quotes
+      # escaped into HTML entities.
+      #
+      # Note that if ActionView is loaded and XSS protection is enabled
+      # (as is the default for Rails 3.0+, and optional for version 2.3.5+),
+      # this won't escape text declared as "safe".
+      #
+      # @param text [String] The string to sanitize
+      # @return [String] The sanitized string
       def html_escape(text)
         text = text.to_s
         text.gsub(HTML_ESCAPE_REGEX, HTML_ESCAPE)
@@ -598,12 +600,14 @@ MESSAGE
 
     HTML_ESCAPE_ONCE_REGEX = /[\"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
 
-    # Escapes HTML entities in `text`, but without escaping an ampersand
-    # that is already part of an escaped entity.
-    #
-    # @param text [String] The string to sanitize
-    # @return [String] The sanitized string
     if RUBY_VERSION >= '1.9'
+      # Include docs here so they are picked up by Yard
+
+      # Escapes HTML entities in `text`, but without escaping an ampersand
+      # that is already part of an escaped entity.
+      #
+      # @param text [String] The string to sanitize
+      # @return [String] The sanitized string
       def escape_once(text)
         text = text.to_s
         text.gsub!(HTML_ESCAPE_ONCE_REGEX, HTML_ESCAPE)
