@@ -506,6 +506,11 @@ HAML
     $stderr = old_stderr
   end
 
+  def test_html_escape_non_string
+    assert_equal('4.58', Haml::Helpers.html_escape(4.58))
+    assert_equal('4.58', Haml::Helpers.html_escape_without_haml_xss(4.58))
+  end
+
   def test_escape_once
     assert_equal "&quot;&gt;&lt;&amp;", Haml::Helpers.escape_once('"><&')
   end
