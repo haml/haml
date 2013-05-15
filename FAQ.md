@@ -5,9 +5,8 @@
 ### Why is my markup indented properly in development mode, but not in production?
 {#q-indentation-in-production}
 
-To improve performance, Haml defaults to {file:HAML_REFERENCE.md#ugly-option "ugly" mode} in Rails
-apps running in production.
-
+To improve performance, Haml defaults to {Haml::Options#ugly "ugly" mode} in
+Rails apps running in production.
 
 ### How do I put a punctuation mark after an element, like "`I like <strong>cake</strong>!`"?
 {#q-punctuation}
@@ -50,7 +49,7 @@ which Haml does using the {Haml::Helpers#preserve} and {Haml::Helpers#find_and_p
 
 Normally, Haml will do this for you automatically
 when you're using a tag that needs it
-(this can be customized using the {file:HAML_REFERENCE.md#preserve-option `:preserve`} option.
+(this can be customized using the {Haml::Options#preserve `:preserve`} option).
 For example,
 
     %p
