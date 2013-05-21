@@ -214,11 +214,6 @@ HAML
                  render(".no_attributes{:nil => nil}").chomp)
   end
 
-  def test_attribute_method_with_both_attrib_styles_and_non_static_hashes
-    assert_equal("<div baz='qux' foo='bar' zig='zag'></div>",
-                render("%div{{:foo => 'bar'}, :baz => 'qux'}(zig = val)", :locals => {:val => 'zag'}).chomp)
-  end
-
   def test_strings_should_get_stripped_inside_tags
     assert_equal("<div class='stripped'>This should have no spaces in front of it</div>",
                  render(".stripped    This should have no spaces in front of it").chomp)
@@ -1457,6 +1452,15 @@ HAML
     assert_equal("<div foo-baz='bang'></div>\n",
       render("%div{:foo => {:baz => 'bang'}}"))
 	end
+
+  def test_arbitrary_attribute_hash_merging
+    assert_equal(%Q{<a aria-baz='qux' aria-foo='bar'></a>\n}, render(<<-HAML))
+- h1 = {:aria => {:foo => :bar}}
+- h2 = {:baz => :qux}
+%a{h1, :aria => h2}
+HAML
+  end
+
 
   def test_html5_data_attributes_with_nested_hash
     assert_equal("<div data-a-b='c'></div>\n", render(<<-HAML))

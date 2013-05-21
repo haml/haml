@@ -9,6 +9,7 @@
   for detailed info. (Matt Wildig)
 * Make escape_once respect hexadecimal references. (Matt Wildig)
 * General performance and memory usage improvements. (Akira Matsuda)
+* Don't treat the 'data' attribute specially when merging attribute hashes. (Matt Wildig and Norman Clarke)
 
 ## 4.0.2
 

@@ -246,16 +246,21 @@ RUBY
         from['class'] ||= to['class']
       end
 
-      from_data = from.delete('data')
-      # forces to_data & from_data into a hash
-      from_data = { nil => from_data } if from_data && !from_data.is_a?(Hash)
-      to['data'] = { nil => to['data'] } if to['data'] && !to['data'].is_a?(Hash)
+      from.keys.each do |key|
+        next unless from[key].kind_of?(Hash) || to[key].kind_of?(Hash)
 
-      if from_data && !to['data']
-        to['data'] = from_data
-      elsif from_data && to['data']
-        to['data'].merge! from_data
+        from_data = from.delete(key)
+        # forces to_data & from_data into a hash
+        from_data = { nil => from_data } if from_data && !from_data.is_a?(Hash)
+        to[key] = { nil => to[key] } if to[key] && !to[key].is_a?(Hash)
+
+        if from_data && !to[key]
+          to[key] = from_data
+        elsif from_data && to[key]
+          to[key].merge! from_data
+        end
       end
+
       to.merge!(from)
     end
 
