@@ -11,6 +11,18 @@
 * General performance and memory usage improvements. (Akira Matsuda)
 * Don't treat the 'data' attribute specially when merging attribute hashes. (Matt Wildig and Norman Clarke)
 
+## 4.0.3
+
+Released May 21, 2013 ([diff](https://github.com/haml/haml/compare/4.0.2...4.0.3)).
+
+* Compatibility with newer versions of Rails's Erubis handler.
+* Fix Erubis handler for compatibility with Tilt 1.4.x, too.
+* Small performance optimization for html_escape.
+(thanks [Lachlan Sylvester](https://github.com/lsylvester))
+* Documentation fixes.
+* Documented some helper methods that were left out of the reference.
+(thanks [Shane Riley](https://github.com/shaneriley))
+
 ## 4.0.2
 
 Released April 5, 2013 ([diff](https://github.com/haml/haml/compare/4.0.1...4.0.2)).
