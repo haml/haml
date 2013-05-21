@@ -106,7 +106,7 @@ class TemplateTest < MiniTest::Unit::TestCase
   end
 
   TEMPLATES.each do |template|
-    define_method "test_template_should_render_correctly [template: #{template}] " do
+    define_method "test_template_should_render_correctly [template: #{template}]" do
       assert_renders_correctly template
     end
   end
