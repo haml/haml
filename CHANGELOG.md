@@ -2,8 +2,10 @@
 
 ## 4.0.3
 
+Released May 21, 2013 ([diff](https://github.com/haml/haml/compare/4.0.2...4.0.3)).
+
 * Compatibility with newer versions of Rails's Erubis handler.
-* Fix Erubus handler for compatibility with Tilt 1.4.x, too.
+* Fix Erubis handler for compatibility with Tilt 1.4.x, too.
 * Small performance optimization for html_escape.
 (thanks [Lachlan Sylvester](https://github.com/lsylvester))
 * Documentation fixes.
