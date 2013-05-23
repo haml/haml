@@ -121,7 +121,7 @@ see {Haml::Options}.
 
 ### Encodings
 
-When using Ruby 1.9 or later, Haml supports the same sorts of
+Haml supports the same sorts of
 encoding-declaration comments that Ruby does. Although both Ruby and Haml
 support several different styles, the easiest it just to add `-# coding:
 encoding-name` at the beginning of the Haml template (it must come before all
@@ -306,7 +306,7 @@ hash-style attributes:
 
 #### Ruby 1.9-style Hashes
 
-On Ruby 1.9, Haml also supports Ruby's new hash syntax:
+Haml also supports Ruby's new hash syntax:
 
     %a{title: @title, href: href} Stuff
 

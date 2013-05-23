@@ -61,7 +61,6 @@ module Haml
     attr_accessor :autoclose
 
     # The encoding to use for the HTML output.
-    # Only available on Ruby 1.9 or higher.
     # This can be a string or an `Encoding` Object. Note that Haml **does not**
     # automatically re-encode Ruby values; any strings coming from outside the
     # application should be converted before being passed into the Haml

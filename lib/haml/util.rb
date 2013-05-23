@@ -91,7 +91,7 @@ module Haml
       text.html_safe
     end
 
-    # Checks that the encoding of a string is valid in Ruby 1.9
+    # Checks that the encoding of a string is valid
     # and cleans up potential encoding gotchas like the UTF-8 BOM.
     # If it's not, yields an error string describing the invalid character
     # and the line on which it occurrs.
@@ -159,7 +159,7 @@ MSG
       return check_encoding(str, &block)
     end
 
-    # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them under Ruby 1.9.2.
+    # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them.
     # This is necessary so that the precompiled Haml template can be `#encode`d into `@options[:encoding]`
     # before being evaluated.
     #
@@ -274,10 +274,8 @@ METHOD
     #     from                    to
     #
     # @param scanner [StringScanner] The string scanner to move
-    # @param start [Character] The character opening the balanced pair.
-    #   A `Fixnum` in 1.8, a `String` in 1.9
-    # @param finish [Character] The character closing the balanced pair.
-    #   A `Fixnum` in 1.8, a `String` in 1.9
+    # @param start [String] The character opening the balanced pair.
+    # @param finish [String] The character closing the balanced pair.
     # @param count [Fixnum] The number of opening characters matched
     #   before calling this method
     # @return [(String, String)] The string matched within the balanced pair
