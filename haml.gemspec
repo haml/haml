@@ -17,6 +17,8 @@ Gem::Specification.new do |spec|
   spec.test_files  = Dir["test/**/*_test.rb"]
   spec.license     = "MIT"
 
+  spec.required_ruby_version = '>=1.9.2'
+
   spec.add_dependency "tilt"
 
   spec.add_development_dependency 'rails', '>= 3.0.0'
