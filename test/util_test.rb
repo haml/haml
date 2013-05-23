@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UtilTest < MiniTest::Unit::TestCase
+class UtilTest < MiniTest::Test
   include Haml::Util
 
   def test_powerset

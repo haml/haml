@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 require 'test_helper'
 
-class EngineTest < MiniTest::Unit::TestCase
+class EngineTest < MiniTest::Test
   # A map of erroneous Haml documents to the error messages they should produce.
   # The error messages may be arrays;
   # if so, the second element should be the line number that should be reported for the error.
