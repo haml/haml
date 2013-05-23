@@ -38,7 +38,7 @@ class DummyController
   end
 end
 
-class TemplateTest < MiniTest::Unit::TestCase
+class TemplateTest < MiniTest::Test
   TEMPLATE_PATH = File.join(File.dirname(__FILE__), "templates")
   TEMPLATES = %w{          very_basic        standard    helpers
     whitespace_handling    original_engine   list        helpful
