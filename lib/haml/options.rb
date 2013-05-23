@@ -243,14 +243,10 @@ module Haml
       @remove_whitespace = value
     end
 
-    if RUBY_VERSION < "1.9"
-      attr_writer :encoding
-    else
-      def encoding=(value)
-        return unless value
-        @encoding = value.is_a?(Encoding) ? value.name : value.to_s
-        @encoding = "UTF-8" if @encoding.upcase == "US-ASCII"
-      end
+    def encoding=(value)
+      return unless value
+      @encoding = value.is_a?(Encoding) ? value.name : value.to_s
+      @encoding = "UTF-8" if @encoding.upcase == "US-ASCII"
     end
 
     # Returns a subset of options: those that {Haml::Buffer} cares about.

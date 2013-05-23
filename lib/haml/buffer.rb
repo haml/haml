@@ -288,14 +288,8 @@ RUBY
       end
     end
 
-    if RUBY_VERSION < "1.9"
-      def new_encoded_string
-        ""
-      end
-    else
-      def new_encoded_string
-        "".encode(Encoding.find(options[:encoding]))
-      end
+    def new_encoded_string
+      "".encode(Encoding.find(options[:encoding]))
     end
 
     @@tab_cache = {}

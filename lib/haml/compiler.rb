@@ -23,22 +23,16 @@ module Haml
       @node = parent
     end
 
-    if RUBY_VERSION < "1.9"
-      # The source code that is evaluated to produce the Haml document.
-      #
-      # In Ruby 1.9, this is automatically converted to the correct encoding
-      # (see {file:REFERENCE.md#encodings the `:encoding` option}).
-      #
-      # @return [String]
-      def precompiled
-        @precompiled
-      end
-    else
-      def precompiled
-        encoding = Encoding.find(@options.encoding)
-        return @precompiled.force_encoding(encoding) if encoding == Encoding::ASCII_8BIT
-        return @precompiled.encode(encoding)
-      end
+    # The source code that is evaluated to produce the Haml document.
+    #
+    # In Ruby 1.9, this is automatically converted to the correct encoding
+    # (see {file:REFERENCE.md#encodings the `:encoding` option}).
+    #
+    # @return [String]
+    def precompiled
+      encoding = Encoding.find(@options.encoding)
+      return @precompiled.force_encoding(encoding) if encoding == Encoding::ASCII_8BIT
+      return @precompiled.encode(encoding)
     end
 
     def precompiled_with_return_value
