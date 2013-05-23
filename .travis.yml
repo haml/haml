@@ -1,5 +1,5 @@
 rvm:
-  - 1.8.7
+  - 1.9.2
   - 1.9.3
   - 2.0.0
   - jruby
@@ -24,9 +24,6 @@ matrix:
     - { rvm: 2.0.0, gemfile: test/gemfiles/Gemfile.rails-3.0.x }
     - { rvm: 2.0.0, gemfile: test/gemfiles/Gemfile.rails-3.1.x }
     - { rvm: 2.0.0, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
-
-    # Rails 4 doesn't run on Ruby 1.8
-    - { rvm: 1.8.7, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
 
   allow_failures:
      - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
