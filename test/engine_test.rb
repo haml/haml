@@ -113,13 +113,11 @@ class EngineTest < MiniTest::Unit::TestCase
   end
 
   def setup
-    return if RUBY_VERSION < "1.9"
     @old_default_internal = Encoding.default_internal
     silence_warnings{Encoding.default_internal = nil}
   end
 
   def teardown
-    return if RUBY_VERSION < "1.9"
     silence_warnings{Encoding.default_internal = @old_default_internal}
   end
 
@@ -407,9 +405,8 @@ HAML
 
   # Regression tests
 
-  unless RUBY_VERSION < "1.9"
-    def test_indentation_after_dynamic_attr_hash
-      assert_equal(<<HTML, render(<<HAML))
+  def test_indentation_after_dynamic_attr_hash
+    assert_equal(<<HTML, render(<<HAML))
 <html>
   <body>
     <img src='test'>
@@ -423,7 +420,6 @@ HTML
     %img{:src => 'te'+'st'}
     = "foo\\nbar"
 HAML
-    end
   end
 
   def test_whitespace_nuke_with_both_newlines
@@ -1715,11 +1711,7 @@ HAML
   end
 
   def test_ruby_character_literals_are_not_continuation
-    html = if RUBY_VERSION < "1.9"
-      "44\n44\n<p>foo</p>\n"
-    else
-      ",\n,\n<p>foo</p>\n"
-    end
+    html = ",\n,\n<p>foo</p>\n"
     assert_equal(html, render(<<HAML))
 = ?,
 = ?\,
@@ -1893,60 +1885,59 @@ HTML
 HAML
   end
 
-  unless RUBY_VERSION < "1.9"
-    def test_default_encoding
-      assert_equal(Encoding.find("utf-8"), render(<<HAML.encode("us-ascii")).encoding)
+  def test_default_encoding
+    assert_equal(Encoding.find("utf-8"), render(<<HAML.encode("us-ascii")).encoding)
 %p bar
 %p foo
 HAML
-    end
+  end
 
-    def test_fake_ascii_encoding
-      assert_encoded_equal(<<HTML.force_encoding("ascii-8bit"), render(<<HAML, :encoding => "ascii-8bit"))
+  def test_fake_ascii_encoding
+    assert_encoded_equal(<<HTML.force_encoding("ascii-8bit"), render(<<HAML, :encoding => "ascii-8bit"))
 <p>bâr</p>
 <p>föö</p>
 HTML
 %p bâr
 %p föö
 HAML
-    end
+  end
 
-    def test_convert_template_render_proc
-      assert_converts_template_properly {|e| e.render_proc.call}
-    end
+  def test_convert_template_render_proc
+    assert_converts_template_properly {|e| e.render_proc.call}
+  end
 
-    def test_convert_template_render
-      assert_converts_template_properly {|e| e.render}
-    end
+  def test_convert_template_render
+    assert_converts_template_properly {|e| e.render}
+  end
 
-    def test_convert_template_def_method
-      assert_converts_template_properly do |e|
-        o = Object.new
-        e.def_method(o, :render)
-        o.render
-      end
+  def test_convert_template_def_method
+    assert_converts_template_properly do |e|
+      o = Object.new
+      e.def_method(o, :render)
+      o.render
     end
+  end
 
-    def test_encoding_error
-      render("foo\nbar\nb\xFEaz".force_encoding("utf-8"))
-      assert(false, "Expected exception")
-    rescue Haml::Error => e
-      assert_equal(3, e.line)
-      assert_match(/Invalid .* character/, e.message)
-    end
+  def test_encoding_error
+    render("foo\nbar\nb\xFEaz".force_encoding("utf-8"))
+    assert(false, "Expected exception")
+  rescue Haml::Error => e
+    assert_equal(3, e.line)
+    assert_match(/Invalid .* character/, e.message)
+  end
 
-    def test_ascii_incompatible_encoding_error
-      template = "foo\nbar\nb_z".encode("utf-16le")
-      template[9] = "\xFE".force_encoding("utf-16le")
-      render(template)
-      assert(false, "Expected exception")
-    rescue Haml::Error => e
-      assert_equal(3, e.line)
-      assert_match(/Invalid .* character/, e.message)
-    end
+  def test_ascii_incompatible_encoding_error
+    template = "foo\nbar\nb_z".encode("utf-16le")
+    template[9] = "\xFE".force_encoding("utf-16le")
+    render(template)
+    assert(false, "Expected exception")
+  rescue Haml::Error => e
+    assert_equal(3, e.line)
+    assert_match(/Invalid .* character/, e.message)
+  end
 
-    def test_same_coding_comment_as_encoding
-      assert_renders_encoded(<<HTML, <<HAML)
+  def test_same_coding_comment_as_encoding
+    assert_renders_encoded(<<HTML, <<HAML)
 <p>bâr</p>
 <p>föö</p>
 HTML
@@ -1954,34 +1945,33 @@ HTML
 %p bâr
 %p föö
 HAML
-    end
+  end
 
-    def test_coding_comments
-      assert_valid_encoding_comment("-# coding: ibm866")
-      assert_valid_encoding_comment("-# CodINg: IbM866")
-      assert_valid_encoding_comment("-#coding:ibm866")
-      assert_valid_encoding_comment("-# CodINg= ibm866")
-      assert_valid_encoding_comment("-# foo BAR FAOJcoding: ibm866")
-      assert_valid_encoding_comment("-# coding: ibm866 ASFJ (&(&#!$")
-      assert_valid_encoding_comment("-# -*- coding: ibm866")
-      assert_valid_encoding_comment("-# coding: ibm866 -*- coding: blah")
-      assert_valid_encoding_comment("-# -*- coding: ibm866 -*-")
-      assert_valid_encoding_comment("-# -*- encoding: ibm866 -*-")
-      assert_valid_encoding_comment('-# -*- coding: "ibm866" -*-')
-      assert_valid_encoding_comment("-#-*-coding:ibm866-*-")
-      assert_valid_encoding_comment("-#-*-coding:ibm866-*-")
-      assert_valid_encoding_comment("-# -*- foo: bar; coding: ibm866; baz: bang -*-")
-      assert_valid_encoding_comment("-# foo bar coding: baz -*- coding: ibm866 -*-")
-      assert_valid_encoding_comment("-# -*- coding: ibm866 -*- foo bar coding: baz")
-    end
+  def test_coding_comments
+    assert_valid_encoding_comment("-# coding: ibm866")
+    assert_valid_encoding_comment("-# CodINg: IbM866")
+    assert_valid_encoding_comment("-#coding:ibm866")
+    assert_valid_encoding_comment("-# CodINg= ibm866")
+    assert_valid_encoding_comment("-# foo BAR FAOJcoding: ibm866")
+    assert_valid_encoding_comment("-# coding: ibm866 ASFJ (&(&#!$")
+    assert_valid_encoding_comment("-# -*- coding: ibm866")
+    assert_valid_encoding_comment("-# coding: ibm866 -*- coding: blah")
+    assert_valid_encoding_comment("-# -*- coding: ibm866 -*-")
+    assert_valid_encoding_comment("-# -*- encoding: ibm866 -*-")
+    assert_valid_encoding_comment('-# -*- coding: "ibm866" -*-')
+    assert_valid_encoding_comment("-#-*-coding:ibm866-*-")
+    assert_valid_encoding_comment("-#-*-coding:ibm866-*-")
+    assert_valid_encoding_comment("-# -*- foo: bar; coding: ibm866; baz: bang -*-")
+    assert_valid_encoding_comment("-# foo bar coding: baz -*- coding: ibm866 -*-")
+    assert_valid_encoding_comment("-# -*- coding: ibm866 -*- foo bar coding: baz")
+  end
 
-    def test_different_coding_than_system
-      assert_renders_encoded(<<HTML.encode("IBM866"), <<HAML.encode("IBM866"))
+  def test_different_coding_than_system
+    assert_renders_encoded(<<HTML.encode("IBM866"), <<HAML.encode("IBM866"))
 <p>тАЬ</p>
 HTML
 %p тАЬ
 HAML
-    end
   end
 
   def test_block_spacing
