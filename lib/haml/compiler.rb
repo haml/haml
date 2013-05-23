@@ -25,7 +25,7 @@ module Haml
 
     # The source code that is evaluated to produce the Haml document.
     #
-    # In Ruby 1.9, this is automatically converted to the correct encoding
+    # This is automatically converted to the correct encoding
     # (see {file:REFERENCE.md#encodings the `:encoding` option}).
     #
     # @return [String]
