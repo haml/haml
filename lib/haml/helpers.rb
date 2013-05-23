@@ -575,8 +575,6 @@ MESSAGE
 
     HTML_ESCAPE_REGEX = /[\"><&]/
 
-    # Include docs here so they are picked up by Yard
-
     # Returns a copy of `text` with ampersands, angle brackets and quotes
     # escaped into HTML entities.
     #
@@ -592,8 +590,6 @@ MESSAGE
     end
 
     HTML_ESCAPE_ONCE_REGEX = /[\"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
-
-    # Include docs here so they are picked up by Yard
 
     # Escapes HTML entities in `text`, but without escaping an ampersand
     # that is already part of an escaped entity.
