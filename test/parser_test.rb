@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class ParserTest < MiniTest::Test
+  class ParserTest < MiniTest::Unit::TestCase
 
     test "should raise error for 'else' at wrong indent level" do
       begin

@@ -16,7 +16,7 @@ module Haml::Helpers
   end
 end
 
-class HelperTest < MiniTest::Test
+class HelperTest < MiniTest::Unit::TestCase
   Post = Struct.new('Post', :body, :error_field, :errors)
   class PostErrors
     def on(name)

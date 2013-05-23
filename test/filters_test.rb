@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class FiltersTest < MiniTest::Test
+class FiltersTest < MiniTest::Unit::TestCase
   test "should be registered as filters when including Haml::Filters::Base" do
     begin
       refute Haml::Filters.defined.has_key? "bar"
@@ -111,7 +111,7 @@ class FiltersTest < MiniTest::Test
 
 end
 
-class ErbFilterTest < MiniTest::Test
+class ErbFilterTest < MiniTest::Unit::TestCase
   test "multiline expressions should work" do
     html = "foobarbaz\n"
     haml = %Q{:erb\n  <%= "foo" +\n      "bar" +\n      "baz" %>}
@@ -132,7 +132,7 @@ class ErbFilterTest < MiniTest::Test
 
 end
 
-class JavascriptFilterTest < MiniTest::Test
+class JavascriptFilterTest < MiniTest::Unit::TestCase
   test "should interpolate" do
     scope = Object.new.instance_eval {foo = "bar"; nil if foo; binding}
     haml  = ":javascript\n  \#{foo}"
@@ -178,7 +178,7 @@ class JavascriptFilterTest < MiniTest::Test
   end
 end
 
-class CSSFilterTest < MiniTest::Test
+class CSSFilterTest < MiniTest::Unit::TestCase
   test "should wrap output in CDATA and a CSS tag when output is XHTML" do
     html = "<style type='text/css'>\n  /*<![CDATA[*/\n    foo\n  /*]]>*/\n</style>\n"
     haml = ":css\n  foo"
@@ -217,7 +217,7 @@ class CSSFilterTest < MiniTest::Test
   end
 end
 
-class CDATAFilterTest < MiniTest::Test
+class CDATAFilterTest < MiniTest::Unit::TestCase
   test "should wrap output in CDATA tag" do
     html = "<![CDATA[\n    foo\n]]>\n"
     haml = ":cdata\n  foo"
@@ -225,7 +225,7 @@ class CDATAFilterTest < MiniTest::Test
   end
 end
 
-class EscapedFilterTest < MiniTest::Test
+class EscapedFilterTest < MiniTest::Unit::TestCase
   test "should escape ampersands" do
     html = "&amp;\n"
     haml = ":escaped\n  &"
@@ -233,7 +233,7 @@ class EscapedFilterTest < MiniTest::Test
   end
 end
 
-class RubyFilterTest < MiniTest::Test
+class RubyFilterTest < MiniTest::Unit::TestCase
   test "can write to haml_io" do
     haml = ":ruby\n  haml_io.puts 'hello'\n"
     html = "hello\n"
