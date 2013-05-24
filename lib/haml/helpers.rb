@@ -117,11 +117,11 @@ MESSAGE
     # HTML entities so they'll render correctly in
     # whitespace-sensitive tags without screwing up the indentation.
     #
-    # @overload perserve(input)
+    # @overload preserve(input)
     #   Escapes newlines within a string.
     #
     #   @param input [String] The string within which to escape all newlines
-    # @overload perserve
+    # @overload preserve
     #   Escapes newlines within a block of Haml code.
     #
     #   @yield The block within which to escape newlines
