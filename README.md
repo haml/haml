@@ -83,6 +83,7 @@ It's also possible to embed Ruby code into Haml documents. An equals sign, `=`,
 will output the result of the code. A hyphen, `-`, will run the code but not
 output the result. You can even use control statements like `if` and `while`:
 
+    - require "date"
     %p
       Date/Time:
       - now = DateTime.now
