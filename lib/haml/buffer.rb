@@ -119,8 +119,8 @@ module Haml
         text.sub!(tabs, '') if dont_tab_up
       end
 
-      @buffer << text
       @real_tabs += tab_change
+      @buffer << text
     end
 
     # Modifies the indentation of the document.
