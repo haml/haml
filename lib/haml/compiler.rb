@@ -502,8 +502,13 @@ END
 
     def prerender_tag(name, self_close, attributes)
       # TODO: consider just passing in the damn options here
+      attributes.merge!({"data-trace"=>@options.filename.split('/views').last + ":" + @node.line.to_s}) if Haml::Template.options[:show_partial_trace]
       attributes_string = Compiler.build_attributes(
-        @options.html?, @options.attr_wrapper, @options.escape_attrs, @options.hyphenate_data_attrs, attributes)
+        @options.html?,
+        @options.attr_wrapper,
+        @options.escape_attrs,
+        @options.hyphenate_data_attrs,
+        attributes)
       "<#{name}#{attributes_string}#{self_close && @options.xhtml? ? ' /' : ''}>"
     end
 
