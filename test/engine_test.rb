@@ -314,6 +314,10 @@ HTML
   foo
 HAML
   end
+  
+  def test_faux_multiline
+    assert_equal("<span>|</span>\n", render("%span |"))
+  end
 
   def test_end_of_file_multiline
     assert_equal("<p>0</p>\n<p>1</p>\n<p>2</p>\n", render("- for i in (0...3)\n  %p= |\n   i |"))
