@@ -21,7 +21,8 @@ module Haml
       :ugly                 => false,
       :cdata                => false,
       :parser_class         => ::Haml::Parser,
-      :compiler_class       => ::Haml::Compiler
+      :compiler_class       => ::Haml::Compiler,
+      :conditional_comments_valid_html => true
     }
 
     @valid_formats = [:html4, :html5, :xhtml]
@@ -166,6 +167,8 @@ module Haml
 
     # The compiler class to use. Defaults to Haml::Compiler.
     attr_accessor :compiler_class
+
+    attr_accessor :conditional_comments_valid_html
 
     def initialize(values = {}, &block)
       defaults.each {|k, v| instance_variable_set :"@#{k}", v}
