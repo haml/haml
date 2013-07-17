@@ -94,6 +94,28 @@ module Haml
       end
     end
 
+    test "revealed conditional comments are detected" do
+      text = "some revealed text"
+      cond = "[cond]"
+
+      node = parse("/!#{cond} #{text}").children[0]
+
+      assert_equal text, node.value[:text]
+      assert_equal cond, node.value[:conditional]
+      assert node.value[:revealed]
+    end
+
+    test "hidden conditional comments are detected" do
+      text = "some revealed text"
+      cond = "[cond]"
+
+      node = parse("/#{cond} #{text}").children[0]
+
+      assert_equal text, node.value[:text]
+      assert_equal cond, node.value[:conditional]
+      refute node.value[:revealed]
+    end
+
     private
 
     def parse(haml, options = nil)
