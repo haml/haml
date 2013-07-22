@@ -1086,7 +1086,7 @@ Surrounds the filtered text with CDATA tags.
 
 {#coffee-filter}
 ### `:coffee`
-Compiles the filtered text to Javascript using Cofeescript. You can also
+Compiles the filtered text to Javascript using Coffeescript. You can also
 reference this filter as `:coffeescript`. This filter is implemented using
 Tilt.
 
