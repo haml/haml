@@ -236,6 +236,11 @@ END
           @options[:for_engine][:attr_wrapper] = '"'
         end
 
+        opts.on('--remove-whitespace',
+                'Remove whitespaces surrounding and within tags') do
+          @options[:for_engine][:remove_whitespace] = true
+        end
+
         opts.on('--cdata',
                 'Always add CDATA sections to javascript and css blocks.') do
           @options[:for_engine][:cdata] = true
