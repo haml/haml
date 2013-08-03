@@ -222,7 +222,11 @@ MESSAGE
     # @param lang [String] The value of `xml:lang` and `lang`
     # @return [{#to_s => String}] The attribute hash
     def html_attrs(lang = 'en-US')
-      {:xmlns => "http://www.w3.org/1999/xhtml", 'xml:lang' => lang, :lang => lang}
+      if haml_buffer.options[:format] == :xhtml
+        {:xmlns => "http://www.w3.org/1999/xhtml", 'xml:lang' => lang, :lang => lang}
+      else
+        {:lang => lang}
+      end
     end
 
     # Increments the number of tabs the buffer automatically adds

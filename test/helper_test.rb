@@ -576,5 +576,34 @@ HAML
     $stderr = old_stderr
   end
 
+  def test_html_attrs_xhtml
+    assert_equal("<html lang='en-US' xml:lang='en-US' xmlns='http://www.w3.org/1999/xhtml'></html>\n",
+                  render("%html{html_attrs}", :format => :xhtml))
+  end
+
+  def test_html_attrs_html4
+    assert_equal("<html lang='en-US'></html>\n",
+                  render("%html{html_attrs}", :format => :html4))
+  end
+
+  def test_html_attrs_html5
+    assert_equal("<html lang='en-US'></html>\n",
+                  render("%html{html_attrs}", :format => :html5))
+  end
+
+  def test_html_attrs_xhtml_other_lang
+    assert_equal("<html lang='es-AR' xml:lang='es-AR' xmlns='http://www.w3.org/1999/xhtml'></html>\n",
+                  render("%html{html_attrs('es-AR')}", :format => :xhtml))
+  end
+
+  def test_html_attrs_html4_other_lang
+    assert_equal("<html lang='es-AR'></html>\n",
+                  render("%html{html_attrs('es-AR')}", :format => :html4))
+  end
+
+  def test_html_attrs_html5_other_lang
+    assert_equal("<html lang='es-AR'></html>\n",
+                  render("%html{html_attrs('es-AR')}", :format => :html5))
+  end
 end
 
