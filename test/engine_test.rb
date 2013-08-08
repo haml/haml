@@ -1210,6 +1210,26 @@ HAML
                  render("/[if !(IE 6)|(IE 7)] Bracket: ]"))
   end
 
+  def test_downlevel_revealed_conditional_comments
+    assert_equal("<!--[if !IE]><!--> A comment <!--<![endif]-->\n",
+                  render("/![if !IE] A comment"))
+  end
+
+  def test_downlevel_revealed_conditional_comments_block
+    assert_equal("<!--[if !IE]><!-->\n  A comment\n<!--<![endif]-->\n",
+                  render("/![if !IE]\n  A comment"))
+  end
+
+  def test_downlevel_revealed_conditional_comments_ms_style
+      assert_equal("<![if !IE]> A comment <![endif]>\n",
+                  render("/![if !IE] A comment", :conditional_comments_valid_html => false))
+  end
+
+  def test_downlevel_revealed_conditional_comments_block_ms_style
+      assert_equal("<![if !IE]>\n  A comment\n<![endif]>\n",
+                  render("/![if !IE]\n  A comment", :conditional_comments_valid_html => false))
+  end
+
   def test_local_assigns_dont_modify_class
     assert_equal("bar\n", render("= foo", :locals => {:foo => 'bar'}))
     assert_equal(nil, defined?(foo))
