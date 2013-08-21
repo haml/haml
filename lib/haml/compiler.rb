@@ -235,11 +235,16 @@ END
     end
 
     def compile_comment
-      open = "<!--#{@node.value[:conditional]}"
+      condition = "#{@node.value[:conditional]}>" if @node.value[:conditional]
+      revealed = @node.value[:revealed]
+
+      open = "<!--#{condition}#{'<!-->' if revealed}"
+
+      close = "#{'<!--' if revealed}#{'<![endif]' if condition}-->"
 
       # Render it statically if possible
       unless block_given?
-        push_text("#{open} #{@node.value[:text]} #{@node.value[:conditional] ? "<![endif]-->" : "-->"}")
+        push_text("#{open} #{@node.value[:text]} #{close}")
         return
       end
 
@@ -247,7 +252,7 @@ END
       @output_tabs += 1
       yield if block_given?
       @output_tabs -= 1
-      push_text(@node.value[:conditional] ? "<![endif]-->" : "-->", -1)
+      push_text(close, -1)
     end
 
     def compile_doctype

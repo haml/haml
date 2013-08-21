@@ -772,6 +772,21 @@ is compiled to:
       </a>
     <![endif]-->
 
+To generate “downlevel-revealed” conditional comments, where the content is
+hidden from IE but not other browsers,  add a `!` before the brackets: `/![]`.
+Haml will produce valid HTML when generating this kind of conditional comment.
+
+For example:
+
+    /![if !IE]
+      You are not using Internet Explorer, or are using version 10+.
+
+is compiled to:
+
+    <!--[if !IE]><!-->
+      You are not using Internet Explorer, or are using version 10+.
+    <!--<![endif]-->
+
 ### Haml Comments: `-#`
 
 The hyphen followed immediately by the pound sign signifies a silent comment.
