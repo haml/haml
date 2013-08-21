@@ -237,11 +237,10 @@ END
     def compile_comment
       condition = "#{@node.value[:conditional]}>" if @node.value[:conditional]
       revealed = @node.value[:revealed]
-      valid_html = @options[:conditional_comments_valid_html]
 
-      open = "<!#{'--' unless revealed && !valid_html}#{condition}#{'<!-->' if revealed && valid_html}"
+      open = "<!--#{condition}#{'<!-->' if revealed}"
 
-      close = "#{'<!--' if revealed && valid_html}#{'<![endif]' if condition}#{'--' unless revealed && !valid_html}>"
+      close = "#{'<!--' if revealed}#{'<![endif]' if condition}-->"
 
       # Render it statically if possible
       unless block_given?
