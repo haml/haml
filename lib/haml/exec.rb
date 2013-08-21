@@ -237,7 +237,7 @@ END
         end
 
         opts.on('--remove-whitespace',
-                'Remove whitespaces surrounding and within tags') do
+                'Remove whitespace surrounding and within tags') do
           @options[:for_engine][:remove_whitespace] = true
         end
 
