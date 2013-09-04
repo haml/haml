@@ -49,7 +49,7 @@ module ActionView
             elsif value.is_a?(String)
               value
             else
-              ''
+              nil
             end
           # NonCattingString is present in Rails less than 3.1.0. When support
           # for 3.0 is dropped, this can be removed.
