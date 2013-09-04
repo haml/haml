@@ -438,6 +438,18 @@ HAML
     assert_equal("foo\n", render("= capture { 'foo' }", :action_view))
   end
 
+  def test_capture_with_non_string_value_reurns_nil
+    Haml::Helpers.module_eval do
+      def check_capture_returns_nil(&block)
+        contents = capture(&block)
+
+        contents << "ERROR" if contents
+      end
+    end
+
+    assert_equal("\n", render("= check_capture_returns_nil { 2 }", :action_view))
+  end
+
   def test_find_and_preserve_with_block
     assert_equal("<pre>Foo&#x000A;Bar</pre>\nFoo\nBar\n",
                  render("= find_and_preserve do\n  %pre\n    Foo\n    Bar\n  Foo\n  Bar"))
