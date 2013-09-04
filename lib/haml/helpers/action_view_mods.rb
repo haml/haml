@@ -53,7 +53,7 @@ module ActionView
             end
           # NonCattingString is present in Rails less than 3.1.0. When support
           # for 3.0 is dropped, this can be removed.
-          return ActionView::NonConcattingString.new(str) if defined?(ActionView::NonConcattingString)
+          return ActionView::NonConcattingString.new(str) if str && defined?(ActionView::NonConcattingString)
           return str
         else
           capture_without_haml(*args, &block)
