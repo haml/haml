@@ -1386,10 +1386,24 @@ HAML
     assert_equal("<a b='a, b'></a>\n", render("%a{:b => 'a, b'}", :suppress_eval => true))
     assert_equal("<a b='a\tb'></a>\n", render('%a{:b => "a\tb"}', :suppress_eval => true))
     assert_equal("<a b='a\#{foo}b'></a>\n", render('%a{:b => "a\\#{foo}b"}', :suppress_eval => true))
+    assert_equal("<a b='#f00'></a>\n", render("%a{:b => '#f00'}", :suppress_eval => true))
   end
 
   def test_dynamic_hashes_with_suppress_eval
     assert_equal("<a></a>\n", render('%a{:b => "a #{1 + 1} b", :c => "d"}', :suppress_eval => true))
+  end
+
+  def test_interpolates_instance_vars_in_attribute_values
+    scope = Object.new
+    scope.instance_variable_set :@foo, 'bar'
+    assert_equal("<a b='a bar b'></a>\n", render('%a{:b => "a #@foo b"}', :scope => scope))
+  end
+
+  def test_interpolates_global_vars_in_attribute_values
+    # make sure the value isn't just interpolated in during template compilation
+    engine = Haml::Engine.new('%a{:b => "a #$global_var_for_testing b"}')
+    $global_var_for_testing = 'bar'
+    assert_equal("<a b='a bar b'></a>\n", engine.to_html)
   end
 
   def test_utf8_attrs
