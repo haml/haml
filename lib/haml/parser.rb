@@ -83,8 +83,7 @@ module Haml
     DOCTYPE_REGEX = /(\d(?:\.\d)?)?\s*([a-z]*)\s*([^ ]+)?/i
 
     # The Regex that matches a literal string or symbol value
-    LITERAL_VALUE_REGEX = /:(\w*)|(["'])((?![\\#]|\2).|\\.)*\2/
-
+    LITERAL_VALUE_REGEX = /:(\w*)|(["'])((?!\\|\#{|\#@|\#\$|\2).|\\.)*\2/
 
     def initialize(template, options)
       @options            = options
