@@ -956,7 +956,7 @@ Ruby string interpolation. For example,
 
 is the same as
 
-    %p= "This is the #{h quality} cake!"
+    %p= "This is #{h quality} cake!"
 
 and might compile to:
 
