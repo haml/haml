@@ -81,13 +81,13 @@ Profile Haml.
 END
 task :profile do
   times  = (ENV['TIMES'] || '1000').to_i
-  file   = ENV['FILE']
+  file   = ENV['FILE'] || 'test/templates/standard.haml'
 
   require 'bundler/setup'
   require 'ruby-prof'
   require 'haml'
-
-  file = File.read(File.expand_path("../test/templates/#{file || 'standard'}.haml", __FILE__))
+  default = 
+  file = File.read(File.expand_path("../#{file}", __FILE__))
   obj = Object.new
   Haml::Engine.new(file, :ugly => true).def_method(obj, :render)
   result = RubyProf.profile { times.times { obj.render } }
