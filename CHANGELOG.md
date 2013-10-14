@@ -1,8 +1,13 @@
 # Haml Changelog
 
+=======
+## 4.0.4
+
+* Parser fix to allow literal '#' with suppress_eval (Matt Wildig).
+
 * Helpers#escape_once works on frozen strings (as does
   ERB::Util.html_escape_once for which it acts as a replacement in
-  Rails.
+  Rails (thanks [Patrik Metzmacher](https://github.com/patrik)).
 
 ## 4.0.3
 
