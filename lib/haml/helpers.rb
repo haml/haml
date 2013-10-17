@@ -487,7 +487,7 @@ MESSAGE
         attrs)
 
       if text.nil? && block.nil? && (haml_buffer.options[:autoclose].include?(name) || flags.include?(:/))
-        haml_concat "<#{name}#{attributes} />"
+        haml_concat "<#{name}#{attributes}#{' /' if haml_buffer.options[:format] == :xhtml}>"
         return ret
       end
 

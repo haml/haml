@@ -288,8 +288,12 @@ HAML
     assert_equal("<p id='foo&amp;bar'>baz</p>\n", render("%p{:id => 'foo&bar'} baz", :escape_html => true))
   end
 
-  def test_haml_tag_autoclosed_tags_are_closed
-    assert_equal("<br class='foo' />\n", render("- haml_tag :br, :class => 'foo'"))
+  def test_haml_tag_autoclosed_tags_are_closed_xhtml
+    assert_equal("<br class='foo' />\n", render("- haml_tag :br, :class => 'foo'", :format => :xhtml))
+  end
+
+  def test_haml_tag_autoclosed_tags_are_closed_html
+    assert_equal("<br class='foo'>\n", render("- haml_tag :br, :class => 'foo'", :format => :html5))
   end
 
   def test_haml_tag_with_class_array
@@ -320,7 +324,8 @@ HAML
   end
 
   def test_haml_tag_flags
-    assert_equal("<p />\n", render("- haml_tag :p, :/"))
+    assert_equal("<p />\n", render("- haml_tag :p, :/", :format => :xhtml))
+    assert_equal("<p>\n", render("- haml_tag :p, :/", :format => :html5))
     assert_equal("<p>kumquat</p>\n", render("- haml_tag :p, :< do\n  kumquat"))
 
     assert_raises(Haml::Error) { render("- haml_tag :p, 'foo', :/") }
