@@ -614,14 +614,12 @@ MESSAGE
       # @return [String] The sanitized string
       def escape_once(text)
         text = text.to_s
-        text.gsub!(HTML_ESCAPE_ONCE_REGEX, HTML_ESCAPE)
-        text
+        text.gsub(HTML_ESCAPE_ONCE_REGEX, HTML_ESCAPE)
       end
     else
       def escape_once(text)
         text = text.to_s
-        text.gsub!(HTML_ESCAPE_ONCE_REGEX){|s| HTML_ESCAPE[s]}
-        text
+        text.gsub(HTML_ESCAPE_ONCE_REGEX){|s| HTML_ESCAPE[s]}
       end
     end
 

@@ -622,5 +622,14 @@ HAML
     assert_equal("<html lang='es-AR'></html>\n",
                   render("%html{html_attrs('es-AR')}", :format => :html5))
   end
+
+  def test_escape_once_should_work_on_frozen_strings
+    begin
+      Haml::Helpers.escape_once('foo'.freeze)
+    rescue => e
+      flunk e.message
+    end
+  end
+
 end
 
