@@ -2,6 +2,7 @@
 
 ## 4.1.0 (Unreleased)
 
+* Haml now requires Ruby 1.9.2 or above.
 * Fix for attribute merging. When an attribute method (or literal nested hash)
   was used in an old style attribute hash and there is also a (non-static) new
   style hash there is an error. The fix can result in different behavior in
