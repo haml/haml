@@ -1,13 +1,17 @@
 # Haml Changelog
 
 =======
+
 ## 4.0.4
 
-* Parser fix to allow literal '#' with suppress_eval (Matt Wildig).
+Released on November 5, 2013 ([diff](https://github.com/haml/haml/compare/4.0.3...4.0.4)).
 
+* Check for Rails::Railtie rather than Rails (thanks [Konstantin Shabanov](https://github.com/etehtsea)).
+* Parser fix to allow literal '#' with suppress_eval (Matt Wildig).
 * Helpers#escape_once works on frozen strings (as does
   ERB::Util.html_escape_once for which it acts as a replacement in
   Rails (thanks [Patrik Metzmacher](https://github.com/patrik)).
+* Minor test fix (thanks [Mircea Moise](https://github.com/mmircea16)).
 
 ## 4.0.3
 
