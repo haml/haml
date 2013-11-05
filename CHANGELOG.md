@@ -1,5 +1,9 @@
 # Haml Changelog
 
+* Helpers#escape_once works on frozen strings (as does
+  ERB::Util.html_escape_once for which it acts as a replacement in
+  Rails.
+
 ## 4.0.3
 
 Released May 21, 2013 ([diff](https://github.com/haml/haml/compare/4.0.2...4.0.3)).
