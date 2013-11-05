@@ -33,7 +33,7 @@ task :set_coverage_env do
   ENV["COVERAGE"] = "true"
 end
 
-desc "Run Simplecov (only works on 1.9)"
+desc "Run Simplecov"
 task :coverage => [:set_coverage_env, :test]
 
 gemspec = File.expand_path("../haml.gemspec", __FILE__)

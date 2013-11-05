@@ -220,14 +220,9 @@ module Haml
 
     private
 
-    if RUBY_VERSION < "1.9"
-      def initialize_encoding(given_value)
-      end
-    else
-      def initialize_encoding(given_value)
-        unless given_value
-          @options.encoding = Encoding.default_internal || @template.encoding
-        end
+    def initialize_encoding(given_value)
+      unless given_value
+        @options.encoding = Encoding.default_internal || @template.encoding
       end
     end
 

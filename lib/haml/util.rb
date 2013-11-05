@@ -91,7 +91,7 @@ module Haml
       text.html_safe
     end
 
-    # Checks that the encoding of a string is valid in Ruby 1.9
+    # Checks that the encoding of a string is valid
     # and cleans up potential encoding gotchas like the UTF-8 BOM.
     # If it's not, yields an error string describing the invalid character
     # and the line on which it occurrs.
@@ -101,97 +101,78 @@ module Haml
     #   Only yields if there is an encoding error
     # @yieldparam msg [String] The error message to be raised
     # @return [String] `str`, potentially with encoding gotchas like BOMs removed
-    if RUBY_VERSION < "1.9"
-      def check_encoding(str)
-        str.gsub(/\A\xEF\xBB\xBF/, '') # Get rid of the UTF-8 BOM
-      end
-    else
-
-      def check_encoding(str)
-        if str.valid_encoding?
-          # Get rid of the Unicode BOM if possible
-          # Shortcut for UTF-8 which might be the majority case
-          if str.encoding == Encoding::UTF_8
-            return str.gsub(/\A\uFEFF/, '')
-          elsif str.encoding.name =~ /^UTF-(16|32)(BE|LE)?$/
-            return str.gsub(Regexp.new("\\A\uFEFF".encode(str.encoding)), '')
-          else
-            return str
-          end
+    def check_encoding(str)
+      if str.valid_encoding?
+        # Get rid of the Unicode BOM if possible
+        # Shortcut for UTF-8 which might be the majority case
+        if str.encoding == Encoding::UTF_8
+          return str.gsub(/\A\uFEFF/, '')
+        elsif str.encoding.name =~ /^UTF-(16|32)(BE|LE)?$/
+          return str.gsub(Regexp.new("\\A\uFEFF".encode(str.encoding)), '')
+        else
+          return str
         end
+      end
 
-        encoding = str.encoding
-        newlines = Regexp.new("\r\n|\r|\n".encode(encoding).force_encoding(Encoding::ASCII_8BIT))
-        str.force_encoding(Encoding::ASCII_8BIT).split(newlines).each_with_index do |line, i|
-          begin
-            line.encode(encoding)
-          rescue Encoding::UndefinedConversionError => e
-            yield <<MSG.rstrip, i + 1
+      encoding = str.encoding
+      newlines = Regexp.new("\r\n|\r|\n".encode(encoding).force_encoding(Encoding::ASCII_8BIT))
+      str.force_encoding(Encoding::ASCII_8BIT).split(newlines).each_with_index do |line, i|
+        begin
+          line.encode(encoding)
+        rescue Encoding::UndefinedConversionError => e
+          yield <<MSG.rstrip, i + 1
 Invalid #{encoding.name} character #{e.error_char.dump}
 MSG
-          end
         end
-        return str
       end
+      return str
     end
 
-    if RUBY_VERSION < "1.9"
-      # Like {\#check\_encoding}, but also checks for a Ruby-style `-# coding:` comment
-      # at the beginning of the template and uses that encoding if it exists.
-      #
-      # The Haml encoding rules are simple.
-      # If a `-# coding:` comment exists,
-      # we assume that that's the original encoding of the document.
-      # Otherwise, we use whatever encoding Ruby has.
-      #
-      # Haml uses the same rules for parsing coding comments as Ruby.
-      # This means that it can understand Emacs-style comments
-      # (e.g. `-*- encoding: "utf-8" -*-`),
-      # and also that it cannot understand non-ASCII-compatible encodings
-      # such as `UTF-16` and `UTF-32`.
-      #
-      # @param str [String] The Haml template of which to check the encoding
-      # @yield [msg] A block in which an encoding error can be raised.
-      #   Only yields if there is an encoding error
-      # @yieldparam msg [String] The error message to be raised
-      # @return [String] The original string encoded properly
-      # @raise [ArgumentError] if the document declares an unknown encoding
-      def check_haml_encoding(str, &block)
-        check_encoding(str, &block)
-      end
-    else
-      def check_haml_encoding(str, &block)
-        str = str.dup if str.frozen?
+    # Like {\#check\_encoding}, but also checks for a Ruby-style `-# coding:` comment
+    # at the beginning of the template and uses that encoding if it exists.
+    #
+    # The Haml encoding rules are simple.
+    # If a `-# coding:` comment exists,
+    # we assume that that's the original encoding of the document.
+    # Otherwise, we use whatever encoding Ruby has.
+    #
+    # Haml uses the same rules for parsing coding comments as Ruby.
+    # This means that it can understand Emacs-style comments
+    # (e.g. `-*- encoding: "utf-8" -*-`),
+    # and also that it cannot understand non-ASCII-compatible encodings
+    # such as `UTF-16` and `UTF-32`.
+    #
+    # @param str [String] The Haml template of which to check the encoding
+    # @yield [msg] A block in which an encoding error can be raised.
+    #   Only yields if there is an encoding error
+    # @yieldparam msg [String] The error message to be raised
+    # @return [String] The original string encoded properly
+    # @raise [ArgumentError] if the document declares an unknown encoding
+    def check_haml_encoding(str, &block)
+      str = str.dup if str.frozen?
 
-        bom, encoding = parse_haml_magic_comment(str)
-        if encoding; str.force_encoding(encoding)
-        elsif bom; str.force_encoding(Encoding::UTF_8)
-        end
-
-        return check_encoding(str, &block)
+      bom, encoding = parse_haml_magic_comment(str)
+      if encoding; str.force_encoding(encoding)
+      elsif bom; str.force_encoding(Encoding::UTF_8)
       end
+
+      return check_encoding(str, &block)
     end
 
-    if RUBY_VERSION < "1.9.2"
-      def inspect_obj(obj)
-        return obj.inspect
-      end
-    else
-      # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them under Ruby 1.9.2.
-      # This is necessary so that the precompiled Haml template can be `#encode`d into `@options[:encoding]`
-      # before being evaluated.
-      #
-      # @param obj {Object}
-      # @return {String}
-      def inspect_obj(obj)
-        case obj
-        when String
-          %Q!"#{obj.gsub(/[\x00-\x7F]+/) {|s| s.inspect[1...-1]}}"!
-        when Symbol
-          ":#{inspect_obj(obj.to_s)}"
-        else
-          obj.inspect
-        end
+    # Like `Object#inspect`, but preserves non-ASCII characters rather than escaping them.
+    # This is necessary so that the precompiled Haml template can be `#encode`d into `@options[:encoding]`
+    # before being evaluated.
+    #
+    # @param obj {Object}
+    # @return {String}
+    def inspect_obj(obj)
+      case obj
+      when String
+        %Q!"#{obj.gsub(/[\x00-\x7F]+/) {|s| s.inspect[1...-1]}}"!
+      when Symbol
+        ":#{inspect_obj(obj.to_s)}"
+      else
+        obj.inspect
       end
     end
 
@@ -293,10 +274,8 @@ METHOD
     #     from                    to
     #
     # @param scanner [StringScanner] The string scanner to move
-    # @param start [Character] The character opening the balanced pair.
-    #   A `Fixnum` in 1.8, a `String` in 1.9
-    # @param finish [Character] The character closing the balanced pair.
-    #   A `Fixnum` in 1.8, a `String` in 1.9
+    # @param start [String] The character opening the balanced pair.
+    # @param finish [String] The character closing the balanced pair.
     # @param count [Fixnum] The number of opening characters matched
     #   before calling this method
     # @return [(String, String)] The string matched within the balanced pair
