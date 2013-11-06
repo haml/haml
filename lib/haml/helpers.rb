@@ -381,29 +381,32 @@ MESSAGE
         elsif value.is_a?(String)
           captured = value
         else
-          captured = nil
+          return nil
         end
 
-        return captured if haml_buffer.options[:ugly]
-        return captured if captured.nil?
-        # Note that the "reject" is needed for rbx 1.2.4, which includes empty
-        # strings in the returned array when splitting by /^/.
-        captured = captured.split(/^/)
-        captured.delete('')
+        return (haml_buffer.options[:ugly] ? captured : prettify(captured))
 
-        min_tabs = nil
-        captured.each do |line|
-          tabs = line.index(/[^ ]/) || line.length
-          min_tabs ||= tabs
-          min_tabs = min_tabs > tabs ? tabs : min_tabs
-        end
-
-        captured.map do |line|
-          line.slice(min_tabs, line.length)
-        end.join
       end
     ensure
       haml_buffer.capture_position = nil
+    end
+
+    def prettify(text)
+      # Note that the "reject" is needed for rbx 1.2.4, which includes empty
+      # strings in the returned array when splitting by /^/.
+      text = text.split(/^/)
+      text.delete('')
+
+      min_tabs = nil
+      text.each do |line|
+        tabs = line.index(/[^ ]/) || line.length
+        min_tabs ||= tabs
+        min_tabs = min_tabs > tabs ? tabs : min_tabs
+      end
+
+      text.map do |line|
+        line.slice(min_tabs, line.length)
+      end.join
     end
 
     # Outputs text directly to the Haml buffer, with the proper indentation.
