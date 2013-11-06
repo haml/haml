@@ -6,6 +6,10 @@ group :docs do
   gem "maruku"
 end
 
+group :test do
+  gem "coveralls", require: false
+end
+
 platform :mri do
   gem "ruby-prof"
 end
