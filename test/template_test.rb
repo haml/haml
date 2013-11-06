@@ -111,6 +111,32 @@ class TemplateTest < MiniTest::Unit::TestCase
     end
   end
 
+
+  def test_render_method_returning_null_with_ugly
+    @base.instance_eval do
+      def empty
+        nil
+      end
+      def render_something(&block)
+        capture(self, &block)
+      end
+    end
+
+    content_to_render = File.read(File.dirname(__FILE__) + "/templates/issue_694.haml")
+    result = render(content_to_render, :ugly => true )
+    expected_result = "<h1>This is part of the broken view.</h1>\n"
+    assert_equal(expected_result, result)
+  end
+
+  def test_simple_rendering_with_ugly
+    content_to_render = "%p test\n= capture { 'foo' }"
+    result = render(content_to_render, :ugly => true)
+    expected_result = "<p>test</p>\nfoo\n"
+    assert_equal(expected_result, result)
+  end
+
+
+
   def test_templates_should_render_correctly_with_render_proc
     assert_renders_correctly("standard") do |name|
       engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)

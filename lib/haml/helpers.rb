@@ -372,10 +372,20 @@ MESSAGE
         position = haml_buffer.buffer.length
 
         haml_buffer.capture_position = position
-        block.call(*args)
+        value = block.call(*args)
 
-        captured = haml_buffer.buffer.slice!(position..-1)
+        if value == haml_buffer.buffer
+          captured = haml_buffer.buffer.slice!(position..-1)
+        elsif position < haml_buffer.buffer.size-1
+          captured = haml_buffer.buffer.slice!(position..-1)
+        elsif value.is_a?(String)
+          captured = value
+        else
+          captured = nil
+        end
+
         return captured if haml_buffer.options[:ugly]
+        return captured if captured.nil?
         # Note that the "reject" is needed for rbx 1.2.4, which includes empty
         # strings in the returned array when splitting by /^/.
         captured = captured.split(/^/)

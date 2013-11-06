@@ -41,16 +41,9 @@ module ActionView
         if Haml::Helpers.block_is_haml?(block)
           #double assignment is to avoid warnings
           _hamlout = _hamlout = eval('_hamlout', block.binding) # Necessary since capture_haml checks _hamlout
-          value = nil
-          buffer = capture_haml(*args) { value = yield(*args) }
-          str =
-            if !buffer.empty?
-              buffer
-            elsif value.is_a?(String)
-              value
-            else
-              nil
-            end
+
+          str = capture_haml(*args) { yield(*args) }
+
           # NonCattingString is present in Rails less than 3.1.0. When support
           # for 3.0 is dropped, this can be removed.
           return ActionView::NonConcattingString.new(str) if str && defined?(ActionView::NonConcattingString)
