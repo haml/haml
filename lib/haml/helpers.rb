@@ -374,16 +374,13 @@ MESSAGE
         haml_buffer.capture_position = position
         value = block.call(*args)
 
-        if value == haml_buffer.buffer
-          captured = haml_buffer.buffer.slice!(position..-1)
-        elsif position < haml_buffer.buffer.size-1
-          captured = haml_buffer.buffer.slice!(position..-1)
-        elsif value.is_a?(String)
-          captured = value
-        else
-          return nil
+        captured = haml_buffer.buffer.slice!(position..-1)
+
+        if captured == '' and value != haml_buffer.buffer
+             captured = (value.is_a?(String) ? value : nil)
         end
 
+        return nil if captured.nil?
         return (haml_buffer.options[:ugly] ? captured : prettify(captured))
 
       end
