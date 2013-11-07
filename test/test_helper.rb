@@ -1,6 +1,8 @@
 begin
-  require 'coveralls'
-  Coveralls.wear!
+  if RUBY_VERSION >= '2.0.0'
+    require 'coveralls'
+    Coveralls.wear!
+  end
 rescue LoadError
   # ignore error for other test Gemfiles
 end
