@@ -13,7 +13,6 @@ if ENV["COVERAGE"]
 end
 
 require 'rubygems'
-gem "minitest"
 require 'bundler/setup'
 require 'minitest/autorun'
 require 'action_pack'
