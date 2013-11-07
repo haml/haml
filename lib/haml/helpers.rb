@@ -388,23 +388,6 @@ MESSAGE
       haml_buffer.capture_position = nil
     end
 
-    def prettify(text)
-      # Note that the "reject" is needed for rbx 1.2.4, which includes empty
-      # strings in the returned array when splitting by /^/.
-      text = text.split(/^/)
-      text.delete('')
-
-      min_tabs = nil
-      text.each do |line|
-        tabs = line.index(/[^ ]/) || line.length
-        min_tabs ||= tabs
-        min_tabs = min_tabs > tabs ? tabs : min_tabs
-      end
-
-      text.map do |line|
-        line.slice(min_tabs, line.length)
-      end.join
-    end
 
     # Outputs text directly to the Haml buffer, with the proper indentation.
     #
@@ -491,10 +474,10 @@ MESSAGE
       name, attrs = merge_name_and_attributes(name.to_s, attrs)
 
       attributes = Haml::Compiler.build_attributes(haml_buffer.html?,
-        haml_buffer.options[:attr_wrapper],
-        haml_buffer.options[:escape_attrs],
-        haml_buffer.options[:hyphenate_data_attrs],
-        attrs)
+      haml_buffer.options[:attr_wrapper],
+      haml_buffer.options[:escape_attrs],
+      haml_buffer.options[:hyphenate_data_attrs],
+      attrs)
 
       if text.nil? && block.nil? && (haml_buffer.options[:autoclose].include?(name) || flags.include?(:/))
         haml_concat "<#{name}#{attributes}#{' /' if haml_buffer.options[:format] == :xhtml}>"
@@ -679,7 +662,26 @@ MESSAGE
       _erbout = _erbout = _hamlout.buffer
       proc { |*args| proc.call(*args) }
     end
+
+    def prettify(text)
+      # Note that the "reject" is needed for rbx 1.2.4, which includes empty
+      # strings in the returned array when splitting by /^/.
+      text = text.split(/^/)
+      text.delete('')
+
+      min_tabs = nil
+      text.each do |line|
+        tabs = line.index(/[^ ]/) || line.length
+        min_tabs ||= tabs
+        min_tabs = min_tabs > tabs ? tabs : min_tabs
+      end
+
+      text.map do |line|
+        line.slice(min_tabs, line.length)
+      end.join
+    end
   end
+
 end
 
 # @private
