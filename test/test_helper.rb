@@ -1,5 +1,9 @@
-require 'coveralls'
-Coveralls.wear!
+begin
+  require 'coveralls'
+  Coveralls.wear!
+rescue LoadError
+  # ignore error for other test Gemfiles
+end
 
 if ENV["COVERAGE"]
   require "simplecov"
