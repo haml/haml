@@ -111,7 +111,6 @@ class TemplateTest < MiniTest::Unit::TestCase
     end
   end
 
-
   def test_render_method_returning_null_with_ugly
     @base.instance_eval do
       def empty
@@ -134,8 +133,6 @@ class TemplateTest < MiniTest::Unit::TestCase
     expected_result = "<p>test</p>\nfoo\n"
     assert_equal(expected_result, result)
   end
-
-
 
   def test_templates_should_render_correctly_with_render_proc
     assert_renders_correctly("standard") do |name|

@@ -388,7 +388,6 @@ MESSAGE
       haml_buffer.capture_position = nil
     end
 
-
     # Outputs text directly to the Haml buffer, with the proper indentation.
     #
     # @param text [#to_s] The text to output
@@ -474,10 +473,10 @@ MESSAGE
       name, attrs = merge_name_and_attributes(name.to_s, attrs)
 
       attributes = Haml::Compiler.build_attributes(haml_buffer.html?,
-      haml_buffer.options[:attr_wrapper],
-      haml_buffer.options[:escape_attrs],
-      haml_buffer.options[:hyphenate_data_attrs],
-      attrs)
+        haml_buffer.options[:attr_wrapper],
+        haml_buffer.options[:escape_attrs],
+        haml_buffer.options[:hyphenate_data_attrs],
+        attrs)
 
       if text.nil? && block.nil? && (haml_buffer.options[:autoclose].include?(name) || flags.include?(:/))
         haml_concat "<#{name}#{attributes}#{' /' if haml_buffer.options[:format] == :xhtml}>"
@@ -681,7 +680,6 @@ MESSAGE
       end.join
     end
   end
-
 end
 
 # @private

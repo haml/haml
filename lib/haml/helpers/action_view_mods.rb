@@ -42,7 +42,7 @@ module ActionView
           #double assignment is to avoid warnings
           _hamlout = _hamlout = eval('_hamlout', block.binding) # Necessary since capture_haml checks _hamlout
 
-          str = capture_haml(*args) { yield(*args) }
+          str = capture_haml(*args, &block)
 
           # NonCattingString is present in Rails less than 3.1.0. When support
           # for 3.0 is dropped, this can be removed.
