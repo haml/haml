@@ -539,7 +539,11 @@ module Haml
 
     # Parses a line into tag_name, attributes, attributes_hash, object_ref, action, value
     def parse_tag(text)
-      match = text.scan(/%([-:\w]+)([-:\w.#]*)(.+)?/)[0]
+      if @root.children and @root.children[0] and @root.children[0].value[:type] == 'xml'
+        match = text.scan(/%([-:\w.]+)([-:\w#]*)(.+)?/)[0]
+      else
+        match = text.scan(/%([-:\w]+)([-:\w.#]*)(.+)?/)[0]
+      end
       raise SyntaxError.new(Error.message(:invalid_tag, text)) unless match
 
       tag_name, attributes, rest = match

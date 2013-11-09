@@ -1562,6 +1562,21 @@ XML
 HAML
   end
 
+  def test_xml_doc_with_dot_in_tag_name
+    assert_equal(<<XML, render(<<HAML, { :format => :html5, :mime_type => 'text/xml' }))
+<?xml version='1.0' encoding='utf-8' ?>
+<root.something.another.thing>
+  <element_even.like-this />
+  <hr />
+</root.something.another.thing>
+XML
+!!! XML
+%root.something.another.thing
+  %element_even.like-this/
+  %hr
+HAML
+  end
+
   # New attributes
 
   def test_basic_new_attributes
