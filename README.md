@@ -138,6 +138,7 @@ both 1.9 and 2.0.
 * [Norman Clarke](http://github.com/norman)
 * [Matt Wildig](http://github.com/mattwildig)
 * [Akira Matsuda](https://github.com/amatsuda)
+* [Tee Parham](https://github.com/teeparham)
 
 ### Alumni
 
