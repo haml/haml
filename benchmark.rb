@@ -1,4 +1,3 @@
-require "rubygems"
 require "bundler/setup"
 require "haml"
 require "rbench"
@@ -13,7 +12,7 @@ END
   exit 1
 end
 
-%w[rubygems erb erubis rails active_support action_controller
+%w[erb erubis rails active_support action_controller
    action_view action_pack haml/template rbench].each {|dep| require(dep)}
 
 def view
