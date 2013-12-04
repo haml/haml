@@ -1,6 +1,14 @@
 # Haml Changelog
 
 =======
+## 4.0.5
+
+Not released yet.
+
+* Fix for bug whereby when HAML :ugly option is "true",
+  ActionView::Helpers::CaptureHelper::capture returns the whole view buffer
+  when passed a block that returns nothing (thanks [Mircea
+  Moise](https://github.com/mmircea16)).
 
 ## 4.0.4
 
