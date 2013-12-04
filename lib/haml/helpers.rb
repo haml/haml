@@ -372,25 +372,16 @@ MESSAGE
         position = haml_buffer.buffer.length
 
         haml_buffer.capture_position = position
-        block.call(*args)
+        value = block.call(*args)
 
         captured = haml_buffer.buffer.slice!(position..-1)
-        return captured if haml_buffer.options[:ugly]
-        # Note that the "reject" is needed for rbx 1.2.4, which includes empty
-        # strings in the returned array when splitting by /^/.
-        captured = captured.split(/^/)
-        captured.delete('')
 
-        min_tabs = nil
-        captured.each do |line|
-          tabs = line.index(/[^ ]/) || line.length
-          min_tabs ||= tabs
-          min_tabs = min_tabs > tabs ? tabs : min_tabs
+        if captured == '' and value != haml_buffer.buffer
+             captured = (value.is_a?(String) ? value : nil)
         end
 
-        captured.map do |line|
-          line.slice(min_tabs, line.length)
-        end.join
+        return nil if captured.nil?
+        return (haml_buffer.options[:ugly] ? captured : prettify(captured))
       end
     ensure
       haml_buffer.capture_position = nil
@@ -668,6 +659,22 @@ MESSAGE
       #double assignment is to avoid warnings
       _erbout = _erbout = _hamlout.buffer
       proc { |*args| proc.call(*args) }
+    end
+
+    def prettify(text)
+      text = text.split(/^/)
+      text.delete('')
+
+      min_tabs = nil
+      text.each do |line|
+        tabs = line.index(/[^ ]/) || line.length
+        min_tabs ||= tabs
+        min_tabs = min_tabs > tabs ? tabs : min_tabs
+      end
+
+      text.map do |line|
+        line.slice(min_tabs, line.length)
+      end.join
     end
   end
 end

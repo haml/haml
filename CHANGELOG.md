@@ -12,6 +12,15 @@
 * General performance and memory usage improvements. (Akira Matsuda)
 * Don't treat the 'data' attribute specially when merging attribute hashes. (Matt Wildig and Norman Clarke)
 
+## 4.0.5
+
+Not released yet.
+
+* Fix for bug whereby when HAML :ugly option is "true",
+  ActionView::Helpers::CaptureHelper::capture returns the whole view buffer
+  when passed a block that returns nothing (thanks [Mircea
+  Moise](https://github.com/mmircea16)).
+
 ## 4.0.4
 
 Released on November 5, 2013 ([diff](https://github.com/haml/haml/compare/4.0.3...4.0.4)).
@@ -1349,3 +1358,4 @@ has been moved to [YARD](http://yard.soen.ca).
 YARD is an excellent documentation system,
 and allows us to write our documentation in [Maruku](http://maruku.rubyforge.org),
 which is also excellent.
+>>>>>>> External Changes
