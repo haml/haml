@@ -439,11 +439,11 @@ module Haml
       conditional, text = balance(text, ?[, ?]) if text[0] == ?[
       text.strip!
 
-      text = text.split(/<!-+/).map do |x|
-        x.split(/--+>/).map do |y|
-          y.gsub(/-(-+)/, "-")
-        end
-      end.join("--><!--")
+      text = text.split(/<!-+|--+>/).map do |x|
+          x.gsub!(/-(-+)/, "-")
+          x.strip!
+          x
+        end.join(" --><!-- ")
 
       if block_opened? && !text.empty?
         raise SyntaxError.new(Haml::Error.message(:illegal_nesting_content), @next_line.index)
