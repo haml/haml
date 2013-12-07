@@ -168,8 +168,8 @@ module Haml
       return @template_tabs + 1 if flat? && line.whitespace =~ /^#{@flat_spaces}/
 
       message = Error.message(:inconsistent_indentation,
-        Haml::Util.human_indentation(line.whitespace),
-        Haml::Util.human_indentation(@indentation)
+        human_indentation(line.whitespace),
+        human_indentation(@indentation)
       )
       raise SyntaxError.new(message, line.index)
     end
