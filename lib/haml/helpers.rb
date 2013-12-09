@@ -391,10 +391,10 @@ MESSAGE
     #
     # @param text [#to_s] The text to output
     def haml_concat(text = "")
-      unless haml_buffer.options[:ugly] || haml_indent == 0
-        haml_buffer.buffer << %[#{haml_indent}#{text.to_s.gsub("\n", "\n#{haml_indent}")}\n]
-      else
+      if haml_buffer.options[:ugly] || haml_indent == 0
         haml_buffer.buffer << "#{text}\n"
+      else
+        haml_buffer.buffer << %[#{haml_indent}#{text.to_s.gsub("\n", "\n#{haml_indent}")}\n]
       end
       ErrorReturn.new("haml_concat")
     end
