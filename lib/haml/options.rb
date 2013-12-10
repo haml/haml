@@ -6,7 +6,9 @@ module Haml
 
     @defaults = {
       :attr_wrapper         => "'",
-      :autoclose            => %w(meta img link br hr input area param col base),
+      :autoclose            => %w(area base basefont br col command embed frame
+                                  hr img input isindex keygen link menuitem meta
+                                  param source track wbr),
       :encoding             => "UTF-8",
       :escape_attrs         => true,
       :escape_html          => false,
