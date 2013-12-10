@@ -194,19 +194,18 @@ MESSAGE
     # @yieldparam item An element of `enum`
     def list_of(enum, opts={}, &block)
       opts_attributes = opts.empty? ? "" : " ".<<(opts.map{|k,v| "#{k}='#{v}'" }.join(" "))
-      to_return = enum.collect do |i|
+      enum.collect do |i|
         result = capture_haml(i, &block)
 
-        if result.count("\n") > 1
+        result = if result.count("\n") > 1
           result.gsub!("\n", "\n  ")
-          result = "\n  #{result.strip}\n"
+          "\n  #{result.strip}\n"
         else
-          result = result.strip
+          result.strip
         end
 
         %Q!<li#{opts_attributes}>#{result}</li>!
-      end
-      to_return.join("\n")
+      end.join("\n")
     end
 
     # Returns a hash containing default assignments for the `xmlns`, `lang`, and `xml:lang`
@@ -377,7 +376,7 @@ MESSAGE
         captured = haml_buffer.buffer.slice!(position..-1)
 
         if captured == '' and value != haml_buffer.buffer
-             captured = (value.is_a?(String) ? value : nil)
+          captured = (value.is_a?(String) ? value : nil)
         end
 
         return nil if captured.nil?
