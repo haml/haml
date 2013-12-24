@@ -18,8 +18,12 @@ require 'action_pack'
 require 'action_controller'
 require 'action_view'
 require 'nokogiri'
-
 require 'rails'
+
+if defined?(I18n.enforce_available_locales)
+  I18n.enforce_available_locales = true
+end
+
 class TestApp < Rails::Application
   config.root = ""
 end
