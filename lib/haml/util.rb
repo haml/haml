@@ -56,15 +56,6 @@ module Haml
       $stderr = the_real_stderr
     end
 
-    # Returns an ActionView::Template::* class.
-    # These classes are of the form `ActionView::Template::Foo`.
-    #
-    # @param name [#to_s] The name of the class to get.
-    #   For example, `:Error` will return `ActionView::Template::Error`.
-    def av_template_class(name)
-      ActionView::Template.const_get(name.to_s)
-    end
-
     ## Rails XSS Safety
 
     # Whether or not ActionView's XSS protection is available and enabled,

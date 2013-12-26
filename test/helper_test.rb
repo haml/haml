@@ -95,7 +95,7 @@ HAML
 
     begin
       ActionView::Base.new.render(:inline => "<%= flatten('Foo\\nBar') %>")
-    rescue NoMethodError, Haml::Util.av_template_class(:Error)
+    rescue NoMethodError, ActionView::Template::Error
       proper_behavior = true
     end
     assert(proper_behavior)
