@@ -2,6 +2,7 @@ rvm:
   - 1.9.2
   - 1.9.3
   - 2.0.0
+  - 2.1.0
   - jruby
   - rbx-19mode
 gemfile:
@@ -26,6 +27,10 @@ matrix:
     - { rvm: 2.0.0, gemfile: test/gemfiles/Gemfile.rails-3.0.x }
     - { rvm: 2.0.0, gemfile: test/gemfiles/Gemfile.rails-3.1.x }
     - { rvm: 2.0.0, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
+
+    - { rvm: 2.1.0, gemfile: test/gemfiles/Gemfile.rails-3.0.x }
+    - { rvm: 2.1.0, gemfile: test/gemfiles/Gemfile.rails-3.1.x }
+    - { rvm: 2.1.0, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
 
   allow_failures:
      - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
