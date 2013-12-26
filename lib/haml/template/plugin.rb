@@ -1,17 +1,7 @@
 module Haml
 
   # This module makes Haml work with Rails using the template handler API.
-  class Plugin < ActionView::Template::Handlers::ERB.superclass
-
-    # Rails 3.1+, template handlers don't inherit from anything. In <= 3.0, they
-    # do. To avoid messy logic figuring this out, we just inherit from whatever
-    # the ERB handler does.
-
-    # In Rails 3.1+, we don't need to include Compilable.
-    if (ActionPack::VERSION::MAJOR == 3) && (ActionPack::VERSION::MINOR < 1)
-      include ActionView::Template::Handlers::Compilable
-    end
-
+  class Plugin
     def handles_encoding?; true; end
 
     def compile(template)
@@ -25,7 +15,6 @@ module Haml
       Haml::Engine.new(template.source, options).compiler.precompiled_with_ambles([])
     end
 
-    # In Rails 3.1+, #call takes the place of #compile
     def self.call(template)
       new.compile(template)
     end

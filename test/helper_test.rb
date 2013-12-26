@@ -34,12 +34,6 @@ class HelperTest < MiniTest::Unit::TestCase
     @base = ActionView::Base.new
     @base.controller = ActionController::Base.new
     @base.view_paths << File.expand_path("../templates", __FILE__)
-
-    if defined?(ActionController::Response)
-      # This is needed for >=3.0.0
-      @base.controller.response = ActionController::Response.new
-    end
-
     @base.instance_variable_set('@post', Post.new("Foo bar\nbaz", nil, PostErrors.new))
   end
 
