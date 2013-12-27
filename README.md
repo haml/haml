@@ -31,6 +31,13 @@ documentation](http://haml.info/docs/yardoc/).
 
 To use Haml with Rails, simply add Haml to your Gemfile and run `bundle`.
 
+    gem 'haml'
+
+Haml 4.1 requires an actively maintained version of Rails (version 3.2 or later).
+If you are using Rails 3.0 or 3.1, you should use Haml version 4.0.x:
+
+    gem 'haml', '~> 4.0.4'
+
 If you'd like to replace Rails's Erb-based generators with Haml, add
 [haml-rails](https://github.com/indirect/haml-rails) to your Gemfile as well.
 
