@@ -18,13 +18,6 @@ module Haml
 
 end
 
-# check for a compatible Rails version when Haml is loaded
-if defined?(Rails) && (actionpack_spec = Gem.loaded_specs['actionpack'])
-  if actionpack_spec.version.to_s < '3.2'
-    raise Exception.new("\n\n** Haml now requires Rails 3.2 and later. Use Haml version 4.0.4\n\n")
-  end
-end
-
 require 'haml/util'
 require 'haml/engine'
 require 'haml/railtie' if defined?(Rails::Railtie)
