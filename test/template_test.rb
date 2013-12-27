@@ -91,7 +91,7 @@ class TemplateTest < MiniTest::Unit::TestCase
         assert_equal(pair.first, pair.last, message)
       end
     end
-  rescue Haml::Util.av_template_class(:Error) => e
+  rescue ActionView::Template::Error => e
     if e.message =~ /Can't run [\w:]+ filter; required (one of|file) ((?:'\w+'(?: or )?)+)(, but none were found| not found)/
       puts "\nCouldn't require #{$2}; skipping a test."
     else
