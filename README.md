@@ -1,5 +1,6 @@
 # Haml
 
+[![Gem Version](https://badge.fury.io/rb/haml.png)](http://badge.fury.io/rb/haml)
 [![Build Status](https://secure.travis-ci.org/haml/haml.png?branch=master)](http://travis-ci.org/haml/haml)
 [![Code Climate](https://codeclimate.com/github/haml/haml.png)](https://codeclimate.com/github/haml/haml)
 [![Coverage Status](https://coveralls.io/repos/haml/haml/badge.png)](https://coveralls.io/r/haml/haml)
