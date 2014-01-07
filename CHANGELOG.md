@@ -17,8 +17,9 @@
 
 ## 4.0.5
 
-Not released yet.
+Released on Jan 7, 2014 ([diff](https://github.com/haml/haml/compare/4.0.4...4.0.5)).
 
+* Fix haml_concat appending unescaped HTML after a call to haml_tag.
 * Fix for bug whereby when HAML :ugly option is "true",
   ActionView::Helpers::CaptureHelper::capture returns the whole view buffer
   when passed a block that returns nothing (thanks [Mircea
