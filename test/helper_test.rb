@@ -14,6 +14,16 @@ module Haml::Helpers
   def something_that_uses_haml_concat
     haml_concat('foo').to_s
   end
+
+  def render_something_with_haml_concat
+    haml_concat "<p>"
+  end
+
+  def render_something_with_haml_tag_and_concat
+    haml_tag 'p' do
+      haml_concat '<foo>'
+    end
+  end
 end
 
 class HelperTest < MiniTest::Unit::TestCase
@@ -46,6 +56,15 @@ class HelperTest < MiniTest::Unit::TestCase
   def render(text, options = {})
     return @base.render :inline => text, :type => :haml if options == :action_view
     super
+  end
+
+  def test_rendering_with_escapes
+    output = render(<<-HAML, :action_view)
+- render_something_with_haml_concat
+- render_something_with_haml_tag_and_concat
+- render_something_with_haml_concat
+HAML
+    assert_equal("&lt;p&gt;\n<p>\n  <foo>\n</p>\n&lt;p&gt;\n", output)
   end
 
   def test_flatten
