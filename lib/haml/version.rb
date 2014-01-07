@@ -1,3 +1,3 @@
 module Haml
-  VERSION = "4.1.0.alpha.2"
+  VERSION = "4.1.0.beta.1"
 end
