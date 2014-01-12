@@ -10,7 +10,7 @@ platform :mri do
   gem "ruby-prof"
 end
 
-platform :mri_19 do
+platform :mri_21 do
   gem "simplecov"
 end
 

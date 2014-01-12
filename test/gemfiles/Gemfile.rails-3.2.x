@@ -6,5 +6,4 @@ gemspec :path => "../.."
 platform :rbx do
   gem 'rubysl', '~> 2.0'
   gem 'racc'
-  gem 'rubinius-developer_tools'
 end
