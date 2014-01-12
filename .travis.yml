@@ -4,30 +4,28 @@ rvm:
   - 2.0.0
   - 2.1.0
   - jruby
-  - rbx-19mode
+  - rbx
 gemfile:
   - test/gemfiles/Gemfile.rails-3.2.x
   - test/gemfiles/Gemfile.rails-4.0.x
+  - test/gemfiles/Gemfile.rails-4.1.x
 matrix:
   exclude:
     # Don't kill Travis: just test against the latest version on 2.0, JRuby
     # and Rubinius.
     - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
-    - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
+    - { rvm: rbx, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
 
     - { rvm: 1.9.2, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
+    - { rvm: 1.9.2, gemfile: test/gemfiles/Gemfile.rails-4.1.x }
+    - { rvm: 1.9.3, gemfile: test/gemfiles/Gemfile.rails-4.1.x }
 
     - { rvm: 2.0.0, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
     - { rvm: 2.1.0, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
 
   allow_failures:
      - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
-     - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
-
-branches:
-  only:
-    - master
-    - stable
-    - 3-1-stable
-
+     - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-4.1.x }
+     - { rvm: rbx, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
+     - { rvm: rbx, gemfile: test/gemfiles/Gemfile.rails-4.1.x }
 script: "bundle exec rake submodules test"
