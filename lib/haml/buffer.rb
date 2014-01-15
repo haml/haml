@@ -130,75 +130,80 @@ module Haml
     def adjust_tabs(tab_change)
       @real_tabs += tab_change
     end
-
-    Haml::Util.def_static_method(self, :format_script, [:result],
-                                 :preserve_script, :in_tag, :preserve_tag, :escape_html,
-                                 :nuke_inner_whitespace, :interpolated, :ugly, <<RUBY)
-      <% # Escape HTML here so that the safety of the string is preserved in Rails
-         result_name = escape_html ? "html_escape(result.to_s)" : "result.to_s" %>
-      <% unless ugly %>
+    
+    def format_script(result, preserve_script, in_tag, preserve_tag, escape_html, nuke_inner_whitespace, interpolated, ugly)
+      result_name = escape_html ? html_escape(result.to_s) : result.to_s
+      unless ugly
         # If we're interpolated,
         # then the custom tabulation is handled in #push_text.
         # The easiest way to avoid it here is to reset @tabulation.
-        <% if interpolated %>
+        if interpolated
           old_tabulation = @tabulation
           @tabulation = 0
-        <% end %>
-
-        <% if !(in_tag && preserve_tag && !nuke_inner_whitespace) %>
-        tabulation = @real_tabs
-        <% end %>
-        result = <%= result_name %>.<% if nuke_inner_whitespace %>strip<% else %>rstrip<% end %>
-      <% else %>
-        result = <%= result_name %><% if nuke_inner_whitespace %>.strip<% end %>
-      <% end %>
-
-      <% if preserve_tag %>
-        result = Haml::Helpers.preserve(result)
-      <% elsif preserve_script %>
-        result = Haml::Helpers.find_and_preserve(result, options[:preserve])
-      <% end %>
-
-      <% if ugly %>
-        fix_textareas!(result) if toplevel? && result.include?('<textarea')
-        return result
-      <% else %>
-        <% if !(in_tag && preserve_tag && !nuke_inner_whitespace) %>
-        has_newline = result.include?("\\n")
-        <% end %>
-
-        <% if in_tag && !nuke_inner_whitespace %>
-          <% unless preserve_tag %> if !has_newline <% end %>
-          @real_tabs -= 1
-          <% if interpolated %> @tabulation = old_tabulation <% end %>
-          return result
-          <% unless preserve_tag %> end <% end %>
-        <% end %>
-
-        <% if !(in_tag && preserve_tag && !nuke_inner_whitespace) %>
-        # Precompiled tabulation may be wrong
-        <% if !interpolated && !in_tag %>
-          result = tabs + result if @tabulation > 0
-        <% end %>
-
-        if has_newline
-          result.gsub! "\\n", "\\n" + tabs(tabulation)
-
-          # Add tabulation if it wasn't precompiled
-          <% if in_tag && !nuke_inner_whitespace %> result = tabs(tabulation) + result <% end %>
         end
 
-        fix_textareas!(result) if toplevel? && result.include?('<textarea')
+        if !(in_tag && preserve_tag && !nuke_inner_whitespace)
+          tabulation = @real_tabs
+        end
+        if nuke_inner_whitespace
+          result = result_name.strip
+        else
+          result = result_name.rstrip
+        end
+      else
+        if nuke_inner_whitespace
+          result = result_name.strip
+        else
+          result = result_name
+        end
+      end
 
-        <% if in_tag && !nuke_inner_whitespace %>
-          result = "\\n\#{result}\\n\#{tabs(tabulation-1)}"
-          @real_tabs -= 1
-        <% end %>
-        <% if interpolated %> @tabulation = old_tabulation <% end %>
-        result
-        <% end %>
-      <% end %>
-RUBY
+      if preserve_tag
+        result = Haml::Helpers.preserve(result)
+      elsif preserve_script
+        result = Haml::Helpers.find_and_preserve(result, options[:preserve])
+      end
+
+      if ugly
+        fix_textareas!(result) if toplevel? && result.include?('<textarea')
+        return result
+      else
+        if !(in_tag && preserve_tag && !nuke_inner_whitespace)
+          has_newline = result.include?("\n")
+        end
+
+        if in_tag && !nuke_inner_whitespace
+          if preserve_tag || !has_newline
+            @real_tabs -= 1
+            @tabulation = old_tabulation if interpolated
+            return result
+          end
+        end
+
+        if !(in_tag && preserve_tag && !nuke_inner_whitespace)
+          # Precompiled tabulation may be wrong
+          if !interpolated && !in_tag
+            result = tabs + result if @tabulation > 0
+          end
+
+          if has_newline
+            result.gsub! "\n", "\n" + tabs(tabulation)
+
+            # Add tabulation if it wasn't precompiled
+            result = tabs(tabulation) + result if in_tag && !nuke_inner_whitespace
+          end
+
+          fix_textareas!(result) if toplevel? && result.include?('<textarea')
+
+          if in_tag && !nuke_inner_whitespace
+            result = "\n#{result}\n#{tabs(tabulation-1)}"
+            @real_tabs -= 1
+          end
+          @tabulation = old_tabulation if interpolated
+          result
+        end
+      end
+    end
 
     def attributes(class_id, obj_ref, *attributes_hashes)
       attributes = class_id
