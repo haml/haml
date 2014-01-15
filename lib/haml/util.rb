@@ -182,52 +182,6 @@ MSG
       end
     end
 
-    # This is used for methods in {Haml::Buffer} that need to be very fast,
-    # and take a lot of boolean parameters
-    # that are known at compile-time.
-    # Instead of passing the parameters in normally,
-    # a separate method is defined for every possible combination of those parameters;
-    # these are then called using \{#static\_method\_name}.
-    #
-    # To define a static method, an ERB template for the method is provided.
-    # All conditionals based on the static parameters
-    # are done as embedded Ruby within this template.
-    # For example:
-    #
-    #     def_static_method(Foo, :my_static_method, [:foo, :bar], :baz, :bang, <<RUBY)
-    #       <% if baz && bang %>
-    #         return foo + bar
-    #       <% elsif baz || bang %>
-    #         return foo - bar
-    #       <% else %>
-    #         return 17
-    #       <% end %>
-    #     RUBY
-    #
-    # \{#static\_method\_name} can be used to call static methods.
-    #
-    # @overload def_static_method(klass, name, args, *vars, erb)
-    # @param klass [Module] The class on which to define the static method
-    # @param name [#to_s] The (base) name of the static method
-    # @param args [Array<Symbol>] The names of the arguments to the defined methods
-    #   (**not** to the ERB template)
-    # @param vars [Array<Symbol>] The names of the static boolean variables
-    #   to be made available to the ERB template
-    def def_static_method(klass, name, args, *vars)
-      erb = vars.pop
-      info = caller_info
-      powerset(vars).each do |set|
-        context = StaticConditionalContext.new(set).instance_eval {binding}
-        method_content = (defined?(Erubis::TinyEruby) && Erubis::TinyEruby || ERB).new(erb).result(context)
-
-        klass.class_eval(<<METHOD, info[0], info[1])
-          def #{static_method_name(name, *vars.map {|v| set.include?(v)})}(#{args.join(', ')})
-            #{method_content}
-          end
-METHOD
-      end
-    end
-
     # Computes the name for a method defined via \{#def\_static\_method}.
     #
     # @param name [String] The base name of the static method
