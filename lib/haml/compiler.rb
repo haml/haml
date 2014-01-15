@@ -371,19 +371,18 @@ END
       return if @options.suppress_eval?
 
       args = [:preserve_script, :in_tag, :preserve_tag, :escape_html, :nuke_inner_whitespace]
-      args.map! {|name| opts[name]}
+      args.map! {|name| !!opts[name]}
       args << !block_given? << @options.ugly
 
       no_format = @options.ugly &&
         !(opts[:preserve_script] || opts[:preserve_tag] || opts[:escape_html])
-      output_expr = "(#{text}\n)"
-      static_method = "_hamlout.#{static_method_name(:format_script, *args)}"
 
       # Prerender tabulation unless we're in a tag
       push_merged_text '' unless opts[:in_tag]
 
       unless block_given?
-        push_generated_script(no_format ? "#{text}\n" : "#{static_method}(#{output_expr});")
+        format_script_method = "_hamlout.format_script((#{text}\n),#{args.join(',')});"
+        push_generated_script(no_format ? "#{text}\n" : format_script_method)
         concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
         return
       end
@@ -392,7 +391,8 @@ END
       push_silent "haml_temp = #{text}"
       yield
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
-      @precompiled << "_hamlout.buffer << #{no_format ? "haml_temp.to_s;" : "#{static_method}(haml_temp);"}"
+      format_script_method = "_hamlout.format_script(haml_temp,#{args.join(',')});"
+      @precompiled << "_hamlout.buffer << #{no_format ? "haml_temp.to_s;" : format_script_method}"
       concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace] || @options.ugly
     end
 
