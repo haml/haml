@@ -163,34 +163,6 @@ MSG
       end
     end
 
-    ## Static Method Stuff
-
-    # The context in which the ERB for \{#def\_static\_method} will be run.
-    class StaticConditionalContext
-      # @param set [#include?] The set of variables that are defined for this context.
-      def initialize(set)
-        @set = set
-      end
-
-      # Checks whether or not a variable is defined for this context.
-      #
-      # @param name [Symbol] The name of the variable
-      # @return [Boolean]
-      def method_missing(name, *args, &block)
-        super unless args.empty? && block.nil?
-        @set.include?(name)
-      end
-    end
-
-    # Computes the name for a method defined via \{#def\_static\_method}.
-    #
-    # @param name [String] The base name of the static method
-    # @param vars [Array<Boolean>] The static variable assignment
-    # @return [String] The real name of the static method
-    def static_method_name(name, *vars)
-      :"#{name}_#{vars.map {|v| !!v}.join('_')}"
-    end
-
     # Scans through a string looking for the interoplation-opening `#{`
     # and, when it's found, yields the scanner to the calling code
     # so it can handle it properly.
