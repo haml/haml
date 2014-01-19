@@ -149,46 +149,35 @@ module Haml
         @tabulation = 0
       end
 
-      if !(in_tag && preserve_tag && !nuke_inner_whitespace)
-        tabulation = @real_tabs
-      end
+      in_tag_no_nuke = in_tag && !nuke_inner_whitespace
+      preserved_no_nuke = in_tag_no_nuke && preserve_tag
+      tabulation = !preserved_no_nuke && @real_tabs
 
-      if nuke_inner_whitespace
-        result = result_name.strip
-      else
-        result = result_name.rstrip
-      end
-
+      result = nuke_inner_whitespace ? result_name.strip : result_name.rstrip
       result = preserve(result, preserve_script, preserve_tag)
 
-      if !(in_tag && preserve_tag && !nuke_inner_whitespace)
-        has_newline = result.include?("\n")
+      has_newline = !preserved_no_nuke && result.include?("\n")
+
+      if in_tag_no_nuke && (preserve_tag || !has_newline)
+        @real_tabs -= 1
+        @tabulation = old_tabulation if interpolated
+        return result
       end
 
-      if in_tag && !nuke_inner_whitespace
-        if preserve_tag || !has_newline
-          @real_tabs -= 1
-          @tabulation = old_tabulation if interpolated
-          return result
-        end
-      end
-
-      if !(in_tag && preserve_tag && !nuke_inner_whitespace)
+      unless preserved_no_nuke
         # Precompiled tabulation may be wrong
-        if !interpolated && !in_tag
-          result = tabs + result if @tabulation > 0
-        end
+        result = tabs + result if !interpolated && !in_tag && @tabulation > 0
 
         if has_newline
           result.gsub! "\n", "\n" + tabs(tabulation)
 
           # Add tabulation if it wasn't precompiled
-          result = tabs(tabulation) + result if in_tag && !nuke_inner_whitespace
+          result = tabs(tabulation) + result if in_tag_no_nuke
         end
 
         fix_textareas!(result) if toplevel? && result.include?('<textarea')
 
-        if in_tag && !nuke_inner_whitespace
+        if in_tag_no_nuke
           result = "\n#{result}\n#{tabs(tabulation-1)}"
           @real_tabs -= 1
         end
