@@ -166,13 +166,13 @@ module Haml
 
       unless preserved_no_nuke
         # Precompiled tabulation may be wrong
-        result = tabs + result if !interpolated && !in_tag && @tabulation > 0
+        result = "#{tabs}#{result}" if !interpolated && !in_tag && @tabulation > 0
 
         if has_newline
-          result.gsub! "\n", "\n" + tabs(tabulation)
+          result.gsub! "\n", "\n#{tabs(tabulation)}"
 
           # Add tabulation if it wasn't precompiled
-          result = tabs(tabulation) + result if in_tag_no_nuke
+          result = "#{tabs(tabulation)}#{result}" if in_tag_no_nuke
         end
 
         fix_textareas!(result) if toplevel? && result.include?('<textarea')
