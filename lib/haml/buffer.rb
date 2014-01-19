@@ -133,7 +133,13 @@ module Haml
     
     def format_script(result, preserve_script, in_tag, preserve_tag, escape_html, nuke_inner_whitespace, interpolated, ugly)
       result_name = escape_html ? html_escape(result.to_s) : result.to_s
-      unless ugly
+      if ugly
+        if nuke_inner_whitespace
+          result = result_name.strip
+        else
+          result = result_name
+        end
+      else
         # If we're interpolated,
         # then the custom tabulation is handled in #push_text.
         # The easiest way to avoid it here is to reset @tabulation.
@@ -145,16 +151,11 @@ module Haml
         if !(in_tag && preserve_tag && !nuke_inner_whitespace)
           tabulation = @real_tabs
         end
+
         if nuke_inner_whitespace
           result = result_name.strip
         else
           result = result_name.rstrip
-        end
-      else
-        if nuke_inner_whitespace
-          result = result_name.strip
-        else
-          result = result_name
         end
       end
 
