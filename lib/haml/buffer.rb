@@ -134,11 +134,7 @@ module Haml
     def format_script(result, preserve_script, in_tag, preserve_tag, escape_html, nuke_inner_whitespace, interpolated, ugly)
       result_name = escape_html ? html_escape(result.to_s) : result.to_s
       if ugly
-        if nuke_inner_whitespace
-          result = result_name.strip
-        else
-          result = result_name
-        end
+        result = nuke_inner_whitespace ? result_name.strip : result_name
       else
         # If we're interpolated,
         # then the custom tabulation is handled in #push_text.
@@ -159,11 +155,7 @@ module Haml
         end
       end
 
-      if preserve_tag
-        result = Haml::Helpers.preserve(result)
-      elsif preserve_script
-        result = Haml::Helpers.find_and_preserve(result, options[:preserve])
-      end
+      result = preserve(result, preserve_script, preserve_tag)
 
       if ugly
         fix_textareas!(result) if toplevel? && result.include?('<textarea')
@@ -275,6 +267,12 @@ module Haml
     end
 
     private
+
+    def preserve(result, preserve_script, preserve_tag)
+      return Haml::Helpers.preserve(result) if preserve_tag
+      return Haml::Helpers.find_and_preserve(result, options[:preserve]) if preserve_script
+      result
+    end
 
     # Works like #{find_and_preserve}, but allows the first newline after a
     # preserved opening tag to remain unencoded, and then outdents the content.
