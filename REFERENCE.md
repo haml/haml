@@ -329,7 +329,7 @@ This is compiled to:
     </html>
 
 You can use as many such attribute methods as you want by separating them with
-commas, like a Ruby argument list. All the hashes will me merged together, from
+commas, like a Ruby argument list. All the hashes will be merged together, from
 left to right. For example, if you defined
 
     def hash1
