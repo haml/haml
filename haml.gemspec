@@ -34,23 +34,4 @@ embedded with ease. It was originally envisioned as a plugin for Ruby on Rails,
 but it can function as a stand-alone templating engine.
 END
 
-  spec.post_install_message = <<-END
-
-HEADS UP! Haml 4.0 has many improvements, but also has changes that may break
-your application:
-
-* Support for Ruby 1.8.6 dropped
-* Support for Rails 2 dropped
-* Sass filter now always outputs <style> tags
-* Data attributes are now hyphenated, not underscored
-* html2haml utility moved to the html2haml gem
-* Textile and Maruku filters moved to the haml-contrib gem
-
-For more info see:
-
-http://rubydoc.info/github/haml/haml/file/CHANGELOG.md
-
-END
-
-
 end
