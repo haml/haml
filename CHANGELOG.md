@@ -14,6 +14,8 @@
 * Make escape_once respect hexadecimal references. (Matt Wildig)
 * General performance and memory usage improvements. (Akira Matsuda)
 * Don't treat the 'data' attribute specially when merging attribute hashes. (Matt Wildig and Norman Clarke)
+* Add a tracing option. When enabled, Haml will output a data-trace attribute on each tag showing the path
+  to the source Haml file from which it was generated. Thanks [Alex Babkin](https://github.com/ababkin).
 
 ## 4.0.5
 

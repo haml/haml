@@ -1986,6 +1986,11 @@ HAML
     end
   end
 
+  def test_tracing
+    result = render('%p', :trace => true, :filename => 'foo').strip
+    assert_equal "<p data-trace='foo:1'></p>", result
+  end
+
   private
 
   def assert_valid_encoding_comment(comment)
