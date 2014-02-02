@@ -1987,8 +1987,8 @@ HAML
   end
 
   def test_tracing
-    result = render('%p', :trace => true, :filename => 'foo').strip
-    assert_equal "<p data-trace='foo:1'></p>", result
+    result = render('%p{:class => "hello"}', :trace => true, :filename => 'foo').strip
+    assert_equal "<p class='hello' data-trace='foo:1'></p>", result
   end
 
   private
