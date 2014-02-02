@@ -162,6 +162,10 @@ END
         preserve_script = t[:preserve_script]
       end
 
+      if @options[:trace]
+        t[:attributes].merge!({"data-trace" => @options.filename.split('/views').last + ":" + @node.line.to_s})
+      end
+
       # Check if we can render the tag directly to text and not process it in the buffer
       if (object_ref == :nil) && attributes_hashes.empty? && !preserve_script
         tag_closed = !block_given? && !t[:self_closing] && !parse
@@ -500,9 +504,6 @@ END
     end
 
     def prerender_tag(name, self_close, attributes)
-      if @options[:trace]
-        attributes.merge!({"data-trace" => @options.filename.split('/views').last + ":" + @node.line.to_s})
-      end
       attributes_string = Compiler.build_attributes(
         @options.html?, @options.attr_wrapper, @options.escape_attrs, @options.hyphenate_data_attrs, attributes)
       "<#{name}#{attributes_string}#{self_close && @options.xhtml? ? ' /' : ''}>"
