@@ -15,29 +15,38 @@ that's both powerful and easy to understand.
 Haml can be used from the command line or as part of a Ruby web framework. The
 first step is to install the gem:
 
-    gem install haml
+```sh
+gem install haml
+```
 
 After you write some Haml, you can run
 
-    haml document.haml
+```sh
+haml document.haml
+```
 
 to compile it to HTML. For more information on these commands, check out
 
-    haml --help
+```sh
+haml --help
+```
 
-To use Haml programatically, check out the [YARD
-documentation](http://haml.info/docs/yardoc/).
+To use Haml programatically, check out the [YARD documentation](http://haml.info/docs/yardoc/).
 
 ## Using Haml with Rails
 
 To use Haml with Rails, simply add Haml to your Gemfile and run `bundle`.
 
-    gem 'haml'
+```ruby
+gem 'haml'
+```
 
 Haml 4.1 requires an actively maintained version of Rails (version 3.2 or later).
 If you are using Rails 3.0 or 3.1, you should use Haml version 4.0.x:
 
-    gem 'haml', '~> 4.0.4'
+```ruby
+gem 'haml', '~> 4.0.5'
+```
 
 If you'd like to replace Rails's Erb-based generators with Haml, add
 [haml-rails](https://github.com/indirect/haml-rails) to your Gemfile as well.
@@ -46,58 +55,76 @@ If you'd like to replace Rails's Erb-based generators with Haml, add
 
 The most basic element of Haml is a shorthand for creating HTML:
 
-    %tagname{:attr1 => 'value1', :attr2 => 'value2'} Contents
+```haml
+%tagname{:attr1 => 'value1', :attr2 => 'value2'} Contents
+```
 
 No end-tag is needed; Haml handles that automatically. If you prefer HTML-style
 attributes, you can also use:
 
-    %tagname(attr1='value1' attr2='value2') Contents
+```haml
+%tagname(attr1='value1' attr2='value2') Contents
+```
 
 Adding `class` and `id` attributes is even easier. Haml uses the same syntax as
 the CSS that styles the document:
 
-    %tagname#id.class
+```haml
+%tagname#id.class
+```
 
 In fact, when you're using the `<div>` tag, it becomes _even easier_. Because
 `<div>` is such a common element, a tag without a name defaults to a div. So
 
-    #foo Hello!
+```haml
+#foo Hello!
+```
 
 becomes
 
-    <div id='foo'>Hello!</div>
+```html
+<div id='foo'>Hello!</div>
+```
 
 Haml uses indentation to bring the individual elements to represent the HTML
 structure. A tag's children are indented beneath than the parent tag. Again, a
 closing tag is automatically added. For example:
 
-    %ul
-      %li Salt
-      %li Pepper
+```haml
+%ul
+  %li Salt
+  %li Pepper
+```
 
 becomes:
 
-    <ul>
-      <li>Salt</li>
-      <li>Pepper</li>
-    </ul>
+```html
+<ul>
+  <li>Salt</li>
+  <li>Pepper</li>
+</ul>
+```
 
 You can also put plain text as a child of an element:
 
-    %p
-      Hello,
-      World!
+```haml
+%p
+  Hello,
+  World!
+```
 
 It's also possible to embed Ruby code into Haml documents. An equals sign, `=`,
 will output the result of the code. A hyphen, `-`, will run the code but not
 output the result. You can even use control statements like `if` and `while`:
 
-    %p
-      Date/Time:
-      - now = DateTime.now
-      %strong= now
-      - if now > DateTime.parse("December 31, 2006")
-        = "Happy new " + "year!"
+```haml
+%p
+  Date/Time:
+  - now = DateTime.now
+  %strong= now
+  - if now > DateTime.parse("December 31, 2006")
+    = "Happy new " + "year!"
+```
 
 Haml provides far more tools than those presented here. Check out the [reference
 documentation](http://haml.info/docs/yardoc/file.REFERENCE.html)
@@ -116,17 +143,21 @@ Contributions are welcomed, but before you get started please read the
 
 After forking and then cloning the repo locally, install Bundler and then use it
 to install the development gem dependecies:
-
-    gem install bundler
-    bundle install
+```sh
+gem install bundler
+bundle install
+```
 
 Once this is complete, you should be able to run the test suite:
-
-    rake
+```sh
+rake
+```
 
 You'll get a warning that you need to install haml-spec, so run this:
 
-    git submodule update --init
+```sh
+git submodule update --init
+```
 
 At this point `rake` should run without error or warning and you are ready to
 start working on your patch!
@@ -134,7 +165,9 @@ start working on your patch!
 Note that you can also run just one test out of the test suite if you're working
 on a specific area:
 
-    ruby -Itest test/helper_test.rb -n test_buffer_access
+```sh
+ruby -Itest test/helper_test.rb -n test_buffer_access
+```
 
 Haml supports Ruby 1.9.2 and higher, so please make sure your changes run on
 both 1.9 and 2.0.
@@ -156,7 +189,6 @@ but still consults on language issues.
 
 [Nathan Weizenbaum](http://nex-3.com) was for many years the primary developer
 and architect of the "modern" Ruby implementation of Haml.
-
 
 ## License
 
