@@ -419,6 +419,16 @@ and the output will be rendered as:
 
     <a data-author_id='123' data-category='7' href='/posts'>Posts By Author</a>
 
+This expansion of hashes is recursive – any value of the child hash that is
+itself a hash will create an attribute for each entry, with the attribute name
+prefixed with all ancestor keys. For example:
+
+    .book-info{:data => {:book => {:id => 123, :genre => 'programming'}, :category => 7}}
+
+will render as:
+
+    <div class='book-info' data-book-genre='programming' data-book-id='123' data-category='7'></div>
+
 ### Class and ID: `.` and `#`
 
 The period and pound sign are borrowed from CSS. They are used as shortcuts to
