@@ -233,8 +233,7 @@ is compiled to:
 
     <script src='javascripts/script_9' type='text/javascript'></script>
 
-#### `:class` and `:id` Attributes
-{#class-and-id-attributes}
+#### `:class` and `:id` Attributes {#class-and-id-attributes}
 
 The `:class` and `:id` attributes can also be specified as a Ruby array whose
 elements will be joined together. A `:class` array is joined with `" "` and an
@@ -1120,53 +1119,53 @@ more info.
 
 Haml comes with the following filters defined:
 
-{#cdata-filter}
-### `:cdata`
+### `:cdata` {#cdata-filter}
+
 Surrounds the filtered text with CDATA tags.
 
-{#coffee-filter}
-### `:coffee`
+### `:coffee` {#coffee-filter}
+
 Compiles the filtered text to Javascript using Coffeescript. You can also
 reference this filter as `:coffeescript`. This filter is implemented using
 Tilt.
 
-{#css-filter}
-### `:css`
+### `:css` {#css-filter}
+
 Surrounds the filtered text with `<style>` and (optionally) CDATA tags. Useful
 for including inline CSS. Use the {Haml::Options#cdata `:cdata` option} to
 control when CDATA tags are added.
 
-{#erb-filter}
-### `:erb`
+### `:erb` {#erb-filter}
+
 Parses the filtered text with ERb, like an RHTML template. Not available if the
 {Haml::Options#suppress_eval `:suppress_eval`} option is set to true. Embedded
 Ruby code is evaluated in the same context as the Haml template. This filter is
 implemented using Tilt.
 
-{#escaped-filter}
-### `:escaped`
+### `:escaped` {#escaped-filter}
+
 Works the same as plain, but HTML-escapes the text
 before placing it in the document.
 
-{#javascript-filter}
-### `:javascript`
+### `:javascript` {#javascript-filter}
+
 Surrounds the filtered text with `<script>` and (optionally) CDATA tags.
 Useful for including inline Javascript. Use the {Haml::Options#cdata `:cdata`
 option} to control when CDATA tags are added.
 
-{#less-filter}
-### `:less`
+### `:less` {#less-filter}
+
 Parses the filtered text with [Less](http://lesscss.org/) to produce CSS output.
 This filter is implemented using Tilt.
 
-{#markdown-filter}
-### `:markdown`
+### `:markdown` {#markdown-filter}
+
 Parses the filtered text with
 [Markdown](http://daringfireball.net/projects/markdown). This filter is
 implemented using Tilt.
 
-{#maruku-filter}
-### `:maruku`
+### `:maruku` {#maruku-filter}
+
 Parses the filtered text with [Maruku](https://github.com/nex3/maruku), which
 has some non-standard extensions to Markdown.
 
@@ -1175,39 +1174,39 @@ contrib](https://github.com/haml/haml-contrib) but is loaded automatically for
 historical reasons. In future versions of Haml it will likely not be loaded by
 default. This filter is implemented using Tilt.
 
-{#plain-filter}
-### `:plain`
+### `:plain` {#plain-filter}
+
 Does not parse the filtered text. This is useful for large blocks of text
 without HTML tags, when you don't want lines starting with `.` or `-` to be
 parsed.
 
-{#preserve-filter}
-### `:preserve`
+### `:preserve` {#preserve-filter}
+
 Inserts the filtered text into the template with whitespace preserved.
 `preserve`d blocks of text aren't indented, and newlines are replaced with the
 HTML escape code for newlines, to preserve nice-looking output. See also
 [Whitespace Preservation](#whitespace_preservation).
 
-{#ruby-filter}
-### `:ruby`
+### `:ruby` {#ruby-filter}
+
 Parses the filtered text with the normal Ruby interpreter. Creates an `IO`
 object named `haml_io`, anything written to it is output into the Haml document.
 Not available if the {Haml::Options#suppress_eval `:suppress_eval`} option is
 set to true. The Ruby code is evaluated in the same context as the Haml
 template.
 
-{#sass-filter}
-### `:sass`
+### `:sass` {#sass-filter}
+
 Parses the filtered text with [Sass](http://sass-lang.com/) to produce CSS
 output. This filter is implemented using Tilt.
 
-{#scss-filter}
-### `:scss`
+### `:scss` {#scss-filter}
+
 Parses the filtered text with Sass like the `:sass` filter, but uses the newer
 SCSS syntax to produce CSS output. This filter is implemented using Tilt.
 
-{#textile-filter}
-### `:textile`
+### `:textile` {#textile-filter}
+
 Parses the filtered text with [Textile](http://www.textism.com/tools/textile).
 Only works if [RedCloth](http://redcloth.org) is installed.
 
@@ -1227,8 +1226,8 @@ the whitespace removal methods allow. There are a few helper methods that are
 useful when dealing with inline content. All these methods take a Haml block to
 modify.
 
-{#surround}
-### surround
+### surround {#surround}
+
 Surrounds a Haml block with text. Expects 1 or 2 string arguments used to
 surround the Haml block. If a second argument is not provided, the first
 argument is used as the second.
@@ -1236,15 +1235,15 @@ argument is used as the second.
     = surround "(", ")" do
       = link_to "learn more", "#"
 
-{#precede}
-### precede
+### precede {#precede}
+
 Prepends a Haml block with text. Expects 1 argument.
 
     = precede "*" do
       %span Required
 
-{#succeed}
-### succeed
+### succeed {#succeed}
+
 Appends a Haml block with text. Expects 1 argument.
 
     Begin by
