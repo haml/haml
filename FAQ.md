@@ -2,14 +2,12 @@
 
 ## Haml
 
-### Why is my markup indented properly in development mode, but not in production?
-{#q-indentation-in-production}
+### Why is my markup indented properly in development mode, but not in production? {#q-indentation-in-production}
 
 To improve performance, Haml defaults to {Haml::Options#ugly "ugly" mode} in
 Rails apps running in production.
 
-### How do I put a punctuation mark after an element, like "`I like <strong>cake</strong>!`"?
-{#q-punctuation}
+### How do I put a punctuation mark after an element, like "`I like <strong>cake</strong>!`"? {#q-punctuation}
 
 Expressing the structure of a document
 and expressing inline formatting are two very different problems.
@@ -37,8 +35,7 @@ then it's even easier:
 
     %p== I like #{link_to 'chocolate', 'http://franschocolates.com'}!
 
-### How do I stop Haml from indenting the contents of my `pre` and `textarea` tags?
-{#q-preserve}
+### How do I stop Haml from indenting the contents of my `pre` and `textarea` tags? {#q-preserve}
 
 Because Haml automatically indents the HTML source code,
 the contents of whitespace-sensitive tags like `pre` and `textarea`
@@ -78,8 +75,7 @@ and renders
 
     <p><textarea>Foo&#x000A;Bar</textarea></p>
 
-### How do I make my long lines of Ruby code look nicer in my Haml document?
-{#q-multiline}
+### How do I make my long lines of Ruby code look nicer in my Haml document? {#q-multiline}
 
 Put them in a helper or your model.
 
@@ -125,8 +121,7 @@ in Haml, you have to do
     - form_for stuff do
       ...
 
-### I have Haml installed. Why is Rails (only looking for `.html.erb` files | rendering Haml files as plain text | rendering Haml files as blank pages)?
-{#q-blank-page}
+### I have Haml installed. Why is Rails (only looking for `.html.erb` files | rendering Haml files as plain text | rendering Haml files as blank pages)? {#q-blank-page}
 
 There are several reasons these things might be happening.
 First of all, make sure that Haml really is installed;
