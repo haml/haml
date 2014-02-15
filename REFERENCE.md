@@ -389,7 +389,7 @@ or using `true` and `false`:
 
     %input(selected=true)
 
-#### Hash Valued Attributes
+#### Prefixed Attributes
 
 HTML5 allows for adding
 [custom non-visible data attributes](http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#embedding-custom-non-visible-data-with-the-data-*-attributes)
