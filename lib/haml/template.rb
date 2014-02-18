@@ -1,7 +1,14 @@
 require 'haml/template/options'
 require 'haml/engine'
-require 'haml/helpers/action_view_mods'
-require 'haml/helpers/action_view_extensions'
+if defined?(ActiveSupport)
+  ActiveSupport.on_load(:action_view) do
+    require 'haml/helpers/action_view_mods'
+    require 'haml/helpers/action_view_extensions'
+  end
+else
+  require 'haml/helpers/action_view_mods'
+  require 'haml/helpers/action_view_extensions'
+end
 require 'haml/helpers/xss_mods'
 require 'haml/helpers/action_view_xss_mods'
 
