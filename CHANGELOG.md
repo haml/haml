@@ -535,7 +535,6 @@ The {file:HAML_REFERENCE.md#ugly-option `:ugly` option} is now on by default
 in the testing environment in Rails to help tests run faster.
 
 ## 3.0.0
-{#3-0-0}
 
 [Tagged on GitHub](http://github.com/nex3/haml/commit/3.0.0).
 
