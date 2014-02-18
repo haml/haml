@@ -79,7 +79,7 @@ Released March 21, 2013 ([diff](https://github.com/haml/haml/compare/4.0.0...4.0
 
 ## 4.0.0
 
-* The Haml exectutable now accepts an `--autoclose` option. You can now
+* The Haml executable now accepts an `--autoclose` option. You can now
   specify a list of tags that should be autoclosed
 
 * The `:ruby` filter no longer redirects $stdout to the Haml document, as this
@@ -116,7 +116,7 @@ Released March 21, 2013 ([diff](https://github.com/haml/haml/compare/4.0.0...4.0
 
 * All Hash attribute values are now treated as HTML5 data, regardless of key.
   Previously only the "data" key was treated this way. Allowing arbitrary keys
-  means you can now easily use this feauture for Aria attributes, among other
+  means you can now easily use this feature for Aria attributes, among other
   uses.
   (thanks to [Elvin Efendi](https://github.com/ElvinEfendi))
 

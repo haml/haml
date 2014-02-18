@@ -142,7 +142,7 @@ Contributions are welcomed, but before you get started please read the
 [guidelines](http://haml.info/development.html#contributing).
 
 After forking and then cloning the repo locally, install Bundler and then use it
-to install the development gem dependecies:
+to install the development gem dependencies:
 ```sh
 gem install bundler
 bundle install

@@ -81,7 +81,7 @@ module Haml
     # Checks that the encoding of a string is valid
     # and cleans up potential encoding gotchas like the UTF-8 BOM.
     # If it's not, yields an error string describing the invalid character
-    # and the line on which it occurrs.
+    # and the line on which it occurs.
     #
     # @param str [String] The string of which to check the encoding
     # @yield [msg] A block in which an encoding error can be raised.
