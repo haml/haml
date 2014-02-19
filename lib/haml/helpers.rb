@@ -522,7 +522,7 @@ MESSAGE
     end
 
     # Conditionally wrap a block in an element. If `condition` is `true` then
-    # this method renders the tag described by the argumants in `tag` (using
+    # this method renders the tag described by the arguments in `tag` (using
     # \{#haml_tag}) with the given block inside, otherwise it just renders the block.
     #
     # For example,
