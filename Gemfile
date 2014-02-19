@@ -3,7 +3,7 @@ gemspec
 
 group :docs do
   gem "yard", "~> 0.8.0"
-  gem "maruku"
+  gem "rdoc"
 end
 
 platform :mri do
