@@ -11,8 +11,6 @@ gemfile:
   - test/gemfiles/Gemfile.rails-4.1.x
 matrix:
   exclude:
-    # Don't kill Travis: just test against the latest version on 2.0, JRuby
-    # and Rubinius.
     - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
     - { rvm: rbx, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
 
@@ -28,4 +26,5 @@ matrix:
      - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-4.1.x }
      - { rvm: rbx, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
      - { rvm: rbx, gemfile: test/gemfiles/Gemfile.rails-4.1.x }
+  fast_finish: true
 script: "bundle exec rake submodules test"
