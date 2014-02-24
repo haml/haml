@@ -503,7 +503,7 @@ HAML
   end
 
   def test_equals_block_with_ugly
-    assert_equal("foo\n", render(<<HAML, :ugly => true))
+    assert_equal("foo\n\n", render(<<HAML, :ugly => true))
 = capture_haml do
   foo
 HAML
