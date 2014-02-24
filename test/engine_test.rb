@@ -1004,6 +1004,16 @@ HTML
 HAML
   end
 
+  def test_script_adds_newline_in_ugly_with_block
+    scope = Object.new
+    def scope.foo
+      "Hello"
+    end
+    haml = "= foo do\n  .ignored\nEnd\n"
+    html = "Hello\nEnd\n"
+    assert_equal(html, render(haml, :scope => scope, :ugly => true))
+  end
+
   # Options tests
 
   def test_filename_and_line
