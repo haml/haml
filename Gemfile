@@ -13,8 +13,3 @@ end
 platform :mri_21 do
   gem "simplecov"
 end
-
-platform :rbx do
-  gem 'rubysl', '~> 2.0'
-  gem 'racc'
-end
