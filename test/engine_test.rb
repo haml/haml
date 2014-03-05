@@ -237,14 +237,59 @@ HAML
     assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#{who}", :locals => {:who => 'World'}))
   end
 
+  def test_interpolation_with_instance_var
+    scope = Object.new
+    scope.instance_variable_set(:@who, 'World')
+
+    assert_equal("<p>Hello World</p>\n", render('%p Hello #@who', :scope => scope))
+    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#@who", :scope => scope))
+  end
+
+  def test_interpolation_with_global
+    $global_var_for_testing = 'World'
+
+    assert_equal("<p>Hello World</p>\n", render('%p Hello #$global_var_for_testing'))
+    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#$global_var_for_testing"))
+  end
+
   def test_interpolation_in_the_middle_of_a_string
     assert_equal("\"title 'Title'. \"\n",
                  render("\"title '\#{\"Title\"}'. \""))
   end
 
+  def test_interpolation_with_instance_var_in_the_middle_of_a_string
+    scope = Object.new
+    scope.instance_variable_set(:@title, 'Title')
+
+    assert_equal("\"title 'Title'. \"\n",
+                 render("\"title '\#@title'. \"",  :scope => scope))
+  end
+
+  def test_interpolation_with_global_in_the_middle_of_a_string
+    $global_var_for_testing = 'Title'
+
+    assert_equal("\"title 'Title'. \"\n",
+                 render("\"title '\#$global_var_for_testing'. \""))
+  end
+
   def test_interpolation_at_the_beginning_of_a_line
     assert_equal("<p>2</p>\n", render('%p #{1 + 1}'))
     assert_equal("<p>\n  2\n</p>\n", render("%p\n  \#{1 + 1}"))
+  end
+
+  def test_interpolation_with_instance_var_at_the_beginning_of_a_line
+    scope = Object.new
+    scope.instance_variable_set(:@foo, 2)
+
+    assert_equal("<p>2</p>\n", render('%p #@foo', :scope => scope))
+    assert_equal("<p>\n  2\n</p>\n", render("%p\n  \#@foo", :scope => scope))
+  end
+
+  def test_interpolation_with_global_at_the_beginning_of_a_line
+    $global_var_for_testing = 2
+
+    assert_equal("<p>2</p>\n", render('%p #$global_var_for_testing'))
+    assert_equal("<p>\n  2\n</p>\n", render("%p\n  \#$global_var_for_testing"))
   end
 
   def test_escaped_interpolation

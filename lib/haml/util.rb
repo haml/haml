@@ -175,7 +175,7 @@ MSG
     # @return [String] The text remaining in the scanner after all `#{`s have been processed
     def handle_interpolation(str)
       scan = StringScanner.new(str)
-      yield scan while scan.scan(/(.*?)(\\*)\#\{/)
+      yield scan while scan.scan(/(.*?)(\\*)\#([\{@$])/)
       scan.rest
     end
 
@@ -224,20 +224,26 @@ MSG
     end
 
     def contains_interpolation?(str)
-      str.include?('#{')
+      /#[\{$@]/ === str
     end
 
     def unescape_interpolation(str, escape_html = nil)
       res = ''
       rest = Haml::Util.handle_interpolation str.dump do |scan|
         escapes = (scan[2].size - 1) / 2
+        char = scan[3] # '{', '@' or '$'
         res << scan.matched[0...-3 - escapes]
         if escapes % 2 == 1
-          res << '#{'
+          res << "\##{char}"
         else
-          content = eval('"' + balance(scan, ?{, ?}, 1)[0][0...-1] + '"')
+          interpolated = if char == '{'
+            balance(scan, ?{, ?}, 1)[0][0...-1]
+          else
+            scan.scan(/\w+/)
+          end
+          content = eval('"' + interpolated + '"')
           content = "Haml::Helpers.html_escape((#{content}))" if escape_html
-          res << '#{' + content + "}"# Use eval to get rid of string escapes
+          res << "\##{char}#{content}#{"}" if  char == '{'}"
         end
       end
       res + rest
