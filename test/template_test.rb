@@ -43,7 +43,7 @@ class TemplateTest < MiniTest::Unit::TestCase
   TEMPLATES = %w{          very_basic        standard    helpers
     whitespace_handling    original_engine   list        helpful
     silent_script          tag_parsing       just_stuff  partials
-    nuke_outer_whitespace  nuke_inner_whitespace
+    nuke_outer_whitespace  nuke_inner_whitespace comments
     render_layout partial_layout partial_layout_erb}
 
   def setup
