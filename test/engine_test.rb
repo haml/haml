@@ -1201,6 +1201,16 @@ HAML
     assert_equal(Haml::Error.message(:unbalanced_brackets), e.message)
   end
 
+  def test_single_line_comments_are_interpolated
+    assert_equal("<!-- Hello 2 -->\n",
+                 render('/ Hello #{1 + 1}'))
+  end
+
+  def test_single_line_comments_are_not_interpolated_with_suppress_eval
+    assert_equal("<!--  -->\n",
+                 render('/ Hello #{1 + 1}', :suppress_eval => true))
+  end
+
   def test_balanced_conditional_comments
     assert_equal("<!--[if !(IE 6)|(IE 7)]> Bracket: ] <![endif]-->\n",
                  render("/[if !(IE 6)|(IE 7)] Bracket: ]"))
