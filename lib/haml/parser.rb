@@ -439,11 +439,18 @@ module Haml
       conditional, text = balance(text, ?[, ?]) if text[0] == ?[
       text.strip!
 
+      if contains_interpolation?(text)
+        parse = true
+        text = unescape_interpolation(text)
+      else
+        parse = false
+      end
+
       if block_opened? && !text.empty?
         raise SyntaxError.new(Haml::Error.message(:illegal_nesting_content), @next_line.index)
       end
 
-      ParseNode.new(:comment, @line.index + 1, :conditional => conditional, :text => text, :revealed => revealed)
+      ParseNode.new(:comment, @line.index + 1, :conditional => conditional, :text => text, :revealed => revealed, :parse => parse)
     end
 
     # Renders an XHTML doctype or XML shebang.

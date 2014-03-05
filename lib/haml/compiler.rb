@@ -240,9 +240,16 @@ END
 
       close = "#{'<!--' if revealed}#{'<![endif]' if condition}-->"
 
-      # Render it statically if possible
       unless block_given?
-        push_text("#{open} #{@node.value[:text]} #{close}")
+        push_merged_text("#{open} ")
+
+        if @node.value[:parse]
+          push_script(@node.value[:text], :in_tag => true)
+        else
+          push_merged_text(@node.value[:text], 0, false)
+        end
+
+        push_merged_text(" #{close}\n", 0, false)
         return
       end
 
