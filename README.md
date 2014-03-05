@@ -1,9 +1,9 @@
 # Haml
 
-[![Gem Version](https://badge.fury.io/rb/haml.png)](http://badge.fury.io/rb/haml)
-[![Build Status](https://secure.travis-ci.org/haml/haml.png?branch=master)](http://travis-ci.org/haml/haml)
-[![Code Climate](https://codeclimate.com/github/haml/haml.png)](https://codeclimate.com/github/haml/haml)
-[![Coverage Status](https://coveralls.io/repos/haml/haml/badge.png)](https://coveralls.io/r/haml/haml)
+[![Gem Version](http://img.shields.io/gem/v/haml.svg)](http://rubygems.org/gems/haml)
+[![Build Status](http://img.shields.io/travis/haml/haml.svg)](http://travis-ci.org/haml/haml)
+[![Code Climate](http://img.shields.io/codeclimate/github/haml/haml.svg)](https://codeclimate.com/github/haml/haml)
+[![Coverage Status](http://img.shields.io/coveralls/haml/haml.svg)](https://coveralls.io/r/haml/haml)
 [![Inline docs](http://inch-pages.github.io/github/haml/haml.png)](http://inch-pages.github.io/github/haml/haml)
 
 Haml is a templating engine for HTML. It's designed to make it both easier and
