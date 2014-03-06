@@ -76,8 +76,13 @@ class MiniTest::Unit::TestCase
     Haml::Util.silence_warnings(&block)
   end
 
+  # Rails hidden_fields behavior changed here: https://github.com/rails/rails/commit/7a085dac2
   def rails_form_opener
-    '<div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>'
+    if Rails.version < '4.1.0'
+      '<div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>'
+    else
+      '<div style="display:none"><input name="utf8" type="hidden" value="&#x2713;" /></div>'
+    end
   end
 
   def assert_raises_message(klass, message)
