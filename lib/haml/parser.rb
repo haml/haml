@@ -220,7 +220,7 @@ module Haml
       case line.text[0]
       when DIV_CLASS; push div(line)
       when DIV_ID
-        return push plain(line) if line.text[1] == ?{
+        return push plain(line) if %w[{ @ $].include?(line.text[1])
         push div(line)
       when ELEMENT; push tag(line)
       when COMMENT; push comment(line.text[1..-1].lstrip)
