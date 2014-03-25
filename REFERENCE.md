@@ -388,6 +388,10 @@ or using `true` and `false`:
 
     %input(selected=true)
 
+<!-- The title to the next section (Prefixed Attributes) has changed. This
+<a> tag is so old links to here still work. -->
+<a id="html5_custom_data_attributes" style="border:0;"></a>
+
 #### Prefixed Attributes
 
 HTML5 allows for adding
