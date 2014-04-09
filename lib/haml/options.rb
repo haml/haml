@@ -24,13 +24,15 @@ module Haml
       :cdata                => false,
       :parser_class         => ::Haml::Parser,
       :compiler_class       => ::Haml::Compiler,
-      :trace                => false
+      :trace                => false,
+      :sanitize_javascript  => false
     }
 
     @valid_formats = [:html4, :html5, :xhtml]
 
     @buffer_option_keys = [:autoclose, :preserve, :attr_wrapper, :ugly, :format,
-      :encoding, :escape_html, :escape_attrs, :hyphenate_data_attrs, :cdata]
+      :encoding, :escape_html, :escape_attrs, :hyphenate_data_attrs, :cdata,
+      :sanitize_javascript]
 
     # The default option values.
     # @return Hash
@@ -176,6 +178,10 @@ module Haml
     # relative path as from the views directory. On non-Rails applications,
     # the path will be the full path.
     attr_accessor :trace
+
+    # Escapes any <script> tags within the :javascript filters. This is an
+    # additional security against XSS
+    attr_accessor :sanitize_javascript
 
     def initialize(values = {}, &block)
       defaults.each {|k, v| instance_variable_set :"@#{k}", v}
