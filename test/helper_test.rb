@@ -468,6 +468,45 @@ HAML
     assert_equal("\n", render("= check_capture_returns_nil { 2 }", :action_view))
   end
 
+
+  class HomemadeViewContext
+    include ActionView::Context
+    include ActionView::Helpers::FormHelper
+
+    def url_for(*)
+      "/"
+    end
+
+    def dom_class(*)
+    end
+
+    def dom_id(*)
+    end
+
+    def m
+      FormFormObject.new
+    end
+
+    def protect_against_forgery?
+    end
+  end
+
+  require "active_model/naming"
+  class FormFormObject
+    extend ActiveModel::Naming
+  end
+
+  def test_form_for_with_homemade_view_context
+    handler  = ActionView::Template.handler_for_extension("haml")
+    template = ActionView::Template.new(<<HAML, "inline template", handler, {})
+
+= form_for(m, :url => "/") do |f|
+  %b Bold!
+HAML
+
+    assert_equal "<b>Bold!</b>", template.render(HomemadeViewContext.new, {})
+  end
+
   def test_find_and_preserve_with_block
     assert_equal("<pre>Foo&#x000A;Bar</pre>\nFoo\nBar\n",
                  render("= find_and_preserve do\n  %pre\n    Foo\n    Bar\n  Foo\n  Bar"))
