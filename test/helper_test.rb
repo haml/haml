@@ -483,7 +483,7 @@ HAML
     def dom_id(*)
     end
 
-    def m
+    def m # I have to inject the model into the view using an instance method, using locals doesn't work.
       FormFormObject.new
     end
 
@@ -507,9 +507,8 @@ HAML
   %b Bold!
 HAML
 
-    assert_equal "<form accept-charset=\"UTF-8\" action=\"/\" method=\"post\"><div style=\"display:none\"><input name=\"utf8\" type=\"hidden\" value=\"&#x2713;\" /></div><b>Bold!</b>
-</form>
-", template.render(HomemadeViewContext.new, {})
+    # see if Bold is within form tags:
+    assert_match /<form.*>.*<b>Bold!<\/b>.*<\/form>/m, template.render(HomemadeViewContext.new, {})
   end
 
   def test_find_and_preserve_with_block
