@@ -136,7 +136,7 @@ module ActionView
         res
       end
       alias_method :form_for_without_haml, :form_for
-      alias_method :form_for, :form_for_with_haml
+      #alias_method :form_for, :form_for_with_haml
     end
   end
 end

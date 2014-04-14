@@ -489,6 +489,10 @@ HAML
 
     def protect_against_forgery?
     end
+
+    # def capture(*args, &block)
+    #   capture_haml(*args, &block)
+    # end
   end
 
   require "active_model/naming"
@@ -499,12 +503,13 @@ HAML
   def test_form_for_with_homemade_view_context
     handler  = ActionView::Template.handler_for_extension("haml")
     template = ActionView::Template.new(<<HAML, "inline template", handler, {})
-
-= form_for(m, :url => "/") do |f|
+= form_for(m, :url => "/") do
   %b Bold!
 HAML
 
-    assert_equal "<b>Bold!</b>", template.render(HomemadeViewContext.new, {})
+    assert_equal "<form accept-charset=\"UTF-8\" action=\"/\" method=\"post\"><div style=\"display:none\"><input name=\"utf8\" type=\"hidden\" value=\"&#x2713;\" /></div><b>Bold!</b>
+</form>
+", template.render(HomemadeViewContext.new, {})
   end
 
   def test_find_and_preserve_with_block
