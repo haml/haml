@@ -109,6 +109,11 @@ class FiltersTest < MiniTest::Unit::TestCase
     end
   end
 
+  test "interpolated code should use be escaped in escape_html is set" do
+    assert_equal "&lt;script&gt;evil&lt;/script&gt;\n",
+                 render(":plain\n  \#{'<script>evil</script>'}", :escape_html => true)
+  end
+
 end
 
 class ErbFilterTest < MiniTest::Unit::TestCase
@@ -140,8 +145,8 @@ class JavascriptFilterTest < MiniTest::Unit::TestCase
     assert_match(/bar/, html)
   end
 
-  test "should never HTML-escape ampersands" do
-    html = "<script>\n  & < > &\n</script>\n"
+  test "should never HTML-escape non-interpolated ampersands" do
+    html = "<script>\n  & < > &amp;\n</script>\n"
     haml = %Q{:javascript\n  & < > \#{"&"}}
     assert_equal(html, render(haml, :escape_html => true))
   end
