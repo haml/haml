@@ -493,6 +493,10 @@ HAML
     include ActionView::Context
     include ActionView::Helpers::FormHelper
 
+    def initialize
+      _prepare_context
+    end
+
     def url_for(*)
       "/"
     end
