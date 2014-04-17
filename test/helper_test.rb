@@ -26,6 +26,13 @@ module Haml::Helpers
   end
 end
 
+
+require "active_model/naming"
+class FormModel
+  extend ActiveModel::Naming
+end
+
+
 class HelperTest < MiniTest::Unit::TestCase
   Post = Struct.new('Post', :body, :error_field, :errors)
   class PostErrors
@@ -143,6 +150,19 @@ HTML
 = form_tag 'foo' do
   %p bar
   %strong baz
+HAML
+  end
+
+  def test_form_for
+    # FIXME: current HAML doesn't do proper indentation with form_for (it's the capture { output } in #form_for).
+    def @base.protect_against_forgery?; false; end
+    assert_equal(<<HTML, render(<<HAML, :action_view))
+<form accept-charset="UTF-8" action="foo" class="new_post" id="new_post" method="post">#{rails_form_opener}<input id="post_name" name="post[name]" type="text" />
+</form>
+HTML
+
+= form_for OpenStruct.new, :url => 'foo', :as => :post do |f|
+  = f.text_field :name
 HAML
   end
 
@@ -484,7 +504,7 @@ HAML
     end
 
     def m # I have to inject the model into the view using an instance method, using locals doesn't work.
-      FormFormObject.new
+      FormModel.new
     end
 
     def protect_against_forgery?
@@ -493,11 +513,6 @@ HAML
     # def capture(*args, &block)
     #   capture_haml(*args, &block)
     # end
-  end
-
-  require "active_model/naming"
-  class FormFormObject
-    extend ActiveModel::Naming
   end
 
   def test_form_for_with_homemade_view_context
