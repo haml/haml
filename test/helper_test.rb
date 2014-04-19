@@ -529,7 +529,7 @@ HAML
 HAML
 
     # see if Bold is within form tags:
-    assert_match /<form.*>.*<b>Bold!<\/b>.*<\/form>/m, template.render(HomemadeViewContext.new, {})
+    assert_match(/<form.*>.*<b>Bold!<\/b>.*<\/form>/m, template.render(HomemadeViewContext.new, {}))
   end
 
   def test_find_and_preserve_with_block
