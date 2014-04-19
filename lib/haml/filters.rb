@@ -163,7 +163,7 @@ module Haml
           if contains_interpolation?(text)
             return if options[:suppress_eval]
 
-            text = unescape_interpolation(text).gsub(/(\\+)n/) do |s|
+            text = unescape_interpolation(text, options[:escape_html]).gsub(/(\\+)n/) do |s|
               escapes = $1.size
               next s if escapes % 2 == 0
               "#{'\\' * (escapes - 1)}\n"
