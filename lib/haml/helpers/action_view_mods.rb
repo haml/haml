@@ -123,20 +123,5 @@ module ActionView
       alias_method :form_tag_without_haml, :form_tag
       alias_method :form_tag, :form_tag_with_haml
     end
-
-    module FormHelper
-      def form_for_with_haml(object_name, *args, &proc)
-        wrap_block = block_given? && is_haml? && block_is_haml?(proc)
-        if wrap_block
-          oldproc = proc
-          proc = proc {|*subargs| with_tabs(1) {oldproc.call(*subargs)}}
-        end
-        res = form_for_without_haml(object_name, *args, &proc)
-        res << "\n" if wrap_block
-        res
-      end
-      alias_method :form_for_without_haml, :form_for
-      alias_method :form_for, :form_for_with_haml
-    end
   end
 end

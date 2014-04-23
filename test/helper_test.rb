@@ -26,6 +26,13 @@ module Haml::Helpers
   end
 end
 
+
+require "active_model/naming"
+class FormModel
+  extend ActiveModel::Naming
+end
+
+
 class HelperTest < MiniTest::Unit::TestCase
   Post = Struct.new('Post', :body, :error_field, :errors)
   class PostErrors
@@ -143,6 +150,21 @@ HTML
 = form_tag 'foo' do
   %p bar
   %strong baz
+HAML
+  end
+
+  def test_form_for
+    size_attribute = ""
+    size_attribute = ' size="30"' if Rails.version >= '3.2.0' and Rails.version < '4.0.0'
+    # FIXME: current HAML doesn't do proper indentation with form_for (it's the capture { output } in #form_for).
+    def @base.protect_against_forgery?; false; end
+    assert_equal(<<HTML, render(<<HAML, :action_view))
+<form accept-charset="UTF-8" action="foo" class="new_post" id="new_post" method="post">#{rails_form_opener}<input id="post_name" name="post[name]"#{size_attribute} type="text" />
+</form>
+HTML
+
+= form_for OpenStruct.new, :url => 'foo', :as => :post do |f|
+  = f.text_field :name
 HAML
   end
 
@@ -466,6 +488,48 @@ HAML
     end
 
     assert_equal("\n", render("= check_capture_returns_nil { 2 }", :action_view))
+  end
+
+
+  class HomemadeViewContext
+    include ActionView::Context
+    include ActionView::Helpers::FormHelper
+
+    def initialize
+      _prepare_context
+    end
+
+    def url_for(*)
+      "/"
+    end
+
+    def dom_class(*)
+    end
+
+    def dom_id(*)
+    end
+
+    def m # I have to inject the model into the view using an instance method, using locals doesn't work.
+      FormModel.new
+    end
+
+    def protect_against_forgery?
+    end
+
+    # def capture(*args, &block)
+    #   capture_haml(*args, &block)
+    # end
+  end
+
+  def test_form_for_with_homemade_view_context
+    handler  = ActionView::Template.handler_for_extension("haml")
+    template = ActionView::Template.new(<<HAML, "inline template", handler, {})
+= form_for(m, :url => "/") do
+  %b Bold!
+HAML
+
+    # see if Bold is within form tags:
+    assert_match /<form.*>.*<b>Bold!<\/b>.*<\/form>/m, template.render(HomemadeViewContext.new, {})
   end
 
   def test_find_and_preserve_with_block
