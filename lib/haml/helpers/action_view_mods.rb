@@ -113,7 +113,7 @@ module ActionView
               with_tabs(1) {oldproc.call(*args)}
             end
           end
-          res = form_tag_without_haml(url_for_options, options, *parameters_for_url, &proc) + "\n"
+          res = form_tag_without_haml(url_for_options, options, *parameters_for_url, &proc) << "\n"
           res << "\n" if wrap_block
           res
         else

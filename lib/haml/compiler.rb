@@ -163,7 +163,7 @@ END
       end
 
       if @options[:trace]
-        t[:attributes].merge!({"data-trace" => @options.filename.split('/views').last + ":" + @node.line.to_s})
+        t[:attributes].merge!({"data-trace" => @options.filename.split('/views').last << ":" << @node.line.to_s})
       end
 
       # Check if we can render the tag directly to text and not process it in the buffer

@@ -166,8 +166,8 @@ module Haml
       end
 
       begin
-        eval("Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {};" +
-             compiler.precompiled_with_ambles(local_names) + "}\n", scope, @options.filename, @options.line)
+        eval("Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {};" <<
+             compiler.precompiled_with_ambles(local_names) << "}\n", scope, @options.filename, @options.line)
       rescue ::SyntaxError => e
         raise SyntaxError, e.message
       end
