@@ -154,10 +154,12 @@ HAML
   end
 
   def test_form_for
+    size_attribute = ""
+    size_attribute = ' size="30"' if Rails.version >= '3.2.0' and Rails.version < '4.0.0'
     # FIXME: current HAML doesn't do proper indentation with form_for (it's the capture { output } in #form_for).
     def @base.protect_against_forgery?; false; end
     assert_equal(<<HTML, render(<<HAML, :action_view))
-<form accept-charset="UTF-8" action="foo" class="new_post" id="new_post" method="post">#{rails_form_opener}<input id="post_name" name="post[name]" type="text" />
+<form accept-charset="UTF-8" action="foo" class="new_post" id="new_post" method="post">#{rails_form_opener}<input id="post_name" name="post[name]"#{size_attribute} type="text" />
 </form>
 HTML
 
