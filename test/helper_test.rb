@@ -154,8 +154,7 @@ HAML
   end
 
   def test_form_for
-    size_attribute = ""
-    size_attribute = ' size="30"' if Rails.version < '4.0.0'
+    size_attribute = Rails.version < '4.0.0' ? ' size="30"' : ''
     # FIXME: current HAML doesn't do proper indentation with form_for (it's the capture { output } in #form_for).
     def @base.protect_against_forgery?; false; end
     assert_equal(<<HTML, render(<<HAML, :action_view))
