@@ -7,9 +7,10 @@
 /.haml
 /site
 *.rbc
-.rbenv-version
-Gemfile.lock
-.rvmrc
-.rbx
-tmp
 .sass-cache
+.rbenv-version
+.rbx
+.ruby-version
+.rvmrc
+Gemfile.lock
+tmp
