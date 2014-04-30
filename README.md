@@ -1,7 +1,7 @@
 # Haml
 
-[![Gem Version](http://img.shields.io/gem/v/haml.svg)](http://rubygems.org/gems/haml)
-[![Build Status](http://img.shields.io/travis/haml/haml.svg)](http://travis-ci.org/haml/haml)
+[![Gem Version](https://badge.fury.io/rb/haml.svg)](http://rubygems.org/gems/haml)
+[![Build Status](https://travis-ci.org/haml/haml.svg?branch=master)](http://travis-ci.org/haml/haml)
 [![Code Climate](http://img.shields.io/codeclimate/github/haml/haml.svg)](https://codeclimate.com/github/haml/haml)
 [![Coverage Status](http://img.shields.io/coveralls/haml/haml.svg)](https://coveralls.io/r/haml/haml)
 [![Inline docs](http://inch-pages.github.io/github/haml/haml.png)](http://inch-pages.github.io/github/haml/haml)
