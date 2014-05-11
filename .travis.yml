@@ -1,7 +1,7 @@
 rvm:
   - 1.9.3
   - 2.0.0
-  - 2.1.1
+  - 2.1.2
   - jruby
   - rbx-2
 gemfile:
@@ -14,7 +14,7 @@ matrix:
     - { rvm: rbx-2, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
     - { rvm: 1.9.3, gemfile: test/gemfiles/Gemfile.rails-4.1.x }
     - { rvm: 2.0.0, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
-    - { rvm: 2.1.1, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
+    - { rvm: 2.1.2, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
   allow_failures:
     - rvm: jruby
     - rvm: rbx-2
