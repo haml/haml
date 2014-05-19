@@ -47,8 +47,7 @@ module Declarative
   end
 end
 
-class MiniTest::Unit::TestCase
-
+class ActiveSupport::TestCase
   extend Declarative
 
   def render(text, options = {}, base = nil, &block)
