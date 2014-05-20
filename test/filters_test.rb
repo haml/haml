@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class FiltersTest < MiniTest::Unit::TestCase
+class FiltersTest < Haml::TestCase
   test "should be registered as filters when including Haml::Filters::Base" do
     begin
       refute Haml::Filters.defined.has_key? "bar"
@@ -116,7 +116,7 @@ class FiltersTest < MiniTest::Unit::TestCase
 
 end
 
-class ErbFilterTest < MiniTest::Unit::TestCase
+class ErbFilterTest < Haml::TestCase
   test "multiline expressions should work" do
     html = "foobarbaz\n"
     haml = %Q{:erb\n  <%= "foo" +\n      "bar" +\n      "baz" %>}
@@ -137,7 +137,7 @@ class ErbFilterTest < MiniTest::Unit::TestCase
 
 end
 
-class JavascriptFilterTest < MiniTest::Unit::TestCase
+class JavascriptFilterTest < Haml::TestCase
   test "should interpolate" do
     scope = Object.new.instance_eval {foo = "bar"; nil if foo; binding}
     haml  = ":javascript\n  \#{foo}"
@@ -183,7 +183,7 @@ class JavascriptFilterTest < MiniTest::Unit::TestCase
   end
 end
 
-class CSSFilterTest < MiniTest::Unit::TestCase
+class CSSFilterTest < Haml::TestCase
   test "should wrap output in CDATA and a CSS tag when output is XHTML" do
     html = "<style type='text/css'>\n  /*<![CDATA[*/\n    foo\n  /*]]>*/\n</style>\n"
     haml = ":css\n  foo"
@@ -222,7 +222,7 @@ class CSSFilterTest < MiniTest::Unit::TestCase
   end
 end
 
-class CDATAFilterTest < MiniTest::Unit::TestCase
+class CDATAFilterTest < Haml::TestCase
   test "should wrap output in CDATA tag" do
     html = "<![CDATA[\n    foo\n]]>\n"
     haml = ":cdata\n  foo"
@@ -230,7 +230,7 @@ class CDATAFilterTest < MiniTest::Unit::TestCase
   end
 end
 
-class EscapedFilterTest < MiniTest::Unit::TestCase
+class EscapedFilterTest < Haml::TestCase
   test "should escape ampersands" do
     html = "&amp;\n"
     haml = ":escaped\n  &"
@@ -238,7 +238,7 @@ class EscapedFilterTest < MiniTest::Unit::TestCase
   end
 end
 
-class RubyFilterTest < MiniTest::Unit::TestCase
+class RubyFilterTest < Haml::TestCase
   test "can write to haml_io" do
     haml = ":ruby\n  haml_io.puts 'hello'\n"
     html = "hello\n"
