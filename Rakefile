@@ -1,6 +1,6 @@
 require "rake/clean"
 require "rake/testtask"
-require "rubygems/package_task"
+require "bundler/gem_tasks"
 
 task :default => :test
 
@@ -35,11 +35,6 @@ end
 
 desc "Run Simplecov"
 task :coverage => [:set_coverage_env, :test]
-
-gemspec = File.expand_path("../haml.gemspec", __FILE__)
-if File.exist? gemspec
-  Gem::PackageTask.new(eval(File.read(gemspec))) { |pkg| }
-end
 
 task :submodules do
   if File.exist?(File.dirname(__FILE__) + "/.git")
@@ -96,7 +91,7 @@ task :profile do
   require 'bundler/setup'
   require 'ruby-prof'
   require 'haml'
-  default = 
+  default =
   file = File.read(File.expand_path("../#{file}", __FILE__))
   obj = Object.new
   Haml::Engine.new(file, :ugly => true).def_method(obj, :render)
