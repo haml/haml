@@ -91,7 +91,6 @@ task :profile do
   require 'bundler/setup'
   require 'ruby-prof'
   require 'haml'
-  default =
   file = File.read(File.expand_path("../#{file}", __FILE__))
   obj = Object.new
   Haml::Engine.new(file, :ugly => true).def_method(obj, :render)
