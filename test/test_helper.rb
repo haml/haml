@@ -41,14 +41,19 @@ require 'haml/template'
 Haml::Template.options[:ugly]   = false
 Haml::Template.options[:format] = :xhtml
 
+BASE_TEST_CLASS = if defined?(Minitest::Test)
+                    Minitest::Test
+                  else
+                    MiniTest::Unit::TestCase
+                  end
+
 module Declarative
   def test(name, &block)
     define_method("test #{name}", &block)
   end
 end
 
-class MiniTest::Unit::TestCase
-
+class Haml::TestCase < BASE_TEST_CLASS
   extend Declarative
 
   def render(text, options = {}, base = nil, &block)
