@@ -1,5 +1,3 @@
-require 'forwardable'
-
 require 'haml/parser'
 require 'haml/compiler'
 require 'haml/options'
