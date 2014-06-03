@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/haml/haml.svg?branch=master)](http://travis-ci.org/haml/haml)
 [![Code Climate](http://img.shields.io/codeclimate/github/haml/haml.svg)](https://codeclimate.com/github/haml/haml)
 [![Coverage Status](http://img.shields.io/coveralls/haml/haml.svg)](https://coveralls.io/r/haml/haml)
-[![Inline docs](http://inch-pages.github.io/github/haml/haml.png)](http://inch-pages.github.io/github/haml/haml)
+[![Inline docs](http://inch-ci.org/github/haml/haml.png)](http://inch-ci.org/github/haml/haml)
 
 Haml is a templating engine for HTML. It's designed to make it both easier and
 more pleasant to write HTML documents, by eliminating redundancy, reflecting the
