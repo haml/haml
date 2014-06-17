@@ -71,6 +71,9 @@ module Haml
     # With older versions of the Rails XSS-safety mechanism,
     # this destructively modifies the HTML-safety of `text`.
     #
+    # It only works if you are using ActiveSupport or the parameter `text`
+    # implements the #html_safe method.
+    #
     # @param text [String, nil]
     # @return [String, nil] `text`, marked as HTML-safe
     def html_safe(text)
