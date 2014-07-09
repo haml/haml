@@ -244,7 +244,9 @@ module Haml
         return push flat_script(line.strip!(2), false) if line.text[1] == FLAT_SCRIPT
         return push plain(line.strip!(1), false) if line.text[1] == ?\s
         push plain(line)
-      when ESCAPE; push plain(line.strip!(1))
+      when ESCAPE
+        line.text = line.text[1..-1]
+        push plain(line)
       else; push plain(line)
       end
     end
