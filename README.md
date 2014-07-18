@@ -188,16 +188,16 @@ Haml was created by [Hampton Catlin](http://hamptoncatlin.com), the author of
 the original implementation. Hampton is no longer involved in day-to-day coding,
 but still consults on language issues.
 
-[Nathan Weizenbaum](http://nex-3.com) was for many years the primary developer
+[Natalie Weizenbaum](http://nex-3.com) was for many years the primary developer
 and architect of the "modern" Ruby implementation of Haml.
 
 ## License
 
-Some of Nathan's work on Haml was supported by Unspace Interactive.
+Some of Natalie's work on Haml was supported by Unspace Interactive.
 
 Beyond that, the implementation is licensed under the MIT License.
 
-Copyright (c) 2006-2013 Hampton Catlin, Nathan Weizenbaum and the Haml team
+Copyright (c) 2006-2013 Hampton Catlin, Natalie Weizenbaum and the Haml team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
