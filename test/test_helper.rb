@@ -82,11 +82,14 @@ class Haml::TestCase < BASE_TEST_CLASS
   end
 
   # Rails hidden_fields behavior changed here: https://github.com/rails/rails/commit/7a085dac2
+  # and again here: https://github.com/rails/rails/commit/89ff1f82f0
   def rails_form_opener
     if Rails.version < '4.1.0'
       '<div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>'
-    else
+    elsif Rails.version < '4.2.0'
       '<div style="display:none"><input name="utf8" type="hidden" value="&#x2713;" /></div>'
+    else
+      '<input name="utf8" type="hidden" value="&#x2713;" />'
     end
   end
 
