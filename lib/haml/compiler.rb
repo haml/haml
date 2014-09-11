@@ -450,7 +450,7 @@ END
           else
             value.to_s
           end
-        value = Haml::Helpers.preserve(escaped)
+        value = escaped.gsub(/\n/, '&#x000A;').delete("\r")
         if escape_attrs
           # We want to decide whether or not to escape quotes
           value.gsub!(/&quot;|&#x0022;/, '"')
