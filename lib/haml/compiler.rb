@@ -117,7 +117,6 @@ END
 
     def compile_silent_script
       return if @options.suppress_eval
-      push_silent(@node.value[:text])
       keyword = @node.value[:keyword]
 
       if block_given?
@@ -125,13 +124,22 @@ END
         # we want to restore them for each branch
         @node.value[:dont_indent_next_line] = @dont_indent_next_line
         @node.value[:dont_tab_up_next_text] = @dont_tab_up_next_text
-        yield
+
+        push_silent(@node.value[:text]) unless keyword == :end
+        if keyword == :capture
+          inject_internal_buffer { yield } 
+        else
+          yield
+        end
         push_silent("end", :can_suppress) unless @node.value[:dont_push_end]
+        return
       elsif keyword == "end"
         if @node.parent.children.last.equal?(@node)
           # Since this "end" is ending the block,
           # we don't need to generate an additional one
           @node.parent.value[:dont_push_end] = true
+          # but we must return the buffer content if close a capture
+          inject_buffer_return if @node.parent.value[:keyword] == :capture
         end
         # Don't restore dont_* for end because it isn't a conditional branch.
       elsif Parser::MID_BLOCK_KEYWORDS.include?(keyword)
@@ -139,6 +147,8 @@ END
         @dont_indent_next_line = @node.parent.value[:dont_indent_next_line]
         @dont_tab_up_next_text = @node.parent.value[:dont_tab_up_next_text]
       end
+
+      push_silent(@node.value[:text])
     end
 
     def compile_haml_comment; end
@@ -406,12 +416,8 @@ END
       flush_merged_text
 
       push_silent "haml_temp = #{text}"
-      @bufvar << '_tmp' 
-      push_new_buffer
-      yield
-      push_silent "#@bufvar.buffer.chomp"
+      inject_internal_buffer { yield }
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
-      @bufvar.slice!(-4, 4)  # cut '_tmp'
 
       format_script_method = "#@bufvar.format_script(haml_temp,#{args.join(',')});"
       @precompiled << "#@bufvar.buffer << #{no_format ? "haml_temp.to_s;" : format_script_method}"
@@ -561,6 +567,18 @@ END
       else
         raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
       end
+    end
+
+    def inject_internal_buffer
+      @bufvar << '_tmp' 
+      push_new_buffer
+      yield
+      inject_buffer_return unless @node.value[:dont_push_end]
+      @bufvar.slice!(-4, 4)  # cut '_tmp'
+    end
+
+    def inject_buffer_return
+      push_silent "#@bufvar.buffer"
     end
   end
 end

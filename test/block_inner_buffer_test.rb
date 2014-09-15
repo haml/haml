@@ -9,7 +9,7 @@ class BlockInnerBufferTest < Haml::TestCase
     !!
     HAML
 
-    assert_equal "Hello\n<em>WORLD</em>\n!!\n", render(haml, {}, TestContext.new)
+    assert_equal "Hello\n<em>WORLD\n</em>\n!!\n", render(haml, {}, TestContext.new)
   end
 
   def clean_space(str)

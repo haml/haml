@@ -73,6 +73,8 @@ module Haml
     #
     BLOCK_WITH_SPACES = /do\s*\|\s*[^\|]*\s+\|\z/
 
+    CAPTURE_KEYWORD = /\bcapture(?:_haml)?\b.*(?:do|{)|haml_tag\b.*:</
+
     MID_BLOCK_KEYWORDS = %w[else elsif rescue ensure end when]
     START_BLOCK_KEYWORDS = %w[if begin case unless]
     # Try to parse assignments to block starters as best as possible
@@ -260,6 +262,10 @@ module Haml
       MID_BLOCK_KEYWORDS.include?(block_keyword(text))
     end
 
+    def capture_keywords?(text)
+      text =~ CAPTURE_KEYWORD
+    end
+
     def push(node)
       @parent.children << node
       node.parent = @parent
@@ -322,6 +328,8 @@ module Haml
           message = Error.message(:bad_script_indent, keyword, @script_level_stack.last[1], @line.tabs)
           raise Haml::SyntaxError.new(message, @line.index)
         end
+      elsif capture_keywords? line.text
+        keyword = :capture
       end
 
       ParseNode.new(:silent_script, @line.index + 1,
