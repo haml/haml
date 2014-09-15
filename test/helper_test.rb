@@ -1,6 +1,4 @@
 require 'test_helper'
-require 'byebug'
-$BREAK = false
 
 class ActionView::Base
   def nested_tag
@@ -604,7 +602,6 @@ MESSAGE
   end
 
   def test_error_return_line_in_helper
-    byebug
     render("- something_that_uses_haml_concat")
     assert false, "Expected Haml::Error"
   rescue Haml::Error => e
@@ -727,4 +724,3 @@ HAML
   end
 
 end
-

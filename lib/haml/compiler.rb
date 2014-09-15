@@ -140,6 +140,8 @@ END
           @node.parent.value[:dont_push_end] = true
           # but we must return the buffer content if close a capture
           inject_buffer_return if @node.parent.value[:keyword] == :capture
+        elsif @node.parent.type == :script && @node.parent.children.any?
+          @node.parent.value[:dont_inject_buffer] = true
         end
         # Don't restore dont_* for end because it isn't a conditional branch.
       elsif Parser::MID_BLOCK_KEYWORDS.include?(keyword)
@@ -573,8 +575,13 @@ END
       @bufvar << '_tmp' 
       push_new_buffer
       yield
-      inject_buffer_return unless @node.value[:dont_push_end]
+      inject_buffer_return unless dont_need_buffer?
       @bufvar.slice!(-4, 4)  # cut '_tmp'
+    end
+
+    def dont_need_buffer?
+      @node.value[:dont_push_end] || @node.value[:dont_inject_buffer] || 
+        @node.children.all? {|n| n.type == :silent_script }
     end
 
     def inject_buffer_return
