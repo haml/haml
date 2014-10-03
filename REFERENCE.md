@@ -1141,7 +1141,7 @@ control when CDATA tags are added.
 
 ### `:erb` {#erb-filter}
 
-Parses the filtered text with ERb, like an RHTML template. Not available if the
+Parses the filtered text with ERB, like an RHTML template. Not available if the
 {Haml::Options#suppress_eval `:suppress_eval`} option is set to true. Embedded
 Ruby code is evaluated in the same context as the Haml template. This filter is
 implemented using Tilt.

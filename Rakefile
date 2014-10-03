@@ -13,7 +13,7 @@ ensure
   $stderr = the_real_stderr
 end
 
-desc "Benchmark Haml against ERb. TIMES=n sets the number of runs, default is 1000."
+desc "Benchmark Haml against ERB. TIMES=n sets the number of runs, default is 1000."
 task :benchmark do
   sh "ruby benchmark.rb #{ENV['TIMES']}"
 end
