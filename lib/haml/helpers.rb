@@ -365,25 +365,11 @@ MESSAGE
     # @param args [Array] Arguments to pass into the block
     # @yield [args] A block of Haml code that will be converted to a string
     # @yieldparam args [Array] `args`
-    def capture_haml(*args, &block)
-      buffer = eval('if defined? _hamlout then _hamlout else nil end', block.binding) || haml_buffer
-      with_haml_buffer(buffer) do
-        position = haml_buffer.buffer.length
+    def capture_haml(*args)
+      captured = yield(*args)
 
-        haml_buffer.capture_position = position
-        value = block.call(*args)
-
-        captured = haml_buffer.buffer.slice!(position..-1)
-
-        if captured == '' and value != haml_buffer.buffer
-          captured = (value.is_a?(String) ? value : nil)
-        end
-
-        return nil if captured.nil?
-        return (haml_buffer.options[:ugly] ? captured : prettify(captured))
-      end
-    ensure
-      haml_buffer.capture_position = nil
+      return nil if captured.nil? || !captured.respond_to?(:to_str)
+      return (haml_buffer.options[:ugly] ? captured : prettify(captured))
     end
 
     # Outputs text directly to the Haml buffer, with the proper indentation.

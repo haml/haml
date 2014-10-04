@@ -10,6 +10,7 @@ module Haml
       @to_merge    = []
       @precompiled = ''
       @node        = nil
+      @bufvar      = '_hamlout'
     end
 
     def compile(node)
@@ -21,6 +22,10 @@ module Haml
       end
     ensure
       @node = parent
+    end
+
+    def new_buffer
+      "Haml::Buffer.new(haml_buffer, #{options.for_buffer.inspect})"
     end
 
     # The source code that is evaluated to produce the Haml document.
@@ -48,8 +53,8 @@ module Haml
       preamble = <<END.tr("\n", ';')
 begin
 extend Haml::Helpers
-_hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{options.for_buffer.inspect})
-_erbout = _hamlout.buffer
+#@bufvar = @haml_buffer = #{new_buffer}
+_erbout = #@bufvar.buffer
 @output_buffer = output_buffer ||= ActionView::OutputBuffer.new rescue nil
 END
       postamble = <<END.tr("\n", ';')
@@ -112,7 +117,6 @@ END
 
     def compile_silent_script
       return if @options.suppress_eval
-      push_silent(@node.value[:text])
       keyword = @node.value[:keyword]
 
       if block_given?
@@ -120,13 +124,24 @@ END
         # we want to restore them for each branch
         @node.value[:dont_indent_next_line] = @dont_indent_next_line
         @node.value[:dont_tab_up_next_text] = @dont_tab_up_next_text
-        yield
+
+        push_silent(@node.value[:text]) unless keyword == :end
+        if keyword == :capture
+          inject_internal_buffer { yield } 
+        else
+          yield
+        end
         push_silent("end", :can_suppress) unless @node.value[:dont_push_end]
+        return
       elsif keyword == "end"
         if @node.parent.children.last.equal?(@node)
           # Since this "end" is ending the block,
           # we don't need to generate an additional one
           @node.parent.value[:dont_push_end] = true
+          # but we must return the buffer content if close a capture
+          inject_buffer_return if @node.parent.value[:keyword] == :capture
+        elsif @node.parent.type == :script && @node.parent.children.any?
+          @node.parent.value[:dont_inject_buffer] = true
         end
         # Don't restore dont_* for end because it isn't a conditional branch.
       elsif Parser::MID_BLOCK_KEYWORDS.include?(keyword)
@@ -134,6 +149,8 @@ END
         @dont_indent_next_line = @node.parent.value[:dont_indent_next_line]
         @dont_tab_up_next_text = @node.parent.value[:dont_tab_up_next_text]
       end
+
+      push_silent(@node.value[:text])
     end
 
     def compile_haml_comment; end
@@ -196,7 +213,7 @@ END
 
         push_merged_text "<#{t[:name]}", 0, !t[:nuke_outer_whitespace]
         push_generated_script(
-          "_hamlout.attributes(#{inspect_obj(t[:attributes])}, #{object_ref}#{attributes_hashes})")
+          "#@bufvar.attributes(#{inspect_obj(t[:attributes])}, #{object_ref}#{attributes_hashes})")
         concat_merged_text(
           if t[:self_closing] && @options.xhtml?
             " />#{"\n" unless t[:nuke_outer_whitespace]}"
@@ -351,7 +368,7 @@ END
           inspect_obj(val)[1...-1]
         when :script
           if mtabs != 0 && !@options.ugly
-            val = "_hamlout.adjust_tabs(#{mtabs}); " + val
+            val = "#@bufvar.adjust_tabs(#{mtabs}); " + val
           end
           mtabs = 0
           "\#{#{val}}"
@@ -364,9 +381,9 @@ END
       unless str.empty?
         @precompiled <<
           if @options.ugly
-            "_hamlout.buffer << \"#{str}\";"
+            "#@bufvar.buffer << \"#{str}\";"
           else
-            "_hamlout.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"
+            "#@bufvar.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"
           end
       end
       @to_merge = []
@@ -392,19 +409,25 @@ END
       push_merged_text '' unless opts[:in_tag]
 
       unless block_given?
-        format_script_method = "_hamlout.format_script((#{text}\n),#{args.join(',')});"
+        format_script_method = "#@bufvar.format_script((#{text}\n),#{args.join(',')});"
         push_generated_script(no_format ? "#{text}\n" : format_script_method)
         concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
         return
       end
 
       flush_merged_text
+
       push_silent "haml_temp = #{text}"
-      yield
+      inject_internal_buffer { yield }
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
-      format_script_method = "_hamlout.format_script(haml_temp,#{args.join(',')});"
-      @precompiled << "_hamlout.buffer << #{no_format ? "haml_temp.to_s;" : format_script_method}"
+
+      format_script_method = "#@bufvar.format_script(haml_temp,#{args.join(',')});"
+      @precompiled << "#@bufvar.buffer << #{no_format ? "haml_temp.to_s;" : format_script_method}"
       concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace] || @options.ugly
+    end
+
+    def push_new_buffer
+      push_silent "#@bufvar = #{new_buffer}"
     end
 
     def push_generated_script(text)
@@ -528,7 +551,7 @@ END
     def rstrip_buffer!(index = -1)
       last = @to_merge[index]
       if last.nil?
-        push_silent("_hamlout.rstrip!", false)
+        push_silent("#@bufvar.rstrip!", false)
         @dont_tab_up_next_text = true
         return
       end
@@ -546,6 +569,23 @@ END
       else
         raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
       end
+    end
+
+    def inject_internal_buffer
+      @bufvar << '_tmp' 
+      push_new_buffer
+      yield
+      inject_buffer_return unless dont_need_buffer?
+      @bufvar.slice!(-4, 4)  # cut '_tmp'
+    end
+
+    def dont_need_buffer?
+      @node.value[:dont_push_end] || @node.value[:dont_inject_buffer] || 
+        @node.children.all? {|n| n.type == :silent_script }
+    end
+
+    def inject_buffer_return
+      push_silent "#@bufvar.buffer"
     end
   end
 end
