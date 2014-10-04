@@ -194,8 +194,8 @@ MESSAGE
     # @yieldparam item An element of `enum`
     def list_of(enum, opts={}, &block)
       opts_attributes = opts.empty? ? "" : " ".<<(opts.map{|k,v| "#{k}='#{v}'" }.join(" "))
-      enum.collect do |i|
-        result = capture_haml(i, &block)
+      enum.collect do |*args|
+        result = capture_haml(*args, &block)
 
         result = if result.count("\n") > 1
           result.gsub!("\n", "\n  ")
