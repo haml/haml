@@ -16,6 +16,7 @@
 * Don't treat the 'data' attribute specially when merging attribute hashes. (Matt Wildig and Norman Clarke)
 * Add a tracing option. When enabled, Haml will output a data-trace attribute on each tag showing the path
   to the source Haml file from which it was generated. Thanks [Alex Babkin](https://github.com/ababkin).
+* Adding while and until to the list of start block keywords in the parser. Thanks [Cameron Dutro](https://github.com/camertron)
 
 ## 4.0.5
 
