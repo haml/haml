@@ -200,7 +200,7 @@ module Haml
       end
 
       def inspect
-        %Q[(#{type} #{value.inspect}#{children.map {|c| "\n#{c.inspect.gsub!(/^/, '  ')}"}.join})]
+        %Q[(#{type} #{value.inspect}#{children.each_with_object('') {|c, s| s << "\n#{c.inspect.gsub!(/^/, '  ')}"}})]
       end
     end
 
@@ -690,7 +690,7 @@ module Haml
 
       return name, [:static, content.first[1]] if content.size == 1
       return name, [:dynamic,
-        %!"#{content.map {|(t, v)| t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}"}.join}"!]
+        %!"#{content.each_with_object('') {|(t, v), s| s << (t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
     end
 
     def next_line

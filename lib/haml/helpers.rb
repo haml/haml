@@ -106,7 +106,11 @@ MESSAGE
     #   @yield The block within which to escape newlines
     def find_and_preserve(input = nil, tags = haml_buffer.options[:preserve], &block)
       return find_and_preserve(capture_haml(&block), input || tags) if block
-      re = /<(#{tags.map(&Regexp.method(:escape)).join('|')})([^>]*)>(.*?)(<\/\1>)/im
+      tags = tags.each_with_object('') do |t, s|
+        s << '|' unless s.empty?
+        s << Regexp.escape(t)
+      end
+      re = /<(#{tags})([^>]*)>(.*?)(<\/\1>)/im
       input.to_s.gsub(re) do |s|
         s =~ re # Can't rely on $1, etc. existing since Rails' SafeBuffer#gsub is incompatible
         "<#{$1}#{$2}>#{preserve($3)}</#{$1}>"
@@ -193,19 +197,20 @@ MESSAGE
     # @yield [item] A block which contains Haml code that goes within list items
     # @yieldparam item An element of `enum`
     def list_of(enum, opts={}, &block)
-      opts_attributes = opts.empty? ? "" : " ".<<(opts.map{|k,v| "#{k}='#{v}'" }.join(" "))
-      enum.collect do |i|
+      opts_attributes = opts.each_with_object('') {|(k, v), s| s << " #{k}='#{v}'"}
+      enum.each_with_object('') do |i, ret|
         result = capture_haml(i, &block)
 
-        result = if result.count("\n") > 1
+        if result.count("\n") > 1
           result.gsub!("\n", "\n  ")
-          "\n  #{result.strip}\n"
+          result = "\n  #{result.strip!}\n"
         else
-          result.strip
+          result.strip!
         end
 
-        %Q!<li#{opts_attributes}>#{result}</li>!
-      end.join("\n")
+        ret << "\n" unless ret.empty?
+        ret << %Q!<li#{opts_attributes}>#{result}</li>!
+      end
     end
 
     # Returns a hash containing default assignments for the `xmlns`, `lang`, and `xml:lang`
@@ -671,9 +676,9 @@ MESSAGE
         min_tabs = min_tabs > tabs ? tabs : min_tabs
       end
 
-      text.map do |line|
-        line.slice(min_tabs, line.length)
-      end.join
+      text.each_with_object('') do |line, str|
+        str << line.slice(min_tabs, line.length)
+      end
     end
   end
 end
