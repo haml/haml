@@ -462,15 +462,14 @@ HAML
   end
 
   def test_capture_deals_properly_with_collections
-    Haml::Helpers.module_eval do
-      def trc(collection, &block)
-        collection.each do |record|
-          haml_concat capture_haml(record, &block)
-        end
+    obj = Object.new
+    def obj.trc(collection, &block)
+      collection.each do |record|
+        haml_concat capture_haml(record, &block)
       end
     end
 
-    assert_equal("1\n\n2\n\n3\n\n", render("- trc([1, 2, 3]) do |i|\n  = i.inspect"))
+    assert_equal("1\n\n2\n\n3\n\n", render("- trc([1, 2, 3]) do |i|\n  = i.inspect", scope: obj))
   end
 
   def test_capture_with_string_block
@@ -478,12 +477,10 @@ HAML
   end
 
   def test_capture_with_non_string_value_reurns_nil
-    Haml::Helpers.module_eval do
-      def check_capture_returns_nil(&block)
-        contents = capture(&block)
+    def @base.check_capture_returns_nil(&block)
+      contents = capture(&block)
 
-        contents << "ERROR" if contents
-      end
+      contents << "ERROR" if contents
     end
 
     assert_equal("\n", render("= check_capture_returns_nil { 2 }", :action_view))

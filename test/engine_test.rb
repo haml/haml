@@ -1562,24 +1562,23 @@ HAML
   end
 
   def test_html5_data_attributes_with_attr_method
-    Haml::Helpers.module_eval do
-      def data_hash
-        {:data => {:foo => "bar", :baz => "bang"}}
-      end
+    obj = Object.new
+    def obj.data_hash
+      {:data => {:foo => "bar", :baz => "bang"}}
+    end
 
-      def data_val
-        {:data => "dat"}
-      end
+    def obj.data_val
+      {:data => "dat"}
     end
 
     assert_equal("<div data-baz='bang' data-brat='wurst' data-foo='blip'></div>\n",
-      render("%div{data_hash, :data => {:foo => 'blip', :brat => 'wurst'}}"))
+      render("%div{data_hash, :data => {:foo => 'blip', :brat => 'wurst'}}", scope: obj))
     assert_equal("<div data-baz='bang' data-foo='blip'></div>\n",
-      render("%div{data_hash, 'data-foo' => 'blip'}"))
+      render("%div{data_hash, 'data-foo' => 'blip'}", scope: obj))
     assert_equal("<div data-baz='bang' data-foo='bar' data='dat'></div>\n",
-      render("%div{data_hash, :data => 'dat'}"))
+      render("%div{data_hash, :data => 'dat'}", scope: obj))
     assert_equal("<div data-brat='wurst' data-foo='blip' data='dat'></div>\n",
-      render("%div{data_val, :data => {:foo => 'blip', :brat => 'wurst'}}"))
+      render("%div{data_val, :data => {:foo => 'blip', :brat => 'wurst'}}", scope: obj))
   end
 
   def test_html5_data_attributes_with_identical_attribute_values
