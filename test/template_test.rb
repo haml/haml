@@ -59,7 +59,7 @@ class TemplateTest < Haml::TestCase
     base = ActionView::Base.new(TEMPLATE_PATH, vars)
 
     # This is needed by RJS in (at least) Rails 3
-    base.instance_variable_set('@template', base)
+    base.instance_variable_set(:@template, base)
 
     # This is used by form_for.
     # It's usually provided by ActionController::Base.
@@ -150,7 +150,7 @@ class TemplateTest < Haml::TestCase
   end
 
   def test_instance_variables_should_work_inside_templates
-    @base.instance_variable_set("@content_for_layout", 'something')
+    @base.instance_variable_set(:@content_for_layout, 'something')
     assert_equal("<p>something</p>", render("%p= @content_for_layout").chomp)
 
     @base.instance_eval("@author = 'Hampton Catlin'")

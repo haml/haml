@@ -1308,7 +1308,7 @@ HAML
 
   def test_render_should_accept_a_binding_as_scope
     string = "This is a string!"
-    string.instance_variable_set("@var", "Instance variable")
+    string.instance_variable_set(:@var, "Instance variable")
     b = string.instance_eval do
       var = "Local variable"
       # Silence unavoidable warning; Ruby doesn't know we're going to use this

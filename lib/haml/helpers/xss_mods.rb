@@ -63,7 +63,7 @@ module Haml
 
       # Input is escaped
       def haml_concat_with_haml_xss(text = "")
-        raw = instance_variable_defined?('@_haml_concat_raw') ? @_haml_concat_raw : false
+        raw = instance_variable_defined?(:@_haml_concat_raw) ? @_haml_concat_raw : false
         haml_concat_without_haml_xss(raw ? text : haml_xss_html_escape(text))
       end
 

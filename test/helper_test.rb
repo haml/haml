@@ -51,7 +51,7 @@ class HelperTest < Haml::TestCase
     @base = ActionView::Base.new
     @base.controller = ActionController::Base.new
     @base.view_paths << File.expand_path("../templates", __FILE__)
-    @base.instance_variable_set('@post', Post.new("Foo bar\nbaz", nil, PostErrors.new))
+    @base.instance_variable_set(:@post, Post.new("Foo bar\nbaz", nil, PostErrors.new))
   end
 
   def render(text, options = {})
@@ -200,7 +200,7 @@ HAML
 
   def test_partials_should_not_cause_textareas_to_be_indented
     # non-indentation of textareas rendered inside partials
-    @base.instance_variable_set('@post', Post.new("Foo", nil, PostErrors.new))
+    @base.instance_variable_set(:@post, Post.new("Foo", nil, PostErrors.new))
     output = render(".foo\n  .bar\n    = render '/text_area_helper'", :action_view)
     match_data = output.match(text_area_content_regex)
     assert_equal 'Foo', match_data[2]
@@ -209,7 +209,7 @@ HAML
   if rails_text_area_helpers_emit_a_newline?
     def test_textareas_should_prerve_leading_whitespace
       # leading whitespace preservation
-      @base.instance_variable_set('@post', Post.new("    Foo", nil, PostErrors.new))
+      @base.instance_variable_set(:@post, Post.new("    Foo", nil, PostErrors.new))
       output = render(".foo\n  = text_area :post, :body", :action_view)
       match_data = output.match(text_area_content_regex)
       assert_equal '&#x0020;   Foo', match_data[2]
@@ -217,7 +217,7 @@ HAML
 
     def test_textareas_should_prerve_leading_whitespace_in_partials
       # leading whitespace in textareas rendered inside partials
-      @base.instance_variable_set('@post', Post.new("    Foo", nil, PostErrors.new))
+      @base.instance_variable_set(:@post, Post.new("    Foo", nil, PostErrors.new))
       output = render(".foo\n  .bar\n    = render '/text_area_helper'", :action_view)
       match_data = output.match(text_area_content_regex)
       assert_equal '&#x0020;   Foo', match_data[2]
