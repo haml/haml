@@ -10,23 +10,6 @@ class ActionView::Base
   end
 end
 
-module Haml::Helpers
-  def something_that_uses_haml_concat
-    haml_concat('foo').to_s
-  end
-
-  def render_something_with_haml_concat
-    haml_concat "<p>"
-  end
-
-  def render_something_with_haml_tag_and_concat
-    haml_tag 'p' do
-      haml_concat '<foo>'
-    end
-  end
-end
-
-
 require "active_model/naming"
 class FormModel
   extend ActiveModel::Naming
@@ -60,6 +43,15 @@ class HelperTest < Haml::TestCase
   end
 
   def test_rendering_with_escapes
+    def @base.render_something_with_haml_concat
+      haml_concat "<p>"
+    end
+    def @base.render_something_with_haml_tag_and_concat
+      haml_tag 'p' do
+        haml_concat '<foo>'
+      end
+    end
+
     output = render(<<-HAML, :action_view)
 - render_something_with_haml_concat
 - render_something_with_haml_tag_and_concat
@@ -583,10 +575,15 @@ MESSAGE
   end
 
   def test_error_return_line_in_helper
-    render("- something_that_uses_haml_concat")
+    obj = Object.new
+    def obj.something_that_uses_haml_concat
+      haml_concat('foo').to_s
+    end
+
+    render("- something_that_uses_haml_concat", scope: obj)
     assert false, "Expected Haml::Error"
   rescue Haml::Error => e
-    assert_equal 15, e.backtrace[0].scan(/:(\d+)/).first.first.to_i
+    assert_equal __LINE__ - 6, e.backtrace[0].scan(/:(\d+)/).first.first.to_i
   end
 
   class ActsLikeTag
