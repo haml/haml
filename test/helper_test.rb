@@ -199,7 +199,7 @@ HAML
   end
 
   if rails_text_area_helpers_emit_a_newline?
-    def test_textareas_should_prerve_leading_whitespace
+    def test_textareas_should_preserve_leading_whitespace
       # leading whitespace preservation
       @base.instance_variable_set(:@post, Post.new("    Foo", nil, PostErrors.new))
       output = render(".foo\n  = text_area :post, :body", :action_view)
@@ -207,7 +207,7 @@ HAML
       assert_equal '&#x0020;   Foo', match_data[2]
     end
 
-    def test_textareas_should_prerve_leading_whitespace_in_partials
+    def test_textareas_should_preserve_leading_whitespace_in_partials
       # leading whitespace in textareas rendered inside partials
       @base.instance_variable_set(:@post, Post.new("    Foo", nil, PostErrors.new))
       output = render(".foo\n  .bar\n    = render '/text_area_helper'", :action_view)
