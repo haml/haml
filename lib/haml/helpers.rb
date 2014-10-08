@@ -395,7 +395,7 @@ MESSAGE
     #
     # @param text [#to_s] The text to output
     def haml_concat(text = "")
-      if haml_buffer.options[:ugly] || haml_indent == 0
+      if haml_buffer.options[:ugly] || haml_buffer.tabulation == 0
         haml_buffer.buffer << "#{text}\n"
       else
         haml_buffer.buffer << %[#{haml_indent}#{text.to_s.gsub("\n", "\n#{haml_indent}")}\n]
