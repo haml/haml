@@ -233,23 +233,29 @@ HAML
   end
 
   def test_interpolation
-    assert_equal("<p>Hello World</p>\n", render('%p Hello #{who}', :locals => {:who => 'World'}))
-    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#{who}", :locals => {:who => 'World'}))
+    assert_equal("<p>Hello World</p>\n", render('%p Hello #{who}', locals: {who: 'World'}, escape_html: false))
+    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#{who}", locals: {who: 'World'}, escape_html: false))
+    assert_equal("<p>Hello World</p>\n", render('%p Hello #{who}', locals: {who: 'World'}, escape_html: true))
+    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#{who}", locals: {who: 'World'}, escape_html: true))
   end
 
   def test_interpolation_with_instance_var
     scope = Object.new
     scope.instance_variable_set(:@who, 'World')
 
-    assert_equal("<p>Hello World</p>\n", render('%p Hello #@who', :scope => scope))
-    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#@who", :scope => scope))
+    assert_equal("<p>Hello World</p>\n", render('%p Hello #@who', scope: scope, escape_html: false))
+    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#@who", scope: scope, escape_html: false))
+    assert_equal("<p>Hello World</p>\n", render('%p Hello #@who', scope: scope, escape_html: true))
+    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#@who", scope: scope, escape_html: true))
   end
 
   def test_interpolation_with_global
     $global_var_for_testing = 'World'
 
-    assert_equal("<p>Hello World</p>\n", render('%p Hello #$global_var_for_testing'))
-    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#$global_var_for_testing"))
+    assert_equal("<p>Hello World</p>\n", render('%p Hello #$global_var_for_testing', escape_html: false))
+    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#$global_var_for_testing", escape_html: false))
+    assert_equal("<p>Hello World</p>\n", render('%p Hello #$global_var_for_testing', escape_html: true))
+    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#$global_var_for_testing", escape_html: true))
   ensure
     $global_var_for_testing = nil
   end
