@@ -250,6 +250,8 @@ HAML
 
     assert_equal("<p>Hello World</p>\n", render('%p Hello #$global_var_for_testing'))
     assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#$global_var_for_testing"))
+  ensure
+    $global_var_for_testing = nil
   end
 
   def test_interpolation_in_the_middle_of_a_string
@@ -270,6 +272,8 @@ HAML
 
     assert_equal("\"title 'Title'. \"\n",
                  render("\"title '\#$global_var_for_testing'. \""))
+  ensure
+    $global_var_for_testing = nil
   end
 
   def test_interpolation_at_the_beginning_of_a_line
@@ -290,6 +294,8 @@ HAML
 
     assert_equal("<p>2</p>\n", render('%p #$global_var_for_testing'))
     assert_equal("<p>\n  2\n</p>\n", render("%p\n  \#$global_var_for_testing"))
+  ensure
+    $global_var_for_testing = nil
   end
 
   def test_escaped_interpolation
@@ -1455,6 +1461,8 @@ HAML
     engine = Haml::Engine.new('%a{:b => "a #$global_var_for_testing b"}')
     $global_var_for_testing = 'bar'
     assert_equal("<a b='a bar b'></a>\n", engine.to_html)
+  ensure
+    $global_var_for_testing = nil
   end
 
   def test_utf8_attrs
