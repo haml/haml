@@ -59,7 +59,7 @@ module Haml
     end
 
     # Removes a filter from Haml. If the filter was removed, it returns
-    # the that was remove Module upon success, or nil on failure. If you try
+    # the Module that was removed upon success, or nil on failure. If you try
     # to redefine a filter, Haml will raise an error. Use this method first to
     # explicitly remove the filter before redefining it.
     # @return Module The filter module that has been removed
