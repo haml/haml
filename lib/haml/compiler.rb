@@ -375,7 +375,7 @@ END
     # Causes `text` to be evaluated in the context of
     # the scope object and the result to be added to `@buffer`.
     #
-    # If `opts[:preserve_script]` is true, Haml::Helpers#find_and_flatten is run on
+    # If `opts[:preserve_script]` is true, Haml::Helpers#find_and_preserve is run on
     # the result before it is added to `@buffer`
     def push_script(text, opts = {})
       return if @options.suppress_eval?
