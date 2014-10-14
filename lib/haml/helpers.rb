@@ -519,7 +519,7 @@ MESSAGE
 
       haml_concat tag
       tab_up
-      block.call
+      yield
       tab_down
       haml_concat "</#{name}>"
 
