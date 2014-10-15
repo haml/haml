@@ -1,16 +1,6 @@
 require 'test_helper'
-
-class ActionView::Base
-  def nested_tag
-    content_tag(:span) {content_tag(:div) {"something"}}
-  end
-
-  def wacky_form
-    form_tag("/foo") {"bar"}
-  end
-end
-
 require "active_model/naming"
+
 class FormModel
   extend ActiveModel::Naming
 end
@@ -31,7 +21,15 @@ class HelperTest < Haml::TestCase
   end
 
   def setup
-    @base = ActionView::Base.new
+    @base = Class.new(ActionView::Base) {
+      def nested_tag
+        content_tag(:span) {content_tag(:div) {"something"}}
+      end
+
+      def wacky_form
+        form_tag("/foo") {"bar"}
+      end
+    }.new
     @base.controller = ActionController::Base.new
     @base.view_paths << File.expand_path("../templates", __FILE__)
     @base.instance_variable_set(:@post, Post.new("Foo bar\nbaz", nil, PostErrors.new))
