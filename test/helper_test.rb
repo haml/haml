@@ -131,8 +131,15 @@ HAML
   def test_form_tag
     # This is usually provided by ActionController::Base.
     def @base.protect_against_forgery?; false; end
+
+    form_attrs = if Rails.version < '4.2.0'
+        %(accept-charset="UTF-8" action="foo" method="post")
+      else
+        %(action="foo" accept-charset="UTF-8" method="post")
+      end
+
     assert_equal(<<HTML, render(<<HAML, :action_view))
-<form accept-charset="UTF-8" action="foo" method="post">#{rails_form_opener}
+<form #{form_attrs}>#{rails_form_opener}
   <p>bar</p>
   <strong>baz</strong>
 </form>
@@ -144,15 +151,28 @@ HAML
   end
 
   def test_form_for
-    size_attribute = Rails.version < '4.0.0' ? ' size="30"' : ''
+    form_attrs = if Rails.version < '4.2.0'
+        %(accept-charset="UTF-8" action="foo" class="new_post" id="new_post" method="post")
+      else
+        %(class="new_post" id="new_post" action="foo" accept-charset="UTF-8" method="post")
+      end
+
+    input_attrs = if Rails.version < '4.2.0'
+      size_attribute = Rails.version < '4.0.0' ? 'size="30" ' : ''
+        %(id="post_name" name="post[name]" ) << size_attribute << %(type="text")
+      else
+        %(type="text" name="post[name]" id="post_name")
+      end
+
     # FIXME: current HAML doesn't do proper indentation with form_for (it's the capture { output } in #form_for).
     def @base.protect_against_forgery?; false; end
+
     assert_equal(<<HTML, render(<<HAML, :action_view))
-<form accept-charset="UTF-8" action="foo" class="new_post" id="new_post" method="post">#{rails_form_opener}<input id="post_name" name="post[name]"#{size_attribute} type="text" />
+<form #{form_attrs}>#{rails_form_opener}<input #{input_attrs} />
 </form>
 HTML
 
-= form_for OpenStruct.new, :url => 'foo', :as => :post do |f|
+= form_for OpenStruct.new, url: 'foo', as: :post do |f|
   = f.text_field :name
 HAML
   end
@@ -249,8 +269,15 @@ HAML
 
   def test_form_tag_in_helper_with_string_block
     def @base.protect_against_forgery?; false; end
+
+    form_attrs = if Rails.version < '4.2.0'
+        %(accept-charset="UTF-8" action="/foo" method="post")
+      else
+        %(action="/foo" accept-charset="UTF-8" method="post")
+      end
+
     assert_equal(<<HTML, render(<<HAML, :action_view))
-<form accept-charset="UTF-8" action="/foo" method="post">#{rails_form_opener}bar</form>
+<form #{form_attrs}>#{rails_form_opener}bar</form>
 HTML
 = wacky_form
 HAML
@@ -700,4 +727,3 @@ HAML
   end
 
 end
-
