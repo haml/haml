@@ -158,7 +158,7 @@ HAML
       end
 
     input_attrs = if Rails.version < '4.2.0'
-      size_attribute = Rails.version < '4.0.0' ? 'size="30" ' : ''
+        size_attribute = Rails.version < '4.0.0' ? 'size="30" ' : ''
         %(id="post_name" name="post[name]" ) << size_attribute << %(type="text")
       else
         %(type="text" name="post[name]" id="post_name")
