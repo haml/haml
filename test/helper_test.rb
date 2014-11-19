@@ -58,6 +58,14 @@ HAML
     assert_equal("&lt;p&gt;\n<p>\n  <foo>\n</p>\n&lt;p&gt;\n", output)
   end
 
+  def test_with_raw_haml_concat
+    haml = <<HAML
+- with_raw_haml_concat do
+  - haml_concat "<>&"
+HAML
+    assert_equal("<>&\n", render(haml, :action_view))
+  end
+
   def test_flatten
     assert_equal("FooBar", Haml::Helpers.flatten("FooBar"))
 
