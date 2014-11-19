@@ -55,7 +55,7 @@ class HelperTest < Haml::TestCase
 - render_something_with_haml_tag_and_concat
 - render_something_with_haml_concat
 HAML
-    assert_equal("&lt;p&gt;\n<p>\n  <foo>\n</p>\n&lt;p&gt;\n", output)
+    assert_equal("&lt;p&gt;\n<p>\n  &lt;foo&gt;\n</p>\n&lt;p&gt;\n", output)
   end
 
   def test_with_raw_haml_concat
@@ -404,6 +404,13 @@ HAML
 </p>
 HTML
 - haml_tag :p, "foo\\nbar\\nbaz"
+HAML
+  end
+
+  def test_haml_concat_inside_haml_tag_escaped_with_xss
+    assert_equal("<p>\n  &lt;&gt;&amp;\n</p>\n", render(<<HAML, :action_view))
+- haml_tag :p do
+  - haml_concat "<>&"
 HAML
   end
 
