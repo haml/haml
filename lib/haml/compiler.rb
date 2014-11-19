@@ -243,7 +243,7 @@ END
         push_merged_text("#{open} ")
 
         if @node.value[:parse]
-          push_script(@node.value[:text], :in_tag => true)
+          push_script(@node.value[:text], :in_tag => true, :nuke_inner_whitespace => true)
         else
           push_merged_text(@node.value[:text], 0, false)
         end
