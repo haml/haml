@@ -395,13 +395,34 @@ MESSAGE
     #
     # @param text [#to_s] The text to output
     def haml_concat(text = "")
-      if haml_buffer.options[:ugly] || haml_buffer.tabulation == 0
-        haml_buffer.buffer << "#{text}\n"
-      else
-        haml_buffer.buffer << %[#{haml_indent}#{text.to_s.gsub("\n", "\n#{haml_indent}")}\n]
-      end
+      haml_internal_concat text
       ErrorReturn.new("haml_concat")
     end
+
+    # Internal method to write directly to the buffer with control of
+    # whether the first line shoule be indented, and if there should be a
+    # final newline.
+    #
+    # Lines added will have the proper indentation. This can be controlled
+    # for the first line.
+    #
+    # Used by #haml_concat and #haml_tag.
+    #
+    # @param text [#to_s] The text to output
+    # @param newline [Boolean] Whether to add a newline after the text
+    # @param indent [Boolean] Whether to add indentation to the first line
+    def haml_internal_concat(text = "", newline = true, indent = true)
+      if haml_buffer.options[:ugly] || haml_buffer.tabulation == 0
+        haml_buffer.buffer << "#{text}#{"\n" if newline}"
+      else
+        haml_buffer.buffer << %[#{haml_indent if indent}#{text.to_s.gsub("\n", "\n#{haml_indent}")}#{"\n" if newline}]
+      end
+    end
+    private :haml_internal_concat
+
+    # Allows writing raw content. `haml_internal_concat_raw` isn't
+    # effected by XSS mods. Used by #haml_tag to write the actual tags.
+    alias :haml_internal_concat_raw :haml_internal_concat
 
     # @return [String] The indentation string for the current line
     def haml_indent
@@ -482,7 +503,7 @@ MESSAGE
         attrs)
 
       if text.nil? && block.nil? && (haml_buffer.options[:autoclose].include?(name) || flags.include?(:/))
-        haml_concat "<#{name}#{attributes}#{' /' if haml_buffer.options[:format] == :xhtml}>"
+        haml_internal_concat_raw "<#{name}#{attributes}#{' /' if haml_buffer.options[:format] == :xhtml}>"
         return ret
       end
 
@@ -492,17 +513,19 @@ MESSAGE
       end
 
       tag = "<#{name}#{attributes}>"
+      end_tag = "</#{name}>"
       if block.nil?
         text = text.to_s
         if text.include?("\n")
-          haml_concat tag
+          haml_internal_concat_raw tag
           tab_up
-          haml_concat text
+          haml_internal_concat text
           tab_down
-          haml_concat "</#{name}>"
+          haml_internal_concat_raw end_tag
         else
-          tag << "#{text}</#{name}>"
-          haml_concat tag
+          haml_internal_concat_raw tag, false
+          haml_internal_concat text, false, false
+          haml_internal_concat_raw end_tag, true, false
         end
         return ret
       end
@@ -512,16 +535,17 @@ MESSAGE
       end
 
       if flags.include?(:<)
-        tag << "#{capture_haml(&block).strip}</#{name}>"
-        haml_concat tag
+        haml_internal_concat_raw tag, false
+        haml_internal_concat "#{capture_haml(&block).strip}", false, false
+        haml_internal_concat_raw end_tag, true, false
         return ret
       end
 
-      haml_concat tag
+      haml_internal_concat_raw tag
       tab_up
       block.call
       tab_down
-      haml_concat "</#{name}>"
+      haml_internal_concat_raw end_tag
 
       ret
     end
