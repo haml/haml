@@ -177,7 +177,7 @@ module Haml
     # that renders the template and returns the result as a string.
     #
     # If `object` is a class or module,
-    # the method will instead by defined as an instance method.
+    # the method will instead be defined as an instance method.
     # For example:
     #
     #     t = Time.now
