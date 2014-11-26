@@ -7,8 +7,8 @@ module Haml
     module XssMods
       def self.included(base)
         %w[html_escape find_and_preserve preserve list_of surround
-           precede succeed capture_haml haml_concat haml_indent
-           haml_tag escape_once].each do |name|
+           precede succeed capture_haml haml_concat haml_internal_concat haml_indent
+           escape_once].each do |name|
           base.send(:alias_method, "#{name}_without_haml_xss", name)
           base.send(:alias_method, name, "#{name}_with_haml_xss")
         end
@@ -61,22 +61,27 @@ module Haml
         Haml::Util.html_safe(capture_haml_without_haml_xss(*args, &block))
       end
 
-      # Input is escaped
+      # Input will be escaped unless this is in a `with_raw_haml_concat`
+      # block. See #Haml::Helpers::ActionViewExtensions#with_raw_haml_concat.
       def haml_concat_with_haml_xss(text = "")
         raw = instance_variable_defined?(:@_haml_concat_raw) ? @_haml_concat_raw : false
-        haml_concat_without_haml_xss(raw ? text : haml_xss_html_escape(text))
+        if raw
+          haml_internal_concat_raw text
+        else
+          haml_internal_concat text
+        end
+        ErrorReturn.new("haml_concat")
       end
+
+      # Input is escaped
+      def haml_internal_concat_with_haml_xss(text="", newline=true, indent=true)
+        haml_internal_concat_without_haml_xss(haml_xss_html_escape(text), newline, indent)
+      end
+      private :haml_internal_concat_with_haml_xss
 
       # Output is always HTML safe
       def haml_indent_with_haml_xss
         Haml::Util.html_safe(haml_indent_without_haml_xss)
-      end
-
-      # Input is escaped, haml_concat'ed output is always HTML safe
-      def haml_tag_with_haml_xss(name, *rest, &block)
-        name = haml_xss_html_escape(name.to_s)
-        rest.unshift(haml_xss_html_escape(rest.shift.to_s)) unless [Symbol, Hash, NilClass].any? {|t| rest.first.is_a? t}
-        with_raw_haml_concat {haml_tag_without_haml_xss(name, *rest, &block)}
       end
 
       # Output is always HTML safe
