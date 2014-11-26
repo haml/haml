@@ -108,14 +108,13 @@ def gemfiles
 end
 
 def with_each_gemfile
-  old_env = ENV['BUNDLE_GEMFILE']
   gemfiles.each do |gemfile|
-    puts "Using gemfile: #{gemfile}"
-    ENV['BUNDLE_GEMFILE'] = gemfile
-    yield
+    Bundler.with_clean_env do
+      puts "Using gemfile: #{gemfile}"
+      ENV['BUNDLE_GEMFILE'] = gemfile
+      yield
+    end
   end
-ensure
-  ENV['BUNDLE_GEMFILE'] = old_env
 end
 
 namespace :test do
