@@ -177,8 +177,8 @@ both 1.9 and 2.0.
 
 ### Current Maintainers
 
-* [Norman Clarke](http://github.com/norman)
-* [Matt Wildig](http://github.com/mattwildig)
+* [Norman Clarke](https://github.com/norman)
+* [Matt Wildig](https://github.com/mattwildig)
 * [Akira Matsuda](https://github.com/amatsuda)
 * [Tee Parham](https://github.com/teeparham)
 
