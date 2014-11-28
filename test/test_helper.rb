@@ -49,7 +49,7 @@ BASE_TEST_CLASS = if defined?(Minitest::Test)
 
 module Declarative
   def test(name, &block)
-    define_method("test #{name}", &block)
+    define_method("test_ #{name}", &block)
   end
 end
 
