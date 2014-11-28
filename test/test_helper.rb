@@ -32,7 +32,7 @@ Haml::Template.options[:format] = :xhtml
 
 module Declarative
   def test(name, &block)
-    define_method("test #{name}", &block)
+    define_method("test_ #{name}", &block)
   end
 end
 
