@@ -209,7 +209,15 @@ module Haml
       return unless line.tabs <= @template_tabs && @template_tabs > 0
 
       to_close = @template_tabs - line.tabs
-      to_close.times {|i| close unless to_close - 1 - i == 0 && mid_block_keyword?(line.text)}
+      to_close.times {|i| close unless to_close - 1 - i == 0 && continuation_script?(line.text)}
+    end
+
+    def continuation_script?(text)
+      text[0] == SILENT_SCRIPT && mid_block_keyword?(text)
+    end
+
+    def mid_block_keyword?(text)
+      MID_BLOCK_KEYWORDS.include?(block_keyword(text))
     end
 
     # Processes a single line of Haml.
@@ -254,10 +262,6 @@ module Haml
     def block_keyword(text)
       return unless keyword = text.scan(BLOCK_KEYWORD_REGEX)[0]
       keyword[0] || keyword[1]
-    end
-
-    def mid_block_keyword?(text)
-      MID_BLOCK_KEYWORDS.include?(block_keyword(text))
     end
 
     def push(node)

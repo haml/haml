@@ -116,6 +116,12 @@ module Haml
       refute node.value[:revealed]
     end
 
+    test "only script lines are checked for continuation keywords" do
+      haml = "- if true\n  setup\n- else\n  else\n"
+      node = parse(haml).children[0]
+      assert_equal(3, node.children.size)
+    end
+
     private
 
     def parse(haml, options = nil)
