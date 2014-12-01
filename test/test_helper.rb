@@ -65,10 +65,6 @@ class MiniTest::Unit::TestCase
     Haml::Util.silence_warnings(&block)
   end
 
-  def rails_form_opener
-    '<div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>'
-  end
-
   def assert_raises_message(klass, message)
     yield
   rescue Exception => e

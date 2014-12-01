@@ -140,16 +140,16 @@ HAML
   def test_form_tag
     # This is usually provided by ActionController::Base.
     def @base.protect_against_forgery?; false; end
-    assert_equal(<<HTML, render(<<HAML, :action_view))
-<form accept-charset="UTF-8" action="foo" method="post">#{rails_form_opener}
-  <p>bar</p>
-  <strong>baz</strong>
-</form>
-HTML
+
+    rendered = render(<<HAML, :action_view)
 = form_tag 'foo' do
   %p bar
   %strong baz
 HAML
+    fragment = Nokogiri::HTML.fragment(rendered)
+    assert_equal 'foo', fragment.css('form').first.attributes['action'].to_s
+    assert_equal 'bar', fragment.css('form p').first.text.strip
+    assert_equal 'baz', fragment.css('form strong').first.text.strip
   end
 
   def test_pre
@@ -244,11 +244,10 @@ HAML
 
   def test_form_tag_in_helper_with_string_block
     def @base.protect_against_forgery?; false; end
-    assert_equal(<<HTML, render(<<HAML, :action_view))
-<form accept-charset="UTF-8" action="/foo" method="post">#{rails_form_opener}bar</form>
-HTML
-= wacky_form
-HAML
+    rendered = render('= wacky_form', :action_view)
+    fragment = Nokogiri::HTML.fragment(rendered)
+    assert_equal 'bar', fragment.text.strip
+    assert_equal '/foo', fragment.css('form').first.attributes['action'].to_s
   end
 
   def test_haml_tag_name_attribute_with_id
