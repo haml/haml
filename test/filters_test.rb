@@ -27,7 +27,7 @@ class FiltersTest < Haml::TestCase
     begin
       assert_raises Haml::Error do
         # ignore warnings from Tilt
-        Kernel.silence_warnings do
+        silence_warnings do
           Haml::Filters.register_tilt_filter "Textile"
           Haml::Filters.defined["textile"].template_class
         end
