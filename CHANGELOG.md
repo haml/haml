@@ -1,6 +1,12 @@
 # Haml Changelog
 
-=======
+## 4.0.6
+
+Released on Dec 1, 2014 ([diff](https://github.com/haml/haml/compare/4.0.5...4.0.6)).
+
+
+* Fix warning on Ruby 1.8.7 "regexp has invalid interval" (thanks [Elia Schito](https://github.com/elia)).
+
 ## 4.0.5
 
 Released on Jan 7, 2014 ([diff](https://github.com/haml/haml/compare/4.0.4...4.0.5)).
