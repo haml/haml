@@ -6,13 +6,6 @@ task :default => :test
 
 CLEAN.replace %w(pkg doc coverage .yardoc test/haml vendor)
 
-def silence_warnings
-  the_real_stderr, $stderr = $stderr, StringIO.new
-  yield
-ensure
-  $stderr = the_real_stderr
-end
-
 desc "Benchmark Haml against ERB. TIMES=n sets the number of runs, default is 1000."
 task :benchmark do
   sh "ruby benchmark.rb #{ENV['TIMES']}"
@@ -43,41 +36,32 @@ task :submodules do
   end
 end
 
-begin
-  silence_warnings do
-    require 'yard'
-  end
-
-  namespace :doc do
-
-    task :sass do
-      require 'sass'
-      Dir["yard/default/**/*.sass"].each do |sass|
-        File.open(sass.gsub(/sass$/, 'css'), 'w') do |f|
-          f.write(Sass::Engine.new(File.read(sass)).render)
-        end
+namespace :doc do
+  task :sass do
+    require 'sass'
+    Dir["yard/default/**/*.sass"].each do |sass|
+      File.open(sass.gsub(/sass$/, 'css'), 'w') do |f|
+        f.write(Sass::Engine.new(File.read(sass)).render)
       end
     end
-
-    desc "List all undocumented methods and classes."
-    task :undocumented do
-      command = 'yard --list --query '
-      command << '"object.docstring.blank? && '
-      command << '!(object.type == :method && object.is_alias?)"'
-      sh command
-    end
   end
 
-  desc "Generate documentation"
-  task(:doc => 'doc:sass') {sh "yard"}
-
-  desc "Generate documentation incrementally"
-  task(:redoc) {sh "yard -c"}
-
-rescue LoadError
+  desc "List all undocumented methods and classes."
+  task :undocumented do
+    command = 'yard --list --query '
+    command << '"object.docstring.blank? && '
+    command << '!(object.type == :method && object.is_alias?)"'
+    sh command
+  end
 end
 
-  desc <<END
+desc "Generate documentation"
+task(:doc => 'doc:sass') {sh "yard"}
+
+desc "Generate documentation incrementally"
+task(:redoc) {sh "yard -c"}
+
+desc <<END
 Profile Haml.
   TIMES=n sets the number of runs. Defaults to 1000.
   FILE=str sets the file to profile. Defaults to 'standard'
