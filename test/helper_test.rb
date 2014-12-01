@@ -156,7 +156,7 @@ HAML
 = form_for OpenStruct.new, url: 'foo', as: :post do |f|
   = f.text_field :name
 HAML
-    assert_match(/<div[^>]+><input/, rendered)
+    assert_match(/<(form|div)[^>]+><input/, rendered)
   end
 
   def test_pre
