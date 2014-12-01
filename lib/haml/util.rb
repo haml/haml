@@ -14,38 +14,6 @@ module Haml
   module Util
     extend self
 
-    # Computes the powerset of the given array.
-    # This is the set of all subsets of the array.
-    #
-    # @example
-    #   powerset([1, 2, 3]) #=>
-    #     Set[Set[], Set[1], Set[2], Set[3], Set[1, 2], Set[2, 3], Set[1, 3], Set[1, 2, 3]]
-    # @param arr [Enumerable]
-    # @return [Set<Set>] The subsets of `arr`
-    def powerset(arr)
-      arr.inject([Set.new].to_set) do |powerset, el|
-        new_powerset = Set.new
-        powerset.each do |subset|
-          new_powerset << subset
-          new_powerset << subset + [el]
-        end
-        new_powerset
-      end
-    end
-
-    # Returns information about the caller of the previous method.
-    #
-    # @param entry [String] An entry in the `#caller` list, or a similarly formatted string
-    # @return [[String, Fixnum, (String, nil)]] An array containing the filename, line, and method name of the caller.
-    #   The method name may be nil
-    def caller_info(entry = caller[1])
-      info = entry.scan(/^(.*?):(-?.*?)(?::.*`(.+)')?$/).first
-      info[1] = info[1].to_i
-      # This is added by Rubinius to designate a block, but we don't care about it.
-      info[2].sub!(/ \{\}\Z/, '') if info[2]
-      info
-    end
-
     # Silence all output to STDERR within a block.
     #
     # @yield A block in which no output will be printed to STDERR
