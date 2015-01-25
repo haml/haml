@@ -704,6 +704,28 @@ MESSAGE
         str << line.slice(min_tabs, line.length)
       end
     end
+
+    # Returns a proc that captures a given haml block.
+    # For example:
+    #
+    #     - tagger = haml_proc do |tag, &block|
+    #       <#{tag}>#{block.call}</#{tag}>
+    #     = tagger.call('p') { 'hello' }
+    #
+    # Produces:
+    #
+    #     <p>hello</p>
+    #
+    #
+    # @param block [#call] A haml block
+    # @return [Proc] A new proc that returns a string.
+    def haml_proc(&block)
+      proc do |*args, &arg_block|
+        capture_haml do
+          block.call(*args, &arg_block)
+        end
+      end
+    end
   end
 end
 

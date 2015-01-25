@@ -707,4 +707,13 @@ HAML
     end
   end
 
+  def test_haml_proc
+    assert_equal(<<HTML, render(<<'HAML'))
+<p>hello</p>
+HTML
+- tagger = haml_proc do |tag, &my_block|
+  <#{tag}>#{my_block.call}</#{tag}>
+= tagger.call('p') { 'hello' }
+HAML
+  end
 end
