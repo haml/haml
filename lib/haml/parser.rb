@@ -409,7 +409,7 @@ module Haml
       raise SyntaxError.new(Error.message(:no_ruby_code, action), last_line - 1) if parse && value.empty?
       raise SyntaxError.new(Error.message(:self_closing_content), last_line - 1) if self_closing && !value.empty?
 
-      if block_opened? && !value.empty? && !is_ruby_multiline?(line.text)
+      if block_opened? && !value.empty? && !is_ruby_multiline?(value)
         raise SyntaxError.new(Error.message(:illegal_nesting_line, tag_name), @next_line.index)
       end
 

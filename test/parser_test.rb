@@ -122,6 +122,17 @@ module Haml
       assert_equal(3, node.children.size)
     end
 
+    # see #830. Strictly speaking the pipe here is not neccesary, but there
+    # shouldn't be an error if it is there.
+    test "multiline Ruby with extra trailing pipe doesn't raise error" do
+      haml = "%p= foo bar, |\n  baz"
+      begin
+        parse haml
+      rescue Haml::SyntaxError
+        flunk "Should not have raised SyntaxError"
+      end
+    end
+
     private
 
     def parse(haml, options = nil)
