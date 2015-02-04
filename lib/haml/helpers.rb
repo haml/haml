@@ -400,7 +400,7 @@ MESSAGE
     end
 
     # Internal method to write directly to the buffer with control of
-    # whether the first line shoule be indented, and if there should be a
+    # whether the first line should be indented, and if there should be a
     # final newline.
     #
     # Lines added will have the proper indentation. This can be controlled
