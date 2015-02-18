@@ -1020,6 +1020,10 @@ might compile to:
         });
       //]]>
     </script>
+    
+#### Interpolation Gotchas
+
+* `%span #{'{'}` can lead to an error.  *There is currently no workaround.*
 
 ### Escaping HTML: `&=` {#escaping_html}
 
