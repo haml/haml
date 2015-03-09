@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Hamilton::VERSION
   spec.authors       = ["Takashi Kokubun"]
   spec.email         = ["takashikkbn@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{Yet another haml implementation}
+  spec.description   = %q{Yet another haml implementation}
+  spec.homepage      = "https://github.com/k0kubun/hamilton"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
