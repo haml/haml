@@ -1,5 +1,5 @@
-require "hamilton/version"
+require 'hamilton/engine'
+require 'hamilton/version'
 
 module Hamilton
-  # Your code goes here...
 end
