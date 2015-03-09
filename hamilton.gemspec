@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "haml"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "slim"
+  spec.add_development_dependency "tenjin"
 end

@@ -11,4 +11,5 @@
 *.so
 *.o
 *.a
+*.cache
 mkmf.log
