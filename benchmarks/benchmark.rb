@@ -14,8 +14,9 @@ require 'tenjin'
 require 'tilt'
 
 class Benchmarks
-  def initialize
-    @benches    = []
+  def initialize(time)
+    @time    = time
+    @benches = []
 
     @erb_code    = File.read(File.dirname(__FILE__) + '/view.erb')
     @haml_code   = File.read(File.dirname(__FILE__) + '/view.haml')
@@ -57,6 +58,7 @@ class Benchmarks
 
   def run
     Benchmark.ips do |x|
+      x.config(time: @time, warmup: 2)
       @benches.each do |name, block|
         x.report(name, &block)
       end
@@ -69,4 +71,5 @@ class Benchmarks
   end
 end
 
-Benchmarks.new.run
+time = (ENV['TIME'] || 5).to_i
+Benchmarks.new(time).run

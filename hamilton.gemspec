@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "erubis"
   spec.add_development_dependency "fast_haml"
   spec.add_development_dependency "haml"
+  spec.add_development_dependency "pry"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "slim"
   spec.add_development_dependency "tenjin"
