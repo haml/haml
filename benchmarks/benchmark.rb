@@ -3,13 +3,14 @@
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'), File.dirname(__FILE__))
 
 require_relative './context'
-
 require 'benchmark/ips'
-require 'tilt'
+
 require 'erb'
+require 'erubis'
+require 'fast_haml'
 require 'haml'
 require 'slim'
-require 'erubis'
+require 'tilt'
 
 class Benchmarks
   def initialize
@@ -26,7 +27,6 @@ class Benchmarks
     erb         = ERB.new(@erb_code)
     erubis      = Erubis::Eruby.new(@erb_code)
     fast_erubis = Erubis::FastEruby.new(@erb_code)
-    haml_pretty = Haml::Engine.new(@haml_code, format: :html5)
     haml_ugly   = Haml::Engine.new(@haml_code, format: :html5, ugly: true)
 
     context  = Context.new
@@ -38,6 +38,7 @@ class Benchmarks
       def run_temple_erb; #{Temple::ERB::Engine.new.call @erb_code}; end
       def run_fast_erubis; #{fast_erubis.src}; end
       def run_slim_ugly; #{Slim::Engine.new.call @slim_code}; end
+      def run_fast_haml; #{FastHaml::Engine.new.call @haml_code}; end
     }
 
     bench('erb')         { context.run_erb }
@@ -46,6 +47,7 @@ class Benchmarks
     bench('temple erb')  { context.run_temple_erb }
     bench('slim')        { context.run_slim_ugly }
     bench('haml')        { context.run_haml_ugly }
+    bench('fast_haml')   { context.run_fast_haml }
   end
 
   def run
