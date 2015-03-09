@@ -31,14 +31,12 @@ class Benchmarks
 
     context  = Context.new
 
-    haml_pretty.def_method(context, :run_haml_pretty)
     haml_ugly.def_method(context, :run_haml_ugly)
     context.instance_eval %{
       def run_erb; #{erb.src}; end
       def run_erubis; #{erubis.src}; end
       def run_temple_erb; #{Temple::ERB::Engine.new.call @erb_code}; end
       def run_fast_erubis; #{fast_erubis.src}; end
-      def run_slim_pretty; #{Slim::Engine.new(pretty: true).call @slim_code}; end
       def run_slim_ugly; #{Slim::Engine.new.call @slim_code}; end
     }
 
@@ -46,10 +44,8 @@ class Benchmarks
     bench('erubis')      { context.run_erubis }
     bench('fast erubis') { context.run_fast_erubis }
     bench('temple erb')  { context.run_temple_erb }
-    bench('slim pretty') { context.run_slim_pretty }
-    bench('slim ugly')   { context.run_slim_ugly }
-    bench('haml pretty') { context.run_haml_pretty }
-    bench('haml ugly')   { context.run_haml_ugly }
+    bench('slim')        { context.run_slim_ugly }
+    bench('haml')        { context.run_haml_ugly }
   end
 
   def run
