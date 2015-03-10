@@ -1,7 +1,11 @@
 describe Hamilton::Engine do
   describe 'doctype' do
     it 'renders html5 doctype' do
-      expect(render_string('!!!')).to eq('<!DOCTYPE html>')
+      assert_render(<<-HAML, <<-HTML)
+        !!!
+      HAML
+        <!DOCTYPE html>
+      HTML
     end
   end
 end

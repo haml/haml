@@ -9,6 +9,20 @@ module HamiltonSpecHelper
   def render_string(str)
     eval Hamilton::Engine.new.call(str)
   end
+
+  def assert_render(haml, html)
+    haml = haml.unindent
+    html = html.unindent.gsub(/\n\Z/, '')
+
+    expect(render_string(haml)).to eq(html)
+  end
+
+  def assert_parse(haml, &block)
+    haml = haml.unindent
+    ast  = block.call
+
+    expect(parse_string(haml)).to eq(ast)
+  end
 end
 
 RSpec.configure do |config|
