@@ -25,7 +25,7 @@ module Hamilton
       while next_indent == @current_indent
         @current_lineno += 1
         ast << parse_line(current_line)
-        ast << [:static, "\n"]
+        ast << [:static, "\n"] unless ast.last == [:newline]
       end
       ast
     end

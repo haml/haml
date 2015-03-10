@@ -19,19 +19,6 @@ describe Hamilton::Engine do
       HTML
     end
 
-    it 'parses multi-line tag with multiple texts' do
-      assert_render(<<-HAML, <<-HTML)
-        %span
-          hello
-          world
-      HAML
-        <span>
-        hello
-        world
-        </span>
-      HTML
-    end
-
     it 'parses a nested tag' do
       assert_render(<<-HAML, <<-HTML)
         %span
@@ -47,6 +34,39 @@ describe Hamilton::Engine do
         <i>
         <small>world</small>
         </i>
+        </span>
+      HTML
+    end
+
+    it 'parses multi-line texts' do
+      assert_render(<<-HAML, <<-HTML)
+        %span
+          %b
+            hello
+            world
+      HAML
+        <span>
+        <b>
+        hello
+        world
+        </b>
+        </span>
+      HTML
+    end
+
+    it 'skips empty lines' do
+      assert_render(<<-HAML, <<-HTML)
+        %span
+
+          %b
+
+            hello
+
+      HAML
+        <span>
+        <b>
+        hello
+        </b>
         </span>
       HTML
     end
