@@ -3,6 +3,8 @@ require 'temple'
 module Hamilton
   class Parser < Temple::Parser
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
+    TAG_REGEXP  = /[a-z]+/
+    DEFAULT_TAG = 'div'
     EOF = -1
 
     def call(template)
@@ -43,7 +45,7 @@ module Hamilton
       case scanner.peek(1)
       when '!'
         parse_doctype(scanner)
-      when '%'
+      when '%', '.', '#'
         parse_tag(scanner)
       else
         parse_text(scanner)
@@ -57,10 +59,8 @@ module Hamilton
     end
 
     def parse_tag(scanner)
-      raise SyntaxError unless scanner.scan(/%/)
-
-      tag = scanner.scan(/[a-z]+/)
-      raise SyntaxError unless tag
+      tag = DEFAULT_TAG
+      tag = scanner.scan(TAG_REGEXP) if scanner.scan(/%/)
 
       attrs = [:html, :attrs]
       attrs += parse_tag_id_and_class(scanner)

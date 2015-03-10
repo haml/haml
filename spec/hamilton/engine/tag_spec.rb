@@ -97,5 +97,24 @@ describe Hamilton::Engine do
         <span id="a c" class="b d">hello</span>
       HTML
     end
+
+    it 'parses implicit div tag starting with id' do
+      assert_render(<<-HAML, <<-HTML)
+        #hello.world
+      HAML
+        <div id="hello" class="world" />
+      HTML
+    end
+
+    it 'parses implicit div tag starting with class' do
+      assert_render(<<-HAML, <<-HTML)
+        .world#hello
+          foo
+      HAML
+        <div id="hello" class="world">
+        foo
+        </div>
+      HTML
+    end
   end
 end
