@@ -31,5 +31,24 @@ describe Hamilton::Engine do
         </span>
       HTML
     end
+
+    it 'parses a nested tag' do
+      assert_render(<<-HAML, <<-HTML)
+        %span
+          %b
+            hello
+          %i
+            %small world
+      HAML
+        <span>
+        <b>
+        hello
+        </b>
+        <i>
+        <small>world</small>
+        </i>
+        </span>
+      HTML
+    end
   end
 end
