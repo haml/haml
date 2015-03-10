@@ -1,4 +1,5 @@
 require 'hamilton'
+require 'unindent'
 
 module HamiltonSpecHelper
   def parse_string(str)
