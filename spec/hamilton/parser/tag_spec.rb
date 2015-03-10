@@ -4,7 +4,9 @@ describe Hamilton::Parser do
       assert_parse(<<-HAML) do
         %span hello
       HAML
-        [:multi, [:html, :tag, 'span', [:html, :attrs], [:static, 'hello']]]
+        [:multi,
+         [:html, :tag, 'span', [:html, :attrs], [:static, 'hello']],
+         [:static, "\n"]]
       end
     end
 
@@ -18,7 +20,8 @@ describe Hamilton::Parser do
           :tag,
           'span',
           [:html, :attrs],
-          [:multi, [:static, "\n"], [:static, 'hello'], [:static, "\n"]]]]
+          [:multi, [:static, "\n"], [:static, 'hello'], [:static, "\n"]]],
+         [:static, "\n"]]
       end
     end
   end

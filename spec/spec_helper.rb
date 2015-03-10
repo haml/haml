@@ -12,7 +12,7 @@ module HamiltonSpecHelper
 
   def assert_render(haml, html)
     haml = haml.unindent
-    html = html.unindent.gsub(/\n\Z/, '')
+    html = html.unindent
 
     expect(render_string(haml)).to eq(html)
   end

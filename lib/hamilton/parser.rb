@@ -24,6 +24,7 @@ module Hamilton
       ast = []
       while nearest_indent == @current_indent
         ast << parse_line(current_line)
+        ast << [:static, "\n"]
         @current_lineno += 1
       end
       ast
@@ -68,7 +69,6 @@ module Hamilton
 
       content = [:multi, [:static, "\n"]]
       content += with_indented { parse_lines }
-      content << [:static, "\n"]
       ast << content
       ast
     end
