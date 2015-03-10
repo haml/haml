@@ -2,6 +2,9 @@ require 'temple'
 
 module Hamilton
   class Parser < Temple::Parser
+    TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
+    EOF = -1
+
     def call(template)
       reset(template)
 
@@ -24,7 +27,7 @@ module Hamilton
       ast = []
       while next_indent == @current_indent
         @current_lineno += 1
-        ast << parse_line(current_line)
+        ast << parse_line(@lines[@current_lineno])
         ast << [:static, "\n"] unless ast.last == [:newline]
       end
       ast
@@ -59,8 +62,10 @@ module Hamilton
       tag = scanner.scan(/[a-z]+/)
       raise SyntaxError unless tag
 
-      ast = [:html, :tag, tag, [:html, :attrs]]
+      attrs = [:html, :attrs]
+      attrs += parse_tag_id_and_class(scanner)
 
+      ast = [:html, :tag, tag, attrs]
       if scanner.scan(/ +/) && text = scanner.scan(/.+/)
         ast << [:static, text]
         return ast
@@ -79,14 +84,37 @@ module Hamilton
       ast
     end
 
+    def parse_tag_id_and_class(scanner)
+      ids     = []
+      classes = []
+
+      while prefix = scanner.scan(/[#.]/)
+        name = scanner.scan(TAG_ID_CLASS_REGEXP)
+        raise SyntaxError unless name
+
+        case prefix
+        when '#'
+          ids << name
+        when '.'
+          classes << name
+        end
+      end
+
+      ast = []
+      ast << [:html, :attr, 'id', [:static, ids.join(' ')]]        if ids.any?
+      ast << [:html, :attr, 'class', [:static, classes.join(' ')]] if classes.any?
+      ast
+    end
+
     # Return nearest line's indent level since next line. This method ignores
-    # empty line.
+    # empty line. It returns -1 if next_line does not exist.
     def next_indent
       lineno = @current_lineno + 1
       while @lines[lineno] && empty_line?(@lines[lineno])
         lineno += 1
       end
-      @lines[lineno] && count_indent(@lines[lineno])
+      return EOF unless @lines[lineno]
+      count_indent(@lines[lineno])
     end
 
     def with_indented(&block)
@@ -95,10 +123,6 @@ module Hamilton
       @current_indent -= 1
 
       result
-    end
-
-    def current_line
-      @lines[@current_lineno]
     end
 
     def count_indent(line)

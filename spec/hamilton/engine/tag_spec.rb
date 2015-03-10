@@ -70,5 +70,32 @@ describe Hamilton::Engine do
         </span>
       HTML
     end
+
+    it 'parses classes' do
+      assert_render(<<-HAML, <<-HTML)
+        %span.foo-1.bar_A hello
+      HAML
+        <span class="foo-1 bar_A">hello</span>
+      HTML
+    end
+
+    it 'parses ids' do
+      assert_render(<<-HAML, <<-HTML)
+        %span#Bar_0#bar-
+          hello
+      HAML
+        <span id="Bar_0 bar-">
+        hello
+        </span>
+      HTML
+    end
+
+    it 'parses ids and classes' do
+      assert_render(<<-HAML, <<-HTML)
+        %span#a.b#c.d hello
+      HAML
+        <span id="a c" class="b d">hello</span>
+      HTML
+    end
   end
 end
