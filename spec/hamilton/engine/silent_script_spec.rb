@@ -52,5 +52,16 @@ describe Hamilton::Engine do
         ok
       HTML
     end
+
+    it 'parses if-elsif' do
+      assert_render(<<-HAML, <<-HTML)
+        - if false
+          ok
+        - elsif true
+          ok
+      HAML
+        ok
+      HTML
+    end
   end
 end
