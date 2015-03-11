@@ -47,6 +47,8 @@ module Hamilton
         parse_doctype(scanner)
       when '%', '.', '#'
         parse_tag(scanner)
+      when '='
+        parse_script(scanner)
       else
         parse_text(scanner)
       end
@@ -66,16 +68,28 @@ module Hamilton
       attrs += parse_tag_id_and_class(scanner)
 
       ast = [:html, :tag, tag, attrs]
-      if scanner.match?(/ +[^ ]/)
-        scanner.scan(/ +/)
+
+      if scanner.match?(/=/)
+        ast << parse_script(scanner)
+        return ast
+      elsif scanner.scan(/ +/) && scanner.rest?
         ast << parse_text(scanner)
         return ast
+      elsif next_indent <= @current_indent
+        return ast
       end
-      return ast if next_indent <= @current_indent
 
       content = [:multi, [:static, "\n"]]
       content += with_indented { parse_lines }
       ast << content
+      ast
+    end
+
+    def parse_script(scanner)
+      raise SyntaxError unless scanner.scan(/=/)
+
+      ast = [:dynamic]
+      ast << scanner.scan(/.+/)
       ast
     end
 
