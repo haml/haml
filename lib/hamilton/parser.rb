@@ -5,6 +5,7 @@ module Hamilton
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
     TAG_REGEXP  = /[a-z]+/
     DEFAULT_TAG = 'div'
+    SKIP_NEWLINE_EXPS = %i[newline code].freeze
     EOF = -1
 
     def call(template)
@@ -30,7 +31,7 @@ module Hamilton
       while next_indent == @current_indent
         @current_lineno += 1
         ast << parse_line(@lines[@current_lineno])
-        ast << [:static, "\n"] unless ast.last == [:newline]
+        ast << [:static, "\n"] unless skip_newline?(ast.last)
       end
       ast
     end
@@ -49,6 +50,8 @@ module Hamilton
         parse_tag(scanner)
       when '='
         parse_script(scanner)
+      when '-'
+        parse_silent_script(scanner)
       else
         parse_text(scanner)
       end
@@ -89,6 +92,14 @@ module Hamilton
       raise SyntaxError unless scanner.scan(/=/)
 
       ast = [:dynamic]
+      ast << scanner.scan(/.+/)
+      ast
+    end
+
+    def parse_silent_script(scanner)
+      raise SyntaxError unless scanner.scan(/-/)
+
+      ast = [:code]
       ast << scanner.scan(/.+/)
       ast
     end
@@ -149,6 +160,10 @@ module Hamilton
 
     def empty_line?(line)
       line =~ /\A *\Z/
+    end
+
+    def skip_newline?(ast)
+      SKIP_NEWLINE_EXPS.include?(ast.first)
     end
   end
 end
