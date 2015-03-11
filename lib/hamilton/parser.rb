@@ -5,7 +5,7 @@ module Hamilton
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
     TAG_REGEXP  = /[a-z]+/
     DEFAULT_TAG = 'div'
-    SKIP_NEWLINE_EXPS = %i[newline code].freeze
+    SKIP_NEWLINE_EXPS = %i[newline code multi].freeze
     EOF = -1
 
     def call(template)
@@ -101,6 +101,11 @@ module Hamilton
 
       ast = [:code]
       ast << scanner.scan(/.+/)
+      return ast if next_indent != @current_indent + 1
+
+      ast = [:multi, ast]
+      ast += with_indented { parse_lines }
+      ast << [:code, 'end']
       ast
     end
 
