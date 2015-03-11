@@ -56,9 +56,28 @@ describe Hamilton::Engine do
     it 'parses if-elsif' do
       assert_render(<<-HAML, <<-HTML)
         - if false
-          ok
         - elsif true
           ok
+
+        - if false
+        - elsif false
+        - else
+          ok
+      HAML
+        ok
+        ok
+      HTML
+    end
+
+    it 'parses case-when' do
+      assert_render(<<-'HAML', <<-HTML)
+        - case 'foo'
+        - when /\Ao/
+          ng
+        - when /\Af/
+          ok
+        - else
+          ng
       HAML
         ok
       HTML

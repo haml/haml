@@ -3,7 +3,7 @@ require 'temple'
 module Hamilton
   class Parser < Temple::Parser
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
-    INTERNAL_STATEMENTS = %w[else elsif].freeze
+    INTERNAL_STATEMENTS = %w[else elsif when].freeze
     SKIP_NEWLINE_EXPS   = %i[newline code multi].freeze
     TAG_REGEXP  = /[a-z]+/
     DEFAULT_TAG = 'div'
@@ -106,7 +106,7 @@ module Hamilton
 
       ast = [:multi, ast]
       ast += with_indented { parse_lines }
-      ast << [:code, 'end'] unless start_with_internal_statement?(next_line)
+      ast << [:code, 'end'] unless internal_statement?(next_line)
       ast
     end
 
@@ -175,7 +175,7 @@ module Hamilton
       line =~ /\A *\Z/
     end
 
-    def start_with_internal_statement?(line)
+    def internal_statement?(line)
       return false unless line
 
       scanner = StringScanner.new(line)
