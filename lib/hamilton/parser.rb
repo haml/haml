@@ -3,9 +3,10 @@ require 'temple'
 module Hamilton
   class Parser < Temple::Parser
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
+    CONTINUE_STATEMENTS = %w[else].freeze
+    SKIP_NEWLINE_EXPS   = %i[newline code multi].freeze
     TAG_REGEXP  = /[a-z]+/
     DEFAULT_TAG = 'div'
-    SKIP_NEWLINE_EXPS = %i[newline code multi].freeze
     EOF = -1
 
     def call(template)
@@ -105,7 +106,7 @@ module Hamilton
 
       ast = [:multi, ast]
       ast += with_indented { parse_lines }
-      ast << [:code, 'end']
+      ast << [:code, 'end'] unless start_with_continue_statement?(next_line)
       ast
     end
 
@@ -140,12 +141,19 @@ module Hamilton
     # Return nearest line's indent level since next line. This method ignores
     # empty line. It returns -1 if next_line does not exist.
     def next_indent
+      line = next_line
+      return EOF unless line
+
+      count_indent(line)
+    end
+
+    # Return nearest line ignoring empty lines.
+    def next_line
       lineno = @current_lineno + 1
       while @lines[lineno] && empty_line?(@lines[lineno])
         lineno += 1
       end
-      return EOF unless @lines[lineno]
-      count_indent(@lines[lineno])
+      @lines[lineno]
     end
 
     def with_indented(&block)
@@ -165,6 +173,17 @@ module Hamilton
 
     def empty_line?(line)
       line =~ /\A *\Z/
+    end
+
+    def start_with_continue_statement?(line)
+      return false unless line
+
+      scanner = StringScanner.new(line)
+      return false unless scanner.scan(/-/)
+
+      scanner.scan(/ +/)
+      statement = scanner.scan(/[^ ]+/)
+      CONTINUE_STATEMENTS.include?(statement)
     end
 
     def skip_newline?(ast)

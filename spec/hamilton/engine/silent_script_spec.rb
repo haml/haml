@@ -34,5 +34,23 @@ describe Hamilton::Engine do
         ok
       HTML
     end
+
+    it 'parses if-else' do
+      assert_render(<<-HAML, <<-HTML)
+        - if true
+          ok
+        - else
+          ng
+
+        - if false
+          ng
+
+        - else
+          ok
+      HAML
+        ok
+        ok
+      HTML
+    end
   end
 end
