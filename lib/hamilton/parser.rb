@@ -66,8 +66,9 @@ module Hamilton
       attrs += parse_tag_id_and_class(scanner)
 
       ast = [:html, :tag, tag, attrs]
-      if scanner.scan(/ +/) && text = scanner.scan(/.+/)
-        ast << [:static, text]
+      if scanner.match?(/ +[^ ]/)
+        scanner.scan(/ +/)
+        ast << parse_text(scanner)
         return ast
       end
       return ast if next_indent <= @current_indent
