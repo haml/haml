@@ -1,4 +1,4 @@
-# Hamilton
+# Hamlit
 
 Yet another haml implementation
 

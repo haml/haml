@@ -1,6 +1,6 @@
 require 'temple'
 
-module Hamilton
+module Hamlit
   class Parser < Temple::Parser
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
     INTERNAL_STATEMENTS = %w[else elsif when].freeze

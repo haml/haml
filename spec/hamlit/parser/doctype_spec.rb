@@ -1,4 +1,4 @@
-describe Hamilton::Parser do
+describe Hamlit::Parser do
   describe 'doctype' do
     it 'parses html5 doctype' do
       assert_parse(<<-HAML) do

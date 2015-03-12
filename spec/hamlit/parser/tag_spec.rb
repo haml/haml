@@ -1,4 +1,4 @@
-describe Hamilton::Parser do
+describe Hamlit::Parser do
   describe 'tag' do
     it 'parses one-line tag' do
       assert_parse(<<-HAML) do

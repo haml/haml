@@ -1,4 +1,4 @@
-describe Hamilton::Parser do
+describe Hamlit::Parser do
   describe 'silent script' do
     it 'parses silent script' do
       assert_parse(<<-HAML) do

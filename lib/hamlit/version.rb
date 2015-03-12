@@ -1,3 +1,3 @@
-module Hamilton
+module Hamlit
   VERSION = "0.0.1"
 end

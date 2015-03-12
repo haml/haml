@@ -1,4 +1,4 @@
-describe Hamilton::Engine do
+describe Hamlit::Engine do
   describe 'doctype' do
     it 'renders html5 doctype' do
       assert_render(<<-HAML, <<-HTML)

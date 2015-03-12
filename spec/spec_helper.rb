@@ -1,13 +1,13 @@
-require 'hamilton'
+require 'hamlit'
 require 'unindent'
 
-module HamiltonSpecHelper
+module HamlitSpecHelper
   def parse_string(str)
-    Hamilton::Parser.new.call(str)
+    Hamlit::Parser.new.call(str)
   end
 
   def render_string(str)
-    eval Hamilton::Engine.new.call(str)
+    eval Hamlit::Engine.new.call(str)
   end
 
   def assert_render(haml, html)
@@ -26,7 +26,7 @@ module HamiltonSpecHelper
 end
 
 RSpec.configure do |config|
-  config.include HamiltonSpecHelper
+  config.include HamlitSpecHelper
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

@@ -1,4 +1,4 @@
-describe Hamilton::Engine do
+describe Hamlit::Engine do
   describe 'script' do
     it 'parses one-line script' do
       assert_render(<<-HAML, <<-HTML)

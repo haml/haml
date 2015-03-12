@@ -1,7 +1,7 @@
 require 'temple'
-require 'hamilton/parser'
+require 'hamlit/parser'
 
-module Hamilton
+module Hamlit
   class Engine < Temple::Engine
     use Parser
     html :Fast

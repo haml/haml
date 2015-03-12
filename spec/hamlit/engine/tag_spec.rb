@@ -1,4 +1,4 @@
-describe Hamilton::Engine do
+describe Hamlit::Engine do
   describe 'tag' do
     it 'parses one-line tag' do
       assert_render(<<-HAML, <<-HTML)

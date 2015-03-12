@@ -1,4 +1,4 @@
-describe Hamilton::Engine do
+describe Hamlit::Engine do
   describe 'silent script' do
     it 'parses silent script' do
       assert_render(<<-HAML, <<-HTML)
