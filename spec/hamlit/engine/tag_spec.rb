@@ -111,7 +111,7 @@ describe Hamlit::Engine do
         .world#hello
           foo
       HAML
-        <div id="hello" class="world">
+        <div class="world" id="hello">
         foo
         </div>
       HTML

@@ -64,7 +64,7 @@ module Hamlit
       tag = scanner.scan(TAG_REGEXP) if scanner.scan(/%/)
 
       attrs = [:html, :attrs]
-      attrs += parse_tag_id_and_class(scanner)
+      attrs += parse_attributes(scanner)
 
       ast = [:html, :tag, tag, attrs]
 
@@ -111,9 +111,18 @@ module Hamlit
       ast
     end
 
+    def parse_attributes(scanner)
+      attributes = parse_tag_id_and_class(scanner)
+
+      ast = []
+      attributes.each do |name, values|
+        ast << [:html, :attr, name, [:static, values.join(' ')]]
+      end
+      ast
+    end
+
     def parse_tag_id_and_class(scanner)
-      ids     = []
-      classes = []
+      attributes = Hash.new { |h, k| h[k] = [] }
 
       while prefix = scanner.scan(/[#.]/)
         name = scanner.scan(TAG_ID_CLASS_REGEXP)
@@ -121,16 +130,13 @@ module Hamlit
 
         case prefix
         when '#'
-          ids << name
+          attributes['id'] << name
         when '.'
-          classes << name
+          attributes['class'] << name
         end
       end
 
-      ast = []
-      ast << [:html, :attr, 'id', [:static, ids.join(' ')]]        if ids.any?
-      ast << [:html, :attr, 'class', [:static, classes.join(' ')]] if classes.any?
-      ast
+      attributes
     end
 
     def internal_statement?(line)
