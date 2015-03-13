@@ -65,6 +65,7 @@ module Hamlit
       tag = scanner.scan(TAG_REGEXP) if scanner.scan(/%/)
 
       attrs = [:html, :attrs]
+      attrs += parse_tag_id_and_class(scanner)
       attrs += parse_attributes(scanner)
 
       ast = [:html, :tag, tag, attrs]
@@ -113,14 +114,9 @@ module Hamlit
     end
 
     def parse_attributes(scanner)
-      attributes = parse_tag_id_and_class(scanner)
-      attributes.merge(HashParser.parse(scanner))
-
-      ast = []
-      attributes.each do |name, values|
-        ast << [:html, :attr, name, [:static, values.join(' ')]]
+      HashParser.parse(scanner).map do |key, value|
+        [:html, :attr, key, [:dynamic, value]]
       end
-      ast
     end
 
     def parse_tag_id_and_class(scanner)
@@ -138,7 +134,11 @@ module Hamlit
         end
       end
 
-      attributes
+      ast = []
+      attributes.each do |name, values|
+        ast << [:html, :attr, name, [:static, values.join(' ')]]
+      end
+      ast
     end
 
     def internal_statement?(line)

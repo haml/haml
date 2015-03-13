@@ -13,11 +13,16 @@ describe Hamlit::Parser::HashParser do
     end
 
     it 'parses a single-key hash' do
+      lines = [
+        '{foo:"bar"}',
+        '{ foo: "bar" }',
+        '{:foo=>"bar"}',
+        '{ :foo => "bar" }',
+      ]
       hash = { 'foo' => '"bar"' }
-      expect(described_class.parse('{foo:"bar"}')).to eq(hash)
-      expect(described_class.parse('{ foo: "bar" }')).to eq(hash)
-      expect(described_class.parse('{:foo=>"bar"}')).to eq(hash)
-      expect(described_class.parse('{ :foo => "bar" }')).to eq(hash)
+      lines.each do |line|
+        expect(described_class.parse(line)).to eq(hash)
+      end
     end
   end
 end

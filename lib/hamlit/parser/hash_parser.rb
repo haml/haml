@@ -12,7 +12,6 @@ module Hamlit
 
       def initialize(scanner)
         @scanner = scanner
-        @level = 0
       end
 
       def parse
