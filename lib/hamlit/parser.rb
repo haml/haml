@@ -1,4 +1,5 @@
 require 'temple'
+require 'hamlit/parser/hash_parser'
 require 'hamlit/parser/utils'
 
 module Hamlit
@@ -113,6 +114,7 @@ module Hamlit
 
     def parse_attributes(scanner)
       attributes = parse_tag_id_and_class(scanner)
+      attributes.merge(HashParser.parse(scanner))
 
       ast = []
       attributes.each do |name, values|
