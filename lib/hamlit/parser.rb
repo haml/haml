@@ -48,6 +48,8 @@ module Hamlit
         parse_script(scanner)
       when '-'
         parse_silent_script(scanner)
+      when '/'
+        parse_comment(scanner)
       else
         parse_text(scanner)
       end
@@ -103,6 +105,14 @@ module Hamlit
       ast = [:multi, ast]
       ast += with_indented { parse_lines }
       ast << [:code, 'end'] unless internal_statement?(next_line)
+      ast
+    end
+
+    def parse_comment(scanner)
+      raise SyntaxError unless scanner.scan(/\//)
+
+      ast = [:html, :comment]
+      ast << [:static, " #{scanner.scan(/.+/).strip} "]
       ast
     end
 
