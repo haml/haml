@@ -61,23 +61,23 @@ describe Hamlit::Parser::AttributeParser do
     end
   end
 
-  describe '.flatten_attributes' do
-    def assert_flatten(attributes, flattened)
-      result = described_class.flatten_attributes(attributes)
-      expect(result).to eq(flattened)
+  describe '.flat_parse' do
+    def assert_flat_hash(string, hash)
+      s = StringScanner.new(string)
+      expect(described_class.flat_parse(s)).to eq(hash)
     end
 
-    it 'flattens hash keys' do
-      assert_flatten(
-        { 'a' => '1', 'b' => { 'c' => '3' } },
+    it 'parses deep hash flatly' do
+      assert_flat_hash(
+        '{ a: 1, b: { c: 3 } }',
         { 'a' => '1', 'b-c' => '3' },
       )
     end
 
-    it 'flattens hash keys' do
-      assert_flatten(
-        { 'a' => { 'b' => {}, 'c' => { 'd' => 'e' }, 'f' => 'g' } },
-        { 'a-c-d' => 'e', 'a-f' => 'g' },
+    it 'parses deep hash flatly and drops empty hash value' do
+      assert_flat_hash(
+        '{ a: { b: {}, c: { d: "e" }, f: "g" } }',
+        { 'a-c-d' => '"e"', 'a-f' => '"g"' },
       )
     end
   end

@@ -17,6 +17,8 @@ module Hamlit
           flatten_attributes(parse(scanner))
         end
 
+        private
+
         def flatten_attributes(attributes)
           flattened = {}
 
@@ -32,8 +34,6 @@ module Hamlit
           end
           flattened
         end
-
-        private
 
         # Return tokens lexed by Ripper, balancing count of braces.
         # And change the scanner position to the last brace.
