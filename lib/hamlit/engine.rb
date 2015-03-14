@@ -1,4 +1,5 @@
 require 'temple'
+require 'hamlit/attribute_filter'
 require 'hamlit/parser'
 
 module Hamlit
@@ -6,6 +7,7 @@ module Hamlit
     define_options generator: Temple::Generators::ArrayBuffer
 
     use Parser
+    use AttributeFilter
     html :Fast
     use :Generator do
       options[:generator].new

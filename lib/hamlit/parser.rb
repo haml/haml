@@ -114,9 +114,7 @@ module Hamlit
     end
 
     def parse_attributes(scanner)
-      AttributeParser.flat_parse(scanner).map do |key, value|
-        [:html, :attr, key, [:dynamic, value]]
-      end
+      [scan_balanced_braces(scanner)].compact
     end
 
     def parse_tag_id_and_class(scanner)
