@@ -1,5 +1,5 @@
 require 'temple'
-require 'hamlit/parser/hash_parser'
+require 'hamlit/parser/attribute_parser'
 require 'hamlit/parser/utils'
 
 module Hamlit
@@ -114,7 +114,7 @@ module Hamlit
     end
 
     def parse_attributes(scanner)
-      HashParser.parse(scanner).map do |key, value|
+      AttributeParser.parse(scanner).map do |key, value|
         [:html, :attr, key, [:dynamic, value]]
       end
     end

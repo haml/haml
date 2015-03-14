@@ -23,5 +23,13 @@ describe Hamlit::Engine do
         <span class="foo">bar</span>
       HTML
     end
+
+    it 'parses attributes' do
+      assert_render(<<-'HAML', <<-HTML)
+        %span{ :class => "foo", id: 'bar' } bar
+      HAML
+        <span class="foo" id="bar">bar</span>
+      HTML
+    end
   end
 end
