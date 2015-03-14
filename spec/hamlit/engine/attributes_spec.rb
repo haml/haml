@@ -31,5 +31,13 @@ describe Hamlit::Engine do
         <span class="foo" id="bar">bar</span>
       HTML
     end
+
+    it 'parses attributes' do
+      assert_render(<<-'HAML', <<-HTML)
+        %span{ :'data-disable' => true } bar
+      HAML
+        <span data-disable="true">bar</span>
+      HTML
+    end
   end
 end

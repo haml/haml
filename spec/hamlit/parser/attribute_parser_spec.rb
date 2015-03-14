@@ -20,6 +20,16 @@ describe Hamlit::Parser::AttributeParser do
       assert_hash('{ :foo => 2 }', { 'foo' => '2' })
     end
 
+    it 'parses a string-key hash' do
+      assert_hash(%!{ 'a' => 1 }!, { 'a' => '1' })
+      assert_hash(%!{ "foo" => 'bar' }!, { 'foo' => "'bar'" })
+    end
+
+    it 'parses a quoted-symbol-key hash' do
+      assert_hash(%!{ :"data-disable" => true }!, { 'data-disable' => 'true' })
+      assert_hash(%!{ :'data-disable' => true }!, { 'data-disable' => 'true' })
+    end
+
     it 'parses a multiple-keys hash' do
       assert_hash('{a:"b",c:"d#{e}"}', { 'a' => '"b"', 'c' => '"d#{e}"' })
       assert_hash('{ a: 2, :b => "3"}', { 'a' => '2', 'b' => '"3"' })

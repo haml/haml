@@ -63,12 +63,27 @@ module Hamlit
           (row, col), type, str = tokens.shift
           case type
           when :on_label
-            str.gsub(/:\Z/, '')
+            str.gsub!(/:\Z/, '')
           when :on_symbeg
-            (row, col), type, str = tokens.shift
+            if %w[:" :'].include?(str)
+              str = read_string!(tokens)
+            else
+              (row, col), type, str = tokens.shift
+            end
             assert_rocket!(tokens)
-            str
+          when :on_tstring_beg
+            str = read_string!(tokens)
+            assert_rocket!(tokens)
           end
+          str
+        end
+
+        def read_string!(tokens)
+          (row, col), type, str = tokens.shift
+          return '' if type == :on_tstring_end
+
+          raise SyntaxError if type_of(tokens.shift) != :on_tstring_end
+          str
         end
 
         def read_value!(tokens)
