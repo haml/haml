@@ -1,6 +1,6 @@
 describe Hamlit::Engine do
   describe 'html attributes' do
-    it 'parses attributes' do
+    it 'renders attributes' do
       assert_render(<<-HAML, <<-HTML)
         %span{class: 'foo'} bar
       HAML
@@ -8,7 +8,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses attributes' do
+    it 'renders attributes' do
       assert_render(<<-HAML, <<-HTML)
         %span{ data: 2 } bar
       HAML
@@ -16,7 +16,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses attributes' do
+    it 'renders attributes' do
       assert_render(<<-'HAML', <<-HTML)
         %span{ :class => "foo" } bar
       HAML
@@ -24,7 +24,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses attributes' do
+    it 'renders attributes' do
       assert_render(<<-'HAML', <<-HTML)
         %span{ :class => "foo", id: 'bar' } bar
       HAML
@@ -32,7 +32,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses attributes' do
+    it 'renders attributes' do
       assert_render(<<-'HAML', <<-HTML)
         %span{ :'data-disable' => true } bar
       HAML
@@ -40,7 +40,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses attributes' do
+    it 'renders attributes' do
       assert_render(<<-'HAML', <<-HTML)
         %span{ data: { disable: true } } bar
       HAML

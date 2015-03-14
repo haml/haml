@@ -1,6 +1,6 @@
 describe Hamlit::Engine do
   describe 'script' do
-    it 'parses one-line script' do
+    it 'renders one-line script' do
       assert_render(<<-HAML, <<-HTML)
         = 1 + 2
         %span= 3 * 4
@@ -10,7 +10,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses multi-lines script' do
+    it 'renders multi-lines script' do
       assert_render(<<-HAML, <<-HTML)
         %span
           = 1 + 2

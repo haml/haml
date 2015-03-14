@@ -1,6 +1,6 @@
 describe Hamlit::Engine do
   describe 'silent script' do
-    it 'parses silent script' do
+    it 'renders silent script' do
       assert_render(<<-HAML, <<-HTML)
         - foo = 3
         - bar = 2
@@ -10,7 +10,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses nested block' do
+    it 'renders nested block' do
       assert_render(<<-HAML, <<-HTML)
         - 2.times do |i|
           = i
@@ -26,7 +26,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses if' do
+    it 'renders if' do
       assert_render(<<-HAML, <<-HTML)
         - if true
           ok
@@ -35,7 +35,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses if-else' do
+    it 'renders if-else' do
       assert_render(<<-HAML, <<-HTML)
         - if true
           ok
@@ -53,7 +53,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses if-elsif' do
+    it 'renders if-elsif' do
       assert_render(<<-HAML, <<-HTML)
         - if false
         - elsif true
@@ -69,7 +69,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses case-when' do
+    it 'renders case-when' do
       assert_render(<<-'HAML', <<-HTML)
         - case 'foo'
         - when /\Ao/

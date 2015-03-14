@@ -1,6 +1,6 @@
 describe Hamlit::Engine do
   describe 'tag' do
-    it 'parses one-line tag' do
+    it 'renders one-line tag' do
       assert_render(<<-HAML, <<-HTML)
         %span hello
       HAML
@@ -8,7 +8,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses multi-line tag' do
+    it 'renders multi-line tag' do
       assert_render(<<-HAML, <<-HTML)
         %span
           hello
@@ -19,7 +19,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses a nested tag' do
+    it 'renders a nested tag' do
       assert_render(<<-HAML, <<-HTML)
         %span
           %b
@@ -38,7 +38,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses multi-line texts' do
+    it 'renders multi-line texts' do
       assert_render(<<-HAML, <<-HTML)
         %span
           %b
@@ -71,7 +71,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses classes' do
+    it 'renders classes' do
       assert_render(<<-HAML, <<-HTML)
         %span.foo-1.bar_A hello
       HAML
@@ -79,7 +79,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses ids' do
+    it 'renders ids' do
       assert_render(<<-HAML, <<-HTML)
         %span#Bar_0#bar-
           hello
@@ -90,7 +90,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses ids and classes' do
+    it 'renders ids and classes' do
       assert_render(<<-HAML, <<-HTML)
         %span#a.b#c.d hello
       HAML
@@ -98,7 +98,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses implicit div tag starting with id' do
+    it 'renders implicit div tag starting with id' do
       assert_render(<<-HAML, <<-HTML)
         #hello.world
       HAML
@@ -106,7 +106,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'parses implicit div tag starting with class' do
+    it 'renders implicit div tag starting with class' do
       assert_render(<<-HAML, <<-HTML)
         .world#hello
           foo
