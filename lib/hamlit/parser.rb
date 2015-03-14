@@ -65,7 +65,7 @@ module Hamlit
       tag = DEFAULT_TAG
       tag = scanner.scan(TAG_REGEXP) if scanner.scan(/%/)
 
-      attrs = [:html, :attrs]
+      attrs = [:haml, :attrs]
       attrs += parse_tag_id_and_class(scanner)
       attrs += parse_attributes(scanner)
 
@@ -93,7 +93,7 @@ module Hamlit
       code = scanner.scan(/.+/)
       return [:dynamic, code] unless has_block?
 
-      ast = [:hamlit, :script, code]
+      ast = [:haml, :script, code]
       ast += with_indented { parse_lines }
       ast << [:code, 'end']
       ast

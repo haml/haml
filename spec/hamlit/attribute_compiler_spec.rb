@@ -7,7 +7,7 @@ describe Hamlit::AttributeCompiler do
 
     it 'does not alter normal attrs' do
       assert_attribute_compile(
-        [:html,
+        [:haml,
          :attrs,
          [:html, :attr, 'id', [:static, 'foo']],
          [:html, :attr, 'class', [:static, 'bar']]],
@@ -20,7 +20,7 @@ describe Hamlit::AttributeCompiler do
 
     it 'convers only string' do
       assert_attribute_compile(
-        [:html,
+        [:haml,
          :attrs,
          [:html, :attr, 'id', [:static, 'foo']],
          '{ foo: "bar" }',
@@ -35,7 +35,7 @@ describe Hamlit::AttributeCompiler do
 
     it 'converts nested attributes' do
       assert_attribute_compile(
-        [:html,
+        [:haml,
          :attrs,
          '{ a: { b: {}, c: "d" }, e: "f" }'],
         [:html,

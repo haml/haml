@@ -5,7 +5,7 @@ module Hamlit
   class AttributeCompiler < Temple::HTML::Filter
     TYPE_POSITION = 1
 
-    def on_html_attrs(*exps)
+    def on_haml_attrs(*exps)
       attrs = []
       exps.map do |exp|
         case exp

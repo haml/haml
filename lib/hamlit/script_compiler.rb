@@ -1,6 +1,8 @@
+require 'temple/filter'
+
 module Hamlit
   class ScriptCompiler < Temple::Filter
-    def on_hamlit_script(*exps)
+    def on_haml_script(*exps)
       exps     = exps.dup
       variable = result_identifier
       code     = exps.shift

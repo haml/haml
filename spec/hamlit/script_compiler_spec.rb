@@ -16,7 +16,7 @@ describe Hamlit::ScriptCompiler do
 
     it 'compiles hamlit script ast into assigning' do
       assert_script_compile(
-        [:hamlit,
+        [:haml,
          :script,
          'link_to user_path do',
          [:static, 'user']],
@@ -30,11 +30,11 @@ describe Hamlit::ScriptCompiler do
     it 'compiles multiple hamlit scripts' do
       assert_script_compile(
         [:multi,
-         [:hamlit,
+         [:haml,
           :script,
           'link_to user_path do',
           [:static, 'user']],
-         [:hamlit,
+         [:haml,
           :script,
           'link_to repo_path do',
           [:static, 'repo']]],
