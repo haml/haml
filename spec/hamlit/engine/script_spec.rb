@@ -24,5 +24,19 @@ describe Hamlit::Engine do
         </span>
       HTML
     end
+
+    it 'renders block script' do
+      assert_render(<<-HAML, <<-HTML)
+        = 3.times do |i|
+          = i
+        4
+      HAML
+        0
+        1
+        2
+        3
+        4
+      HTML
+    end
   end
 end

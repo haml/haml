@@ -1,12 +1,12 @@
 describe Hamlit::AttributeCompiler do
-  def assert_compile(before, after)
-    result = described_class.new.call(before)
-    expect(result).to eq(after)
-  end
-
   describe '#call' do
+    def assert_attribute_compile(before, after)
+      result = described_class.new.call(before)
+      expect(result).to eq(after)
+    end
+
     it 'does not alter normal attrs' do
-      assert_compile(
+      assert_attribute_compile(
         [:html,
          :attrs,
          [:html, :attr, 'id', [:static, 'foo']],
@@ -19,7 +19,7 @@ describe Hamlit::AttributeCompiler do
     end
 
     it 'convers only string' do
-      assert_compile(
+      assert_attribute_compile(
         [:html,
          :attrs,
          [:html, :attr, 'id', [:static, 'foo']],
@@ -34,7 +34,7 @@ describe Hamlit::AttributeCompiler do
     end
 
     it 'converts nested attributes' do
-      assert_compile(
+      assert_attribute_compile(
         [:html,
          :attrs,
          '{ a: { b: {}, c: "d" }, e: "f" }'],

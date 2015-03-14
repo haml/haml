@@ -1,5 +1,6 @@
 require 'temple'
 require 'hamlit/attribute_compiler'
+require 'hamlit/script_compiler'
 require 'hamlit/parser'
 
 module Hamlit
@@ -7,6 +8,7 @@ module Hamlit
     define_options generator: Temple::Generators::ArrayBuffer
 
     use Parser
+    use ScriptCompiler
     use AttributeCompiler
     html :Fast
     use :Generator do

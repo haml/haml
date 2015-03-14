@@ -90,8 +90,12 @@ module Hamlit
     def parse_script(scanner)
       raise SyntaxError unless scanner.scan(/=/)
 
-      ast = [:dynamic]
-      ast << scanner.scan(/.+/)
+      code = scanner.scan(/.+/)
+      return [:dynamic, code] unless has_block?
+
+      ast = [:hamlit, :script, code]
+      ast += with_indented { parse_lines }
+      ast << [:code, 'end']
       ast
     end
 
@@ -100,7 +104,7 @@ module Hamlit
 
       ast = [:code]
       ast << scanner.scan(/.+/)
-      return ast if next_indent != @current_indent + 1
+      return ast unless has_block?
 
       ast = [:multi, ast]
       ast += with_indented { parse_lines }
@@ -161,6 +165,10 @@ module Hamlit
 
     def skip_newline?(ast)
       SKIP_NEWLINE_EXPS.include?(ast.first)
+    end
+
+    def has_block?
+      next_indent == @current_indent + 1
     end
   end
 end
