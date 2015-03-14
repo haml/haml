@@ -114,7 +114,7 @@ module Hamlit
     end
 
     def parse_attributes(scanner)
-      AttributeParser.parse(scanner).map do |key, value|
+      AttributeParser.flat_parse(scanner).map do |key, value|
         [:html, :attr, key, [:dynamic, value]]
       end
     end

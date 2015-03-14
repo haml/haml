@@ -13,6 +13,26 @@ module Hamlit
           parse_attributes(tokens)
         end
 
+        def flat_parse(scanner)
+          flatten_attributes(parse(scanner))
+        end
+
+        def flatten_attributes(attributes)
+          flattened = {}
+
+          attributes.each do |key, value|
+            case value
+            when Hash
+              flatten_attributes(value).each do |k, v|
+                flattened["#{key}-#{k}"] = v
+              end
+            else
+              flattened[key] = value
+            end
+          end
+          flattened
+        end
+
         private
 
         # Return tokens lexed by Ripper, balancing count of braces.
@@ -52,6 +72,9 @@ module Hamlit
             key = read_key!(tokens)
             val = read_value!(tokens)
             attributes[key] = val if key && val
+
+            skip_tokens!(tokens, :on_sp)
+            raise SyntaxError if tokens.any? && type_of(tokens.shift) != :on_comma
           end
 
           attributes
@@ -88,6 +111,13 @@ module Hamlit
 
         def read_value!(tokens)
           result = ''
+          skip_tokens!(tokens, :on_sp)
+
+          if type_of(tokens.first) == :on_lbrace
+            hash, _ = fetch_balanced_braces(tokens)
+            hash.length.times { tokens.shift }
+            return parse_attributes(hash)
+          end
 
           while token = tokens.shift
             (row, col), type, str = token
@@ -95,6 +125,7 @@ module Hamlit
             when :on_sp
               next
             when :on_comma
+              tokens.unshift(token)
               break
             end
 
@@ -112,6 +143,7 @@ module Hamlit
         def assert_rocket!(tokens, *types)
           skip_tokens!(tokens, :on_sp)
           (row, col), type, str = tokens.shift
+
           raise SyntaxError unless type == :on_op && str == '=>'
         end
 
