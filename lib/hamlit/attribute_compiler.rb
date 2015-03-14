@@ -2,7 +2,7 @@ require 'ripper'
 require 'temple/html/filter'
 
 module Hamlit
-  class AttributeFilter < Temple::HTML::Filter
+  class AttributeCompiler < Temple::HTML::Filter
     TYPE_POSITION = 1
 
     def on_html_attrs(*args)

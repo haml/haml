@@ -1,4 +1,4 @@
-describe Hamlit::AttributeFilter do
+describe Hamlit::AttributeCompiler do
   describe '#on_html_attrs' do
     it 'wraps arguments with :multi' do
       attr = [:html, :attr, 'id', [:static, 'foo']]
