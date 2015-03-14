@@ -5,17 +5,17 @@ module Hamlit
   class AttributeCompiler < Temple::HTML::Filter
     TYPE_POSITION = 1
 
-    def on_html_attrs(*args)
+    def on_html_attrs(*exps)
       attrs = []
-      args.map do |arg|
-        case arg
+      exps.map do |exp|
+        case exp
         when String
-          attrs += compile_attribute(arg)
+          attrs += compile_attribute(exp)
         else
-          attrs << arg
+          attrs << compile(exp)
         end
       end
-      [:multi].concat(attrs)
+      [:html, :attrs, *attrs]
     end
 
     private
