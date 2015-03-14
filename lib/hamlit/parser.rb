@@ -1,5 +1,4 @@
 require 'temple'
-require 'hamlit/parser/attribute_parser'
 require 'hamlit/parser/utils'
 
 module Hamlit
