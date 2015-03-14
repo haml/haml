@@ -43,6 +43,13 @@ describe Hamlit::Parser::AttributeParser do
       assert_hash('{ a: 2, :b => ","}', { 'a' => '2', 'b' => '","' })
     end
 
+    pending 'parses a value including comma' do
+      assert_hash(
+        '{ a: [1, 2] }',
+        { a: '[1, 2]' },
+      )
+    end
+
     describe 'scanner position' do
       it 'scans balanced hash' do
         line = '{ a: 1, b: { c: 4 } }='
