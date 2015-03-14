@@ -1,37 +1,48 @@
 describe Hamlit::AttributeCompiler do
-  describe '#on_html_attrs' do
-    it 'wraps arguments with :multi' do
-      attr = [:html, :attr, 'id', [:static, 'foo']]
-      result = described_class.new.on_html_attrs(attr)
-      expect(result).to eq([:html, :attrs, attr])
+  def assert_compile(before, after)
+    result = described_class.new.call(before)
+    expect(result).to eq(after)
+  end
+
+  describe '#call' do
+    it 'does not alter normal attrs' do
+      assert_compile(
+        [:html,
+         :attrs,
+         [:html, :attr, 'id', [:static, 'foo']],
+         [:html, :attr, 'class', [:static, 'bar']]],
+        [:html,
+         :attrs,
+         [:html, :attr, 'id', [:static, 'foo']],
+         [:html, :attr, 'class', [:static, 'bar']]],
+      )
     end
 
-    it 'wraps arguments with :multi' do
-      attr1 = [:html, :attr, 'id', [:static, 'foo']]
-      attr2 = [:html, :attr, 'class', [:static, 'bar']]
-      result = described_class.new.on_html_attrs(attr1, attr2)
-      expect(result).to eq([:html, :attrs, attr1, attr2])
-    end
-
-    it 'converts only string into dynamic value' do
-      result = described_class.new.on_html_attrs('{ foo: "bar" }')
-      attr   = [:html, :attr, 'foo', [:dynamic, '"bar"']]
-      expect(result).to eq([:html, :attrs, attr])
+    it 'convers only string' do
+      assert_compile(
+        [:html,
+         :attrs,
+         [:html, :attr, 'id', [:static, 'foo']],
+         '{ foo: "bar" }',
+         [:html, :attr, 'class', [:static, 'bar']]],
+        [:html,
+         :attrs,
+         [:html, :attr, 'id', [:static, 'foo']],
+         [:html, :attr, 'foo', [:dynamic, '"bar"']],
+         [:html, :attr, 'class', [:static, 'bar']]],
+      )
     end
 
     it 'converts nested attributes' do
-      result = described_class.new.on_html_attrs('{ a: { b: 3 } }')
-      attr   = [:html, :attr, 'a-b', [:dynamic, '3']]
-      expect(result).to eq([:html, :attrs, attr])
-    end
-
-    it 'wraps arguments with :multi' do
-      attr1 = [:html, :attr, 'id', [:static, 'foo']]
-      attr2 = '{ "foo" => "bar" }'
-      result = described_class.new.on_html_attrs(attr1, attr2)
-
-      converted_attr2 = [:html, :attr, 'foo', [:dynamic, '"bar"']]
-      expect(result).to eq([:html, :attrs, attr1, converted_attr2])
+      assert_compile(
+        [:html,
+         :attrs,
+         '{ a: { b: {}, c: "d" }, e: "f" }'],
+        [:html,
+         :attrs,
+         [:html, :attr, 'a-c', [:dynamic, '"d"']],
+         [:html, :attr, 'e', [:dynamic, '"f"']]],
+      )
     end
   end
 end
