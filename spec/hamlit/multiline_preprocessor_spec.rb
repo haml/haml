@@ -1,12 +1,7 @@
 describe Hamlit::MultilinePreprocessor do
   describe '#call' do
-    def assert_multiline_preprocess(before, after)
-      result = described_class.new.call(before)
-      expect(result).to eq(after)
-    end
-
     it 'does not alter normal lines' do
-      assert_multiline_preprocess(<<-HAML, <<-HAML)
+      assert_compile(<<-HAML, <<-HAML)
         abc
         d|
         ef
@@ -18,7 +13,7 @@ describe Hamlit::MultilinePreprocessor do
     end
 
     it 'joins multi-lines' do
-      assert_multiline_preprocess(<<-HAML, <<-HAML)
+      assert_compile(<<-HAML, <<-HAML)
         abc  |
         d    |
         ef
@@ -30,7 +25,7 @@ describe Hamlit::MultilinePreprocessor do
     end
 
     it 'joins multi-lines' do
-      assert_multiline_preprocess(<<-HAML, <<-HAML)
+      assert_compile(<<-HAML, <<-HAML)
         = 'a' + |
             'b' |
       HAML

@@ -23,6 +23,11 @@ module HamlitSpecHelper
 
     expect(parse_string(haml)).to eq(ast)
   end
+
+  def assert_compile(before, after)
+    result = described_class.new.call(before)
+    expect(result).to eq(after)
+  end
 end
 
 RSpec.configure do |config|

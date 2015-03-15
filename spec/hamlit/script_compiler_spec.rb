@@ -1,12 +1,12 @@
 describe Hamlit::ScriptCompiler do
   describe '#call' do
-    def assert_script_compile(before, after)
+    def assert_compile(before, after)
       result = described_class.new.call(before)
       expect(result).to eq(after)
     end
 
     it 'does not alter single-line script' do
-      assert_script_compile(
+      assert_compile(
         [:multi,
          [:dynamic, 'a']],
         [:multi,
@@ -15,7 +15,7 @@ describe Hamlit::ScriptCompiler do
     end
 
     it 'compiles hamlit script ast into assigning' do
-      assert_script_compile(
+      assert_compile(
         [:haml,
          :script,
          'link_to user_path do',
@@ -28,7 +28,7 @@ describe Hamlit::ScriptCompiler do
     end
 
     it 'compiles multiple hamlit scripts' do
-      assert_script_compile(
+      assert_compile(
         [:multi,
          [:haml,
           :script,
