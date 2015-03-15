@@ -10,7 +10,8 @@ describe Hamlit::Parser do
         '%span a',
         [:multi,
          [:html, :tag, 'span', [:haml, :attrs], [:static, 'a']],
-         [:static, "\n"]],
+         [:static, "\n"],
+         [:newline]],
       )
     end
 
@@ -19,7 +20,8 @@ describe Hamlit::Parser do
         '%span{ a: 1, b: { c: 2 } }',
         [:multi,
          [:html, :tag, "span", [:haml, :attrs, "{ a: 1, b: { c: 2 } }"]],
-         [:static, "\n"]],
+         [:static, "\n"],
+         [:newline]],
       )
     end
 
@@ -35,7 +37,8 @@ describe Hamlit::Parser do
            [:html, :attr, 'id', [:static, 'foo']],
            [:html, :attr, 'class', [:static, 'bar']],
            '{ baz: 1 }']],
-         [:static, "\n"]],
+         [:static, "\n"],
+         [:newline]],
       )
     end
   end
