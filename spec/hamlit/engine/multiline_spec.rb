@@ -20,5 +20,25 @@ describe Hamlit::Engine do
         'd'
       HTML
     end
+
+    it 'accepts invalid indent' do
+      assert_render(<<-HAML, <<-HTML)
+        %span
+          %div
+            = '1' + |
+        '2' |
+          %div
+            3
+      HAML
+        <span>
+        <div>
+        12
+        </div>
+        <div>
+        3
+        </div>
+        </span>
+      HTML
+    end
   end
 end
