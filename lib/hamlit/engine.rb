@@ -12,6 +12,9 @@ module Hamlit
     use AttributeCompiler
     html :Fast
     filter :Escapable
+    filter :ControlFlow
+    filter :MultiFlattener
+    filter :StaticMerger
     use :Generator do
       options[:generator].new
     end
