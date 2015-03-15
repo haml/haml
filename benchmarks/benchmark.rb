@@ -12,6 +12,7 @@ require 'haml'
 require 'slim'
 require 'tenjin'
 require 'tilt'
+require 'hamlit'
 
 class Benchmarks
   def initialize(time)
@@ -44,15 +45,17 @@ class Benchmarks
       def run_slim_ugly; #{Slim::Engine.new.call @slim_code}; end
       def run_fast_haml; #{FastHaml::Engine.new.call @haml_code}; end
       def run_tenjin; _buf = ''; #{tenjin.script}; end
+      def run_hamlit; #{Hamlit::Engine.new.call @haml_code}; end
     }
 
     bench('erubis')      { context.run_erubis }
+    bench('slim')        { context.run_slim_ugly }
+    bench('fast_haml')   { context.run_fast_haml }
     bench('tenjin')      { context.run_tenjin }
     bench('fast erubis') { context.run_fast_erubis }
-    bench('fast_haml')   { context.run_fast_haml }
-    bench('slim')        { context.run_slim_ugly }
     bench('temple erb')  { context.run_temple_erb }
     bench('erb')         { context.run_erb }
+    bench('hamlit')      { context.run_hamlit }
     bench('haml')        { context.run_haml_ugly }
   end
 
