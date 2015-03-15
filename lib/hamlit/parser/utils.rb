@@ -84,6 +84,11 @@ module Hamlit
 
         tokens
       end
+
+      def same_indent?(line)
+        return false unless line
+        count_indent(line) == @current_indent
+      end
     end
   end
 end

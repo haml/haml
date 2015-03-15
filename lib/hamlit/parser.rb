@@ -108,7 +108,7 @@ module Hamlit
 
       ast = [:multi, ast]
       ast += with_indented { parse_lines }
-      ast << [:code, 'end'] unless internal_statement?(next_line)
+      ast << [:code, 'end'] unless same_indent?(next_line) && internal_statement?(next_line)
       ast
     end
 

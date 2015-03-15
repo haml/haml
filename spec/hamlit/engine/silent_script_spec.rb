@@ -67,6 +67,18 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'accept if inside if-else' do
+      assert_render(<<-'HAML', <<-HTML)
+        - if false
+          - if true
+            ng
+        - else
+          ok
+      HAML
+        ok
+      HTML
+    end
+
     it 'renders if-elsif' do
       assert_render(<<-HAML, <<-HTML)
         - if false
