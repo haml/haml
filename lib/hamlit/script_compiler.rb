@@ -1,7 +1,7 @@
-require 'temple/filter'
+require 'temple/html/filter'
 
 module Hamlit
-  class ScriptCompiler < Temple::Filter
+  class ScriptCompiler < Temple::HTML::Filter
     def on_haml_script(*exps)
       exps     = exps.dup
       variable = result_identifier
@@ -9,7 +9,7 @@ module Hamlit
 
       assign = [:code, "#{variable} = #{code}"]
       result = [:dynamic, variable]
-      [:multi, assign, *exps, result]
+      [:multi, assign, *exps.map { |exp| compile(exp) }, result]
     end
 
     private

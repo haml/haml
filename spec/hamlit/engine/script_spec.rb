@@ -38,5 +38,18 @@ describe Hamlit::Engine do
         4
       HTML
     end
+
+    it 'renders tag internal block script' do
+      assert_render(<<-HAML, <<-HTML)
+        %span
+          = 1.times do |i|
+            = i
+      HAML
+        <span>
+        0
+        1
+        </span>
+      HTML
+    end
   end
 end
