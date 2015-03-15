@@ -156,6 +156,7 @@ module Hamlit
       return false unless line
 
       scanner = StringScanner.new(line)
+      scanner.scan(/ +/)
       return false unless scanner.scan(/-/)
 
       scanner.scan(/ +/)

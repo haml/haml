@@ -53,6 +53,20 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders nested if-else' do
+      assert_render(<<-'HAML', <<-HTML)
+        %span
+          - if false
+            ng
+          - else
+            ok
+      HAML
+        <span>
+        ok
+        </span>
+      HTML
+    end
+
     it 'renders if-elsif' do
       assert_render(<<-HAML, <<-HTML)
         - if false
