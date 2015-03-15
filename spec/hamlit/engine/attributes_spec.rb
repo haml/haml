@@ -47,5 +47,13 @@ describe Hamlit::Engine do
         <span data-disable="true">bar</span>
       HTML
     end
+
+    it 'accepts even illegal input for haml' do
+      assert_render(<<-'HAML', <<-HTML)
+        %span{ class: "}}}", id: '{}}' } }{
+      HAML
+        <span class="}}}" id="{}}">}{</span>
+      HTML
+    end
   end
 end
