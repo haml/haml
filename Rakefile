@@ -2,7 +2,7 @@ require 'bundler/gem_tasks'
 
 desc 'Run benchmarks'
 task :bench do
-  system('TIME=20 bundle exec ruby benchmarks/benchmark.rb')
+  system('bundle exec ruby benchmarks/benchmark.rb')
 end
 
 desc 'Run RSpec code examples'
