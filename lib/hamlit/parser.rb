@@ -1,16 +1,23 @@
 require 'strscan'
 require 'temple'
-require 'hamlit/parser/utils'
+require 'hamlit/concerns/brace_reader'
+require 'hamlit/concerns/indentable'
+require 'hamlit/concerns/line_reader'
 
 module Hamlit
   class Parser
-    include Utils
+    include Concerns::BraceReader
+    include Concerns::Indentable
+    include Concerns::LineReader
 
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
     INTERNAL_STATEMENTS = %w[else elsif when].freeze
     SKIP_NEWLINE_EXPS   = %i[newline code multi].freeze
     TAG_REGEXP  = /[a-zA-Z0-9\-_]+/
     DEFAULT_TAG = 'div'
+
+    def initialize(options = {})
+    end
 
     def call(template)
       reset(template)
@@ -21,6 +28,12 @@ module Hamlit
     end
 
     private
+
+    # Reset the parser state.
+    def reset(template)
+      reset_lines(template.split("\n"))
+      reset_indent
+    end
 
     # Parse lines in current_indent and return ASTs.
     def parse_lines
@@ -129,7 +142,7 @@ module Hamlit
     end
 
     def parse_attributes(scanner)
-      [scan_balanced_braces(scanner)].compact
+      [read_brace(scanner)].compact
     end
 
     def parse_tag_id_and_class(scanner)

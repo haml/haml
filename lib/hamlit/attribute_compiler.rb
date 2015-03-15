@@ -1,8 +1,11 @@
 require 'ripper'
 require 'temple/html/filter'
+require 'hamlit/concerns/brace_reader'
 
 module Hamlit
   class AttributeCompiler < Temple::HTML::Filter
+    include Concerns::BraceReader
+
     TYPE_POSITION = 1
 
     def on_haml_attrs(*exps)
@@ -42,25 +45,6 @@ module Hamlit
         end
       end
       flattened
-    end
-
-    # Given Ripper tokens, return first brace-balanced tokens and rest tokens.
-    def fetch_balanced_braces(all_tokens)
-      tokens     = []
-      open_count = 0
-
-      all_tokens.each_with_index do |token, index|
-        (row, col), type, str = token
-        case type
-        when :on_lbrace then open_count += 1
-        when :on_rbrace then open_count -= 1
-        end
-
-        tokens << token
-        break if open_count == 0
-      end
-
-      [tokens, all_tokens - tokens]
     end
 
     # Parse brace-balanced tokens and return the result as hash
@@ -114,7 +98,7 @@ module Hamlit
       skip_tokens!(tokens, :on_sp)
 
       if type_of(tokens.first) == :on_lbrace
-        hash, _ = fetch_balanced_braces(tokens)
+        hash = fetch_balanced_braces(tokens)
         hash.length.times { tokens.shift }
         return parse_attributes(hash)
       end
