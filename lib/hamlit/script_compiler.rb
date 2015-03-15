@@ -1,14 +1,17 @@
 require 'temple/html/filter'
+require 'hamlit/concerns/escapable'
 
 module Hamlit
   class ScriptCompiler < Temple::HTML::Filter
+    include Concerns::Escapable
+
     def on_haml_script(*exps)
       exps     = exps.dup
       variable = result_identifier
       code     = exps.shift
 
       assign = [:code, "#{variable} = #{code}"]
-      result = [:escape, true, [:dynamic, variable]]
+      result = escape_html([:dynamic, variable])
       [:multi, assign, *exps.map { |exp| compile(exp) }, result]
     end
 

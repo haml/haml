@@ -15,7 +15,7 @@ class HamlTest < MiniTest::Unit::TestCase
         locals           = Hash[(test["locals"] || {}).map {|x, y| [x.to_sym, y]}]
         options          = Hash[(test["config"] || {}).map {|x, y| [x.to_sym, y]}]
         options[:format] = options[:format].to_sym if options.key?(:format)
-        engine           = Hamlit::Template.new { haml }
+        engine           = Hamlit::Template.new(options) { haml }
         result           = engine.render(Object.new, locals)
 
         assert_equal html, result.strip

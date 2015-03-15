@@ -5,7 +5,10 @@ require 'hamlit/parser'
 
 module Hamlit
   class Engine < Temple::Engine
-    define_options generator: Temple::Generators::ArrayBuffer
+    define_options(
+      generator: Temple::Generators::ArrayBuffer,
+      escape_html: false,
+    )
 
     use Parser
     use ScriptCompiler

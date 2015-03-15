@@ -1,12 +1,14 @@
 require 'strscan'
 require 'temple'
 require 'hamlit/concerns/brace_reader'
+require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/indentable'
 require 'hamlit/concerns/line_reader'
 
 module Hamlit
-  class Parser
+  class Parser < Temple::Parser
     include Concerns::BraceReader
+    include Concerns::Escapable
     include Concerns::Indentable
     include Concerns::LineReader
 
@@ -15,9 +17,6 @@ module Hamlit
     SKIP_NEWLINE_EXPS   = %i[newline code multi].freeze
     TAG_REGEXP  = /[a-zA-Z0-9\-_]+/
     DEFAULT_TAG = 'div'
-
-    def initialize(options = {})
-    end
 
     def call(template)
       reset(template)
@@ -106,7 +105,7 @@ module Hamlit
       raise SyntaxError unless scanner.scan(/=/)
 
       code = scanner.scan(/.+/)
-      return [:escape, true, [:dynamic, code]] unless has_block?
+      return escape_html([:dynamic, code]) unless has_block?
 
       ast = [:haml, :script, code]
       ast += with_indented { parse_lines }

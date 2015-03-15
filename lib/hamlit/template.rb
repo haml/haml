@@ -8,6 +8,7 @@ module Hamlit
       # Use rails-specific generator. This is necessary
       # to support block capturing and streaming.
       generator: Temple::Generators::RailsOutputBuffer,
+      escape_html: true,
       streaming: true,
     )
   end
