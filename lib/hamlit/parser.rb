@@ -115,6 +115,10 @@ module Hamlit
 
     def parse_silent_script(scanner)
       raise SyntaxError unless scanner.scan(/-/)
+      if scanner.scan(/#/)
+        with_indented { skip_lines }
+        return [:newline]
+      end
 
       ast = [:code]
       ast << scanner.scan(/.+/)

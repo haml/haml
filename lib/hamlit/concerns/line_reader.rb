@@ -18,6 +18,12 @@ module Hamlit
       def empty_line?(line)
         line =~ /\A *\Z/
       end
+
+      def skip_lines
+        while next_indent >= @current_indent
+          @current_lineno += 1
+        end
+      end
     end
   end
 end

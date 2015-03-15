@@ -13,5 +13,17 @@ describe Hamlit::Parser do
         <!-- comments -->
       HTML
     end
+
+    it 'ignores multiline comment' do
+      assert_render(<<-'HAML', <<-HTML)
+        -# if true
+          - raise 'ng'
+            = invalid script
+                too deep indent
+        ok
+      HAML
+        ok
+      HTML
+    end
   end
 end
