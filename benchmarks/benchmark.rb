@@ -48,15 +48,18 @@ class Benchmarks
       def run_hamlit; #{Hamlit::Engine.new.call @haml_code}; end
     }
 
-    bench('erubis')      { context.run_erubis }
-    bench('slim')        { context.run_slim_ugly }
-    bench('fast_haml')   { context.run_fast_haml }
-    bench('tenjin')      { context.run_tenjin }
-    bench('fast erubis') { context.run_fast_erubis }
-    bench('temple erb')  { context.run_temple_erb }
-    bench('erb')         { context.run_erb }
-    bench('hamlit')      { context.run_hamlit }
-    bench('haml')        { context.run_haml_ugly }
+    bench('erubis')        { context.run_erubis }
+    bench('slim')          { context.run_slim_ugly }
+    bench('fast_haml')     { context.run_fast_haml }
+    bench('hamlit')        { context.run_hamlit }
+
+    if ENV['ALL']
+      bench('tenjin')      { context.run_tenjin }
+      bench('fast erubis') { context.run_fast_erubis }
+      bench('temple erb')  { context.run_temple_erb }
+      bench('erb')         { context.run_erb }
+      bench('haml')        { context.run_haml_ugly }
+    end
   end
 
   def run

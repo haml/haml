@@ -32,4 +32,4 @@ build:
 
     - script:
         name: run benchmarks
-        code: bundle exec rake bench
+        code: ALL=true bundle exec rake bench
