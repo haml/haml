@@ -14,5 +14,6 @@ gem 'hamlit', path: '../..'
 group :development, :test do
   gem 'pry-rails'
   gem 'spring'
+  gem 'rspec-rails', '>= 3.2'
 end
 
