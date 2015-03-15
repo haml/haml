@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "temple"
+  spec.add_dependency "thor"
 
   spec.add_development_dependency "benchmark-ips"
   spec.add_development_dependency "bundler"
