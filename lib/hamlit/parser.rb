@@ -39,7 +39,7 @@ module Hamlit
       ast = []
       while next_indent == @current_indent
         @current_lineno += 1
-        ast << parse_line(@lines[@current_lineno])
+        ast << parse_line(current_line)
         ast << [:static, "\n"] unless skip_newline?(ast.last)
         ast << [:newline]
       end

@@ -6,6 +6,10 @@ module Hamlit
         @current_lineno = -1
       end
 
+      def current_line
+        @lines[@current_lineno]
+      end
+
       # Return nearest line ignoring empty lines.
       def next_line
         lineno = @current_lineno + 1
