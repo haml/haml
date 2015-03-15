@@ -28,6 +28,7 @@ module Hamlit
         @current_lineno += 1
         ast << parse_line(@lines[@current_lineno])
         ast << [:static, "\n"] unless skip_newline?(ast.last)
+        ast << [:newline]
       end
       ast
     end
