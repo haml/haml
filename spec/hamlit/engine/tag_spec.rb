@@ -116,5 +116,32 @@ describe Hamlit::Engine do
         </div>
       HTML
     end
+
+    it 'renders large-case tag' do
+      assert_render(<<-HAML, <<-HTML)
+        %SPAN
+          foo
+      HAML
+        <SPAN>
+        foo
+        </SPAN>
+      HTML
+    end
+
+    it 'renders h1 tag' do
+      assert_render(<<-HAML, <<-HTML)
+        %h1 foo
+      HAML
+        <h1>foo</h1>
+      HTML
+    end
+
+    it 'renders tag including hyphen or underscore' do
+      assert_render(<<-HAML, <<-HTML)
+        %-_ foo
+      HAML
+        <-_>foo</-_>
+      HTML
+    end
   end
 end
