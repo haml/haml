@@ -1,0 +1,5 @@
+source 'https://rubygems.org'
+
+gem 'hamlit', path: '../..'
+gem 'minitest'
+gem 'tilt'
