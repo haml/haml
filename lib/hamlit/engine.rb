@@ -11,6 +11,7 @@ module Hamlit
     use ScriptCompiler
     use AttributeCompiler
     html :Fast
+    filter :Escapable
     use :Generator do
       options[:generator].new
     end

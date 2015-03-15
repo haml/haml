@@ -8,7 +8,7 @@ module Hamlit
       code     = exps.shift
 
       assign = [:code, "#{variable} = #{code}"]
-      result = [:dynamic, variable]
+      result = [:escape, true, [:dynamic, variable]]
       [:multi, assign, *exps.map { |exp| compile(exp) }, result]
     end
 

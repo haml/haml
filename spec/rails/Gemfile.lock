@@ -3,6 +3,7 @@ PATH
   specs:
     hamlit (0.0.1)
       temple
+      thor
 
 GEM
   remote: https://rubygems.org/

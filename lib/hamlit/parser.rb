@@ -91,7 +91,7 @@ module Hamlit
       raise SyntaxError unless scanner.scan(/=/)
 
       code = scanner.scan(/.+/)
-      return [:dynamic, code] unless has_block?
+      return [:escape, true, [:dynamic, code]] unless has_block?
 
       ast = [:haml, :script, code]
       ast += with_indented { parse_lines }

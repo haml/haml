@@ -23,7 +23,7 @@ describe Hamlit::ScriptCompiler do
         [:multi,
          [:code, "_hamlit_compiler0 = link_to user_path do"],
          [:static, "user"],
-         [:dynamic, "_hamlit_compiler0"]],
+         [:escape, true, [:dynamic, "_hamlit_compiler0"]]],
       )
     end
 
@@ -42,11 +42,11 @@ describe Hamlit::ScriptCompiler do
          [:multi,
           [:code, "_hamlit_compiler0 = link_to user_path do"],
           [:static, "user"],
-          [:dynamic, "_hamlit_compiler0"]],
+          [:escape, true, [:dynamic, "_hamlit_compiler0"]]],
          [:multi,
           [:code, "_hamlit_compiler1 = link_to repo_path do"],
           [:static, "repo"],
-          [:dynamic, "_hamlit_compiler1"]]],
+          [:escape, true, [:dynamic, "_hamlit_compiler1"]]]],
       )
     end
   end
