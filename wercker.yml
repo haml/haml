@@ -32,4 +32,4 @@ build:
 
     - script:
         name: run benchmarks
-        code: bundle exec rake bench
+        code: TIME=100 bundle exec rake bench
