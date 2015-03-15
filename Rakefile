@@ -17,4 +17,11 @@ namespace :rails do
   end
 end
 
-task default: [:spec, 'rails:spec']
+namespace :haml do
+  desc 'Run Haml Spec'
+  task :spec do
+    system('cd spec/haml-spec && rake spec')
+  end
+end
+
+task default: [:spec, 'rails:spec', 'haml:spec']

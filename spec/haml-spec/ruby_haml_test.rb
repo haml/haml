@@ -1,7 +1,9 @@
+$:.unshift File.expand_path('../../../lib', __FILE__)
+
 require "rubygems"
 require "minitest/autorun"
 require "json"
-require "haml"
+require "hamlit"
 
 class HamlTest < MiniTest::Unit::TestCase
   contexts = JSON.parse(File.read(File.dirname(__FILE__) + "/tests.json"))
@@ -13,7 +15,7 @@ class HamlTest < MiniTest::Unit::TestCase
         locals           = Hash[(test["locals"] || {}).map {|x, y| [x.to_sym, y]}]
         options          = Hash[(test["config"] || {}).map {|x, y| [x.to_sym, y]}]
         options[:format] = options[:format].to_sym if options.key?(:format)
-        engine           = Haml::Engine.new(haml, options)
+        engine           = Hamlit::Template.new { haml }
         result           = engine.render(Object.new, locals)
 
         assert_equal html, result.strip

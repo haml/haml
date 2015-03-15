@@ -1,3 +1,4 @@
+require 'strscan'
 require 'temple'
 require 'hamlit/parser/utils'
 

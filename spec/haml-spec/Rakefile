@@ -1,0 +1,6 @@
+desc 'Run haml-spec'
+task :spec do
+  system('ruby ruby_haml_test.rb')
+end
+
+task default: :spec
