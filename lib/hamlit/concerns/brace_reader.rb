@@ -3,7 +3,7 @@ require 'ripper'
 module Hamlit
   module Concerns
     module BraceReader
-      # Return tokens lexed by Ripper, balancing count of braces.
+      # Return a string balancing count of braces.
       # And change the scanner position to the last brace.
       def read_brace(scanner)
         return unless scanner.match?(/{/)
