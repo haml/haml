@@ -1,10 +1,20 @@
 require 'bundler/gem_tasks'
 
-require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new(:spec)
-
+desc 'Run benchmarks'
 task :bench do
   system('TIME=20 bundle exec ruby benchmarks/benchmark.rb')
 end
 
-task default: :spec
+desc 'Run RSpec code examples'
+task :spec do
+  system('bundle exec rspec --pattern spec/hamlit/**{,/\*/\*\*\}/\*_spec.rb')
+end
+
+namespace :rails do
+  desc 'Run Rails specs'
+  task :spec do
+    system('cd spec/rails && rake spec')
+  end
+end
+
+task default: [:spec, 'rails:spec']
