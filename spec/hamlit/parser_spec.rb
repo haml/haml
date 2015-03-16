@@ -4,7 +4,7 @@ describe Hamlit::Parser do
       assert_compile(
         '%span a',
         [:multi,
-         [:html, :tag, 'span', [:haml, :attrs], [:static, 'a']],
+         [:html, :tag, 'span', [:haml, :attrs], [:haml, :text, 'a']],
          [:static, "\n"],
          [:newline]],
       )

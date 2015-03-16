@@ -52,6 +52,7 @@ module Hamlit
 
       scanner = StringScanner.new(line)
       scanner.scan(/ +/)
+      return parse_text(scanner) if scanner.match?(/\#{/)
 
       case scanner.peek(1)
       when '!'
@@ -149,7 +150,7 @@ module Hamlit
     end
 
     def parse_text(scanner)
-      ast = [:static]
+      ast = [:haml, :text]
       ast << scanner.scan(/.+/)
       ast
     end

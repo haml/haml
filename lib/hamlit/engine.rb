@@ -6,6 +6,7 @@ require 'hamlit/filter_formatter'
 require 'hamlit/multiline_preprocessor'
 require 'hamlit/parser'
 require 'hamlit/script_compiler'
+require 'hamlit/text_compiler'
 
 module Hamlit
   class Engine < Temple::Engine
@@ -17,6 +18,7 @@ module Hamlit
     use FilterFormatter
     use FilterCompiler
     use ScriptCompiler
+    use TextCompiler
     use DynamicFormatter
     html :Fast
     filter :Escapable
