@@ -18,7 +18,10 @@ module Hamlit
     filter :MultiFlattener
     filter :StaticMerger
     use :Generator do
-      options[:generator].new
+      valid_options = options.to_hash.select do |key, value|
+        options[:generator].options.valid_key?(key)
+      end
+      options[:generator].new(valid_options)
     end
   end
 end
