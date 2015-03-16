@@ -7,7 +7,7 @@ describe Hamlit::Engine do
       { buffer: buffer, generator: Temple::Generators::ArrayBuffer }
     end
 
-    it 'allows generator valid options' do
+    it 'accepts generator valid options' do
       expect(subject.call('')).to eq(
         "#{buffer} = []; ; #{buffer} = #{buffer}.join",
       )

@@ -1,10 +1,5 @@
 describe Hamlit::ScriptCompiler do
   describe '#call' do
-    def assert_compile(before, after)
-      result = described_class.new.call(before)
-      expect(result).to eq(after)
-    end
-
     it 'does not alter single-line script' do
       assert_compile(
         [:multi,
