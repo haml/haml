@@ -1,5 +1,6 @@
 require 'temple/html/filter'
 require 'hamlit/concerns/registerable'
+require 'hamlit/filters/css'
 require 'hamlit/filters/javascript'
 
 module Hamlit
@@ -7,6 +8,7 @@ module Hamlit
     extend Concerns::Registerable
 
     register :javascript, Filters::Javascript
+    register :css,        Filters::Css
 
     def on_haml_filter(name, exp)
       compiler = FilterCompiler.find(name)
