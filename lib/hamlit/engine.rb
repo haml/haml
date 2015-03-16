@@ -1,5 +1,6 @@
 require 'temple'
 require 'hamlit/attribute_compiler'
+require 'hamlit/dynamic_formatter'
 require 'hamlit/multiline_preprocessor'
 require 'hamlit/parser'
 require 'hamlit/script_compiler'
@@ -12,6 +13,7 @@ module Hamlit
     use Parser
     use ScriptCompiler
     use AttributeCompiler
+    use DynamicFormatter
     html :Fast
     filter :Escapable
     filter :ControlFlow

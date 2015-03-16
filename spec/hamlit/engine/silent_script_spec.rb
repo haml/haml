@@ -108,5 +108,28 @@ describe Hamlit::Engine do
         ok
       HTML
     end
+
+    it 'joins a next line if a current line ends with ","' do
+      assert_render("- foo = [',  \n     ']\n= foo", <<-HTML)
+        [", "]
+      HTML
+    end
+
+    it 'accepts illegal indent in continuing code' do
+      assert_render(<<-HAML, <<-HTML)
+        %span
+          %div
+            - def foo(a, b); a + b; end
+            - num = foo(1,
+        2)
+            = num
+      HAML
+        <span>
+        <div>
+        3
+        </div>
+        </span>
+      HTML
+    end
   end
 end

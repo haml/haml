@@ -51,5 +51,15 @@ describe Hamlit::Engine do
         </span>
       HTML
     end
+
+    it 'accepts a continuing script' do
+      assert_render(<<-HAML, <<-HTML)
+        - def foo(a, b); a + b; end
+        = foo(1,
+        2)
+      HAML
+        3
+      HTML
+    end
   end
 end
