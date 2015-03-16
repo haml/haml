@@ -18,15 +18,16 @@ module Hamlit
       while @lines[@current_lineno + 1]
         @current_lineno += 1
 
-        if end_with_pipe?(current_line)
-          prefix = current_line[/\A */]
-          lines  = scan_multilines
-
-          result << prefix + build_multiline(lines)
-          (lines.length - 1).times { result << '' }
-        else
+        unless end_with_pipe?(current_line)
           result << current_line
+          next
         end
+
+        prefix = current_line[/\A */]
+        lines  = scan_multilines
+
+        result << prefix + build_multiline(lines)
+        (lines.length - 1).times { result << '' }
       end
       result.map { |line| "#{line}\n" }.join
     end
