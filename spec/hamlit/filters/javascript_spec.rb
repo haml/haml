@@ -67,5 +67,16 @@ describe Hamlit::Filters::Javascript do
         </script>
       HTML
     end
+
+    it 'parses string interpolation' do
+      assert_render(<<-HAML, <<-HTML)
+        :javascript
+          var a = #{[1, 2]};
+      HAML
+        <script>
+          var a = [1, 2];
+        </script>
+      HTML
+    end
   end
 end
