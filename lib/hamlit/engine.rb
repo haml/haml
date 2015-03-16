@@ -2,6 +2,7 @@ require 'temple'
 require 'hamlit/attribute_compiler'
 require 'hamlit/dynamic_formatter'
 require 'hamlit/filter_compiler'
+require 'hamlit/filter_formatter'
 require 'hamlit/multiline_preprocessor'
 require 'hamlit/parser'
 require 'hamlit/script_compiler'
@@ -13,6 +14,7 @@ module Hamlit
     use MultilinePreprocessor
     use Parser
     use AttributeCompiler
+    use FilterFormatter
     use FilterCompiler
     use ScriptCompiler
     use DynamicFormatter

@@ -8,9 +8,9 @@ module Hamlit
 
     register :javascript, Filters::Javascript
 
-    def on_haml_filter(name, lines)
+    def on_haml_filter(name, exp)
       compiler = FilterCompiler.find(name)
-      compiler.compile(lines)
+      compiler.compile(exp)
     end
   end
 end
