@@ -143,5 +143,13 @@ describe Hamlit::Engine do
         <-_>foo</-_>
       HTML
     end
+
+    it 'does not render silent script just after a tag' do
+      assert_render(<<-HAML, <<-HTML)
+        %span- raise 'a'
+      HAML
+        <span->raise 'a'</span->
+      HTML
+    end
   end
 end
