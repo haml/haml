@@ -4,12 +4,10 @@ module Hamlit
   if defined?(::ActionView)
     RailsTemplate = Temple::Templates::Rails.create(
       Hamlit::Engine,
+      generator:   Temple::Generators::RailsOutputBuffer,
       register_as: :haml,
-      # Use rails-specific generator. This is necessary
-      # to support block capturing and streaming.
-      generator: Temple::Generators::RailsOutputBuffer,
       escape_html: true,
-      streaming: true,
+      streaming:   true,
     )
   end
 end
