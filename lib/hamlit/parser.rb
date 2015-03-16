@@ -64,6 +64,8 @@ module Hamlit
         parse_silent_script(scanner)
       when '/'
         parse_comment(scanner)
+      when ':'
+        parse_filter(scanner)
       else
         parse_text(scanner)
       end
@@ -136,6 +138,14 @@ module Hamlit
       ast = [:html, :comment]
       ast << [:static, " #{scanner.scan(/.+/).strip} "]
       ast
+    end
+
+    def parse_filter(scanner)
+      raise SyntaxError unless scanner.scan(/:/)
+
+      name = scanner.scan(/.+/).strip
+      lines = with_indented { read_lines }
+      [:haml, :filter, name, lines]
     end
 
     def parse_text(scanner)

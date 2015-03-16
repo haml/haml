@@ -10,10 +10,7 @@ module Hamlit
       # Return nearest line's indent level since next line. This method ignores
       # empty line. It returns -1 if next_line does not exist.
       def next_indent
-        line = next_line
-        return EOF unless line
-
-        count_indent(line)
+        count_indent(next_line)
       end
 
       def with_indented(&block)
@@ -24,8 +21,11 @@ module Hamlit
         result
       end
 
-      def count_indent(line)
+      def count_indent(line, strict: false)
+        return EOF unless line
         width = line[/\A +/].to_s.length
+
+        return (width + 1) / 2 unless strict
         raise SyntaxError if width.odd?
 
         width / 2

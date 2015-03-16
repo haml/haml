@@ -28,6 +28,15 @@ module Hamlit
           @current_lineno += 1
         end
       end
+
+      def read_lines
+        lines = []
+        while count_indent(next_line, strict: false) >= @current_indent
+          lines << @lines[@current_lineno + 1]
+          @current_lineno += 1
+        end
+        lines
+      end
     end
   end
 end
