@@ -16,7 +16,7 @@ describe Hamlit::Filters::Css do
     end
 
     it 'parses string interpolation' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-'HAML', <<-HTML)
         :css
           .foo {
             width: #{100 * 3}px;

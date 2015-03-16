@@ -32,7 +32,7 @@ module Hamlit
     def wrap_newlines(lines)
       ast = []
       lines.each do |line|
-        ast << [:static, line]
+        ast << [:haml, :text, line]
         ast << [:static, "\n"]
       end
       ast
