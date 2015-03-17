@@ -46,4 +46,11 @@ describe UsersController, type: :request do
       HTML
     end
   end
+
+  describe '#form' do
+    it 'renders haml tags in the form block' do
+      get form_users_path
+      expect(response.body).to include('row')
+    end
+  end
 end

@@ -1,8 +1,8 @@
-require 'temple/html/filter'
+require 'hamlit/filter'
 require 'hamlit/concerns/escapable'
 
 module Hamlit
-  class ScriptCompiler < Temple::HTML::Filter
+  class ScriptCompiler < Hamlit::Filter
     include Concerns::Escapable
 
     def on_haml_script(*exps)

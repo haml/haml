@@ -1,9 +1,9 @@
-require 'temple/html/filter'
+require 'hamlit/filter'
 
 # NOTE: This compiler has an extremely bad effect for performance.
 # We should optimize this.
 module Hamlit
-  class TextCompiler < Temple::HTML::Filter
+  class TextCompiler < Hamlit::Filter
     def on_haml_text(exp)
       compile_text(exp)
     end

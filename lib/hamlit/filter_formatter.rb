@@ -1,7 +1,7 @@
-require 'temple/html/filter'
+require 'hamlit/filter'
 
 module Hamlit
-  class FilterFormatter < Temple::HTML::Filter
+  class FilterFormatter < Hamlit::Filter
     BASE_DEPTH = 2
 
     def on_haml_filter(name, lines)

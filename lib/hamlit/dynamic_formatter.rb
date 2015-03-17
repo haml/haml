@@ -1,7 +1,7 @@
-require 'temple/html/filter'
+require 'hamlit/filter'
 
 module Hamlit
-  class DynamicFormatter < Temple::HTML::Filter
+  class DynamicFormatter < Hamlit::Filter
     def on_dynamic(exp)
       [:dynamic, "(#{exp}).to_s"]
     end

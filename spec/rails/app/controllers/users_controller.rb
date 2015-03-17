@@ -5,4 +5,7 @@ class UsersController < ApplicationController
 
   def capture
   end
+
+  def form
+  end
 end

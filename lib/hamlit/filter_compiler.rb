@@ -1,10 +1,10 @@
-require 'temple/html/filter'
+require 'hamlit/filter'
 require 'hamlit/concerns/registerable'
 require 'hamlit/filters/css'
 require 'hamlit/filters/javascript'
 
 module Hamlit
-  class FilterCompiler < Temple::HTML::Filter
+  class FilterCompiler < Hamlit::Filter
     extend Concerns::Registerable
 
     register :javascript, Filters::Javascript

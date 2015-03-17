@@ -1,9 +1,9 @@
 require 'ripper'
-require 'temple/html/filter'
+require 'hamlit/filter'
 require 'hamlit/concerns/brace_reader'
 
 module Hamlit
-  class AttributeCompiler < Temple::HTML::Filter
+  class AttributeCompiler < Hamlit::Filter
     include Concerns::BraceReader
 
     TYPE_POSITION = 1
