@@ -91,7 +91,7 @@ module Hamlit
       if scanner.match?(/=/)
         ast << parse_script(scanner)
         return ast
-      elsif scanner.scan(/ +/) && scanner.rest?
+      elsif scanner.rest.match(/[^ ]/)
         ast << parse_text(scanner)
         return ast
       elsif next_indent <= @current_indent
@@ -151,7 +151,7 @@ module Hamlit
 
     def parse_text(scanner)
       ast = [:haml, :text]
-      ast << scanner.scan(/.+/)
+      ast << scanner.scan(/.+/).strip
       ast
     end
 

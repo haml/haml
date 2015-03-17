@@ -151,5 +151,29 @@ describe Hamlit::Engine do
         <span->raise 'a'</span->
       HTML
     end
+
+    it 'renders a text just after attributes' do
+      assert_render(<<-HAML, <<-HTML)
+        %span{a: 2}a
+      HAML
+        <span a="2">a</span>
+      HTML
+    end
+
+    it 'strips a text' do
+      assert_render(<<-HAML, <<-HTML)
+        %span    foo
+      HAML
+        <span>foo</span>
+      HTML
+    end
+
+    it 'ignores spaces after tag' do
+      assert_render("%span  \n  a", <<-HTML)
+        <span>
+        a
+        </span>
+      HTML
+    end
   end
 end
