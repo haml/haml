@@ -2,9 +2,12 @@ require 'hamlit/filter'
 
 module Hamlit
   class FilterFormatter < Hamlit::Filter
-    BASE_DEPTH = 2
+    BASE_DEPTH      = 2
+    IGNORED_FILTERS = %w[ruby].freeze
 
     def on_haml_filter(name, lines)
+      return [:haml, :filter, name, lines] if IGNORED_FILTERS.include?(name)
+
       lines = [''] if lines.empty?
       lines = unindent_lines(lines)
 
