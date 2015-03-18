@@ -90,7 +90,6 @@ module Haml
 
     def initialize(template, options)
       @options            = options
-      @flat               = false
       # Record the indent levels of "if" statements to validate the subsequent
       # elsif and else statements are indented at the appropriate level.
       @script_level_stack = []
@@ -109,7 +108,8 @@ module Haml
 
     def parse
       @root = @parent = ParseNode.new(:root)
-      @haml_comment = false
+      @flat = false
+      @filter_buffer = nil
       @indentation = nil
       @line = next_line
 
@@ -129,13 +129,13 @@ module Haml
         end
 
         @tab_up = nil
-        process_line(@line) unless @line.text.empty? || @haml_comment
-        if @parent.type != :haml_comment && (block_opened? || @tab_up)
+        process_line(@line) unless @line.text.empty?
+        if block_opened? || @tab_up
           @template_tabs += 1
           @parent = @parent.children.last
         end
 
-        if !@haml_comment && !flat? && @next_line.tabs - @line.tabs > 1
+        if !flat? && @next_line.tabs - @line.tabs > 1
           raise SyntaxError.new(Error.message(:deeper_indenting, @next_line.tabs - @line.tabs), @next_line.index)
         end
 
@@ -243,7 +243,9 @@ module Haml
         line.text = line.text[1..-1]
         push script(line)
       when FLAT_SCRIPT; push flat_script(line.strip!(1))
-      when SILENT_SCRIPT; push silent_script(line)
+      when SILENT_SCRIPT
+        return push haml_comment(line.text[2..-1]) if line.text[1] == SILENT_COMMENT
+        push silent_script(line)
       when FILTER; push filter(line.text[1..-1].downcase)
       when DOCTYPE
         return push doctype(line.text) if line.text[0, 3] == '!!!'
@@ -301,8 +303,6 @@ module Haml
     end
 
     def silent_script(line)
-      return haml_comment(line.text[2..-1]) if line.text[1] == SILENT_COMMENT
-
       raise SyntaxError.new(Error.message(:no_end), line.index) if line.text[1..-1].strip == 'end'
 
       line = handle_ruby_multiline(line)
@@ -343,7 +343,15 @@ module Haml
     end
 
     def haml_comment(text)
-      @haml_comment = block_opened?
+      if filter_opened?
+        @flat = true
+        @filter_buffer = String.new
+        @filter_buffer << "#{text}\n" unless text.empty?
+        text = @filter_buffer
+        # If we don't know the indentation by now, it'll be set in Line#tabs
+        @flat_spaces = @indentation * (@template_tabs+1) if @indentation
+      end
+
       ParseNode.new(:haml_comment, @line.index + 1, :text => text)
     end
 
@@ -469,10 +477,9 @@ module Haml
     def filter(name)
       raise Error.new(Error.message(:invalid_filter_name, name)) unless name =~ /^\w+$/
 
-      @filter_buffer = String.new
-
       if filter_opened?
         @flat = true
+        @filter_buffer = String.new
         # If we don't know the indentation by now, it'll be set in Line#tabs
         @flat_spaces = @indentation * (@template_tabs+1) if @indentation
       end
@@ -487,13 +494,17 @@ module Haml
     end
 
     def close_filter(_)
-      @flat = false
-      @flat_spaces = nil
-      @filter_buffer = nil
+      close_flat_section
     end
 
     def close_haml_comment(_)
-      @haml_comment = false
+      close_flat_section
+    end
+
+    def close_flat_section
+      @flat = false
+      @flat_spaces = nil
+      @filter_buffer = nil
     end
 
     def close_silent_script(node)
@@ -772,7 +783,7 @@ module Haml
     # Same semantics as block_opened?, except that block_opened? uses Line#tabs,
     # which doesn't interact well with filter lines
     def filter_opened?
-      @next_line.full =~ (@indentation ? /^#{@indentation * @template_tabs}/ : /^\s/)
+      @next_line.full =~ (@indentation ? /^#{@indentation * (@template_tabs + 1)}/ : /^\s/)
     end
 
     def flat?

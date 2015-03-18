@@ -133,6 +133,34 @@ module Haml
       end
     end
 
+    test "empty filter doesn't hide following lines" do
+      root = parse "%p\n  :plain\n  %p\n"
+      p_element = root.children[0]
+      assert_equal 2, p_element.children.size
+      assert_equal :filter, p_element.children[0].type
+      assert_equal :tag, p_element.children[1].type
+    end
+
+    # Previously blocks under a haml_comment would be rejected if any line was
+    # indented by a value that wasn't a multiple of the document indentation.
+    test "haml_comment accepts any indentation in content" do
+      begin
+        parse "-\#\n  Indented two spaces\n   Indented three spaces"
+      rescue Haml::SyntaxError
+        flunk "haml_comment should accept any combination of indentation"
+      end
+    end
+
+    test "block haml_comment includes text" do
+      root = parse "-#\n  Hello\n   Hello\n"
+      assert_equal "Hello\n Hello\n", root.children[0].value[:text]
+    end
+
+    test "block haml_comment includes first line if present" do
+      root = parse "-# First line\n  Hello\n   Hello\n"
+      assert_equal " First line\nHello\n Hello\n", root.children[0].value[:text]
+    end
+
     private
 
     def parse(haml, options = nil)
