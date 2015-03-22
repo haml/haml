@@ -30,7 +30,7 @@ task :convert do
       spec += "      haml             = %q{#{test[:haml]}}\n"
       spec += "      locals           = Hash[#{test[:locals] || {}}.map {|x, y| [x.to_sym, y]}]\n"
       spec += "      options          = #{options}\n"
-      spec += "      options[:format] = '#{options[:format]}'\n" if options.key?(:format)
+      spec += "      options[:format] = :#{options[:format]}\n" if options.key?(:format)
       spec += "      engine           = Hamlit::Template.new(options) { haml }\n"
       spec += "      result           = engine.render(Object.new, locals)\n"
       spec += "      expect(result.strip).to eq(html)\n"

@@ -5,7 +5,7 @@ describe 'haml-spec' do
       haml             = %q{!!! XML}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -16,7 +16,7 @@ describe 'haml-spec' do
       haml             = %q{!!!}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -27,7 +27,7 @@ describe 'haml-spec' do
       haml             = %q{!!! 1.1}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -38,7 +38,7 @@ describe 'haml-spec' do
       haml             = %q{!!! mobile}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -49,7 +49,7 @@ describe 'haml-spec' do
       haml             = %q{!!! basic}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -60,7 +60,7 @@ describe 'haml-spec' do
       haml             = %q{!!! frameset}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -71,7 +71,7 @@ describe 'haml-spec' do
       haml             = %q{!!! 5}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -82,7 +82,7 @@ describe 'haml-spec' do
       haml             = %q{!!! XML}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html5"}
-      options[:format] = 'html5'
+      options[:format] = :html5
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -93,7 +93,7 @@ describe 'haml-spec' do
       haml             = %q{!!!}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html5"}
-      options[:format] = 'html5'
+      options[:format] = :html5
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -104,7 +104,7 @@ describe 'haml-spec' do
       haml             = %q{!!! XML}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html4"}
-      options[:format] = 'html4'
+      options[:format] = :html4
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -115,7 +115,7 @@ describe 'haml-spec' do
       haml             = %q{!!!}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html4"}
-      options[:format] = 'html4'
+      options[:format] = :html4
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -126,7 +126,7 @@ describe 'haml-spec' do
       haml             = %q{!!! frameset}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html4"}
-      options[:format] = 'html4'
+      options[:format] = :html4
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -137,7 +137,7 @@ describe 'haml-spec' do
       haml             = %q{!!! strict}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html4"}
-      options[:format] = 'html4'
+      options[:format] = :html4
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -160,7 +160,7 @@ describe 'haml-spec' do
       haml             = %q{%meta}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -171,7 +171,7 @@ describe 'haml-spec' do
       haml             = %q{%meta}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html4"}
-      options[:format] = 'html4'
+      options[:format] = :html4
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -182,7 +182,7 @@ describe 'haml-spec' do
       haml             = %q{%meta}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html5"}
-      options[:format] = 'html5'
+      options[:format] = :html5
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -193,7 +193,7 @@ describe 'haml-spec' do
       haml             = %q{%zzz/}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -204,7 +204,7 @@ describe 'haml-spec' do
       haml             = %q{%zzz/}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html5"}
-      options[:format] = 'html5'
+      options[:format] = :html5
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -864,7 +864,7 @@ describe 'haml-spec' do
 %p}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -882,7 +882,7 @@ describe 'haml-spec' do
 %p}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -899,7 +899,7 @@ describe 'haml-spec' do
 %p}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html5"}
-      options[:format] = 'html5'
+      options[:format] = :html5
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -915,7 +915,7 @@ describe 'haml-spec' do
 %p}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html5"}
-      options[:format] = 'html5'
+      options[:format] = :html5
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -1003,7 +1003,7 @@ describe 'haml-spec' do
       haml             = %q{%input(checked=true)}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"xhtml"}
-      options[:format] = 'xhtml'
+      options[:format] = :xhtml
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
@@ -1014,7 +1014,7 @@ describe 'haml-spec' do
       haml             = %q{%input(checked=true)}
       locals           = Hash[{}.map {|x, y| [x.to_sym, y]}]
       options          = {:format=>"html5"}
-      options[:format] = 'html5'
+      options[:format] = :html5
       engine           = Hamlit::Template.new(options) { haml }
       result           = engine.render(Object.new, locals)
       expect(result.strip).to eq(html)
