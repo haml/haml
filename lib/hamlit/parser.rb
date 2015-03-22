@@ -2,7 +2,6 @@ require 'strscan'
 require 'temple'
 require 'hamlit/concerns/balanceable'
 require 'hamlit/concerns/escapable'
-require 'hamlit/concerns/format_normalizable'
 require 'hamlit/concerns/indentable'
 require 'hamlit/concerns/line_reader'
 
@@ -10,7 +9,6 @@ module Hamlit
   class Parser < Temple::Parser
     include Concerns::Balanceable
     include Concerns::Escapable
-    include Concerns::FormatNormalizable
     include Concerns::Indentable
     include Concerns::LineReader
 
@@ -77,14 +75,12 @@ module Hamlit
     def parse_doctype(scanner)
       raise SyntaxError unless scanner.scan(/!!!/)
 
+      type = nil
       if scanner.scan(/ +/) && scanner.rest?
-        case scanner.rest.strip
-        when 'XML'
-          return [:static, "<?xml version='1.0' encoding='utf-8' ?>"]
-        end
+        type = scanner.rest.strip
       end
 
-      [:html, :doctype, normalize_format(options[:format]).to_s]
+      [:haml, :doctype, options[:format], type]
     end
 
     def parse_tag(scanner)
