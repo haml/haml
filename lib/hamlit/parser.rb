@@ -1,13 +1,13 @@
 require 'strscan'
 require 'temple'
-require 'hamlit/concerns/brace_reader'
+require 'hamlit/concerns/balanceable'
 require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/indentable'
 require 'hamlit/concerns/line_reader'
 
 module Hamlit
   class Parser < Temple::Parser
-    include Concerns::BraceReader
+    include Concerns::Balanceable
     include Concerns::Escapable
     include Concerns::Indentable
     include Concerns::LineReader
@@ -156,7 +156,19 @@ module Hamlit
     end
 
     def parse_attributes(scanner)
-      [read_brace(scanner)].compact
+      if scanner.match?(/{/)
+        parse_old_attributes(scanner)
+      else
+        parse_new_attributes(scanner)
+      end
+    end
+
+    def parse_old_attributes(scanner)
+      [read_braces(scanner)].compact
+    end
+
+    def parse_new_attributes(scanner)
+      [read_parentheses(scanner)].compact
     end
 
     def parse_tag_id_and_class(scanner)

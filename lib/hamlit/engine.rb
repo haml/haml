@@ -4,6 +4,7 @@ require 'hamlit/dynamic_formatter'
 require 'hamlit/filter_compiler'
 require 'hamlit/filter_formatter'
 require 'hamlit/multiline_preprocessor'
+require 'hamlit/new_attribute_compiler'
 require 'hamlit/parser'
 require 'hamlit/script_compiler'
 require 'hamlit/text_compiler'
@@ -15,6 +16,7 @@ module Hamlit
     use MultilinePreprocessor
     use Parser
     use AttributeCompiler
+    use NewAttributeCompier
     use FilterFormatter
     use FilterCompiler
     use ScriptCompiler
@@ -25,6 +27,7 @@ module Hamlit
     filter :ControlFlow
     filter :MultiFlattener
     filter :StaticMerger
+
     use :Generator do
       valid_options = options.to_hash.select do |key, value|
         options[:generator].options.valid_key?(key)

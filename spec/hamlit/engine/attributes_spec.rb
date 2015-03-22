@@ -1,5 +1,5 @@
 describe Hamlit::Engine do
-  describe 'html attributes' do
+  describe 'old attributes' do
     it 'renders attributes' do
       assert_render(<<-HAML, <<-HTML)
         %span{class: 'foo'} bar

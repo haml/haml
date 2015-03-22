@@ -6,10 +6,21 @@ describe Hamlit::AttributeCompiler do
          :attrs,
          [:html, :attr, 'id', [:static, 'foo']],
          [:html, :attr, 'class', [:static, 'bar']]],
-        [:html,
+        [:haml,
          :attrs,
          [:html, :attr, 'id', [:static, 'foo']],
          [:html, :attr, 'class', [:static, 'bar']]],
+      )
+    end
+
+    it 'does not alter news-tyle attributes' do
+      assert_compile(
+        [:haml,
+         :attrs,
+         '(a=2)'],
+        [:haml,
+         :attrs,
+         '(a=2)'],
       )
     end
 
@@ -20,7 +31,7 @@ describe Hamlit::AttributeCompiler do
          [:html, :attr, 'id', [:static, 'foo']],
          '{ foo: "bar" }',
          [:html, :attr, 'class', [:static, 'bar']]],
-        [:html,
+        [:haml,
          :attrs,
          [:html, :attr, 'id', [:static, 'foo']],
          [:html, :attr, 'foo', [:dynamic, '"bar"']],
@@ -33,7 +44,7 @@ describe Hamlit::AttributeCompiler do
         [:haml,
          :attrs,
          '{ a: { b: {}, c: "d" }, e: "f" }'],
-        [:html,
+        [:haml,
          :attrs,
          [:html, :attr, 'a-c', [:dynamic, '"d"']],
          [:html, :attr, 'e', [:dynamic, '"f"']]],

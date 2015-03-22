@@ -1,10 +1,12 @@
 require 'ripper'
 require 'hamlit/filter'
-require 'hamlit/concerns/brace_reader'
+require 'hamlit/concerns/balanceable'
 
+# AttributeCompiler compiles only old-style attribute, which is
+# surrounded by brackets.
 module Hamlit
   class AttributeCompiler < Hamlit::Filter
-    include Concerns::BraceReader
+    include Concerns::Balanceable
 
     TYPE_POSITION = 1
 
@@ -12,13 +14,13 @@ module Hamlit
       attrs = []
       exps.map do |exp|
         case exp
-        when String
+        when /\A{.+}\Z/
           attrs += compile_attribute(exp)
         else
           attrs << compile(exp)
         end
       end
-      [:html, :attrs, *attrs]
+      [:haml, :attrs, *attrs]
     end
 
     private
@@ -49,7 +51,7 @@ module Hamlit
 
     # Parse brace-balanced tokens and return the result as hash
     def parse_attributes(tokens)
-      tokens = tokens[1..-2] # strip braces
+      tokens = tokens.slice(1..-2) # strip braces
       attributes = {}
 
       while tokens && tokens.any?
