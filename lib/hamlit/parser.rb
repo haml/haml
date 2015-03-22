@@ -2,6 +2,7 @@ require 'strscan'
 require 'temple'
 require 'hamlit/concerns/balanceable'
 require 'hamlit/concerns/escapable'
+require 'hamlit/concerns/format_normalizable'
 require 'hamlit/concerns/indentable'
 require 'hamlit/concerns/line_reader'
 
@@ -9,6 +10,7 @@ module Hamlit
   class Parser < Temple::Parser
     include Concerns::Balanceable
     include Concerns::Escapable
+    include Concerns::FormatNormalizable
     include Concerns::Indentable
     include Concerns::LineReader
 
@@ -75,7 +77,7 @@ module Hamlit
     def parse_doctype(scanner)
       raise SyntaxError unless scanner.scan(/!!!/)
 
-      [:html, :doctype, 'html']
+      [:html, :doctype, normalize_format(options[:format]).to_s]
     end
 
     def parse_tag(scanner)
