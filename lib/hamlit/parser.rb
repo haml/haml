@@ -77,6 +77,13 @@ module Hamlit
     def parse_doctype(scanner)
       raise SyntaxError unless scanner.scan(/!!!/)
 
+      if scanner.scan(/ +/) && scanner.rest?
+        case scanner.rest.strip
+        when 'XML'
+          return [:static, "<?xml version='1.0' encoding='utf-8' ?>"]
+        end
+      end
+
       [:html, :doctype, normalize_format(options[:format]).to_s]
     end
 

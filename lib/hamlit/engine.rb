@@ -23,7 +23,7 @@ module Hamlit
     use ScriptCompiler
     use TextCompiler
     use DynamicFormatter
-    html :Fast
+    use HTML
     filter :Escapable
     filter :ControlFlow
     filter :MultiFlattener

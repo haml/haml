@@ -13,9 +13,9 @@ module Hamlit
 
     # Temple's warning is noisy.
     def rewrite_format(options)
-      options.merge(
-        format: normalize_format(options[:format]),
-      )
+      options = options.dup
+      options[:format] = normalize_format(options[:format]) if options[:format]
+      options
     end
   end
 end
