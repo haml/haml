@@ -20,7 +20,7 @@ end
 namespace :haml do
   desc 'Run Haml Spec'
   task :spec do
-    system('cd spec/haml-spec && rake spec')
+    system('cd haml-spec && rake spec')
   end
 end
 
