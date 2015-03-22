@@ -3,6 +3,7 @@ require 'hamlit/attribute_compiler'
 require 'hamlit/dynamic_formatter'
 require 'hamlit/filter_compiler'
 require 'hamlit/filter_formatter'
+require 'hamlit/html'
 require 'hamlit/multiline_preprocessor'
 require 'hamlit/new_attribute_compiler'
 require 'hamlit/parser'
@@ -22,7 +23,7 @@ module Hamlit
     use ScriptCompiler
     use TextCompiler
     use DynamicFormatter
-    html :Fast
+    use HTML
     filter :Escapable
     filter :ControlFlow
     filter :MultiFlattener
