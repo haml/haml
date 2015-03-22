@@ -4,36 +4,41 @@ require 'json'
 
 desc 'Convert tests.json into rspec tests'
 task :convert do
-  tests = []
+  spec = "describe 'haml-spec' do\n"
 
   contexts = JSON.parse(File.read(File.expand_path('../../../haml-spec/tests.json', __FILE__)))
-  contexts.each do |context|
-    context[1].each_with_index do |(name, test), index|
+  contexts.each_with_index do |context, index|
+    spec += "\n" if index != 0
+    spec += "  context \"#{context[0]}\" do\n"
+
+    tests = []
+    context[1].each do |name, test|
       tests << {
-        name: "#{name} (#{context[0]})",
+        name: name,
         html: test['html'],
         haml: test['haml'],
         locals: test['locals'],
         config: test['config'],
       }
     end
+
+    spec += tests.map { |test|
+      options = Hash[(test[:config] || {}).map {|x, y| [x.to_sym, y]}]
+
+      spec =  "    specify \"#{test[:name]}\" do\n"
+      spec += "      html             = %q{#{test[:html]}}\n"
+      spec += "      haml             = %q{#{test[:haml]}}\n"
+      spec += "      locals           = Hash[#{test[:locals] || {}}.map {|x, y| [x.to_sym, y]}]\n"
+      spec += "      options          = #{options}\n"
+      spec += "      options[:format] = '#{options[:format]}'\n" if options.key?(:format)
+      spec += "      engine           = Hamlit::Template.new(options) { haml }\n"
+      spec += "      result           = engine.render(Object.new, locals)\n"
+      spec += "      expect(result.strip).to eq(html)\n"
+      spec += "    end\n"
+    }.join("\n")
+    spec += "  end\n"
   end
 
-  spec = "describe 'haml-spec' do\n"
-  spec += tests.map { |test|
-    options = Hash[(test[:config] || {}).map {|x, y| [x.to_sym, y]}]
-
-    spec =  "  specify %q{#{test[:name]}} do\n"
-    spec += "    html             = %q{#{test[:html]}}\n"
-    spec += "    haml             = %q{#{test[:haml]}}\n"
-    spec += "    locals           = Hash[#{test[:locals] || {}}.map {|x, y| [x.to_sym, y]}]\n"
-    spec += "    options          = #{options}\n"
-    spec += "    options[:format] = '#{options[:format]}'\n" if options.key?(:format)
-    spec += "    engine           = Hamlit::Template.new(options) { haml }\n"
-    spec += "    result           = engine.render(Object.new, locals)\n"
-    spec += "    expect(result.strip).to eq(html)\n"
-    spec += "  end\n"
-  }.join("\n")
   spec += "end\n"
   File.write('ruby_haml_spec.rb', spec)
 end
