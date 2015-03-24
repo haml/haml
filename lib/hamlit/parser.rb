@@ -100,6 +100,7 @@ module Hamlit
         ast << parse_text(scanner)
         return ast
       elsif next_indent <= @current_indent
+        ast << [:multi]
         return ast
       end
 

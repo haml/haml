@@ -102,7 +102,7 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML)
         #hello.world
       HAML
-        <div id="hello" class="world" />
+        <div id="hello" class="world"></div>
       HTML
     end
 

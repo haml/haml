@@ -14,7 +14,7 @@ describe Hamlit::Parser do
       assert_compile(
         '%span{ a: 1, b: { c: 2 } }',
         [:multi,
-         [:html, :tag, "span", [:haml, :attrs, "{ a: 1, b: { c: 2 } }"]],
+         [:html, :tag, "span", [:haml, :attrs, "{ a: 1, b: { c: 2 } }"], [:multi]],
          [:static, "\n"],
          [:newline]],
       )
@@ -31,7 +31,8 @@ describe Hamlit::Parser do
            :attrs,
            [:html, :attr, 'id', [:static, 'foo']],
            [:html, :attr, 'class', [:static, 'bar']],
-           '{ baz: 1 }']],
+           '{ baz: 1 }'],
+          [:multi]],
          [:static, "\n"],
          [:newline]],
       )
