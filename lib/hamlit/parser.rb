@@ -18,6 +18,8 @@ module Hamlit
     TAG_REGEXP  = /[a-zA-Z0-9\-_]+/
     DEFAULT_TAG = 'div'
 
+    define_options :format
+
     def call(template)
       reset(template)
 

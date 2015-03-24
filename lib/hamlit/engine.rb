@@ -13,7 +13,10 @@ require 'hamlit/text_compiler'
 
 module Hamlit
   class Engine < Temple::Engine
-    define_options generator: Temple::Generators::ArrayBuffer
+    define_options(
+      generator: Temple::Generators::ArrayBuffer,
+      format:    :html,
+    )
 
     use MultilinePreprocessor
     use Parser

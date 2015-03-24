@@ -1,9 +1,8 @@
 require 'temple/html/fast'
-require 'hamlit/concerns/format_normalizable'
 
 module Hamlit
   class HTML < Temple::HTML::Fast
-    include Concerns::FormatNormalizable
+    define_options :format
 
     def initialize(opts = {})
       super rewrite_format(opts)
@@ -16,6 +15,17 @@ module Hamlit
       options = options.dup
       options[:format] = normalize_format(options[:format]) if options[:format]
       options
+    end
+
+    def normalize_format(format)
+      return :html unless format
+
+      case format
+      when :html4, :html5
+        :html
+      else
+        format
+      end
     end
   end
 end
