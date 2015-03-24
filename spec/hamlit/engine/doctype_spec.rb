@@ -7,5 +7,13 @@ describe Hamlit::Engine do
         <!DOCTYPE html>
       HTML
     end
+
+    it 'renders xml doctype' do
+      assert_render(<<-HAML, <<-HTML)
+        !!! XML
+      HAML
+        <?xml version='1.0' encoding='utf-8' ?>
+      HTML
+    end
   end
 end
