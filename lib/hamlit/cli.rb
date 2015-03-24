@@ -3,6 +3,8 @@ require 'thor'
 
 module Hamlit
   class CLI < Thor
+    IGNORED_COMPILERS = ['HTML'].freeze
+
     desc 'render HAML', 'Render haml template'
     def render(file)
       code = generate_code(file)
@@ -42,7 +44,7 @@ module Hamlit
     def generate_temple_ast(file)
       chain = Hamlit::Engine.chain.map(&:first).map(&:to_s)
       compilers = chain.select do |compiler|
-        compiler =~ /\AHamlit::/
+        compiler =~ /\AHamlit::/ && !ignored_compilers.include?(compiler)
       end
 
       template = File.read(file)
@@ -67,6 +69,10 @@ module Hamlit
         require 'pp'
         super(arg)
       end
+    end
+
+    def ignored_compilers
+      IGNORED_COMPILERS.map { |name| "Hamlit::#{name}" }
     end
   end
 end
