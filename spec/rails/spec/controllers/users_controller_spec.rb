@@ -39,7 +39,7 @@ describe UsersController, type: :request do
     it 'allows capture method to work' do
       get capture_users_path
       expect(response.body).to include(<<-HTML.strip_heredoc)
-        <div class="capture"><span>
+        <div class='capture'><span>
         <p>Capture</p>
         </span>
         </div>
