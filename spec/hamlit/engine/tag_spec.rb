@@ -79,12 +79,12 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'renders ids' do
+    it 'renders ids only last one' do
       assert_render(<<-HAML, <<-HTML)
         %span#Bar_0#bar-
           hello
       HAML
-        <span id='Bar_0 bar-'>
+        <span id='bar-'>
         hello
         </span>
       HTML
@@ -94,7 +94,7 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML)
         %span#a.b#c.d hello
       HAML
-        <span id='a c' class='b d'>hello</span>
+        <span id='c' class='b d'>hello</span>
       HTML
     end
 

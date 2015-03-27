@@ -190,7 +190,7 @@ module Hamlit
 
         case prefix
         when '#'
-          attributes['id'] << name
+          attributes['id'] = [name]
         when '.'
           attributes['class'] << name
         end
