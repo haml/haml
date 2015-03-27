@@ -1,7 +1,7 @@
 require 'temple/html/fast'
 
 module Hamlit
-  class HTML < Temple::HTML::Fast
+  class Html < Temple::HTML::Fast
     define_options :format
 
     def initialize(opts = {})
@@ -10,7 +10,7 @@ module Hamlit
 
     private
 
-    # Temple's warning is noisy.
+    # Temple's warning is noisy in haml-spec.
     def rewrite_format(options)
       options = options.dup
       options[:format] = normalize_format(options[:format]) if options[:format]
@@ -18,8 +18,6 @@ module Hamlit
     end
 
     def normalize_format(format)
-      return :html unless format
-
       case format
       when :html4, :html5
         :html

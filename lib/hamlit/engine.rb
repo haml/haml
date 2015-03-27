@@ -18,6 +18,7 @@ module Hamlit
       generator:  Temple::Generators::ArrayBuffer,
       format:     :html,
       attr_quote: "'",
+      ugly:       false,
     )
 
     use MultilinePreprocessor
@@ -31,17 +32,28 @@ module Hamlit
     use ScriptCompiler
     use TextCompiler
     use DynamicFormatter
-    use HTML
+    use :Html, -> { create(html_compiler) }
     filter :Escapable
     filter :ControlFlow
     filter :MultiFlattener
     filter :StaticMerger
+    use :Generator, -> { create(options[:generator]) }
 
-    use :Generator do
+    private
+
+    def create(klass)
       valid_options = options.to_hash.select do |key, value|
-        options[:generator].options.valid_key?(key)
+        klass.options.valid_key?(key)
       end
-      options[:generator].new(valid_options)
+      klass.new(valid_options)
+    end
+
+    def html_compiler
+      if options[:ugly]
+        Temple::HTML::Fast
+      else
+        Html
+      end
     end
   end
 end

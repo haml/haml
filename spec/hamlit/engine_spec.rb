@@ -4,7 +4,11 @@ describe Hamlit::Engine do
 
     let(:buffer)  { '_a' }
     let(:options) do
-      { buffer: buffer, generator: Temple::Generators::ArrayBuffer }
+      {
+        buffer:    buffer,
+        generator: Temple::Generators::ArrayBuffer,
+        ugly:      true,
+      }
     end
 
     it 'accepts generator valid options' do
