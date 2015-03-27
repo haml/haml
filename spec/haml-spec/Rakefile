@@ -9,7 +9,6 @@ def generate_spec(test, locals, options)
       haml    = %q{#{test[:haml]}}
       locals  = #{locals}
       options = #{options}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   SPEC
@@ -20,7 +19,7 @@ task :convert do
   spec = <<-SPEC.unindent
     require "haml"
 
-    describe "haml-spec" do
+    describe "haml" do
       def assert_pretty(haml, locals, options)
         engine = Haml::Engine.new(haml, options)
         hamlit = Hamlit::Template.new(options) { haml }

@@ -1,6 +1,6 @@
 require "haml"
 
-describe "haml-spec" do
+describe "haml" do
   def assert_pretty(haml, locals, options)
     engine = Haml::Engine.new(haml, options)
     hamlit = Hamlit::Template.new(options) { haml }
@@ -16,7 +16,6 @@ describe "haml-spec" do
       haml    = %q{!!! XML}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -24,7 +23,6 @@ describe "haml-spec" do
       haml    = %q{!!!}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -32,7 +30,6 @@ describe "haml-spec" do
       haml    = %q{!!! 1.1}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -40,7 +37,6 @@ describe "haml-spec" do
       haml    = %q{!!! mobile}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -48,7 +44,6 @@ describe "haml-spec" do
       haml    = %q{!!! basic}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -56,7 +51,6 @@ describe "haml-spec" do
       haml    = %q{!!! frameset}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -64,7 +58,6 @@ describe "haml-spec" do
       haml    = %q{!!! 5}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -72,7 +65,6 @@ describe "haml-spec" do
       haml    = %q{!!! XML}
       locals  = {}
       options = {:format=>:html5}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -80,7 +72,6 @@ describe "haml-spec" do
       haml    = %q{!!!}
       locals  = {}
       options = {:format=>:html5}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -88,7 +79,6 @@ describe "haml-spec" do
       haml    = %q{!!! XML}
       locals  = {}
       options = {:format=>:html4}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -96,7 +86,6 @@ describe "haml-spec" do
       haml    = %q{!!!}
       locals  = {}
       options = {:format=>:html4}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -104,7 +93,6 @@ describe "haml-spec" do
       haml    = %q{!!! frameset}
       locals  = {}
       options = {:format=>:html4}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -112,7 +100,6 @@ describe "haml-spec" do
       haml    = %q{!!! strict}
       locals  = {}
       options = {:format=>:html4}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -122,7 +109,6 @@ describe "haml-spec" do
       haml    = %q{%p}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -130,7 +116,6 @@ describe "haml-spec" do
       haml    = %q{%meta}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -138,7 +123,6 @@ describe "haml-spec" do
       haml    = %q{%meta}
       locals  = {}
       options = {:format=>:html4}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -146,7 +130,6 @@ describe "haml-spec" do
       haml    = %q{%meta}
       locals  = {}
       options = {:format=>:html5}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -154,7 +137,6 @@ describe "haml-spec" do
       haml    = %q{%zzz/}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -162,7 +144,6 @@ describe "haml-spec" do
       haml    = %q{%zzz/}
       locals  = {}
       options = {:format=>:html5}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -170,7 +151,6 @@ describe "haml-spec" do
       haml    = %q{%p.class1}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -178,7 +158,6 @@ describe "haml-spec" do
       haml    = %q{%p.class1.class2}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -186,7 +165,6 @@ describe "haml-spec" do
       haml    = %q{%p#id1}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -194,7 +172,6 @@ describe "haml-spec" do
       haml    = %q{%p#id1#id2}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -202,7 +179,6 @@ describe "haml-spec" do
       haml    = %q{%p.class1#id1}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -210,7 +186,6 @@ describe "haml-spec" do
       haml    = %q{%p#id1.class1}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -218,7 +193,6 @@ describe "haml-spec" do
       haml    = %q{#id1}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -226,7 +200,6 @@ describe "haml-spec" do
       haml    = %q{.class1}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -236,7 +209,6 @@ describe "haml-spec" do
     %p}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -246,7 +218,6 @@ describe "haml-spec" do
       haml    = %q{%ns:tag}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -254,7 +225,6 @@ describe "haml-spec" do
       haml    = %q{%snake_case}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -262,7 +232,6 @@ describe "haml-spec" do
       haml    = %q{%dashed-tag}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -270,7 +239,6 @@ describe "haml-spec" do
       haml    = %q{%camelCase}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -278,7 +246,6 @@ describe "haml-spec" do
       haml    = %q{%PascalCase}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -288,7 +255,6 @@ describe "haml-spec" do
       haml    = %q{.123}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -296,7 +262,6 @@ describe "haml-spec" do
       haml    = %q{.__}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -304,7 +269,6 @@ describe "haml-spec" do
       haml    = %q{.--}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -314,7 +278,6 @@ describe "haml-spec" do
       haml    = %q{%p hello}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -322,7 +285,6 @@ describe "haml-spec" do
       haml    = %q{%p.class1 hello}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -332,7 +294,6 @@ describe "haml-spec" do
     %p text}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -343,7 +304,6 @@ describe "haml-spec" do
   hello}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -352,7 +312,6 @@ describe "haml-spec" do
   hello}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -363,7 +322,6 @@ describe "haml-spec" do
       text}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -373,7 +331,6 @@ describe "haml-spec" do
       haml    = %q{%p(a='b')}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -381,7 +338,6 @@ describe "haml-spec" do
       haml    = %q{%p(a='b' c='d')}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -390,7 +346,6 @@ describe "haml-spec" do
   c='d')}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -398,7 +353,6 @@ describe "haml-spec" do
       haml    = %q{%p(a="#{var}")}
       locals  = {:var=>"value"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -406,7 +360,6 @@ describe "haml-spec" do
       haml    = %q{%p(class='class1')}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -414,7 +367,6 @@ describe "haml-spec" do
       haml    = %q{%p.class2(class='class1')}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -422,7 +374,6 @@ describe "haml-spec" do
       haml    = %q{%p(id='1')}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -430,7 +381,6 @@ describe "haml-spec" do
       haml    = %q{%p#id(id='1')}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -438,7 +388,6 @@ describe "haml-spec" do
       haml    = %q{%p(class=var)}
       locals  = {:var=>"hello"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -446,7 +395,6 @@ describe "haml-spec" do
       haml    = %q{.hello(class=var)}
       locals  = {:var=>"world"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -454,7 +402,6 @@ describe "haml-spec" do
       haml    = %q{.z(class=var)}
       locals  = {:var=>"a"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -464,7 +411,6 @@ describe "haml-spec" do
       haml    = %q{%p{:a => 'b'}}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -472,7 +418,6 @@ describe "haml-spec" do
       haml    = %q{%p{  :a  =>  'b'  }}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -480,7 +425,6 @@ describe "haml-spec" do
       haml    = %q{%p{:a =>"#{var}"}}
       locals  = {:var=>"value"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -488,7 +432,6 @@ describe "haml-spec" do
       haml    = %q{%p{ :a => 'b', 'c' => 'd' }}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -497,7 +440,6 @@ describe "haml-spec" do
   'c' => 'd' }}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -505,7 +447,6 @@ describe "haml-spec" do
       haml    = %q{%p{:class => 'class1'}}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -513,7 +454,6 @@ describe "haml-spec" do
       haml    = %q{%p.class2{:class => 'class1'}}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -521,7 +461,6 @@ describe "haml-spec" do
       haml    = %q{%p{:id => '1'}}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -529,7 +468,6 @@ describe "haml-spec" do
       haml    = %q{%p#id{:id => '1'}}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -537,7 +475,6 @@ describe "haml-spec" do
       haml    = %q{%p#id{:id => 1}}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -545,7 +482,6 @@ describe "haml-spec" do
       haml    = %q{%p{:class => var}}
       locals  = {:var=>"hello"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -553,7 +489,6 @@ describe "haml-spec" do
       haml    = %q{.hello{:class => var}}
       locals  = {:var=>"world"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -561,7 +496,6 @@ describe "haml-spec" do
       haml    = %q{.z{:class => var}}
       locals  = {:var=>"a"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -571,7 +505,6 @@ describe "haml-spec" do
       haml    = %q{-# hello}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -580,7 +513,6 @@ describe "haml-spec" do
   hello}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -590,7 +522,6 @@ describe "haml-spec" do
     foo}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -600,7 +531,6 @@ describe "haml-spec" do
       foo}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -610,7 +540,6 @@ describe "haml-spec" do
       haml    = %q{/ comment}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -620,7 +549,6 @@ describe "haml-spec" do
   comment2}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -631,7 +559,6 @@ describe "haml-spec" do
   %p a}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -642,7 +569,6 @@ describe "haml-spec" do
   <&">}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -653,7 +579,6 @@ describe "haml-spec" do
 %p}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -664,7 +589,6 @@ describe "haml-spec" do
 %p}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -675,7 +599,6 @@ describe "haml-spec" do
 %p}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -685,7 +608,6 @@ describe "haml-spec" do
 %p}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -696,7 +618,6 @@ describe "haml-spec" do
 %p}
       locals  = {}
       options = {:format=>:html5}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -706,7 +627,6 @@ describe "haml-spec" do
 %p}
       locals  = {}
       options = {:format=>:html5}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -716,7 +636,6 @@ describe "haml-spec" do
       haml    = %q{%p #{var}}
       locals  = {:var=>"value"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -724,7 +643,6 @@ describe "haml-spec" do
       haml    = %q{%p \#{var}}
       locals  = {:var=>"value"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -732,7 +650,6 @@ describe "haml-spec" do
       haml    = %q{%p \\#{var}}
       locals  = {:var=>"value"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -741,7 +658,6 @@ describe "haml-spec" do
   #{var} interpolated: #{var}}
       locals  = {:var=>"value"}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -751,7 +667,6 @@ describe "haml-spec" do
       haml    = %q{&= '<"&>'}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -759,7 +674,6 @@ describe "haml-spec" do
       haml    = %q{= '<"&>'}
       locals  = {}
       options = {:escape_html=>"true"}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -767,7 +681,6 @@ describe "haml-spec" do
       haml    = %q{!= '<"&>'}
       locals  = {}
       options = {:escape_html=>"true"}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -777,7 +690,6 @@ describe "haml-spec" do
       haml    = %q{%input(checked=true)}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -785,7 +697,6 @@ describe "haml-spec" do
       haml    = %q{%input(checked=true)}
       locals  = {}
       options = {:format=>:html5}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -795,7 +706,6 @@ describe "haml-spec" do
       haml    = %q{~ "Foo\n<pre>Bar\nBaz</pre>"}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -805,7 +715,6 @@ describe "haml-spec" do
   hello}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -815,7 +724,6 @@ describe "haml-spec" do
   hello}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
@@ -827,7 +735,6 @@ describe "haml-spec" do
 %li again}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -838,7 +745,6 @@ describe "haml-spec" do
 %li again}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
 
@@ -848,7 +754,6 @@ describe "haml-spec" do
   world}
       locals  = {}
       options = {}
-      assert_pretty(haml, locals, options)
       assert_ugly(haml, locals, options)
     end
   end
