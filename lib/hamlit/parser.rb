@@ -15,7 +15,7 @@ module Hamlit
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
     INTERNAL_STATEMENTS = %w[else elsif when].freeze
     SKIP_NEWLINE_EXPS   = %i[newline code multi].freeze
-    TAG_REGEXP  = /[a-zA-Z0-9\-_]+/
+    TAG_REGEXP  = /[a-zA-Z0-9\-_:]+/
     DEFAULT_TAG = 'div'
 
     define_options :format
