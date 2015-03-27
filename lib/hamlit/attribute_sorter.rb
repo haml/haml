@@ -18,20 +18,29 @@ module Hamlit
       combine_classes(class_attrs) + (attrs - class_attrs)
     end
 
-    # FIXME: can't parse '!'
     def combine_classes(attrs)
       return attrs if attrs.length <= 1
 
       values = []
-      attrs.each do |html, attr, name, (type, value)|
+      attrs.each_with_index do |(html, attr, name, value), index|
+        type, str = value
         case type
         when :static
           values.push(value)
         when :dynamic
-          values.unshift("\#{#{value}}")
+          values.unshift(value)
         end
       end
-      [[:html, :attr, 'class', [:dynamic, "%Q!#{values.join(' ')}!"]]]
+      [[:html, :attr, 'class', [:multi, *insert_spaces(values)]]]
+    end
+
+    def insert_spaces(array)
+      result = []
+      array.each_with_index do |value, index|
+        result << [:static, ' '] if index > 0
+        result << value
+      end
+      result
     end
   end
 end
