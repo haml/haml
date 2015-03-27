@@ -4,7 +4,7 @@ describe "haml-spec" do
   def assert_pretty(haml, locals, options)
     engine = Haml::Engine.new(haml, options)
     hamlit = Hamlit::Template.new(options) { haml }
-    expect(engine.render(Object.new, locals)).to eq(hamlit.render(Object.new, locals))
+    expect(hamlit.render(Object.new, locals)).to eq(engine.render(Object.new, locals))
   end
 
   def assert_ugly(haml, locals, options)
