@@ -42,8 +42,8 @@ module Hamlit
         token = tokens.first
         break unless token
 
-        pos   = token.first.last
-        str   = str[(pos - 1)..-1]
+        pos = token.first.last
+        str = str[pos..-1]
       end
 
       attributes

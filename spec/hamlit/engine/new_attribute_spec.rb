@@ -7,5 +7,13 @@ describe Hamlit::Engine do
         <p class='foo'>bar</p>
       HTML
     end
+
+    it 'renders multiple attributes' do
+      assert_render(<<-HAML, <<-HTML)
+        %p(a=1 b=2) bar
+      HAML
+        <p a='1' b='2'>bar</p>
+      HTML
+    end
   end
 end
