@@ -6,6 +6,7 @@ require 'hamlit/doctype_compiler'
 require 'hamlit/filter_compiler'
 require 'hamlit/filter_formatter'
 require 'hamlit/html/pretty'
+require 'hamlit/html/ugly'
 require 'hamlit/multiline_preprocessor'
 require 'hamlit/new_attribute_compiler'
 require 'hamlit/parser'
@@ -50,9 +51,9 @@ module Hamlit
 
     def html_compiler
       if options[:ugly]
-        Temple::HTML::Fast
+        HTML::Ugly
       else
-        Hamlit::HTML::Pretty
+        HTML::Pretty
       end
     end
   end

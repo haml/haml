@@ -1,15 +1,10 @@
+require 'hamlit/concerns/deprecation'
 require 'temple/html/pretty'
 
 module Hamlit
   module HTML
     class Pretty < Temple::HTML::Pretty
-      DEPCATED_OPTIONS = %i[html4 html5].freeze
-
-      define_options :format
-
-      def initialize(opts = {})
-        super rewrite_deprecated_options(opts)
-      end
+      include Concerns::Deprecation
 
       def call(exp)
         result = super(exp)
@@ -24,15 +19,6 @@ module Hamlit
         else
           [:static, exp]
         end
-      end
-
-      private
-
-      # Temple's warning is noisy in haml-spec.
-      def rewrite_deprecated_options(options)
-        options = options.dup
-        options[:format] = :html if DEPCATED_OPTIONS.include?(options[:format])
-        options
       end
     end
   end
