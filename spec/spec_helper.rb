@@ -6,15 +6,15 @@ module HamlitSpecHelper
     Hamlit::Parser.new.call(str)
   end
 
-  def render_string(str)
-    eval Hamlit::Engine.new.call(str)
+  def render_string(str, options = {})
+    eval Hamlit::Engine.new(options).call(str)
   end
 
-  def assert_render(haml, html)
+  def assert_render(haml, html, options = {})
     haml = haml.unindent
     html = html.unindent
 
-    expect(render_string(haml)).to eq(html)
+    expect(render_string(haml, options)).to eq(html)
   end
 
   def assert_parse(haml, &block)

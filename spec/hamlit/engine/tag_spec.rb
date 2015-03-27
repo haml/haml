@@ -175,5 +175,15 @@ describe Hamlit::Engine do
         </span>
       HTML
     end
+
+    it 'parses self-closing tag' do
+      assert_render(<<-HAML, <<-HTML, format: :xhtml)
+        %div/
+        %div
+      HAML
+        <div />
+        <div></div>
+      HTML
+    end
   end
 end

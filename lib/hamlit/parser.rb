@@ -98,6 +98,8 @@ module Hamlit
       if scanner.match?(/=/)
         ast << parse_script(scanner)
         return ast
+      elsif scanner.scan(/\//)
+        return ast
       elsif scanner.rest.match(/[^ ]/)
         ast << parse_text(scanner)
         return ast
