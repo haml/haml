@@ -20,6 +20,26 @@ module Hamlit
           [:static, exp]
         end
       end
+
+      def on_html_tag(name, attrs, content = nil)
+        if content.is_a?(Array) && content.first != :multi
+          return parse_oneline_tag(name, attrs, content)
+        end
+
+        super
+      end
+
+      private
+
+      def parse_oneline_tag(name, attrs, content)
+        name = name.to_s
+        closed = !content || (empty_exp?(content) && (@format == :xml || options[:autoclose].include?(name)))
+        result = [:multi, [:static, "<#{name}"], compile(attrs)]
+        result << [:static, (closed && @format != :html ? ' /' : '') + '>']
+        result << compile(content) if content
+        result << [:static, "</#{name}>"] if !closed
+        result
+      end
     end
   end
 end
