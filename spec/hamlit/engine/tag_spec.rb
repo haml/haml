@@ -75,7 +75,7 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML)
         %span.foo-1.bar_A hello
       HAML
-        <span class="foo-1 bar_A">hello</span>
+        <span class='foo-1 bar_A'>hello</span>
       HTML
     end
 
@@ -84,7 +84,7 @@ describe Hamlit::Engine do
         %span#Bar_0#bar-
           hello
       HAML
-        <span id="Bar_0 bar-">
+        <span id='Bar_0 bar-'>
         hello
         </span>
       HTML
@@ -94,7 +94,7 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML)
         %span#a.b#c.d hello
       HAML
-        <span id="a c" class="b d">hello</span>
+        <span id='a c' class='b d'>hello</span>
       HTML
     end
 
@@ -102,7 +102,7 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML)
         #hello.world
       HAML
-        <div id="hello" class="world"></div>
+        <div id='hello' class='world'></div>
       HTML
     end
 
@@ -111,7 +111,7 @@ describe Hamlit::Engine do
         .world#hello
           foo
       HAML
-        <div class="world" id="hello">
+        <div class='world' id='hello'>
         foo
         </div>
       HTML
@@ -156,7 +156,7 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML)
         %span{a: 2}a
       HAML
-        <span a="2">a</span>
+        <span a='2'>a</span>
       HTML
     end
 

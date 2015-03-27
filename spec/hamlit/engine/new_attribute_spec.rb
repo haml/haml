@@ -4,7 +4,7 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML)
         %p(class='foo') bar
       HAML
-        <p class="foo">bar</p>
+        <p class='foo'>bar</p>
       HTML
     end
   end

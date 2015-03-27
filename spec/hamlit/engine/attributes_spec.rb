@@ -4,7 +4,7 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML)
         %span{class: 'foo'} bar
       HAML
-        <span class="foo">bar</span>
+        <span class='foo'>bar</span>
       HTML
     end
 
@@ -12,23 +12,23 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML)
         %span{ data: 2 } bar
       HAML
-        <span data="2">bar</span>
+        <span data='2'>bar</span>
       HTML
     end
 
     it 'renders attributes' do
       assert_render(<<-'HAML', <<-HTML)
-        %span{ :class => "foo" } bar
+        %span{ :class => 'foo' } bar
       HAML
-        <span class="foo">bar</span>
+        <span class='foo'>bar</span>
       HTML
     end
 
     it 'renders attributes' do
       assert_render(<<-'HAML', <<-HTML)
-        %span{ :class => "foo", id: 'bar' } bar
+        %span{ :class => 'foo', id: 'bar' } bar
       HAML
-        <span class="foo" id="bar">bar</span>
+        <span class='foo' id='bar'>bar</span>
       HTML
     end
 
@@ -36,7 +36,7 @@ describe Hamlit::Engine do
       assert_render(<<-'HAML', <<-HTML)
         %span{ :'data-disable' => true } bar
       HAML
-        <span data-disable="true">bar</span>
+        <span data-disable='true'>bar</span>
       HTML
     end
 
@@ -44,15 +44,15 @@ describe Hamlit::Engine do
       assert_render(<<-'HAML', <<-HTML)
         %span{ data: { disable: true } } bar
       HAML
-        <span data-disable="true">bar</span>
+        <span data-disable='true'>bar</span>
       HTML
     end
 
     it 'accepts even illegal input for haml' do
       assert_render(<<-'HAML', <<-HTML)
-        %span{ class: "}}}", id: '{}}' } }{
+        %span{ class: '}}}', id: '{}}' } }{
       HAML
-        <span class="}}}" id="{}}">}{</span>
+        <span class='}}}' id='{}}'>}{</span>
       HTML
     end
   end

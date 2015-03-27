@@ -14,8 +14,9 @@ require 'hamlit/text_compiler'
 module Hamlit
   class Engine < Temple::Engine
     define_options(
-      generator: Temple::Generators::ArrayBuffer,
-      format:    :html,
+      generator:  Temple::Generators::ArrayBuffer,
+      format:     :html,
+      attr_quote: "'",
     )
 
     use MultilinePreprocessor
