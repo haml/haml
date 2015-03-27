@@ -28,12 +28,12 @@ module Hamlit
       when :html4, :html5
         [:newline]
       else
-        [:static, "<?xml version='1.0' encoding='utf-8' ?>"]
+        [:multi, [:static, "<?xml version='1.0' encoding='utf-8' ?>"], [:static, "\n"]]
       end
     end
 
     def doctype_tag(type)
-      [:html, :doctype, type.to_s]
+      [:multi, [:html, :doctype, type.to_s], [:static, "\n"]]
     end
   end
 end

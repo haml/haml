@@ -216,7 +216,7 @@ module Hamlit
     end
 
     def skip_newline?(ast)
-      SKIP_NEWLINE_EXPS.include?(ast.first)
+      SKIP_NEWLINE_EXPS.include?(ast.first) || (ast[0..1] == [:haml, :doctype])
     end
 
     def has_block?
