@@ -4,7 +4,12 @@ require 'json'
 
 desc 'Convert tests.json into rspec tests'
 task :convert do
-  spec = "describe 'haml-spec' do\n"
+  spec =  "describe 'haml-spec' do\n"
+  spec += "  def assert_render(html, haml, locals, options)\n"
+  spec += "    engine = Hamlit::Template.new(options) { haml }\n"
+  spec += "    result = engine.render(Object.new, locals)\n"
+  spec += "    expect(result.strip).to eq(html)\n"
+  spec += "  end\n\n"
 
   contexts = JSON.parse(File.read(File.expand_path('../../../haml-spec/tests.json', __FILE__)))
   contexts.each_with_index do |context, index|
@@ -23,17 +28,16 @@ task :convert do
     end
 
     spec += tests.map { |test|
+      locals  = Hash[(test[:locals] || {}).map {|x, y| [x.to_sym, y]}]
       options = Hash[(test[:config] || {}).map {|x, y| [x.to_sym, y]}]
+      options[:format] = options[:format].to_sym if options[:format]
 
       spec =  "    specify \"#{test[:name]}\" do\n"
-      spec += "      html             = %q{#{test[:html]}}\n"
-      spec += "      haml             = %q{#{test[:haml]}}\n"
-      spec += "      locals           = Hash[#{test[:locals] || {}}.map {|x, y| [x.to_sym, y]}]\n"
-      spec += "      options          = #{options}\n"
-      spec += "      options[:format] = :#{options[:format]}\n" if options.key?(:format)
-      spec += "      engine           = Hamlit::Template.new(options) { haml }\n"
-      spec += "      result           = engine.render(Object.new, locals)\n"
-      spec += "      expect(result.strip).to eq(html)\n"
+      spec += "      html    = %q{#{test[:html]}}\n"
+      spec += "      haml    = %q{#{test[:haml]}}\n"
+      spec += "      locals  = #{locals}\n"
+      spec += "      options = #{options}\n"
+      spec += "      assert_render(html, haml, locals, options)\n"
       spec += "    end\n"
     }.join("\n")
     spec += "  end\n"
