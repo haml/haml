@@ -1,5 +1,6 @@
 require 'temple'
 require 'hamlit/attribute_compiler'
+require 'hamlit/attribute_sorter'
 require 'hamlit/dynamic_formatter'
 require 'hamlit/doctype_compiler'
 require 'hamlit/filter_compiler'
@@ -24,6 +25,7 @@ module Hamlit
     use DoctypeCompiler
     use AttributeCompiler
     use NewAttributeCompier
+    use AttributeSorter
     use FilterFormatter
     use FilterCompiler
     use ScriptCompiler

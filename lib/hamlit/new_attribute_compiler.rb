@@ -17,7 +17,7 @@ module Hamlit
           attrs << compile(exp)
         end
       end
-      [:html, :attrs, *attrs]
+      [:haml, :attrs, *attrs]
     end
 
     private

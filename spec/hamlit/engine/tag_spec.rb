@@ -94,7 +94,7 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML)
         %span#a.b#c.d hello
       HAML
-        <span id='c' class='b d'>hello</span>
+        <span class='b d' id='c'>hello</span>
       HTML
     end
 
@@ -102,7 +102,7 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML)
         #hello.world
       HAML
-        <div id='hello' class='world'></div>
+        <div class='world' id='hello'></div>
       HTML
     end
 
