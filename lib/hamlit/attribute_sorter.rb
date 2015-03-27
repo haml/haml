@@ -12,10 +12,26 @@ module Hamlit
     private
 
     def pull_class_first(attrs)
-      class_attr = attrs.select do |html, attr, name, content|
+      class_attrs = attrs.select do |html, attr, name, content|
         name == 'class'
       end
-      class_attr + (attrs - class_attr)
+      combine_classes(class_attrs) + (attrs - class_attrs)
+    end
+
+    # FIXME: can't parse '!'
+    def combine_classes(attrs)
+      return attrs if attrs.length <= 1
+
+      values = []
+      attrs.each do |html, attr, name, (type, value)|
+        case type
+        when :static
+          values.push(value)
+        when :dynamic
+          values.unshift("\#{#{value}}")
+        end
+      end
+      [[:html, :attr, 'class', [:dynamic, "%Q!#{values.join(' ')}!"]]]
     end
   end
 end
