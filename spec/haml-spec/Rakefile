@@ -1,15 +1,39 @@
 $:.unshift File.expand_path('../../../lib', __FILE__)
 
 require 'json'
+require 'unindent'
+
+def generate_spec(test, locals, options)
+  <<-SPEC
+    specify \"#{test[:name]}\" do
+      haml    = %q{#{test[:haml]}}
+      locals  = #{locals}
+      options = #{options}
+      assert_pretty(haml, locals, options)
+      assert_ugly(haml, locals, options)
+    end
+  SPEC
+end
 
 desc 'Convert tests.json into rspec tests'
 task :convert do
-  spec =  "describe 'haml-spec' do\n"
-  spec += "  def assert_render(html, haml, locals, options)\n"
-  spec += "    engine = Hamlit::Template.new(options) { haml }\n"
-  spec += "    result = engine.render(Object.new, locals)\n"
-  spec += "    expect(result.strip).to eq(html)\n"
-  spec += "  end\n\n"
+  spec = <<-SPEC.unindent
+    require "haml"
+
+    describe "haml-spec" do
+      def assert_pretty(haml, locals, options)
+        engine = Haml::Engine.new(haml, options)
+        hamlit = Hamlit::Template.new(options) { haml }
+        expect(engine.render(Object.new, locals).strip).to eq(hamlit.render(Object.new, locals))
+      end
+
+      def assert_ugly(haml, locals, options)
+        engine = Haml::Engine.new(haml, { ugly: true }.merge(options))
+        hamlit = Hamlit::Template.new({ ugly: true }.merge(options)) { haml }
+        expect(engine.render(Object.new, locals)).to eq(hamlit.render(Object.new, locals))
+      end
+
+  SPEC
 
   contexts = JSON.parse(File.read(File.expand_path('../../../haml-spec/tests.json', __FILE__)))
   contexts.each_with_index do |context, index|
@@ -32,13 +56,7 @@ task :convert do
       options = Hash[(test[:config] || {}).map {|x, y| [x.to_sym, y]}]
       options[:format] = options[:format].to_sym if options[:format]
 
-      spec =  "    specify \"#{test[:name]}\" do\n"
-      spec += "      html    = %q{#{test[:html]}}\n"
-      spec += "      haml    = %q{#{test[:haml]}}\n"
-      spec += "      locals  = #{locals}\n"
-      spec += "      options = #{options}\n"
-      spec += "      assert_render(html, haml, locals, options)\n"
-      spec += "    end\n"
+      generate_spec(test, locals, options)
     }.join("\n")
     spec += "  end\n"
   end

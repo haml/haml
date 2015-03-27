@@ -8,6 +8,7 @@ module Hamlit
       register_as: :haml,
       escape_html: true,
       streaming:   true,
+      ugly:        true,
     )
   end
 end
