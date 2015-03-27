@@ -3,26 +3,37 @@ require 'hamlit/filter'
 module Hamlit
   class DoctypeCompiler < Hamlit::Filter
     def on_haml_doctype(format, type)
-      case type
-      when 'XML'
-        return [:static, "<?xml version='1.0' encoding='utf-8' ?>"]
+      if type == 'XML'
+        return xml_doctype_tag(format)
+      elsif type
+        return doctype_tag(type)
       end
 
-      [:html, :doctype, convert_format(format, type).to_s]
+      case format
+      when :html4
+        doctype_tag(:transitional)
+      when :html5
+        doctype_tag(:html)
+      when :xhtml
+        doctype_tag(:transitional)
+      else
+        doctype_tag(format)
+      end
     end
 
     private
 
-    def convert_format(format, type)
+    def xml_doctype_tag(format)
       case format
       when :html4, :html5
-        :html
-      when :xhtml
-        return type if type
-        :transitional
+        [:newline]
       else
-        format
+        [:static, "<?xml version='1.0' encoding='utf-8' ?>"]
       end
+    end
+
+    def doctype_tag(type)
+      [:html, :doctype, type.to_s]
     end
   end
 end
