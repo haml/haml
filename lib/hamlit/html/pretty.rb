@@ -11,8 +11,15 @@ module Hamlit
         super rewrite_deprecated_options(opts)
       end
 
+      def call(exp)
+        result = super(exp)
+        result << [:static, "\n"] if @added_newline
+        result
+      end
+
       def on_static(exp)
         if exp == "\n"
+          @added_newline = true
           [:static, '']
         else
           [:static, exp]

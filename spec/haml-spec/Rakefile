@@ -24,13 +24,11 @@ task :convert do
       def assert_pretty(haml, locals, options)
         engine = Haml::Engine.new(haml, options)
         hamlit = Hamlit::Template.new(options) { haml }
-        expect(engine.render(Object.new, locals).strip).to eq(hamlit.render(Object.new, locals))
+        expect(engine.render(Object.new, locals)).to eq(hamlit.render(Object.new, locals))
       end
 
       def assert_ugly(haml, locals, options)
-        engine = Haml::Engine.new(haml, { ugly: true }.merge(options))
-        hamlit = Hamlit::Template.new({ ugly: true }.merge(options)) { haml }
-        expect(engine.render(Object.new, locals)).to eq(hamlit.render(Object.new, locals))
+        assert_pretty(haml, locals, { ugly: true }.merge(options))
       end
 
   SPEC
