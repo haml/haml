@@ -57,7 +57,8 @@ module Hamlit
 
       scanner = StringScanner.new(line)
       scanner.scan(/ +/)
-      return parse_text(scanner) if scanner.match?(/\#{/)
+      return parse_text(scanner)         if scanner.match?(/\#{/)
+      return parse_script(scanner, true) if scanner.match?(/&=/)
 
       case scanner.peek(1)
       when '!'
@@ -119,11 +120,11 @@ module Hamlit
       ast
     end
 
-    def parse_script(scanner)
-      raise SyntaxError unless scanner.scan(/=/)
+    def parse_script(scanner, force_escape = false)
+      raise SyntaxError unless scanner.scan(/=|&=/)
 
       code = scan_code(scanner)
-      return escape_html([:dynamic, code]) unless has_block?
+      return escape_html([:dynamic, code], force_escape) unless has_block?
 
       ast = [:haml, :script, code]
       ast += with_indented { parse_lines }
