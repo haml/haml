@@ -1,4 +1,5 @@
 require 'hamlit/compilers/doctype'
+require 'hamlit/compilers/dynamic'
 require 'hamlit/compilers/filter'
 require 'hamlit/compilers/preserve'
 require 'hamlit/compilers/script'
@@ -13,6 +14,7 @@ require 'hamlit/filters/ruby'
 module Hamlit
   class Compiler < Hamlit::Filter
     include Compilers::Doctype
+    include Compilers::Dynamic
     include Compilers::Filter
     include Compilers::Preserve
     include Compilers::Script

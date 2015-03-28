@@ -2,7 +2,6 @@ require 'temple'
 require 'hamlit/attribute_compiler'
 require 'hamlit/attribute_sorter'
 require 'hamlit/compiler'
-require 'hamlit/dynamic_formatter'
 require 'hamlit/html/pretty'
 require 'hamlit/html/ugly'
 require 'hamlit/multiline'
@@ -24,7 +23,6 @@ module Hamlit
     use AttributeCompiler
     use NewAttributeCompier
     use AttributeSorter
-    use DynamicFormatter
     use :Html, -> { create(html_compiler) }
     filter :Escapable
     filter :ControlFlow

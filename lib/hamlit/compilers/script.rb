@@ -10,6 +10,8 @@ module Hamlit
 
         assign = [:code, "#{variable} = #{code}"]
         result = escape_html([:dynamic, variable])
+
+        # FIXME: should not result be compiled?
         [:multi, assign, *exps.map { |exp| compile(exp) }, result]
       end
 
