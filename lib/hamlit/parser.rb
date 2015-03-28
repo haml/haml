@@ -98,7 +98,7 @@ module Hamlit
       attrs += parse_tag_id_and_class(scanner)
       attrs += parse_attributes(scanner)
 
-      ast = [:html, :tag, tag, attrs]
+      ast = [:haml, :tag, tag, attrs]
 
       if scanner.match?(/=/)
         ast << parse_script(scanner)
