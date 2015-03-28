@@ -1,5 +1,5 @@
-describe Hamlit::ScriptCompiler do
-  describe '#call' do
+describe Hamlit::Compiler do
+  describe 'script' do
     it 'does not alter single-line script' do
       assert_compile(
         [:multi,

@@ -10,7 +10,6 @@ require 'hamlit/html/ugly'
 require 'hamlit/multiline'
 require 'hamlit/new_attribute_compiler'
 require 'hamlit/parser'
-require 'hamlit/script_compiler'
 require 'hamlit/text_compiler'
 
 module Hamlit
@@ -30,7 +29,6 @@ module Hamlit
     use AttributeSorter
     use FilterFormatter
     use FilterCompiler
-    use ScriptCompiler
     use TextCompiler
     use DynamicFormatter
     use :Html, -> { create(html_compiler) }
