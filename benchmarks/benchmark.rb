@@ -48,10 +48,10 @@ class Benchmarks
       def run_hamlit; #{Hamlit::Engine.new.call @haml_code}; end
     }
 
-    bench('erubis')        { context.run_erubis }
-    bench('slim')          { context.run_slim_ugly }
-    bench('fast_haml')     { context.run_fast_haml }
     bench('hamlit')        { context.run_hamlit }
+    bench('erubis')        { context.run_erubis }
+    bench('fast_haml')     { context.run_fast_haml }
+    bench('slim')          { context.run_slim_ugly }
 
     if ENV['ALL']
       bench('tenjin')      { context.run_tenjin }
@@ -63,17 +63,32 @@ class Benchmarks
   end
 
   def run
-    Benchmark.ips do |x|
+    result = Benchmark.ips do |x|
       x.config(time: @time, warmup: 2)
       @benches.each do |name, block|
         x.report(name, &block)
       end
       x.compare!
     end
+    assert_fastest(result)
   end
 
   def bench(name, &block)
     @benches.push([name, block])
+  end
+
+  def assert_fastest(result)
+    hamlit = result.entries.first
+    rival  = result.entries[1..-1].max_by(&:ips)
+
+    if hamlit.ips < rival.ips
+      fatal "Hamlit is slower than #{rival.label}"
+    end
+  end
+
+  def fatal(message)
+    puts "\e[31m#{message}\e[0m"
+    exit 1
   end
 end
 
