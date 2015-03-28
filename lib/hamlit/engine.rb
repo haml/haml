@@ -8,7 +8,7 @@ require 'hamlit/filter_compiler'
 require 'hamlit/filter_formatter'
 require 'hamlit/html/pretty'
 require 'hamlit/html/ugly'
-require 'hamlit/multiline_preprocessor'
+require 'hamlit/multiline'
 require 'hamlit/new_attribute_compiler'
 require 'hamlit/parser'
 require 'hamlit/script_compiler'
@@ -23,7 +23,7 @@ module Hamlit
       ugly:       false,
     )
 
-    use MultilinePreprocessor
+    use Multiline
     use Parser
     use Compiler
     use DoctypeCompiler

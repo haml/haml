@@ -1,4 +1,4 @@
-describe Hamlit::MultilinePreprocessor do
+describe Hamlit::Multiline do
   describe '#call' do
     it 'does not alter normal lines' do
       assert_compile(<<-HAML, <<-HAML)

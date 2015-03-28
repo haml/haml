@@ -2,7 +2,7 @@ require 'temple'
 require 'hamlit/concerns/line_reader'
 
 module Hamlit
-  class MultilinePreprocessor < Temple::Parser
+  class Multiline < Temple::Parser
     include Concerns::LineReader
 
     def call(template)
