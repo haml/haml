@@ -4,7 +4,6 @@ require 'hamlit/attribute_sorter'
 require 'hamlit/compiler'
 require 'hamlit/dynamic_formatter'
 require 'hamlit/filter_compiler'
-require 'hamlit/filter_formatter'
 require 'hamlit/html/pretty'
 require 'hamlit/html/ugly'
 require 'hamlit/multiline'
@@ -22,7 +21,6 @@ module Hamlit
 
     use Multiline
     use Parser
-    use FilterFormatter
     use FilterCompiler
     use Compiler
     use AttributeCompiler
