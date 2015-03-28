@@ -2,7 +2,6 @@ require 'temple'
 require 'hamlit/compiler'
 require 'hamlit/html/pretty'
 require 'hamlit/html/ugly'
-require 'hamlit/multiline'
 require 'hamlit/parser'
 
 module Hamlit
@@ -14,7 +13,6 @@ module Hamlit
       ugly:       false,
     )
 
-    use Multiline
     use Parser
     use Compiler
     use :Html, -> { create(html_compiler) }

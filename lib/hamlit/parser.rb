@@ -4,6 +4,7 @@ require 'hamlit/concerns/balanceable'
 require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/indentable'
 require 'hamlit/concerns/line_reader'
+require 'hamlit/concerns/multiline'
 
 module Hamlit
   class Parser < Temple::Parser
@@ -11,6 +12,7 @@ module Hamlit
     include Concerns::Escapable
     include Concerns::Indentable
     include Concerns::LineReader
+    include Concerns::Multiline
 
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
     INTERNAL_STATEMENTS = %w[else elsif when].freeze
@@ -32,6 +34,7 @@ module Hamlit
 
     # Reset the parser state.
     def reset(template)
+      template = preprocess_multilines(template)
       reset_lines(template.split("\n"))
       reset_indent
     end
