@@ -7,6 +7,10 @@ module Hamlit
       include Compilers::NewAttribute
       include Compilers::OldAttribute
 
+      def self.included(base)
+        base.define_options :format
+      end
+
       def on_haml_attrs(*attrs)
         attrs = compile_attributes(attrs)
         attrs = join_ids(attrs)

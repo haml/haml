@@ -11,6 +11,7 @@ module Hamlit
         str    = str.gsub(/\A\(|\)\Z/, '')
         attrs  = parse_new_attributes(str)
         attrs.map do |key, value|
+          next true_attribute(key) if value == 'true'
           [:html, :attr, key, [:dynamic, value]]
         end
       end
@@ -99,6 +100,15 @@ module Hamlit
       def type_of(token)
         return nil unless token
         token[TYPE_POSITION]
+      end
+
+      def true_attribute(key)
+        case options[:format]
+        when :xhtml
+          [:html, :attr, key, [:static, key]]
+        else
+          [:html, :attr, key, [:multi]]
+        end
       end
     end
   end
