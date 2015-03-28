@@ -74,7 +74,6 @@ class Benchmarks
       end
       x.compare!
     end
-    assert_fastest(result)
   end
 
   private
