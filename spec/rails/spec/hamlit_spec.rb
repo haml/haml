@@ -1,12 +1,25 @@
 require 'rails_helper'
 
-describe UsersController, type: :request do
-  describe '#index' do
-    it 'renders params' do
-      get users_path(q: 'hello')
-      expect(response.body).to include('<span>hello</span>')
-    end
+describe 'Hamlit rails integration', type: :request do
+  it 'renders views' do
+    get root_path
+    expect(response).to be_ok
+    expect(response).to render_template('application/index')
+    expect(response).to render_template('layouts/application')
+    expect(response.body).to include('<span>Hamlit</span>')
+  end
 
+  it 'renders params' do
+    get users_path(q: 'hello')
+    expect(response.body).to include('<span>hello</span>')
+  end
+
+  it 'renders instance variable' do
+    get users_path
+    expect(response.body).to include('<p>k0kubun</p>')
+  end
+
+  describe 'escaping' do
     it 'escapes script' do
       get users_path(q: '<script>alert("a");</script>')
       expect(response.body).to include(
@@ -14,7 +27,7 @@ describe UsersController, type: :request do
       )
     end
 
-    it 'descapes block script' do
+    it 'escapes block script' do
       get users_path(q: '<>')
       expect(response.body).to include(<<-HTML.strip_heredoc)
         <i>
@@ -23,19 +36,14 @@ describe UsersController, type: :request do
         </i>
       HTML
     end
+  end
 
-    it 'renders instance variable' do
-      get users_path
-      expect(response.body).to include('<p>k0kubun</p>')
-    end
-
+  describe 'rails helpers' do
     it 'renders rails helper' do
       get users_path
       expect(response.body).to include('<a href="/">root</a>')
     end
-  end
 
-  describe '#capture' do
     it 'allows capture method to work' do
       get capture_users_path
       expect(response.body).to include(<<-HTML.strip_heredoc)
@@ -45,16 +53,14 @@ describe UsersController, type: :request do
         </div>
       HTML
     end
-  end
 
-  describe '#form' do
     it 'renders haml tags in the form block' do
       get form_users_path
       expect(response.body).to include('row')
     end
   end
 
-  describe '#helpers' do
+  describe 'haml helpers' do
     it 'accepts find_and_preserve' do
       get helpers_users_path
       expect(response.body).to include(<<-HTML.strip_heredoc)
