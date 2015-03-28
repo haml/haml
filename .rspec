@@ -1,3 +1,2 @@
 --color
 --require spec_helper
---pattern spec/hamlit/**{,/\*/\*\*\}/\*_spec.rb
