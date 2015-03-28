@@ -57,8 +57,13 @@ module Hamlit
 
       scanner = StringScanner.new(line)
       scanner.scan(/ +/)
-      return parse_text(scanner)         if scanner.match?(/\#{/)
-      return parse_script(scanner, true) if scanner.match?(/&=/)
+      if scanner.match?(/\#{/)
+        return parse_text(scanner)
+      elsif scanner.match?(/&=/)
+        return parse_script(scanner, force_escape: true)
+      elsif scanner.match?(/!=/)
+        return parse_script(scanner, disable_escape: true)
+      end
 
       case scanner.peek(1)
       when '!'
@@ -120,12 +125,16 @@ module Hamlit
       ast
     end
 
-    def parse_script(scanner, force_escape = false)
-      raise SyntaxError unless scanner.scan(/=|&=/)
+    def parse_script(scanner, force_escape: false, disable_escape: false)
+      raise SyntaxError unless scanner.scan(/=|&=|!=/)
 
       code = scan_code(scanner)
-      return escape_html([:dynamic, code], force_escape) unless has_block?
+      unless has_block?
+        return [:dynamic, code] if disable_escape
+        return escape_html([:dynamic, code], force_escape)
+      end
 
+      # FIXME: parse != or &= for block
       ast = [:haml, :script, code]
       ast += with_indented { parse_lines }
       ast << [:code, 'end']
