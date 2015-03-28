@@ -1,12 +1,12 @@
 module Hamlit
+  class NotFound < StandardError
+    def initialize(name)
+      super(%Q{Filter "#{name}" is not defined.})
+    end
+  end
+
   module Concerns
     module Registerable
-      class NotFound < StandardError
-        def initialize(name)
-          super(%Q{Filter "#{name}" is not defined.})
-        end
-      end
-
       def registered
         @registered ||= {}
       end
