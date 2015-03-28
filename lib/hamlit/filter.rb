@@ -18,5 +18,9 @@ module Hamlit
     def on_haml_text(exp)
       [:haml, :text, compile(exp)]
     end
+
+    def on_haml_preserve(exp)
+      [:haml, :preserve, exp]
+    end
   end
 end

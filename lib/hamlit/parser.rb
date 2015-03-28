@@ -132,8 +132,7 @@ module Hamlit
       raise SyntaxError unless scanner.scan(/~/)
 
       code = scan_code(scanner)
-      code = "Hamlit::Helpers.find_and_preserve(#{code})"
-      escape_html([:dynamic, code])
+      escape_html([:haml, :preserve, code])
     end
 
     def parse_silent_script(scanner)
