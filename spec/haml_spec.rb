@@ -697,6 +697,7 @@ describe "haml" do
     specify "content in a 'plain' filter" do
       haml    = %q{:plain
   hello
+  hello
 
 %p}
       html    = %q{hello

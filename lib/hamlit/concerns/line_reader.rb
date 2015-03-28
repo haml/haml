@@ -30,9 +30,10 @@ module Hamlit
       end
 
       def read_lines
-        lines = []
+        lines  = []
+        spaces = ' ' * (@current_indent * 2)
         while count_indent(next_line, strict: false) >= @current_indent
-          lines << @lines[@current_lineno + 1]
+          lines << @lines[@current_lineno + 1].gsub(/\A#{spaces}/, '')
           @current_lineno += 1
         end
         lines

@@ -1,5 +1,6 @@
 require 'hamlit/concerns/included'
 require 'hamlit/concerns/registerable'
+require 'hamlit/filters/plain'
 
 module Hamlit
   module Compilers
@@ -8,10 +9,12 @@ module Hamlit
 
       included do
         extend Concerns::Registerable
+
+        register :plain, Filters::Plain
       end
 
-      def on_haml_filter(name, exp)
-        ast = compile_filter(name, exp)
+      def on_haml_filter(name, lines)
+        ast = compile_filter(name, lines)
         compile(ast)
       end
 
