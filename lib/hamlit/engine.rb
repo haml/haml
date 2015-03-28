@@ -1,6 +1,5 @@
 require 'temple'
 require 'hamlit/attribute_compiler'
-require 'hamlit/attribute_sorter'
 require 'hamlit/compiler'
 require 'hamlit/html/pretty'
 require 'hamlit/html/ugly'
@@ -19,10 +18,9 @@ module Hamlit
 
     use Multiline
     use Parser
-    use Compiler
     use AttributeCompiler
     use NewAttributeCompier
-    use AttributeSorter
+    use Compiler
     use :Html, -> { create(html_compiler) }
     filter :Escapable
     filter :ControlFlow

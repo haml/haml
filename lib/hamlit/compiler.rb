@@ -1,3 +1,4 @@
+require 'hamlit/compilers/attributes'
 require 'hamlit/compilers/doctype'
 require 'hamlit/compilers/dynamic'
 require 'hamlit/compilers/filter'
@@ -8,6 +9,7 @@ require 'hamlit/filter'
 
 module Hamlit
   class Compiler < Hamlit::Filter
+    include Compilers::Attributes
     include Compilers::Doctype
     include Compilers::Dynamic
     include Compilers::Filter
