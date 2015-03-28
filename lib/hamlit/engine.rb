@@ -10,7 +10,6 @@ require 'hamlit/html/ugly'
 require 'hamlit/multiline'
 require 'hamlit/new_attribute_compiler'
 require 'hamlit/parser'
-require 'hamlit/text_compiler'
 
 module Hamlit
   class Engine < Temple::Engine
@@ -23,13 +22,12 @@ module Hamlit
 
     use Multiline
     use Parser
+    use FilterFormatter
+    use FilterCompiler
     use Compiler
     use AttributeCompiler
     use NewAttributeCompier
     use AttributeSorter
-    use FilterFormatter
-    use FilterCompiler
-    use TextCompiler
     use DynamicFormatter
     use :Html, -> { create(html_compiler) }
     filter :Escapable
