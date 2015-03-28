@@ -111,7 +111,7 @@ module Hamlit
       attrs += parse_attributes(scanner)
 
       inner_removal = parse_whitespace_removal(scanner)
-      ast = [:haml, :tag, tag, attrs]
+      ast = [:html, :tag, tag, attrs]
 
       if scanner.match?(/=/)
         ast << parse_script(scanner)
@@ -127,7 +127,9 @@ module Hamlit
       end
 
       content = [:multi, [:static, "\n"]]
-      content[0, 1] = [:haml, :strip] if inner_removal
+      if inner_removal || Helpers::DEFAULT_PRESERVE_TAGS.include?(tag)
+        content[0, 1] = [:haml, :strip]
+      end
       content += with_indented { parse_lines }
       ast << content
       ast
