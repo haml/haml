@@ -20,7 +20,14 @@ end
 namespace :haml do
   desc 'Run Haml Spec'
   task :spec do
-    system('bundle exec rspec --pattern spec/haml-spec/**{,/\*/\*\*\}/\*_spec.rb')
+    system('bundle exec rspec spec/haml_spec.rb')
+  end
+
+  namespace :spec do
+    desc 'Generate converted haml-spec'
+    task :update do
+      system('cd spec && rake convert')
+    end
   end
 end
 

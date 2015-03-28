@@ -405,6 +405,14 @@ describe "haml" do
       options = {}
       assert_ugly(haml, locals, options)
     end
+
+    # FIXME: currently this is not considered
+    pending "HTML-style tag with an atomic attribute" do
+      haml    = %q{%a(flag)}
+      locals  = {}
+      options = {}
+      assert_ugly(haml, locals, options)
+    end
   end
 
   context "tags with Ruby-style attributes" do

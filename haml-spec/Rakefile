@@ -1,6 +1,0 @@
-desc 'Run haml-spec'
-task :spec do
-  system('bundle exec ruby ruby_haml_test.rb')
-end
-
-task default: :spec

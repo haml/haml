@@ -1,7 +1,8 @@
-$:.unshift File.expand_path('../../../lib', __FILE__)
+$:.unshift File.expand_path('../../lib', __FILE__)
 
 require 'json'
 require 'unindent'
+require 'open-uri'
 
 def generate_spec(test, locals, options)
   <<-SPEC
@@ -32,7 +33,8 @@ task :convert do
 
   SPEC
 
-  contexts = JSON.parse(File.read(File.expand_path('../../../haml-spec/tests.json', __FILE__)))
+  url = 'https://raw.githubusercontent.com/haml/haml-spec/master/tests.json'
+  contexts = JSON.parse(open(url).read)
   contexts.each_with_index do |context, index|
     spec += "\n" if index != 0
     spec += "  context \"#{context[0]}\" do\n"
@@ -59,7 +61,7 @@ task :convert do
   end
 
   spec += "end\n"
-  File.write('ruby_haml_spec.rb', spec)
+  File.write('haml_spec.rb', spec)
 end
 
 task default: :convert
