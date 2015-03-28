@@ -4,7 +4,6 @@ require 'hamlit/compiler'
 require 'hamlit/html/pretty'
 require 'hamlit/html/ugly'
 require 'hamlit/multiline'
-require 'hamlit/new_attribute_compiler'
 require 'hamlit/parser'
 
 module Hamlit
@@ -19,7 +18,6 @@ module Hamlit
     use Multiline
     use Parser
     use AttributeCompiler
-    use NewAttributeCompier
     use Compiler
     use :Html, -> { create(html_compiler) }
     filter :Escapable

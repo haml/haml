@@ -1,7 +1,17 @@
 module Hamlit
   module Compilers
     module Attributes
-      def on_haml_attrs(*attrs)
+      def on_haml_attrs(*exps)
+        attrs = []
+        exps.each do |exp|
+          case exp
+          when /\A(.+)\Z/
+            attrs += compile_new_attribute(exp)
+          else
+            attrs << compile(exp)
+          end
+        end
+
         attrs = join_ids(attrs)
         attrs = combine_classes(attrs)
         attrs = pull_class_first(attrs)
