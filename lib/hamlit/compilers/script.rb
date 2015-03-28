@@ -1,10 +1,13 @@
 require 'hamlit/concerns/escapable'
+require 'hamlit/concerns/included'
 
 module Hamlit
   module Compilers
     module Script
-      def self.included(base)
-        base.send(:include, Concerns::Escapable)
+      extend Concerns::Included
+
+      included do
+        include Concerns::Escapable
       end
 
       def on_haml_script(*exps)

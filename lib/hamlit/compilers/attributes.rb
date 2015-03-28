@@ -1,14 +1,16 @@
 require 'hamlit/compilers/new_attribute'
 require 'hamlit/compilers/old_attribute'
+require 'hamlit/concerns/included'
 
 module Hamlit
   module Compilers
     module Attributes
+      extend Concerns::Included
       include Compilers::NewAttribute
       include Compilers::OldAttribute
 
-      def self.included(base)
-        base.define_options :format
+      included do
+        define_options :format
       end
 
       def on_haml_attrs(*attrs)

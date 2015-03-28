@@ -1,3 +1,4 @@
+require 'hamlit/concerns/included'
 require 'hamlit/concerns/registerable'
 require 'hamlit/filters/css'
 require 'hamlit/filters/javascript'
@@ -6,17 +7,17 @@ require 'hamlit/filters/ruby'
 module Hamlit
   module Compilers
     module Filter
+      extend Concerns::Included
+
       BASE_DEPTH      = 2
       IGNORED_FILTERS = %w[ruby].freeze
 
-      def self.included(base)
-        base.class_eval do
-          extend Concerns::Registerable
+      included do
+        extend Concerns::Registerable
 
-          register :javascript, Filters::Javascript
-          register :css,        Filters::Css
-          register :ruby,       Filters::Ruby
-        end
+        register :javascript, Filters::Javascript
+        register :css,        Filters::Css
+        register :ruby,       Filters::Ruby
       end
 
       def on_haml_filter(name, exp)

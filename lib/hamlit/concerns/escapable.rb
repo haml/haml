@@ -1,8 +1,12 @@
+require 'hamlit/concerns/included'
+
 module Hamlit
   module Concerns
     module Escapable
-      def self.included(base)
-        base.define_options(escape_html: false)
+      extend Included
+
+      included do
+        define_options escape_html: false
       end
 
       def escape_html(exp, force_escape = false)
