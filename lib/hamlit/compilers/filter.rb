@@ -9,6 +9,16 @@ module Hamlit
       BASE_DEPTH      = 2
       IGNORED_FILTERS = %w[ruby].freeze
 
+      def self.included(base)
+        base.class_eval do
+          extend Concerns::Registerable
+
+          register :javascript, Filters::Javascript
+          register :css,        Filters::Css
+          register :ruby,       Filters::Ruby
+        end
+      end
+
       def on_haml_filter(name, exp)
         exp = format_expressions(name, exp)
 

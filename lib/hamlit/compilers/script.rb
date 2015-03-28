@@ -3,6 +3,10 @@ require 'hamlit/concerns/escapable'
 module Hamlit
   module Compilers
     module Script
+      def self.included(base)
+        base.send(:include, Concerns::Escapable)
+      end
+
       def on_haml_script(*exps)
         exps     = exps.dup
         variable = result_identifier
