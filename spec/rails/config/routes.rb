@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     collection do
       get :capture
       get :form
+      get :helpers
     end
   end
 end

@@ -9,4 +9,10 @@ module Hamlit
     streaming:   true,
     ugly:        true,
   )
+
+  ActiveSupport.on_load(:action_view) do
+    # Haml extends Haml::Helpers in action view each time.
+    # It costs much, so Hamlit includes a compatible module at first.
+    ActionView::Base.send :include, Hamlit::Helpers
+  end
 end

@@ -8,4 +8,7 @@ class UsersController < ApplicationController
 
   def form
   end
+
+  def helpers
+  end
 end
