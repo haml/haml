@@ -3,11 +3,16 @@ module Hamlit
     class Plain
       def compile(lines)
         ast = [:multi]
-        lines.each_with_index do |line, index|
-          ast << [:static, "\n"] if index > 0
-          ast << [:haml, :text, line]
-        end
+        text = lines.join("\n")
+        ast << [:haml, :text, text]
+        ast << [:static, "\n"] if string_interpolated?(text)
         ast
+      end
+
+      private
+
+      def string_interpolated?(text)
+        text =~ /\#{[^\#{}]*}/
       end
     end
   end
