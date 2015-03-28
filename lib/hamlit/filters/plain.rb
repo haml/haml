@@ -1,11 +1,13 @@
+require 'hamlit/filters/base'
+
 module Hamlit
   module Filters
-    class Plain
+    class Plain < Base
       def compile(lines)
         ast = [:multi]
-        text = strip_last(lines).join("\n")
+        text = compile_lines(lines)
+        text.gsub!(/\n\Z/, '') unless string_interpolated?(text)
         ast << [:haml, :text, text]
-        ast << [:static, "\n"] if string_interpolated?(text)
         ast
       end
 
@@ -13,14 +15,6 @@ module Hamlit
 
       def string_interpolated?(text)
         text =~ /\#{[^\#{}]*}/
-      end
-
-      def strip_last(lines)
-        lines = lines.dup
-        while lines.last && lines.last.length == 0
-          lines.delete_at(-1)
-        end
-        lines
       end
     end
   end

@@ -2,6 +2,7 @@ require 'hamlit/concerns/included'
 require 'hamlit/concerns/registerable'
 require 'hamlit/filters/css'
 require 'hamlit/filters/escaped'
+require 'hamlit/filters/javascript'
 require 'hamlit/filters/plain'
 require 'hamlit/filters/preserve'
 
@@ -13,10 +14,11 @@ module Hamlit
       included do
         extend Concerns::Registerable
 
-        register :css,      Filters::Css
-        register :escaped,  Filters::Escaped
-        register :plain,    Filters::Plain
-        register :preserve, Filters::Preserve
+        register :css,        Filters::Css
+        register :escaped,    Filters::Escaped
+        register :javascript, Filters::Javascript
+        register :plain,      Filters::Plain
+        register :preserve,   Filters::Preserve
       end
 
       def on_haml_filter(name, lines)

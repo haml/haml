@@ -30,16 +30,20 @@ module Hamlit
       end
 
       def read_lines
-        lines  = []
-        spaces = ' ' * (@current_indent * 2)
+        lines = []
         while read_line?
-          lines << @lines[@current_lineno + 1].gsub(/\A#{spaces}/, '')
+          lines << @lines[@current_lineno + 1]
           @current_lineno += 1
         end
-        lines
+        trim_lines(lines)
       end
 
       private
+
+      def trim_lines(lines)
+        size = (lines.first || '').index(/[^\s]/) || 0
+        lines.map { |line| line.gsub(/\A {#{size}}/, '') }
+      end
 
       def read_line?
         return true if count_indent(next_line, strict: false) >= @current_indent
