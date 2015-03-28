@@ -8,6 +8,7 @@ def generate_spec(test, locals, options)
   <<-SPEC
     specify \"#{test[:name]}\" do
       haml    = %q{#{test[:haml]}}
+      html    = %q{#{test[:html]}}
       locals  = #{locals}
       options = #{options}
       assert_ugly(haml, locals, options)
