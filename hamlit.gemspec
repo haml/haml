@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "benchmark-ips"
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "erubis"
-  spec.add_development_dependency "fast_haml"
+  spec.add_development_dependency "faml"
   spec.add_development_dependency "haml"
   spec.add_development_dependency "pry"
   spec.add_development_dependency "rake"

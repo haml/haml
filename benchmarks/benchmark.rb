@@ -7,7 +7,7 @@ require 'benchmark/ips'
 
 require 'erb'
 require 'erubis'
-require 'fast_haml'
+require 'faml'
 require 'haml'
 require 'slim'
 require 'tenjin'
@@ -43,14 +43,14 @@ class Benchmarks
       def run_temple_erb; #{Temple::ERB::Engine.new.call @erb_code}; end
       def run_fast_erubis; #{fast_erubis.src}; end
       def run_slim_ugly; #{Slim::Engine.new.call @slim_code}; end
-      def run_fast_haml; #{FastHaml::Engine.new.call @haml_code}; end
+      def run_faml; #{Faml::Engine.new.call @haml_code}; end
       def run_tenjin; _buf = ''; #{tenjin.script}; end
       def run_hamlit; #{Hamlit::Engine.new.call @haml_code}; end
     }
 
     bench('hamlit')        { context.run_hamlit }
     bench('erubis')        { context.run_erubis }
-    bench('fast_haml')     { context.run_fast_haml }
+    bench('faml')          { context.run_faml }
     bench('slim')          { context.run_slim_ugly }
 
     if ENV['ALL']
