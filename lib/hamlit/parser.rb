@@ -63,6 +63,8 @@ module Hamlit
         parse_tag(scanner)
       when '='
         parse_script(scanner)
+      when '~'
+        parse_preservation(scanner)
       when '-'
         parse_silent_script(scanner)
       when '/'
@@ -124,6 +126,14 @@ module Hamlit
       ast += with_indented { parse_lines }
       ast << [:code, 'end']
       ast
+    end
+
+    def parse_preservation(scanner)
+      raise SyntaxError unless scanner.scan(/~/)
+
+      code = scan_code(scanner)
+      code = "Hamlit::Helpers.find_and_preserve(#{code})"
+      escape_html([:dynamic, code])
     end
 
     def parse_silent_script(scanner)
