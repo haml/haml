@@ -5,10 +5,10 @@ require 'hamlit/compilers/filter'
 require 'hamlit/compilers/preserve'
 require 'hamlit/compilers/script'
 require 'hamlit/compilers/text'
-require 'hamlit/filter'
+require 'temple/html/filter'
 
 module Hamlit
-  class Compiler < Hamlit::Filter
+  class Compiler < Temple::HTML::Filter
     include Compilers::Attributes
     include Compilers::Doctype
     include Compilers::Dynamic
