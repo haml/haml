@@ -1,5 +1,6 @@
 require 'hamlit/concerns/included'
 require 'hamlit/concerns/registerable'
+require 'hamlit/filters/escaped'
 require 'hamlit/filters/plain'
 
 module Hamlit
@@ -10,7 +11,8 @@ module Hamlit
       included do
         extend Concerns::Registerable
 
-        register :plain, Filters::Plain
+        register :escaped, Filters::Escaped
+        register :plain,   Filters::Plain
       end
 
       def on_haml_filter(name, lines)
@@ -21,8 +23,7 @@ module Hamlit
       private
 
       def compile_filter(name, exp)
-        compiler = Compiler.find(name)
-        compiler.compile(exp)
+        self.class.find(name).compile(exp)
       end
     end
   end
