@@ -17,7 +17,7 @@ module Hamlit
 
       def find(name)
         raise NotFound.new(name) unless registered[name.to_sym]
-        registered[name.to_sym].new
+        registered[name.to_sym]
       end
     end
   end

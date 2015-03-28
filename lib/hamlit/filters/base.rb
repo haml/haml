@@ -1,6 +1,12 @@
 module Hamlit
   module Filters
     class Base
+      attr_reader :options
+
+      def initialize(options)
+        @options = options
+      end
+
       def compile(lines)
         raise NotImplementedError
       end

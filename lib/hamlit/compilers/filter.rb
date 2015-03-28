@@ -14,6 +14,8 @@ module Hamlit
       included do
         extend Concerns::Registerable
 
+        define_options :format
+
         register :css,        Filters::Css
         register :escaped,    Filters::Escaped
         register :javascript, Filters::Javascript
@@ -29,7 +31,7 @@ module Hamlit
       private
 
       def compile_filter(name, exp)
-        self.class.find(name).compile(exp)
+        self.class.find(name).new(options).compile(exp)
       end
     end
   end

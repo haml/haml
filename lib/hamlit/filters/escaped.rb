@@ -1,6 +1,8 @@
+require 'hamlit/filters/base'
+
 module Hamlit
   module Filters
-    class Escaped
+    class Escaped < Base
       def compile(lines)
         ast = [:haml, :text, lines.join("\n")]
         ast = [:multi, escape_html(ast)]
