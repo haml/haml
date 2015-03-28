@@ -1,4 +1,3 @@
-require 'hamlit/filter'
 require 'hamlit/concerns/escapable'
 
 module Hamlit

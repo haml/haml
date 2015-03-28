@@ -1,5 +1,3 @@
-require 'hamlit/filter'
-
 # NOTE: This compiler has an extremely bad effect for performance.
 # We should optimize this.
 module Hamlit
