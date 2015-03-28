@@ -3,7 +3,6 @@ require 'hamlit/attribute_compiler'
 require 'hamlit/attribute_sorter'
 require 'hamlit/compiler'
 require 'hamlit/dynamic_formatter'
-require 'hamlit/doctype_compiler'
 require 'hamlit/filter_compiler'
 require 'hamlit/filter_formatter'
 require 'hamlit/html/pretty'
@@ -26,7 +25,6 @@ module Hamlit
     use Multiline
     use Parser
     use Compiler
-    use DoctypeCompiler
     use AttributeCompiler
     use NewAttributeCompier
     use AttributeSorter
