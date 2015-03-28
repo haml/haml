@@ -1,6 +1,6 @@
 require 'ripper'
 
-# NewAttributeCompiler compiles new-style attributes, which is
+# This module compiles new-style attributes, which is
 # surrounded by parentheses.
 module Hamlit
   module Compilers
@@ -9,7 +9,7 @@ module Hamlit
 
       def compile_new_attribute(str)
         str    = str.gsub(/\A\(|\)\Z/, '')
-        attrs  = parse_attributes(str)
+        attrs  = parse_new_attributes(str)
         attrs.map do |key, value|
           [:html, :attr, key, [:dynamic, value]]
         end
@@ -17,7 +17,7 @@ module Hamlit
 
       private
 
-      def parse_attributes(str)
+      def parse_new_attributes(str)
         attributes = {}
 
         while str.length > 0

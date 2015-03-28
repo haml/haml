@@ -579,7 +579,7 @@ describe "haml" do
     end
 
     # FIXME: it requires attribute sorter
-    pending "Ruby-style tag with a CSS class and 'class' as a variable attribute" do
+    specify "Ruby-style tag with a CSS class and 'class' as a variable attribute" do
       haml    = %q{.hello{:class => var}}
       html    = %q{<div class='hello world'></div>}
       locals  = {:var=>"world"}

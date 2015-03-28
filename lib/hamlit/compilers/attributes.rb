@@ -1,17 +1,14 @@
+require 'hamlit/compilers/new_attribute'
+require 'hamlit/compilers/old_attribute'
+
 module Hamlit
   module Compilers
     module Attributes
-      def on_haml_attrs(*exps)
-        attrs = []
-        exps.each do |exp|
-          case exp
-          when /\A(.+)\Z/
-            attrs += compile_new_attribute(exp)
-          else
-            attrs << compile(exp)
-          end
-        end
+      include Compilers::NewAttribute
+      include Compilers::OldAttribute
 
+      def on_haml_attrs(*attrs)
+        attrs = compile_attributes(attrs)
         attrs = join_ids(attrs)
         attrs = combine_classes(attrs)
         attrs = pull_class_first(attrs)
@@ -19,6 +16,21 @@ module Hamlit
       end
 
       private
+
+      def compile_attributes(exps)
+        attrs = []
+        exps.each do |exp|
+          case exp
+          when /\A\(.+\)\Z/
+            attrs += compile_new_attribute(exp)
+          when /\A{.+}\Z/
+            attrs += compile_old_attribute(exp)
+          else
+            attrs << compile(exp)
+          end
+        end
+        attrs
+      end
 
       def pull_class_first(attrs)
         class_attrs = filter_attrs(attrs, 'class')

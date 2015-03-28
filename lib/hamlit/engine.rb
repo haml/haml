@@ -1,5 +1,4 @@
 require 'temple'
-require 'hamlit/attribute_compiler'
 require 'hamlit/compiler'
 require 'hamlit/html/pretty'
 require 'hamlit/html/ugly'
@@ -17,7 +16,6 @@ module Hamlit
 
     use Multiline
     use Parser
-    use AttributeCompiler
     use Compiler
     use :Html, -> { create(html_compiler) }
     filter :Escapable
