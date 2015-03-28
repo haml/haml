@@ -16,8 +16,9 @@ require 'hamlit'
 
 class Benchmarks
   def initialize(time)
-    @time    = time
-    @benches = []
+    @time     = time
+    @benches  = []
+    @versions = {}
 
     @erb_code    = File.read(File.dirname(__FILE__) + '/view.erb')
     @haml_code   = File.read(File.dirname(__FILE__) + '/view.haml')
@@ -49,21 +50,23 @@ class Benchmarks
       def run_hamlit; #{hamlit_ugly.call @haml_code}; end
     }
 
-    bench('hamlit')        { context.run_hamlit }
-    bench('erubis')        { context.run_erubis }
-    bench('faml')          { context.run_faml }
-    bench('slim')          { context.run_slim_ugly }
+    bench('hamlit', Hamlit::VERSION)        { context.run_hamlit }
+    bench('erubis', Erubis::VERSION)        { context.run_erubis }
+    bench('faml', Faml::VERSION)            { context.run_faml }
+    bench('slim', Slim::VERSION)            { context.run_slim_ugly }
 
     if ENV['ALL']
-      bench('tenjin')      { context.run_tenjin }
-      bench('fast erubis') { context.run_fast_erubis }
-      bench('temple erb')  { context.run_temple_erb }
-      bench('erb')         { context.run_erb }
-      bench('haml')        { context.run_haml_ugly }
+      erb_version = ERB.version.match(/\[([^ ]+)/)[1]
+      bench('tenjin', Tenjin::RELEASE)      { context.run_tenjin }
+      bench('fast erubis', Erubis::VERSION) { context.run_fast_erubis }
+      bench('temple erb', Temple::VERSION)  { context.run_temple_erb }
+      bench('erb', erb_version)             { context.run_erb }
+      bench('haml', Haml::VERSION)          { context.run_haml_ugly }
     end
   end
 
   def run
+    show_versions
     result = Benchmark.ips do |x|
       x.config(time: @time, warmup: 2)
       @benches.each do |name, block|
@@ -74,8 +77,18 @@ class Benchmarks
     assert_fastest(result)
   end
 
-  def bench(name, &block)
+  private
+
+  def bench(name, version, &block)
     @benches.push([name, block])
+    @versions[name] = version
+  end
+
+  def show_versions
+    puts 'Versions ' + '-' * 40
+    @versions.each do |name, version|
+      printf "%20s %10s\n", name, "v#{version}"
+    end
   end
 
   def assert_fastest(result)
