@@ -1,3 +1,4 @@
+require 'set'
 require 'strscan'
 require 'temple'
 require 'hamlit/concerns/balanceable'
@@ -34,6 +35,7 @@ module Hamlit
 
     # Reset the parser state.
     def reset(template)
+      @outer_removal = Set.new
       template = preprocess_multilines(template)
       reset_lines(template.split("\n"))
       reset_indent
@@ -44,9 +46,13 @@ module Hamlit
       ast = []
       while next_indent == @current_indent
         @current_lineno += 1
-        ast << parse_line(current_line)
-        ast << [:static, "\n"] unless skip_newline?(ast.last)
+        node = parse_line(current_line)
+        if @outer_removal.include?(@current_indent) && ast.last == [:static, "\n"]
+          ast.delete_at(-1)
+        end
+        ast << node
         ast << [:newline]
+        ast << [:static, "\n"] unless skip_newline?(node)
       end
       ast
     end
@@ -104,6 +110,7 @@ module Hamlit
       attrs += parse_tag_id_and_class(scanner)
       attrs += parse_attributes(scanner)
 
+      parse_whitespace_removal(scanner)
       ast = [:haml, :tag, tag, attrs]
 
       if scanner.match?(/=/)
@@ -123,6 +130,28 @@ module Hamlit
       content += with_indented { parse_lines }
       ast << content
       ast
+    end
+
+    def parse_whitespace_removal(scanner)
+      if scanner.match?(/</)
+        parse_inner_removal(scanner)
+        parse_outer_removal(scanner)
+      else
+        parse_outer_removal(scanner)
+        parse_inner_removal(scanner)
+      end
+    end
+
+    def parse_inner_removal(scanner)
+      return unless scanner.scan(/</)
+    end
+
+    def parse_outer_removal(scanner)
+      if scanner.scan(/>/)
+        @outer_removal.add(@current_indent)
+      else
+        @outer_removal.delete(@current_indent)
+      end
     end
 
     def parse_script(scanner, force_escape: false, disable_escape: false)
@@ -246,7 +275,9 @@ module Hamlit
     end
 
     def skip_newline?(ast)
-      SKIP_NEWLINE_EXPS.include?(ast.first) || (ast[0..1] == [:haml, :doctype])
+      SKIP_NEWLINE_EXPS.include?(ast.first) ||
+        (ast[0..1] == [:haml, :doctype]) ||
+        @outer_removal.include?(@current_indent)
     end
 
     def has_block?
