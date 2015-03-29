@@ -20,6 +20,13 @@ module Hamlit
         return [] unless scanner.match?(/{/)
 
         tokens = Ripper.lex(scanner.rest)
+        until balanced_braces_exist?(tokens)
+          @current_lineno += 1
+          break unless @lines[@current_lineno]
+          scanner.concat(current_line)
+          tokens = Ripper.lex(scanner.rest)
+        end
+
         tokens = fetch_balanced_braces(tokens)
         scanner.pos += tokens.last.first.last + 1
         [tokens.map(&:last).join]
@@ -31,6 +38,7 @@ module Hamlit
         tokens = Ripper.lex(scanner.rest)
         until balanced_parens_exist?(tokens)
           @current_lineno += 1
+          break unless @lines[@current_lineno]
           scanner.concat(current_line)
           tokens = Ripper.lex(scanner.rest)
         end

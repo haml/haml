@@ -1,5 +1,6 @@
 require 'ripper'
 
+# FIXME: this can be refactored
 module Hamlit
   module Concerns
     module Balanceable
@@ -41,6 +42,22 @@ module Hamlit
       end
 
       private
+
+      def balanced_braces_exist?(tokens)
+        open_count = 0
+
+        tokens.each do |token|
+          (row, col), type, str = token
+          case type
+          when :on_lbrace then open_count += 1
+          when :on_rbrace then open_count -= 1
+          end
+
+          break if open_count == 0
+        end
+
+        open_count == 0
+      end
 
       def balanced_parens_exist?(tokens)
         open_count = 0

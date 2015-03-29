@@ -518,8 +518,7 @@ describe "haml" do
       assert_ugly(haml, locals, options)
     end
 
-    # FIXME: it requires multiple-line attribute parser
-    pending "Ruby-style attributes separated with newlines" do
+    specify "Ruby-style attributes separated with newlines" do
       haml    = %q{%p{ :a => 'b',
   'c' => 'd' }}
       html    = %q{<p a='b' c='d'></p>}
