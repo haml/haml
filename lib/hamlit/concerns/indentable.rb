@@ -17,6 +17,10 @@ module Hamlit
         count_indent(next_line)
       end
 
+      def next_width
+        count_width(next_line)
+      end
+
       def with_indented(&block)
         @current_indent += 1
         result = block.call
@@ -27,12 +31,17 @@ module Hamlit
 
       def count_indent(line, strict: false)
         return EOF unless line
-        width = line[/\A +/].to_s.length
+        width = count_width(line)
 
         return (width + 1) / 2 unless strict
         assert!('Expected to count even-width indent') if width.odd?
 
         width / 2
+      end
+
+      def count_width(line)
+        return EOF unless line
+        line[/\A +/].to_s.length
       end
 
       def same_indent?(line)

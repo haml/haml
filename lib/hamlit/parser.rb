@@ -48,13 +48,13 @@ module Hamlit
     def parse_lines
       ast = []
       loop do
-        indent = next_indent
-        if indent != @current_indent
-          if indent != Hamlit::EOF && indent > @current_indent
+        width = next_width
+        if width != @current_indent * 2
+          if width != Hamlit::EOF && (width > @current_indent * 2 || width.odd?)
             ast << [:newline]
             ast << syntax_error(
               "inconsistent indentation: #{2 * @current_indent} spaces used for indentation, "\
-              "but the rest of the document was indented using #{next_line[/\A +/].to_s.length} spaces"
+              "but the rest of the document was indented using #{width} spaces"
             )
           end
           break
