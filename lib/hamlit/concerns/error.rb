@@ -11,6 +11,10 @@ module Hamlit
         [:code, code]
       end
 
+      def assert!(message)
+        raise CompileError.new(message)
+      end
+
       def assert_scan!(scanner, regexp)
         result = scanner.scan(regexp)
         unless result

@@ -1,6 +1,10 @@
+require 'hamlit/concerns/error'
+
 module Hamlit
   module Concerns
     module Indentable
+      include Concerns::Error
+
       EOF = -1
 
       def reset_indent
@@ -26,7 +30,7 @@ module Hamlit
         width = line[/\A +/].to_s.length
 
         return (width + 1) / 2 unless strict
-        raise SyntaxError if width.odd?
+        assert!('Expected to count even-width indent') if width.odd?
 
         width / 2
       end
