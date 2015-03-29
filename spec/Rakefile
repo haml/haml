@@ -21,7 +21,9 @@ task :convert do
   spec = <<-SPEC.unindent
     require "haml"
 
-    describe "haml" do
+    # This is an automatically generated spec converted by haml-spec.
+    # See: https://github.com/haml/haml-spec
+    describe "haml ugly mode" do
       def assert_pretty(haml, locals, options)
         engine = Haml::Engine.new(haml, options)
         hamlit = Hamlit::Template.new(options) { haml }
@@ -62,7 +64,7 @@ task :convert do
   end
 
   spec += "end\n"
-  File.write('haml_spec.rb', spec)
+  File.write('hamlit/ugly_spec.rb', spec)
 end
 
 task default: :convert

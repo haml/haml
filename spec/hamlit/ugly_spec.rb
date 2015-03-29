@@ -1,6 +1,8 @@
 require "haml"
 
-describe "haml" do
+# This is an automatically generated spec converted by haml-spec.
+# See: https://github.com/haml/haml-spec
+describe "haml ugly mode" do
   def assert_pretty(haml, locals, options)
     engine = Haml::Engine.new(haml, options)
     hamlit = Hamlit::Template.new(options) { haml }
@@ -575,7 +577,6 @@ describe "haml" do
       assert_ugly(haml, locals, options)
     end
 
-    # FIXME: it requires attribute sorter
     specify "Ruby-style tag with a CSS class and 'class' as a variable attribute" do
       haml    = %q{.hello{:class => var}}
       html    = %q{<div class='hello world'></div>}
@@ -692,7 +693,6 @@ describe "haml" do
 
     specify "content in a 'plain' filter" do
       haml    = %q{:plain
-  hello
   hello
 
 %p}
