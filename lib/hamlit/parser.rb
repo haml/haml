@@ -5,6 +5,7 @@ require 'hamlit/concerns/balanceable'
 require 'hamlit/concerns/indentable'
 require 'hamlit/concerns/line_reader'
 require 'hamlit/concerns/multiline'
+require 'hamlit/parsers/comment'
 require 'hamlit/parsers/doctype'
 require 'hamlit/parsers/script'
 
@@ -14,6 +15,7 @@ module Hamlit
     include Concerns::Indentable
     include Concerns::LineReader
     include Concerns::Multiline
+    include Parsers::Comment
     include Parsers::Doctype
     include Parsers::Script
 
@@ -147,23 +149,6 @@ module Hamlit
       else
         @outer_removal.delete(@current_indent)
       end
-    end
-
-    def parse_comment(scanner)
-      raise SyntaxError unless scanner.scan(/\//)
-
-      ast = [:html, :comment]
-      text = (scanner.scan(/.+/) || '').strip
-
-      if text.empty?
-        content = with_indented { parse_lines }
-        return ast << [:multi, [:static, "\n"], *content]
-      elsif !text.match(/\[.*\]/)
-        return ast << [:static, " #{text} "]
-      end
-
-      content = with_indented { parse_lines }
-      [:haml, :comment, text, content]
     end
 
     def parse_filter(scanner)
