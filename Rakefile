@@ -10,6 +10,20 @@ task :spec do
   system('bundle exec rspec --pattern spec/hamlit/**{,/\*/\*\*\}/\*_spec.rb')
 end
 
+namespace :spec do
+  namespace :update do
+    desc 'Generate converted ugly haml-spec'
+    task :ugly do
+      system('cd spec && rake ugly')
+    end
+
+    desc 'Generate converted pretty haml-spec'
+    task :pretty do
+      system('cd spec && rake pretty')
+    end
+  end
+end
+
 namespace :rails do
   desc 'Run Rails specs'
   task :spec do
@@ -17,18 +31,4 @@ namespace :rails do
   end
 end
 
-namespace :haml do
-  desc 'Run Haml Spec'
-  task :spec do
-    system('bundle exec rspec spec/haml_spec.rb')
-  end
-
-  namespace :spec do
-    desc 'Generate converted haml-spec'
-    task :update do
-      system('cd spec && rake convert')
-    end
-  end
-end
-
-task default: [:spec, 'rails:spec', 'haml:spec']
+task default: [:spec, 'rails:spec']

@@ -4,26 +4,13 @@ require 'json'
 require 'unindent'
 require 'open-uri'
 
-def generate_spec(test, locals, options)
-  <<-SPEC
-    specify \"#{test[:name]}\" do
-      haml    = %q{#{test[:haml]}}
-      html    = %q{#{test[:html]}}
-      locals  = #{locals}
-      options = #{options}
-      assert_ugly(haml, locals, options)
-    end
-  SPEC
-end
-
-desc 'Convert tests.json into rspec tests'
-task :convert do
+def generate_spec(mode)
   spec = <<-SPEC.unindent
     require "haml"
 
     # This is an automatically generated spec converted by haml-spec.
     # See: https://github.com/haml/haml-spec
-    describe "haml ugly mode" do
+    describe "haml #{mode} mode" do
       def assert_pretty(haml, locals, options)
         engine = Haml::Engine.new(haml, options)
         hamlit = Hamlit::Template.new(options) { haml }
@@ -58,13 +45,35 @@ task :convert do
       options = Hash[(test[:config] || {}).map {|x, y| [x.to_sym, y]}]
       options[:format] = options[:format].to_sym if options[:format]
 
-      generate_spec(test, locals, options)
+      generate_specify(test, locals, options, mode)
     }.join("\n")
     spec += "  end\n"
   end
 
   spec += "end\n"
-  File.write('hamlit/ugly_spec.rb', spec)
+  File.write("hamlit/#{mode}_spec.rb", spec)
 end
 
-task default: :convert
+def generate_specify(test, locals, options, mode)
+  <<-SPEC
+    specify \"#{test[:name]}\" do
+      haml    = %q{#{test[:haml]}}
+      html    = %q{#{test[:html]}}
+      locals  = #{locals}
+      options = #{options}
+      assert_#{mode}(haml, locals, options)
+    end
+  SPEC
+end
+
+desc 'Convert tests.json into ugly rspec tests'
+task :ugly do
+  generate_spec(:ugly)
+end
+
+desc 'Convert tests.json into pretty rspec tests'
+task :pretty do
+  generate_spec(:pretty)
+end
+
+task default: [:ugly, :pretty]
