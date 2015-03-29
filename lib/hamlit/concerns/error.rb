@@ -1,13 +1,10 @@
 module Hamlit
-  class SyntaxError < StandardError
-  end
-
-  class CompileError < StandardError
-  end
+  class SyntaxError < StandardError; end
+  class CompileError < StandardError; end
 
   module Concerns
     module Error
-      # Template engine must raise Exception on runtime to
+      # Template engine should raise Exception on runtime to
       # show template's error backtrace.
       def syntax_error(message)
         code = %Q{raise Hamlit::SyntaxError.new(%q{#{message}})}
@@ -15,9 +12,11 @@ module Hamlit
       end
 
       def assert_scan!(scanner, regexp)
-        unless scanner.scan(regexp)
+        result = scanner.scan(regexp)
+        unless result
           raise CompileError.new("Expected to scan #{regexp} but got nil")
         end
+        result
       end
     end
   end

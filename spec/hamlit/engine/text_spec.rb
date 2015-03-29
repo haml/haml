@@ -11,5 +11,19 @@ describe Hamlit::Engine do
         <ht2ml>
       HTML
     end
+
+    it 'renders . or # which is not continued by tag name' do
+      assert_render(<<-HAML, <<-HTML)
+        .
+        .*
+        #
+        #+
+      HAML
+        .
+        .*
+        #
+        #+
+      HTML
+    end
   end
 end

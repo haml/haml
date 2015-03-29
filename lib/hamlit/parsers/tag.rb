@@ -1,9 +1,11 @@
+require 'hamlit/concerns/error'
 require 'hamlit/concerns/indentable'
 require 'hamlit/helpers'
 
 module Hamlit
   module Parsers
     module Tag
+      include Concerns::Error
       include Concerns::Indentable
 
       TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
@@ -48,8 +50,7 @@ module Hamlit
         attributes = Hash.new { |h, k| h[k] = [] }
 
         while prefix = scanner.scan(/[#.]/)
-          name = scanner.scan(TAG_ID_CLASS_REGEXP)
-          raise SyntaxError unless name
+          name = assert_scan!(scanner, TAG_ID_CLASS_REGEXP)
 
           case prefix
           when '#'
