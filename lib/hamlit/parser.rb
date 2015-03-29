@@ -6,6 +6,7 @@ require 'hamlit/parsers/doctype'
 require 'hamlit/parsers/filter'
 require 'hamlit/parsers/multiline'
 require 'hamlit/parsers/script'
+require 'hamlit/parsers/text'
 require 'hamlit/parsers/whitespace'
 
 module Hamlit
@@ -16,6 +17,7 @@ module Hamlit
     include Parsers::Filter
     include Parsers::Multiline
     include Parsers::Script
+    include Parsers::Text
     include Parsers::Whitespace
 
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
@@ -124,12 +126,6 @@ module Hamlit
       end
       content += with_indented { parse_lines }
       ast << content
-      ast
-    end
-
-    def parse_text(scanner)
-      ast = [:haml, :text]
-      ast << scanner.scan(/.+/).strip
       ast
     end
 
