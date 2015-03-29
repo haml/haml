@@ -659,8 +659,7 @@ describe "haml" do
   end
 
   context "conditional comments" do
-    # FIXME: I'll implement later
-    pending "a conditional comment" do
+    specify "a conditional comment" do
       haml    = %q{/[if IE]
   %p a}
       html    = %q{<!--[if IE]>

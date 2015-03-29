@@ -202,16 +202,17 @@ module Hamlit
       raise SyntaxError unless scanner.scan(/\//)
 
       ast = [:html, :comment]
-      if scanner.rest.match(/[^ ]/)
-        ast << [:static, " #{scanner.scan(/.+/).strip} "]
-        return ast
+      text = (scanner.scan(/.+/) || '').strip
+
+      if text.empty?
+        content = with_indented { parse_lines }
+        return ast << [:multi, [:static, "\n"], *content]
+      elsif !text.match(/\[.*\]/)
+        return ast << [:static, " #{text} "]
       end
 
-      # FIXME: parse_lines may not be enough
-      content = [:multi, [:static, "\n"]]
-      content += with_indented { parse_lines }
-      ast << content
-      ast
+      content = with_indented { parse_lines }
+      [:haml, :comment, text, content]
     end
 
     def parse_filter(scanner)
