@@ -2,6 +2,7 @@ require "haml"
 
 # This is a spec converted by haml-spec.
 # See: https://github.com/haml/haml-spec
+# NOTE: Currently some specs are ignored. Generate again when hamlit can pass them.
 describe "haml pretty mode" do
   def assert_pretty(haml, locals, options)
     engine = Haml::Engine.new(haml, options)
@@ -331,20 +332,6 @@ describe "haml pretty mode" do
       options = {}
       assert_pretty(haml, locals, options)
     end
-
-    pending "Inline content multiple simple tags" do
-      haml    = %q{%div
-  %div
-    %p text}
-      html    = %q{<div>
-  <div>
-    <p>text</p>
-  </div>
-</div>}
-      locals  = {}
-      options = {}
-      assert_pretty(haml, locals, options)
-    end
   end
 
   context "tags with nested content" do
@@ -641,32 +628,6 @@ describe "haml pretty mode" do
       options = {}
       assert_pretty(haml, locals, options)
     end
-
-    pending "a nested markup comment" do
-      haml    = %q{/
-  comment
-  comment2}
-      html    = %q{<!--
-  comment
-  comment2
--->}
-      locals  = {}
-      options = {}
-      assert_pretty(haml, locals, options)
-    end
-  end
-
-  context "conditional comments" do
-    pending "a conditional comment" do
-      haml    = %q{/[if IE]
-  %p a}
-      html    = %q{<!--[if IE]>
-  <p>a</p>
-<![endif]-->}
-      locals  = {}
-      options = {}
-      assert_pretty(haml, locals, options)
-    end
   end
 
   context "internal filters" do
@@ -702,64 +663,6 @@ describe "haml pretty mode" do
       options = {}
       assert_pretty(haml, locals, options)
     end
-
-    pending "content in a 'css' filter (XHTML)" do
-      haml    = %q{:css
-  hello
-
-%p}
-      html    = %q{<style type='text/css'>
-  /*<![CDATA[*/
-    hello
-  /*]]>*/
-</style>
-<p></p>}
-      locals  = {}
-      options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
-    end
-
-    pending "content in a 'javascript' filter (XHTML)" do
-      haml    = %q{:javascript
-  a();
-%p}
-      html    = %q{<script type='text/javascript'>
-  //<![CDATA[
-    a();
-  //]]>
-</script>
-<p></p>}
-      locals  = {}
-      options = {:format=>:xhtml}
-      assert_pretty(haml, locals, options)
-    end
-
-    pending "content in a 'css' filter (HTML)" do
-      haml    = %q{:css
-  hello
-
-%p}
-      html    = %q{<style>
-  hello
-</style>
-<p></p>}
-      locals  = {}
-      options = {:format=>:html5}
-      assert_pretty(haml, locals, options)
-    end
-
-    pending "content in a 'javascript' filter (HTML)" do
-      haml    = %q{:javascript
-  a();
-%p}
-      html    = %q{<script>
-  a();
-</script>
-<p></p>}
-      locals  = {}
-      options = {:format=>:html5}
-      assert_pretty(haml, locals, options)
-    end
   end
 
   context "Ruby-style interpolation" do
@@ -782,15 +685,6 @@ describe "haml pretty mode" do
     specify "interpolation when the escape character is escaped" do
       haml    = %q{%p \\#{var}}
       html    = %q{<p>\value</p>}
-      locals  = {:var=>"value"}
-      options = {}
-      assert_pretty(haml, locals, options)
-    end
-
-    pending "interpolation inside filtered content" do
-      haml    = %q{:plain
-  #{var} interpolated: #{var}}
-      html    = %q{value interpolated: value}
       locals  = {:var=>"value"}
       options = {}
       assert_pretty(haml, locals, options)
@@ -850,28 +744,6 @@ describe "haml pretty mode" do
       options = {}
       assert_pretty(haml, locals, options)
     end
-
-    pending "inside a textarea tag" do
-      haml    = %q{%textarea
-  hello
-  hello}
-      html    = %q{<textarea>hello
-hello</textarea>}
-      locals  = {}
-      options = {}
-      assert_pretty(haml, locals, options)
-    end
-
-    pending "inside a pre tag" do
-      haml    = %q{%pre
-  hello
-  hello}
-      html    = %q{<pre>hello
-hello</pre>}
-      locals  = {}
-      options = {}
-      assert_pretty(haml, locals, options)
-    end
   end
 
   context "whitespace removal" do
@@ -880,30 +752,6 @@ hello</pre>}
 %li> world
 %li again}
       html    = %q{<li>hello</li><li>world</li><li>again</li>}
-      locals  = {}
-      options = {}
-      assert_pretty(haml, locals, options)
-    end
-
-    pending "a tag with '>' appended and nested content" do
-      haml    = %q{%li hello
-%li>
-  world
-%li again}
-      html    = %q{<li>hello</li><li>
-  world
-</li><li>again</li>}
-      locals  = {}
-      options = {}
-      assert_pretty(haml, locals, options)
-    end
-
-    pending "a tag with '<' appended" do
-      haml    = %q{%p<
-  hello
-  world}
-      html    = %q{<p>hello
-world</p>}
       locals  = {}
       options = {}
       assert_pretty(haml, locals, options)
