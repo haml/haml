@@ -1,3 +1,4 @@
+require 'hamlit/concerns/error'
 require 'hamlit/concerns/indentable'
 
 module Hamlit
@@ -6,7 +7,7 @@ module Hamlit
       include Concerns::Indentable
 
       def parse_comment(scanner)
-        raise SyntaxError unless scanner.scan(/\//)
+        assert_scan!(scanner, /\//)
 
         ast = [:html, :comment]
         text = (scanner.scan(/.+/) || '').strip

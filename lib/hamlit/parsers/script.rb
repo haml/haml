@@ -1,14 +1,14 @@
 require 'hamlit/concerns/escapable'
+require 'hamlit/concerns/error'
 require 'hamlit/concerns/included'
 require 'hamlit/concerns/indentable'
-require 'hamlit/concerns/syntax_error'
 
 module Hamlit
   module Parsers
     module Script
       extend Concerns::Included
+      include Concerns::Error
       include Concerns::Indentable
-      include Concerns::SyntaxError
 
       INTERNAL_STATEMENTS = %w[else elsif when].freeze
 
@@ -17,7 +17,7 @@ module Hamlit
       end
 
       def parse_script(scanner, force_escape: false, disable_escape: false)
-        raise SyntaxError unless scanner.scan(/=|&=|!=/)
+        assert_scan!(scanner, /=|&=|!=/)
 
         code = scan_code(scanner)
         return syntax_error("There's no Ruby code for = to evaluate.") if code.empty?
@@ -34,14 +34,14 @@ module Hamlit
       end
 
       def parse_preserve(scanner)
-        raise SyntaxError unless scanner.scan(/~/)
+        assert_scan!(scanner, /~/)
 
         code = scan_code(scanner)
         escape_html([:haml, :preserve, code])
       end
 
       def parse_silent_script(scanner)
-        raise SyntaxError unless scanner.scan(/-/)
+        assert_scan!(scanner, /-/)
         if scanner.scan(/#/)
           with_indented { skip_lines }
           return [:newline]

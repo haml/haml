@@ -1,8 +1,10 @@
+require 'hamlit/concerns/error'
+
 module Hamlit
   module Parsers
     module Doctype
       def parse_doctype(scanner)
-        raise SyntaxError unless scanner.scan(/!!!/)
+        assert_scan!(scanner, /!!!/)
 
         type = nil
         if scanner.scan(/ +/) && scanner.rest?

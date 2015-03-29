@@ -1,3 +1,4 @@
+require 'hamlit/concerns/error'
 require 'hamlit/concerns/indentable'
 
 module Hamlit
@@ -6,7 +7,7 @@ module Hamlit
       include Concerns::Indentable
 
       def parse_filter(scanner)
-        raise SyntaxError unless scanner.scan(/:/)
+        assert_scan!(scanner, /:/)
 
         name = scanner.scan(/.+/).strip
         lines = with_indented { read_lines }
