@@ -4,6 +4,7 @@ require 'temple'
 require 'hamlit/parsers/attribute'
 require 'hamlit/parsers/comment'
 require 'hamlit/parsers/doctype'
+require 'hamlit/parsers/filter'
 require 'hamlit/parsers/multiline'
 require 'hamlit/parsers/script'
 
@@ -12,6 +13,7 @@ module Hamlit
     include Parsers::Attribute
     include Parsers::Comment
     include Parsers::Doctype
+    include Parsers::Filter
     include Parsers::Multiline
     include Parsers::Script
 
@@ -145,14 +147,6 @@ module Hamlit
       else
         @outer_removal.delete(@current_indent)
       end
-    end
-
-    def parse_filter(scanner)
-      raise SyntaxError unless scanner.scan(/:/)
-
-      name = scanner.scan(/.+/).strip
-      lines = with_indented { read_lines }
-      [:haml, :filter, name, lines]
     end
 
     def parse_text(scanner)
