@@ -17,7 +17,12 @@ module Hamlit
       private
 
       def parse_old_attributes(scanner)
-        [read_braces(scanner)].compact
+        return [] unless scanner.match?(/{/)
+
+        tokens = Ripper.lex(scanner.rest)
+        tokens = fetch_balanced_braces(tokens)
+        scanner.pos += tokens.last.first.last + 1
+        [tokens.map(&:last).join]
       end
 
       def parse_new_attributes(scanner)
@@ -30,7 +35,7 @@ module Hamlit
           tokens = Ripper.lex(scanner.rest)
         end
 
-        tokens      = fetch_balanced_parentheses(tokens)
+        tokens = fetch_balanced_parentheses(tokens)
         scanner.pos += tokens.last.first.last + 1
         [tokens.map(&:last).join]
       end

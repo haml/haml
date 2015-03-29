@@ -3,28 +3,6 @@ require 'ripper'
 module Hamlit
   module Concerns
     module Balanceable
-      # Return a string balancing count of braces.
-      # And change the scanner position to the last brace.
-      def read_braces(scanner)
-        return unless scanner.match?(/{/)
-
-        all_tokens  = Ripper.lex(scanner.rest)
-        tokens      = fetch_balanced_braces(all_tokens)
-        scanner.pos += tokens.last.first.last + 1
-        tokens.map(&:last).join
-      end
-
-      def read_parentheses(scanner)
-        return unless scanner.match?(/\(/)
-
-        all_tokens  = Ripper.lex(scanner.rest)
-        tokens      = fetch_balanced_parentheses(all_tokens)
-        scanner.pos += tokens.last.first.last + 1
-        tokens.map(&:last).join
-      end
-
-      private
-
       # Given Ripper tokens, return first brace-balanced tokens
       def fetch_balanced_braces(all_tokens)
         tokens     = []
@@ -61,6 +39,8 @@ module Hamlit
 
         tokens
       end
+
+      private
 
       def balanced_parens_exist?(tokens)
         open_count = 0
