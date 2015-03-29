@@ -242,7 +242,18 @@ module Hamlit
     end
 
     def parse_new_attributes(scanner)
-      [read_parentheses(scanner)].compact
+      return [] unless scanner.match?(/\(/)
+
+      tokens = Ripper.lex(scanner.rest)
+      until balanced_parens_exist?(tokens)
+        @current_lineno += 1
+        scanner.concat(current_line)
+        tokens = Ripper.lex(scanner.rest)
+      end
+
+      tokens      = fetch_balanced_parentheses(tokens)
+      scanner.pos += tokens.last.first.last + 1
+      [tokens.map(&:last).join]
     end
 
     def parse_tag_id_and_class(scanner)

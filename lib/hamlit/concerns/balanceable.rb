@@ -61,6 +61,22 @@ module Hamlit
 
         tokens
       end
+
+      def balanced_parens_exist?(tokens)
+        open_count = 0
+
+        tokens.each do |token|
+          (row, col), type, str = token
+          case type
+          when :on_lparen then open_count += 1
+          when :on_rparen then open_count -= 1
+          end
+
+          break if open_count == 0
+        end
+
+        open_count == 0
+      end
     end
   end
 end
