@@ -2,20 +2,20 @@ require 'set'
 require 'strscan'
 require 'temple'
 require 'hamlit/concerns/balanceable'
-require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/indentable'
 require 'hamlit/concerns/line_reader'
 require 'hamlit/concerns/multiline'
 require 'hamlit/parsers/doctype'
+require 'hamlit/parsers/script'
 
 module Hamlit
   class Parser < Temple::Parser
     include Concerns::Balanceable
-    include Concerns::Escapable
     include Concerns::Indentable
     include Concerns::LineReader
     include Concerns::Multiline
     include Parsers::Doctype
+    include Parsers::Script
 
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
     INTERNAL_STATEMENTS = %w[else elsif when].freeze
@@ -81,7 +81,7 @@ module Hamlit
       when '='
         parse_script(scanner)
       when '~'
-        parse_preservation(scanner)
+        parse_preserve(scanner)
       when '-'
         parse_silent_script(scanner)
       when '/'
@@ -147,46 +147,6 @@ module Hamlit
       else
         @outer_removal.delete(@current_indent)
       end
-    end
-
-    def parse_script(scanner, force_escape: false, disable_escape: false)
-      raise SyntaxError unless scanner.scan(/=|&=|!=/)
-
-      code = scan_code(scanner)
-      unless has_block?
-        return [:dynamic, code] if disable_escape
-        return escape_html([:dynamic, code], force_escape)
-      end
-
-      # FIXME: parse != or &= for block
-      ast = [:haml, :script, code]
-      ast += with_indented { parse_lines }
-      ast << [:code, 'end']
-      ast
-    end
-
-    def parse_preservation(scanner)
-      raise SyntaxError unless scanner.scan(/~/)
-
-      code = scan_code(scanner)
-      escape_html([:haml, :preserve, code])
-    end
-
-    def parse_silent_script(scanner)
-      raise SyntaxError unless scanner.scan(/-/)
-      if scanner.scan(/#/)
-        with_indented { skip_lines }
-        return [:newline]
-      end
-
-      ast = [:code]
-      ast << scan_code(scanner)
-      return ast unless has_block?
-
-      ast = [:multi, ast]
-      ast += with_indented { parse_lines }
-      ast << [:code, 'end'] unless same_indent?(next_line) && internal_statement?(next_line)
-      ast
     end
 
     def parse_comment(scanner)
@@ -289,19 +249,6 @@ module Hamlit
 
     def has_block?
       next_indent == @current_indent + 1
-    end
-
-    def scan_code(scanner)
-      code = ''
-      loop do
-        code += scanner.scan(/.+/).strip
-        break unless code =~ /,\Z/
-
-        @current_lineno += 1
-        scanner = StringScanner.new(current_line)
-        code += ' '
-      end
-      code
     end
   end
 end
