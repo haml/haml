@@ -2,7 +2,7 @@ require "haml"
 
 # This is a spec converted by haml-spec.
 # See: https://github.com/haml/haml-spec
-describe "haml ugly mode" do
+describe "haml pretty mode" do
   def assert_pretty(haml, locals, options)
     engine = Haml::Engine.new(haml, options)
     hamlit = Hamlit::Template.new(options) { haml }
@@ -19,7 +19,7 @@ describe "haml ugly mode" do
       html    = %q{<?xml version='1.0' encoding='utf-8' ?>}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an XHTML default (transitional) doctype" do
@@ -27,7 +27,7 @@ describe "haml ugly mode" do
       html    = %q{<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an XHTML 1.1 doctype" do
@@ -35,7 +35,7 @@ describe "haml ugly mode" do
       html    = %q{<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an XHTML 1.2 mobile doctype" do
@@ -43,7 +43,7 @@ describe "haml ugly mode" do
       html    = %q{<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an XHTML 1.1 basic doctype" do
@@ -51,7 +51,7 @@ describe "haml ugly mode" do
       html    = %q{<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an XHTML 1.0 frameset doctype" do
@@ -59,7 +59,7 @@ describe "haml ugly mode" do
       html    = %q{<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an HTML 5 doctype with XHTML syntax" do
@@ -67,7 +67,7 @@ describe "haml ugly mode" do
       html    = %q{<!DOCTYPE html>}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an HTML 5 XML prolog (silent)" do
@@ -75,7 +75,7 @@ describe "haml ugly mode" do
       html    = %q{}
       locals  = {}
       options = {:format=>:html5}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an HTML 5 doctype" do
@@ -83,7 +83,7 @@ describe "haml ugly mode" do
       html    = %q{<!DOCTYPE html>}
       locals  = {}
       options = {:format=>:html5}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an HTML 4 XML prolog (silent)" do
@@ -91,7 +91,7 @@ describe "haml ugly mode" do
       html    = %q{}
       locals  = {}
       options = {:format=>:html4}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an HTML 4 default (transitional) doctype" do
@@ -99,7 +99,7 @@ describe "haml ugly mode" do
       html    = %q{<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">}
       locals  = {}
       options = {:format=>:html4}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an HTML 4 frameset doctype" do
@@ -107,7 +107,7 @@ describe "haml ugly mode" do
       html    = %q{<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">}
       locals  = {}
       options = {:format=>:html4}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an HTML 4 strict doctype" do
@@ -115,7 +115,7 @@ describe "haml ugly mode" do
       html    = %q{<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">}
       locals  = {}
       options = {:format=>:html4}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -125,7 +125,7 @@ describe "haml ugly mode" do
       html    = %q{<p></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a self-closing tag (XHTML)" do
@@ -133,7 +133,7 @@ describe "haml ugly mode" do
       html    = %q{<meta />}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a self-closing tag (HTML4)" do
@@ -141,7 +141,7 @@ describe "haml ugly mode" do
       html    = %q{<meta>}
       locals  = {}
       options = {:format=>:html4}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a self-closing tag (HTML5)" do
@@ -149,7 +149,7 @@ describe "haml ugly mode" do
       html    = %q{<meta>}
       locals  = {}
       options = {:format=>:html5}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a self-closing tag ('/' modifier + XHTML)" do
@@ -157,7 +157,7 @@ describe "haml ugly mode" do
       html    = %q{<zzz />}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a self-closing tag ('/' modifier + HTML5)" do
@@ -165,7 +165,7 @@ describe "haml ugly mode" do
       html    = %q{<zzz>}
       locals  = {}
       options = {:format=>:html5}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a tag with a CSS class" do
@@ -173,7 +173,7 @@ describe "haml ugly mode" do
       html    = %q{<p class='class1'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a tag with multiple CSS classes" do
@@ -181,7 +181,7 @@ describe "haml ugly mode" do
       html    = %q{<p class='class1 class2'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a tag with a CSS id" do
@@ -189,7 +189,7 @@ describe "haml ugly mode" do
       html    = %q{<p id='id1'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a tag with multiple CSS id's" do
@@ -197,7 +197,7 @@ describe "haml ugly mode" do
       html    = %q{<p id='id2'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a tag with a class followed by an id" do
@@ -205,7 +205,7 @@ describe "haml ugly mode" do
       html    = %q{<p class='class1' id='id1'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a tag with an id followed by a class" do
@@ -213,7 +213,7 @@ describe "haml ugly mode" do
       html    = %q{<p class='class1' id='id1'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an implicit div with a CSS id" do
@@ -221,7 +221,7 @@ describe "haml ugly mode" do
       html    = %q{<div id='id1'></div>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "an implicit div with a CSS class" do
@@ -229,7 +229,7 @@ describe "haml ugly mode" do
       html    = %q{<div class='class1'></div>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "multiple simple Haml tags" do
@@ -243,7 +243,7 @@ describe "haml ugly mode" do
 </div>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -253,7 +253,7 @@ describe "haml ugly mode" do
       html    = %q{<ns:tag></ns:tag>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a tag with underscores" do
@@ -261,7 +261,7 @@ describe "haml ugly mode" do
       html    = %q{<snake_case></snake_case>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a tag with dashes" do
@@ -269,7 +269,7 @@ describe "haml ugly mode" do
       html    = %q{<dashed-tag></dashed-tag>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a tag with camelCase" do
@@ -277,7 +277,7 @@ describe "haml ugly mode" do
       html    = %q{<camelCase></camelCase>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a tag with PascalCase" do
@@ -285,7 +285,7 @@ describe "haml ugly mode" do
       html    = %q{<PascalCase></PascalCase>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -295,7 +295,7 @@ describe "haml ugly mode" do
       html    = %q{<div class='123'></div>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a class with underscores" do
@@ -303,7 +303,7 @@ describe "haml ugly mode" do
       html    = %q{<div class='__'></div>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a class with dashes" do
@@ -311,7 +311,7 @@ describe "haml ugly mode" do
       html    = %q{<div class='--'></div>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -321,7 +321,7 @@ describe "haml ugly mode" do
       html    = %q{<p>hello</p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Inline content tag with CSS" do
@@ -329,10 +329,10 @@ describe "haml ugly mode" do
       html    = %q{<p class='class1'>hello</p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
-    specify "Inline content multiple simple tags" do
+    pending "Inline content multiple simple tags" do
       haml    = %q{%div
   %div
     %p text}
@@ -343,7 +343,7 @@ describe "haml ugly mode" do
 </div>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -356,7 +356,7 @@ describe "haml ugly mode" do
 </p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Nested content tag with CSS" do
@@ -367,7 +367,7 @@ describe "haml ugly mode" do
 </p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Nested content multiple simple tags" do
@@ -384,7 +384,7 @@ describe "haml ugly mode" do
 </div>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -394,7 +394,7 @@ describe "haml ugly mode" do
       html    = %q{<p a='b'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "HTML-style multiple attributes" do
@@ -402,7 +402,7 @@ describe "haml ugly mode" do
       html    = %q{<p a='b' c='d'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "HTML-style attributes separated with newlines" do
@@ -411,7 +411,7 @@ describe "haml ugly mode" do
       html    = %q{<p a='b' c='d'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "HTML-style interpolated attribute" do
@@ -419,7 +419,7 @@ describe "haml ugly mode" do
       html    = %q{<p a='value'></p>}
       locals  = {:var=>"value"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "HTML-style 'class' as an attribute" do
@@ -427,7 +427,7 @@ describe "haml ugly mode" do
       html    = %q{<p class='class1'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "HTML-style tag with a CSS class and 'class' as an attribute" do
@@ -435,7 +435,7 @@ describe "haml ugly mode" do
       html    = %q{<p class='class1 class2'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "HTML-style tag with 'id' as an attribute" do
@@ -443,7 +443,7 @@ describe "haml ugly mode" do
       html    = %q{<p id='1'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "HTML-style tag with a CSS id and 'id' as an attribute" do
@@ -451,7 +451,7 @@ describe "haml ugly mode" do
       html    = %q{<p id='id_1'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "HTML-style tag with a variable attribute" do
@@ -459,7 +459,7 @@ describe "haml ugly mode" do
       html    = %q{<p class='hello'></p>}
       locals  = {:var=>"hello"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "HTML-style tag with a CSS class and 'class' as a variable attribute" do
@@ -467,7 +467,7 @@ describe "haml ugly mode" do
       html    = %q{<div class='hello world'></div>}
       locals  = {:var=>"world"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "HTML-style tag multiple CSS classes (sorted correctly)" do
@@ -475,7 +475,7 @@ describe "haml ugly mode" do
       html    = %q{<div class='a z'></div>}
       locals  = {:var=>"a"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "HTML-style tag with an atomic attribute" do
@@ -483,7 +483,7 @@ describe "haml ugly mode" do
       html    = %q{<a flag></a>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -493,7 +493,7 @@ describe "haml ugly mode" do
       html    = %q{<p a='b'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style attributes hash with whitespace" do
@@ -501,7 +501,7 @@ describe "haml ugly mode" do
       html    = %q{<p a='b'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style interpolated attribute" do
@@ -509,7 +509,7 @@ describe "haml ugly mode" do
       html    = %q{<p a='value'></p>}
       locals  = {:var=>"value"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style multiple attributes" do
@@ -517,7 +517,7 @@ describe "haml ugly mode" do
       html    = %q{<p a='b' c='d'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style attributes separated with newlines" do
@@ -526,7 +526,7 @@ describe "haml ugly mode" do
       html    = %q{<p a='b' c='d'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style 'class' as an attribute" do
@@ -534,7 +534,7 @@ describe "haml ugly mode" do
       html    = %q{<p class='class1'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style tag with a CSS class and 'class' as an attribute" do
@@ -542,7 +542,7 @@ describe "haml ugly mode" do
       html    = %q{<p class='class1 class2'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style tag with 'id' as an attribute" do
@@ -550,7 +550,7 @@ describe "haml ugly mode" do
       html    = %q{<p id='1'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style tag with a CSS id and 'id' as an attribute" do
@@ -558,7 +558,7 @@ describe "haml ugly mode" do
       html    = %q{<p id='id_1'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style tag with a CSS id and a numeric 'id' as an attribute" do
@@ -566,7 +566,7 @@ describe "haml ugly mode" do
       html    = %q{<p id='id_1'></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style tag with a variable attribute" do
@@ -574,7 +574,7 @@ describe "haml ugly mode" do
       html    = %q{<p class='hello'></p>}
       locals  = {:var=>"hello"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style tag with a CSS class and 'class' as a variable attribute" do
@@ -582,7 +582,7 @@ describe "haml ugly mode" do
       html    = %q{<div class='hello world'></div>}
       locals  = {:var=>"world"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "Ruby-style tag multiple CSS classes (sorted correctly)" do
@@ -590,7 +590,7 @@ describe "haml ugly mode" do
       html    = %q{<div class='a z'></div>}
       locals  = {:var=>"a"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -600,7 +600,7 @@ describe "haml ugly mode" do
       html    = %q{}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a nested silent comment" do
@@ -609,7 +609,7 @@ describe "haml ugly mode" do
       html    = %q{}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a multiply nested silent comment" do
@@ -619,7 +619,7 @@ describe "haml ugly mode" do
       html    = %q{}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "a multiply nested silent comment with inconsistent indents" do
@@ -629,7 +629,7 @@ describe "haml ugly mode" do
       html    = %q{}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -639,10 +639,10 @@ describe "haml ugly mode" do
       html    = %q{<!-- comment -->}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
-    specify "a nested markup comment" do
+    pending "a nested markup comment" do
       haml    = %q{/
   comment
   comment2}
@@ -652,12 +652,12 @@ describe "haml ugly mode" do
 -->}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
   context "conditional comments" do
-    specify "a conditional comment" do
+    pending "a conditional comment" do
       haml    = %q{/[if IE]
   %p a}
       html    = %q{<!--[if IE]>
@@ -665,7 +665,7 @@ describe "haml ugly mode" do
 <![endif]-->}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -676,7 +676,7 @@ describe "haml ugly mode" do
       html    = %q{&lt;&amp;&quot;&gt;}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "content in a 'preserve' filter" do
@@ -688,7 +688,7 @@ describe "haml ugly mode" do
 <p></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "content in a 'plain' filter" do
@@ -700,10 +700,10 @@ describe "haml ugly mode" do
 <p></p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
-    specify "content in a 'css' filter (XHTML)" do
+    pending "content in a 'css' filter (XHTML)" do
       haml    = %q{:css
   hello
 
@@ -716,10 +716,10 @@ describe "haml ugly mode" do
 <p></p>}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
-    specify "content in a 'javascript' filter (XHTML)" do
+    pending "content in a 'javascript' filter (XHTML)" do
       haml    = %q{:javascript
   a();
 %p}
@@ -731,10 +731,10 @@ describe "haml ugly mode" do
 <p></p>}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
-    specify "content in a 'css' filter (HTML)" do
+    pending "content in a 'css' filter (HTML)" do
       haml    = %q{:css
   hello
 
@@ -745,10 +745,10 @@ describe "haml ugly mode" do
 <p></p>}
       locals  = {}
       options = {:format=>:html5}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
-    specify "content in a 'javascript' filter (HTML)" do
+    pending "content in a 'javascript' filter (HTML)" do
       haml    = %q{:javascript
   a();
 %p}
@@ -758,7 +758,7 @@ describe "haml ugly mode" do
 <p></p>}
       locals  = {}
       options = {:format=>:html5}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -768,7 +768,7 @@ describe "haml ugly mode" do
       html    = %q{<p>value</p>}
       locals  = {:var=>"value"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "no interpolation when escaped" do
@@ -776,7 +776,7 @@ describe "haml ugly mode" do
       html    = %q{<p>#{var}</p>}
       locals  = {:var=>"value"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "interpolation when the escape character is escaped" do
@@ -784,16 +784,16 @@ describe "haml ugly mode" do
       html    = %q{<p>\value</p>}
       locals  = {:var=>"value"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
-    specify "interpolation inside filtered content" do
+    pending "interpolation inside filtered content" do
       haml    = %q{:plain
   #{var} interpolated: #{var}}
       html    = %q{value interpolated: value}
       locals  = {:var=>"value"}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -803,7 +803,7 @@ describe "haml ugly mode" do
       html    = %q{&lt;&quot;&amp;&gt;}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "code following '=' when escape_haml is set to true" do
@@ -811,7 +811,7 @@ describe "haml ugly mode" do
       html    = %q{&lt;&quot;&amp;&gt;}
       locals  = {}
       options = {:escape_html=>"true"}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "code following '!=' when escape_haml is set to true" do
@@ -819,7 +819,7 @@ describe "haml ugly mode" do
       html    = %q{<"&>}
       locals  = {}
       options = {:escape_html=>"true"}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -829,7 +829,7 @@ describe "haml ugly mode" do
       html    = %q{<input checked='checked' />}
       locals  = {}
       options = {:format=>:xhtml}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
     specify "boolean attribute with HTML" do
@@ -837,7 +837,7 @@ describe "haml ugly mode" do
       html    = %q{<input checked>}
       locals  = {}
       options = {:format=>:html5}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -848,10 +848,10 @@ describe "haml ugly mode" do
 <pre>Bar&#x000A;Baz</pre>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
-    specify "inside a textarea tag" do
+    pending "inside a textarea tag" do
       haml    = %q{%textarea
   hello
   hello}
@@ -859,10 +859,10 @@ describe "haml ugly mode" do
 hello</textarea>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
-    specify "inside a pre tag" do
+    pending "inside a pre tag" do
       haml    = %q{%pre
   hello
   hello}
@@ -870,7 +870,7 @@ hello</textarea>}
 hello</pre>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 
@@ -882,10 +882,10 @@ hello</pre>}
       html    = %q{<li>hello</li><li>world</li><li>again</li>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
-    specify "a tag with '>' appended and nested content" do
+    pending "a tag with '>' appended and nested content" do
       haml    = %q{%li hello
 %li>
   world
@@ -895,10 +895,10 @@ hello</pre>}
 </li><li>again</li>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
 
-    specify "a tag with '<' appended" do
+    pending "a tag with '<' appended" do
       haml    = %q{%p<
   hello
   world}
@@ -906,7 +906,7 @@ hello</pre>}
 world</p>}
       locals  = {}
       options = {}
-      assert_ugly(haml, locals, options)
+      assert_pretty(haml, locals, options)
     end
   end
 end

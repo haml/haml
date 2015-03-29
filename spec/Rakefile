@@ -8,7 +8,7 @@ def generate_spec(mode)
   spec = <<-SPEC.unindent
     require "haml"
 
-    # This is an automatically generated spec converted by haml-spec.
+    # This is a spec converted by haml-spec.
     # See: https://github.com/haml/haml-spec
     describe "haml #{mode} mode" do
       def assert_pretty(haml, locals, options)
