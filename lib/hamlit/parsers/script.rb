@@ -1,10 +1,12 @@
 require 'hamlit/concerns/included'
+require 'hamlit/concerns/indentable'
 require 'hamlit/concerns/escapable'
 
 module Hamlit
   module Parsers
     module Script
       extend Concerns::Included
+      include Concerns::Indentable
 
       included do
         include Concerns::Escapable

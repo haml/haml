@@ -1,6 +1,10 @@
+require 'hamlit/concerns/indentable'
+
 module Hamlit
   module Parsers
     module Comment
+      include Concerns::Indentable
+
       def parse_comment(scanner)
         raise SyntaxError unless scanner.scan(/\//)
 

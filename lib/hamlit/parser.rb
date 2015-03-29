@@ -2,7 +2,6 @@ require 'set'
 require 'strscan'
 require 'temple'
 require 'hamlit/concerns/balanceable'
-require 'hamlit/concerns/indentable'
 require 'hamlit/parsers/comment'
 require 'hamlit/parsers/doctype'
 require 'hamlit/parsers/multiline'
@@ -11,7 +10,6 @@ require 'hamlit/parsers/script'
 module Hamlit
   class Parser < Temple::Parser
     include Concerns::Balanceable
-    include Concerns::Indentable
     include Parsers::Comment
     include Parsers::Doctype
     include Parsers::Multiline
