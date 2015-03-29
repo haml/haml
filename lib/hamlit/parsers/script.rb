@@ -8,6 +8,8 @@ module Hamlit
       extend Concerns::Included
       include Concerns::Indentable
 
+      INTERNAL_STATEMENTS = %w[else elsif when].freeze
+
       included do
         include Concerns::Escapable
       end
@@ -65,6 +67,22 @@ module Hamlit
           code += ' '
         end
         code
+      end
+
+      def has_block?
+        next_indent == @current_indent + 1
+      end
+
+      def internal_statement?(line)
+        return false unless line
+
+        scanner = StringScanner.new(line)
+        scanner.scan(/ +/)
+        return false unless scanner.scan(/-/)
+
+        scanner.scan(/ +/)
+        statement = scanner.scan(/[^ ]+/)
+        INTERNAL_STATEMENTS.include?(statement)
       end
     end
   end

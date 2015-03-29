@@ -22,8 +22,7 @@ module Hamlit
     include Parsers::Text
     include Parsers::Whitespace
 
-    INTERNAL_STATEMENTS = %w[else elsif when].freeze
-    SKIP_NEWLINE_EXPS   = %i[newline code multi].freeze
+    SKIP_NEWLINE_EXPS = %i[newline code multi].freeze
 
     define_options :format
 
@@ -95,26 +94,10 @@ module Hamlit
       end
     end
 
-    def internal_statement?(line)
-      return false unless line
-
-      scanner = StringScanner.new(line)
-      scanner.scan(/ +/)
-      return false unless scanner.scan(/-/)
-
-      scanner.scan(/ +/)
-      statement = scanner.scan(/[^ ]+/)
-      INTERNAL_STATEMENTS.include?(statement)
-    end
-
     def skip_newline?(ast)
       SKIP_NEWLINE_EXPS.include?(ast.first) ||
         (ast[0..1] == [:haml, :doctype]) ||
         @outer_removal.include?(@current_indent)
-    end
-
-    def has_block?
-      next_indent == @current_indent + 1
     end
   end
 end
