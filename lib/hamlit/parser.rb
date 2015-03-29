@@ -231,9 +231,9 @@ module Hamlit
 
     def parse_attributes(scanner)
       if scanner.match?(/{/)
-        parse_old_attributes(scanner)
+        parse_old_attributes(scanner) + parse_new_attributes(scanner)
       else
-        parse_new_attributes(scanner)
+        parse_new_attributes(scanner) + parse_old_attributes(scanner)
       end
     end
 
