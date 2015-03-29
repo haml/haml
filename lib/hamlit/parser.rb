@@ -6,6 +6,7 @@ require 'hamlit/parsers/doctype'
 require 'hamlit/parsers/filter'
 require 'hamlit/parsers/multiline'
 require 'hamlit/parsers/script'
+require 'hamlit/parsers/tag'
 require 'hamlit/parsers/text'
 require 'hamlit/parsers/whitespace'
 
@@ -17,14 +18,12 @@ module Hamlit
     include Parsers::Filter
     include Parsers::Multiline
     include Parsers::Script
+    include Parsers::Tag
     include Parsers::Text
     include Parsers::Whitespace
 
-    TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
     INTERNAL_STATEMENTS = %w[else elsif when].freeze
     SKIP_NEWLINE_EXPS   = %i[newline code multi].freeze
-    TAG_REGEXP  = /[a-zA-Z0-9\-_:]+/
-    DEFAULT_TAG = 'div'
 
     define_options :format
 
@@ -94,61 +93,6 @@ module Hamlit
       else
         parse_text(scanner)
       end
-    end
-
-    def parse_tag(scanner)
-      tag = DEFAULT_TAG
-      tag = scanner.scan(TAG_REGEXP) if scanner.scan(/%/)
-
-      attrs = [:haml, :attrs]
-      attrs += parse_tag_id_and_class(scanner)
-      attrs += parse_attributes(scanner)
-
-      inner_removal = parse_whitespace_removal(scanner)
-      ast = [:html, :tag, tag, attrs]
-
-      if scanner.match?(/=/)
-        ast << parse_script(scanner)
-        return ast
-      elsif scanner.scan(/\//)
-        return ast
-      elsif scanner.rest.match(/[^ ]/)
-        ast << parse_text(scanner)
-        return ast
-      elsif next_indent <= @current_indent
-        ast << [:multi]
-        return ast
-      end
-
-      content = [:multi, [:static, "\n"]]
-      if inner_removal || Helpers::DEFAULT_PRESERVE_TAGS.include?(tag)
-        content[0, 1] = [:haml, :strip]
-      end
-      content += with_indented { parse_lines }
-      ast << content
-      ast
-    end
-
-    def parse_tag_id_and_class(scanner)
-      attributes = Hash.new { |h, k| h[k] = [] }
-
-      while prefix = scanner.scan(/[#.]/)
-        name = scanner.scan(TAG_ID_CLASS_REGEXP)
-        raise SyntaxError unless name
-
-        case prefix
-        when '#'
-          attributes['id'] = [name]
-        when '.'
-          attributes['class'] << name
-        end
-      end
-
-      ast = []
-      attributes.each do |name, values|
-        ast << [:html, :attr, name, [:static, values.join(' ')]]
-      end
-      ast
     end
 
     def internal_statement?(line)
