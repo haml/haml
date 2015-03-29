@@ -1,8 +1,7 @@
-require 'temple'
 require 'hamlit/concerns/line_reader'
 
 module Hamlit
-  module Concerns
+  module Parsers
     module Multiline
       include Concerns::LineReader
 

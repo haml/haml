@@ -3,20 +3,18 @@ require 'strscan'
 require 'temple'
 require 'hamlit/concerns/balanceable'
 require 'hamlit/concerns/indentable'
-require 'hamlit/concerns/line_reader'
-require 'hamlit/concerns/multiline'
 require 'hamlit/parsers/comment'
 require 'hamlit/parsers/doctype'
+require 'hamlit/parsers/multiline'
 require 'hamlit/parsers/script'
 
 module Hamlit
   class Parser < Temple::Parser
     include Concerns::Balanceable
     include Concerns::Indentable
-    include Concerns::LineReader
-    include Concerns::Multiline
     include Parsers::Comment
     include Parsers::Doctype
+    include Parsers::Multiline
     include Parsers::Script
 
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
