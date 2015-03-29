@@ -1,4 +1,3 @@
-require 'set'
 require 'strscan'
 require 'temple'
 require 'hamlit/parsers/attribute'
@@ -7,6 +6,7 @@ require 'hamlit/parsers/doctype'
 require 'hamlit/parsers/filter'
 require 'hamlit/parsers/multiline'
 require 'hamlit/parsers/script'
+require 'hamlit/parsers/whitespace'
 
 module Hamlit
   class Parser < Temple::Parser
@@ -16,6 +16,7 @@ module Hamlit
     include Parsers::Filter
     include Parsers::Multiline
     include Parsers::Script
+    include Parsers::Whitespace
 
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
     INTERNAL_STATEMENTS = %w[else elsif when].freeze
@@ -37,10 +38,10 @@ module Hamlit
 
     # Reset the parser state.
     def reset(template)
-      @outer_removal = Set.new
       template = preprocess_multilines(template)
       reset_lines(template.split("\n"))
       reset_indent
+      reset_outer_removal
     end
 
     # Parse lines in current_indent and return ASTs.
@@ -124,29 +125,6 @@ module Hamlit
       content += with_indented { parse_lines }
       ast << content
       ast
-    end
-
-    def parse_whitespace_removal(scanner)
-      if scanner.match?(/</)
-        inner_removal = parse_inner_removal(scanner)
-        parse_outer_removal(scanner)
-      else
-        parse_outer_removal(scanner)
-        inner_removal = parse_inner_removal(scanner)
-      end
-      inner_removal
-    end
-
-    def parse_inner_removal(scanner)
-      scanner.scan(/</)
-    end
-
-    def parse_outer_removal(scanner)
-      if scanner.scan(/>/)
-        @outer_removal.add(@current_indent)
-      else
-        @outer_removal.delete(@current_indent)
-      end
     end
 
     def parse_text(scanner)
