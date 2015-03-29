@@ -6,6 +6,7 @@ require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/indentable'
 require 'hamlit/concerns/line_reader'
 require 'hamlit/concerns/multiline'
+require 'hamlit/parsers/doctype'
 
 module Hamlit
   class Parser < Temple::Parser
@@ -14,6 +15,7 @@ module Hamlit
     include Concerns::Indentable
     include Concerns::LineReader
     include Concerns::Multiline
+    include Parsers::Doctype
 
     TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
     INTERNAL_STATEMENTS = %w[else elsif when].freeze
@@ -89,17 +91,6 @@ module Hamlit
       else
         parse_text(scanner)
       end
-    end
-
-    def parse_doctype(scanner)
-      raise SyntaxError unless scanner.scan(/!!!/)
-
-      type = nil
-      if scanner.scan(/ +/) && scanner.rest?
-        type = scanner.rest.strip
-      end
-
-      [:haml, :doctype, options[:format], type]
     end
 
     def parse_tag(scanner)
