@@ -476,8 +476,7 @@ describe "haml" do
       assert_ugly(haml, locals, options)
     end
 
-    # FIXME: currently this is not considered
-    pending "HTML-style tag with an atomic attribute" do
+    specify "HTML-style tag with an atomic attribute" do
       haml    = %q{%a(flag)}
       html    = %q{<a flag></a>}
       locals  = {}

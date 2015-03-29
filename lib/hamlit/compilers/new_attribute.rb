@@ -25,7 +25,11 @@ module Hamlit
           tokens = Ripper.lex(str)
           key = read_key!(tokens)
           val = read_value!(tokens)
-          attributes[key] = val if key && val
+          if key && val
+            attributes[key] = val
+          elsif key
+            attributes[key] = 'true'
+          end
 
           token = tokens.first
           break unless token
@@ -40,15 +44,14 @@ module Hamlit
       def read_key!(tokens)
         skip_tokens!(tokens, :on_sp)
         (row, col), type, key = tokens.shift
-
-        skip_tokens!(tokens, :on_sp)
-        (row, col), type, str = tokens.shift
-        raise SyntaxError if str != '='
-
         key
       end
 
       def read_value!(tokens)
+        skip_tokens!(tokens, :on_sp)
+        (row, col), type, str = tokens.shift
+        return nil if str != '='
+
         skip_tokens!(tokens, :on_sp)
         return if tokens.empty?
 
