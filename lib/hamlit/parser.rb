@@ -62,7 +62,7 @@ module Hamlit
 
     # Parse current line and return AST.
     def parse_line(line)
-      return [:newline] if empty_line?(line)
+      return [:multi] if empty_line?(line)
 
       scanner = StringScanner.new(line)
       scanner.scan(/ +/)
