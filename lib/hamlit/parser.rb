@@ -47,7 +47,19 @@ module Hamlit
     # Parse lines in current_indent and return ASTs.
     def parse_lines
       ast = []
-      while next_indent == @current_indent
+      loop do
+        indent = next_indent
+        if indent != @current_indent
+          if indent != Hamlit::EOF && indent > @current_indent
+            ast << [:newline]
+            ast << syntax_error(
+              "inconsistent indentation: #{2 * @current_indent} spaces used for indentation, "\
+              "but the rest of the document was indented using #{next_line[/\A +/].to_s.length} spaces"
+            )
+          end
+          break
+        end
+
         @current_lineno += 1
         node = parse_line(current_line)
         if @outer_removal.include?(@current_indent) && ast.last == [:static, "\n"]

@@ -1,11 +1,11 @@
 require 'hamlit/concerns/error'
 
 module Hamlit
+  EOF = -1
+
   module Concerns
     module Indentable
       include Concerns::Error
-
-      EOF = -1
 
       def reset_indent
         @current_indent = 0
