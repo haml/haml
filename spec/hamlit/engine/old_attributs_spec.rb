@@ -36,7 +36,7 @@ describe Hamlit::Engine do
       assert_render(<<-'HAML', <<-HTML)
         %span{ :'data-disable' => true } bar
       HAML
-        <span data-disable='true'>bar</span>
+        <span data-disable>bar</span>
       HTML
     end
 
@@ -44,7 +44,7 @@ describe Hamlit::Engine do
       assert_render(<<-'HAML', <<-HTML)
         %span{ data: { disable: true } } bar
       HAML
-        <span data-disable='true'>bar</span>
+        <span data-disable>bar</span>
       HTML
     end
 
@@ -53,6 +53,14 @@ describe Hamlit::Engine do
         %span{ class: '}}}', id: '{}}' } }{
       HAML
         <span class='}}}' id='{}}'>}{</span>
+      HTML
+    end
+
+    it 'accepts method call including comma' do
+      assert_render(<<-'HAML', <<-HTML)
+        %body{ class: "#{"ab".gsub(/a/, 'b')}", data: { confirm: 'really?', disable: true }, id: 'c'.gsub(/c/, 'a') }
+      HAML
+        <body class='bb' data-confirm='really?' data-disable id='a'></body>
       HTML
     end
   end

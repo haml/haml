@@ -12,14 +12,36 @@ module Hamlit
       TYPE_POSITION = 1
 
       def compile_old_attribute(str)
-        tokens = Ripper.lex(str)
-        attrs  = parse_old_attributes(tokens)
+        attrs = parse_old_attributes(str)
         flatten_attributes(attrs).map do |key, value|
+          next true_attribute(key) if value == 'true'
           [:html, :attr, key, [:dynamic, value]]
         end
       end
 
       private
+
+      # Parse brace-balanced string and return the result as hash
+      def parse_old_attributes(str)
+        attributes = {}
+
+        split_hash(str).each do |attr|
+          tokens = Ripper.lex("{#{attr}")
+          tokens = tokens.drop(1)
+
+          key = read_hash_key!(tokens)
+          val = tokens.map(&:last).join.strip
+
+          tokens = tokens.reject { |t| t[TYPE_POSITION] == :on_sp }
+          if tokens.first[TYPE_POSITION] == :on_lbrace
+            val = parse_old_attributes(val)
+          end
+
+          attributes[key] = val if key
+        end
+
+        attributes
+      end
 
       def flatten_attributes(attributes)
         flattened = {}
@@ -35,23 +57,6 @@ module Hamlit
           end
         end
         flattened
-      end
-
-      # Parse brace-balanced tokens and return the result as hash
-      def parse_old_attributes(tokens)
-        tokens = tokens.slice(1..-2) # strip braces
-        attributes = {}
-
-        while tokens && tokens.any?
-          key = read_hash_key!(tokens)
-          val = read_hash_value!(tokens)
-          attributes[key] = val if key && val
-
-          hash_skip_tokens!(tokens, :on_sp)
-          raise SyntaxError if tokens.any? && hash_type_of(tokens.shift) != :on_comma
-        end
-
-        attributes
       end
 
       def read_hash_key!(tokens)
@@ -83,31 +88,6 @@ module Hamlit
         str
       end
 
-      def read_hash_value!(tokens)
-        result = ''
-        hash_skip_tokens!(tokens, :on_sp)
-
-        if hash_type_of(tokens.first) == :on_lbrace
-          hash = fetch_balanced_braces(tokens)
-          hash.length.times { tokens.shift }
-          return parse_old_attributes(hash)
-        end
-
-        while token = tokens.shift
-          (row, col), type, str = token
-          case type
-          when :on_sp
-            next
-          when :on_comma
-            tokens.unshift(token)
-            break
-          end
-
-          result += str
-        end
-        result
-      end
-
       def hash_skip_tokens!(tokens, *types)
         while types.include?(hash_type_of(tokens.first))
           tokens.shift
@@ -124,6 +104,60 @@ module Hamlit
       def hash_type_of(token)
         return nil unless token
         token[TYPE_POSITION]
+      end
+
+      def split_hash(str)
+        columns = HashParser.assoc_columns(str)
+        columns = reject_nested_columns(str, columns)
+
+        splitted  = []
+        start_pos = 1
+        columns.each do |end_pos|
+          splitted << str[start_pos..(end_pos - 1)]
+          start_pos = end_pos + 1
+        end
+
+        splitted
+      end
+
+      def reject_nested_columns(str, columns)
+        result     = []
+        open_count = 0
+
+        Ripper.lex(str).each do |(row, col), type, str|
+          if columns.include?(col) && open_count == 1
+            result << col
+          end
+
+          case type
+          when :on_lbrace
+            open_count += 1
+          when :on_rbrace
+            open_count -= 1
+          end
+        end
+        result
+      end
+
+      class HashParser < Ripper
+        attr_reader :columns
+
+        def self.assoc_columns(src)
+          parser = new(src)
+          parser.parse
+          parser.columns
+        end
+
+        def initialize(src)
+          super(src)
+          @columns = []
+        end
+
+        private
+
+        def on_assoc_new(*args)
+          @columns << column - 1
+        end
       end
     end
   end
