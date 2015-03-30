@@ -10,6 +10,17 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders one-line script with comment' do
+      assert_render(<<-HAML, <<-HTML)
+        = '#' + "#" # = 3 #
+        = ['#',
+          "#"]  # comment
+      HAML
+        ##
+        ["#", "#"]
+      HTML
+    end
+
     it 'renders multi-lines script' do
       assert_render(<<-HAML, <<-HTML)
         %span

@@ -70,7 +70,16 @@ module Hamlit
           scanner = StringScanner.new(current_line)
           code += ' '
         end
-        code
+        remove_comment(code)
+      end
+
+      def remove_comment(code)
+        result = ''
+        Ripper.lex(code).each do |(row, col), type, str|
+          next if type == :on_comment
+          result += str
+        end
+        result
       end
 
       def has_block?
