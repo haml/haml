@@ -1,4 +1,4 @@
-# Hamlit
+# Hamlit [![Build Status](https://travis-ci.org/k0kubun/hamlit.svg?branch=master)](https://travis-ci.org/k0kubun/hamlit)
 
 Hamlit is a high performance [haml](https://github.com/haml/haml) implementation.
 
