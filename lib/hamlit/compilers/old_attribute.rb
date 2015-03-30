@@ -16,7 +16,7 @@ module Hamlit
         return runtime_build(str) unless Ripper.sexp(str)
 
         attrs = parse_old_attributes(str)
-        flatten_attributes(attrs).map do |key, value|
+        format_attributes(attrs).map do |key, value|
           next true_attribute(key) if value == 'true'
           [:html, :attr, key, [:dynamic, value]]
         end

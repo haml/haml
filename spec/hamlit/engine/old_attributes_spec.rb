@@ -40,11 +40,24 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'renders attributes' do
+    it 'renders true attributes' do
       assert_render(<<-'HAML', <<-HTML)
         %span{ data: { disable: true } } bar
       HAML
         <span data-disable>bar</span>
+      HTML
+    end
+
+    it 'renders false or nil attributes' do
+      assert_render(<<-'HAML', <<-HTML)
+        - hash = { checked: false }
+        %input{ hash }
+        %input{ checked: false }
+        %input{ checked: nil }
+      HAML
+        <input>
+        <input>
+        <input>
       HTML
     end
 
