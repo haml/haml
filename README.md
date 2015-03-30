@@ -17,6 +17,8 @@ or just replace `gem "haml"` with `gem "hamlit"`.
 
 Hamlit's rendering is **8.47x times faster** than original haml.
 
+![](http://i.gyazo.com/57b726102a4a169d4b85cc22fcbb3ff3.png)
+
 ```
     hamlit:   133922.9 i/s
     erubis:   123464.1 i/s - 1.08x slower
@@ -33,7 +35,7 @@ is the same as [slim-template/slim](https://github.com/slim-template/slim)'s one
 
 Haml's attribute parser is not so good. For example, raises syntax error for `%a{ b: '}' }`.
 Hamlit's attribute parser is implemented with Ripper, which is an official lexer for Ruby,
-so it can able to parse such an attribute.
+so it is able to parse such an attribute.
 
 ### Passing haml-spec
 
@@ -41,6 +43,11 @@ so it can able to parse such an attribute.
 For all test cases in haml-spec, Hamlit behaves the same as Haml (ugly mode only, which is used on production).
 
 Hamlit is used on [githubranking.com](http://githubranking.com/).
+
+## Usage
+
+Basically the same as [haml](https://github.com/haml/haml).
+Check out the [reference documentation](http://haml.info/docs/yardoc/file.REFERENCE.html) for details.
 
 ## Why high performance?
 ### Less work on runtime
