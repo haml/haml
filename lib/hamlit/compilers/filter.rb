@@ -8,6 +8,7 @@ require 'hamlit/filters/plain'
 require 'hamlit/filters/preserve'
 require 'hamlit/filters/ruby'
 require 'hamlit/filters/sass'
+require 'hamlit/filters/markdown'
 require 'hamlit/filters/scss'
 
 module Hamlit
@@ -24,6 +25,7 @@ module Hamlit
         register :escaped,    Filters::Escaped
         register :javascript, Filters::Javascript
         register :less,       Filters::Less
+        register :markdown,   Filters::Markdown
         register :plain,      Filters::Plain
         register :preserve,   Filters::Preserve
         register :ruby,       Filters::Ruby

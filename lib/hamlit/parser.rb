@@ -112,6 +112,7 @@ module Hamlit
       SKIP_NEWLINE_EXPS.include?(ast.first) ||
         (ast[0..1] == [:haml, :doctype]) ||
         (ast[0..2] == [:haml, :filter, 'ruby']) ||
+        (ast[0..2] == [:haml, :filter, 'markdown']) ||
         @outer_removal.include?(@current_indent)
     end
   end
