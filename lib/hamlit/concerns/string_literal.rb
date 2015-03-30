@@ -5,10 +5,6 @@ module Hamlit
         unescape_interpolation(str)
       end
 
-      def contains_interpolation?(str)
-        /#[\{$@]/ === str
-      end
-
       private
 
       def unescape_interpolation(str)

@@ -10,6 +10,12 @@ module Hamlit
 
         [:dynamic, string_literal(exp)]
       end
+
+      private
+
+      def contains_interpolation?(str)
+        /#[\{$@]/ === str
+      end
     end
   end
 end
