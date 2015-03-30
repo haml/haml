@@ -73,7 +73,6 @@ class Benchmarks
       end
       x.compare!
     end
-    assert_fastest(result)
   end
 
   private
@@ -88,20 +87,6 @@ class Benchmarks
     @versions.each do |name, version|
       printf "%20s %10s\n", name, "v#{version}"
     end
-  end
-
-  def assert_fastest(result)
-    hamlit = result.entries.first
-    rival  = result.entries[1..-1].max_by(&:ips)
-
-    if hamlit.ips < rival.ips
-      fatal "Hamlit is slower than #{rival.label}"
-    end
-  end
-
-  def fatal(message)
-    puts "\e[31m#{message}\e[0m"
-    exit 1
   end
 end
 
