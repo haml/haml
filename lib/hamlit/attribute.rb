@@ -1,4 +1,5 @@
 require 'hamlit/concerns/attribute_builder'
+require 'temple/utils'
 
 # Hamlit::Attribute is a module to compile old-style attributes which
 # can be compiled only on runtime. If you write old-style attributes
@@ -21,7 +22,8 @@ module Hamlit
     def build(attributes)
       result = ''
       flatten_attributes(attributes).each do |key, value|
-        result += " #{key}=#{@quote}#{value}#{@quote}"
+        escaped = Temple::Utils.escape_html(value)
+        result += " #{key}=#{@quote}#{escaped}#{@quote}"
       end
       result
     end

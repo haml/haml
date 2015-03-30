@@ -72,5 +72,14 @@ describe Hamlit::Engine do
         <span foo='bar'></span>
       HTML
     end
+
+    it 'renders runtime hash attribute escaping only value' do
+      assert_render(<<-'HAML', <<-HTML)
+        - hash = { "'<foo>'" => '<bar>' }
+        %span{ hash }
+      HAML
+        <span '<foo>'='&lt;bar&gt;'></span>
+      HTML
+    end
   end
 end
