@@ -1,7 +1,7 @@
 PATH
   remote: ../..
   specs:
-    hamlit (0.0.1)
+    hamlit (0.1.0)
       temple
       thor
       tilt
