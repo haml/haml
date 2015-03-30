@@ -1,13 +1,13 @@
 require 'hamlit/concerns/string_literal'
 
-# FIXME: This compiler has an extremely bad effect for performance.
-# We should optimize this.
 module Hamlit
   module Compilers
     module Text
       include Concerns::StringLiteral
 
       def on_haml_text(exp)
+        return [:static, exp] unless contains_interpolation?(exp)
+
         [:dynamic, string_literal(exp)]
       end
     end
