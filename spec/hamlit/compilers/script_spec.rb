@@ -9,7 +9,7 @@ describe Hamlit::Compiler do
         [:multi,
          [:code, "_hamlit_compiler0 = link_to user_path do"],
          [:static, "user"],
-         [:escape, false, [:dynamic, "_hamlit_compiler0"]]],
+         [:escape, false, [:dynamic, "(_hamlit_compiler0).to_s"]]],
       )
     end
 
@@ -28,11 +28,11 @@ describe Hamlit::Compiler do
          [:multi,
           [:code, "_hamlit_compiler0 = link_to user_path do"],
           [:static, "user"],
-          [:escape, false, [:dynamic, "_hamlit_compiler0"]]],
+          [:escape, false, [:dynamic, "(_hamlit_compiler0).to_s"]]],
          [:multi,
           [:code, "_hamlit_compiler1 = link_to repo_path do"],
           [:static, "repo"],
-          [:escape, false, [:dynamic, "_hamlit_compiler1"]]]],
+          [:escape, false, [:dynamic, "(_hamlit_compiler1).to_s"]]]],
       )
     end
   end

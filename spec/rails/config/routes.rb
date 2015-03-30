@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       get :capture_haml
       get :form
       get :helpers
+      get :safe_buffer
     end
   end
 end

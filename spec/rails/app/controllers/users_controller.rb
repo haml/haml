@@ -14,4 +14,7 @@ class UsersController < ApplicationController
 
   def helpers
   end
+
+  def safe_buffer
+  end
 end

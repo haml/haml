@@ -19,6 +19,11 @@ describe 'Hamlit rails integration', type: :request do
     expect(response.body).to include('<p>k0kubun</p>')
   end
 
+  it 'does not escape the object whose to_s returns SafeBuffer' do
+    get safe_buffer_users_path
+    expect(response.body).to include('<safe>')
+  end
+
   describe 'escaping' do
     it 'escapes script' do
       get users_path(q: '<script>alert("a");</script>')
