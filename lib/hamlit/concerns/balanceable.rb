@@ -1,72 +1,52 @@
 require 'ripper'
 
-# FIXME: this can be refactored
 module Hamlit
   module Concerns
     module Balanceable
-      # Given Ripper tokens, return first brace-balanced tokens
       def fetch_balanced_braces(all_tokens)
-        tokens     = []
-        open_count = 0
-
-        all_tokens.each_with_index do |token, index|
-          (row, col), type, str = token
-          case type
-          when :on_lbrace then open_count += 1
-          when :on_rbrace then open_count -= 1
-          end
-
-          tokens << token
-          break if open_count == 0
-        end
-
-        tokens
+        fetch_balanced_tokens(all_tokens, :on_lbrace, :on_rbrace)
       end
 
       def fetch_balanced_parentheses(all_tokens)
-        tokens     = []
-        open_count = 0
+        fetch_balanced_tokens(all_tokens, :on_lparen, :on_rparen)
+      end
 
-        all_tokens.each_with_index do |token, index|
-          (row, col), type, str = token
-          case type
-          when :on_lparen then open_count += 1
-          when :on_rparen then open_count -= 1
-          end
+      def balanced_braces_exist?(tokens)
+        balanced_tokens_exist?(tokens, :on_lbrace, :on_rbrace)
+      end
 
-          tokens << token
-          break if open_count == 0
-        end
-
-        tokens
+      def balanced_parens_exist?(tokens)
+        balanced_tokens_exist?(tokens, :on_lparen, :on_rparen)
       end
 
       private
 
-      def balanced_braces_exist?(tokens)
+      def fetch_balanced_tokens(all_tokens, open_token, close_token)
+        tokens     = []
         open_count = 0
 
-        tokens.each do |token|
+        all_tokens.each_with_index do |token, index|
           (row, col), type, str = token
           case type
-          when :on_lbrace then open_count += 1
-          when :on_rbrace then open_count -= 1
+          when open_token  then open_count += 1
+          when close_token then open_count -= 1
           end
 
+          tokens << token
           break if open_count == 0
         end
 
-        open_count == 0
+        tokens
       end
 
-      def balanced_parens_exist?(tokens)
+      def balanced_tokens_exist?(tokens, open_token, close_token)
         open_count = 0
 
         tokens.each do |token|
           (row, col), type, str = token
           case type
-          when :on_lparen then open_count += 1
-          when :on_rparen then open_count -= 1
+          when open_token  then open_count += 1
+          when close_token then open_count -= 1
           end
 
           break if open_count == 0
