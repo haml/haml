@@ -1,8 +1,12 @@
 module Hamlit
   module Concerns
-    module StringLiteral
+    module StringInterpolation
       def string_literal(str)
         unescape_interpolation(str)
+      end
+
+      def contains_interpolation?(str)
+        /#[\{$@]/ === str
       end
 
       private

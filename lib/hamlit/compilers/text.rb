@@ -1,20 +1,14 @@
-require 'hamlit/concerns/string_literal'
+require 'hamlit/concerns/string_interpolation'
 
 module Hamlit
   module Compilers
     module Text
-      include Concerns::StringLiteral
+      include Concerns::StringInterpolation
 
       def on_haml_text(exp)
         return [:static, exp] unless contains_interpolation?(exp)
 
         [:dynamic, string_literal(exp)]
-      end
-
-      private
-
-      def contains_interpolation?(str)
-        /#[\{$@]/ === str
       end
     end
   end

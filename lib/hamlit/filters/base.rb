@@ -3,15 +3,18 @@ module Hamlit
     class Base
       attr_reader :options
 
-      def initialize(options)
+      def self.indent_source(source, indent_width: 0)
+        lines = source.split("\n")
+        self.new.compile_lines(lines, indent_width: indent_width)
+      end
+
+      def initialize(options = {})
         @options = options
       end
 
       def compile(lines)
         raise NotImplementedError
       end
-
-      private
 
       def compile_lines(lines, indent_width: 0)
         base  = (lines.first || '').index(/[^\s]/) || 0
@@ -25,6 +28,8 @@ module Hamlit
         text = lines.join("\n") + "\n"
         text
       end
+
+      private
 
       # NOTE: empty line is reserved for preserve filter.
       def strip_last(lines)

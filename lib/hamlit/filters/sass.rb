@@ -1,21 +1,11 @@
-require 'tilt'
-require 'hamlit/filters/base'
+require 'hamlit/filters/tilt'
 
 module Hamlit
   module Filters
-    class Sass < Base
+    class Sass < Filters::Tilt
       def compile(lines)
-        result  = compile_with_tilt(lines)
-        content = [:multi, [:static, "\n"], result]
-        [:html, :tag, 'style', [:html, :attrs], content]
-      end
-
-      private
-
-      def compile_with_tilt(lines)
-        source = lines.join("\n")
-        result = ::Tilt['t.sass'].new { source }.render
-        [:static, compile_lines(result.split("\n"), indent_width: 2)]
+        ast = [:html, :tag, 'style', [:html, :attrs]]
+        compile_with_tilt('sass', lines.join("\n"), ast)
       end
     end
   end
