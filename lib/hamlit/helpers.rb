@@ -29,8 +29,10 @@ module Hamlit
       s
     end
 
+    # NOTE: currently Hamlit::Helpers is enabled by default on only
+    # Rails environment. Thus you can use capture.
     def capture_haml(*args, &block)
-      raise NotImplementedError
+      capture(*args, &block)
     end
   end
 end

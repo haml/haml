@@ -6,6 +6,9 @@ class UsersController < ApplicationController
   def capture
   end
 
+  def capture_haml
+  end
+
   def form
   end
 

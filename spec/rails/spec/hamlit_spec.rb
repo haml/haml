@@ -68,5 +68,15 @@ describe 'Hamlit rails integration', type: :request do
         <pre>Bar&#x000A;Baz</pre>
       HTML
     end
+
+    it 'accepts capture_haml' do
+      get capture_users_path
+      expect(response.body).to include(<<-HTML.strip_heredoc)
+        <div class='capture'><span>
+        <p>Capture</p>
+        </span>
+        </div>
+      HTML
+    end
   end
 end

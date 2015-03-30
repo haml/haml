@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :users, only: :index do
     collection do
       get :capture
+      get :capture_haml
       get :form
       get :helpers
     end
