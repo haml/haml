@@ -12,6 +12,8 @@ module Hamlit
       include Concerns::Balanceable
       include Concerns::Ripperable
 
+      IGNORED_EXPRESSIONS = %w[false nil].freeze
+
       def compile_old_attribute(str)
         return runtime_build(str) unless Ripper.sexp(str)
 
@@ -23,6 +25,18 @@ module Hamlit
       end
 
       private
+
+      def format_attributes(attributes)
+        attributes = flatten_attributes(attributes)
+        ignore_falsy_values(attributes)
+      end
+
+      def ignore_falsy_values(attributes)
+        attributes = attributes.dup
+        attributes.each do |key, value|
+          attributes.delete(key) if IGNORED_EXPRESSIONS.include?(value)
+        end
+      end
 
       # Parse brace-balanced string and return the result as hash
       def parse_old_attributes(str)
