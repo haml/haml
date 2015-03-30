@@ -10,7 +10,7 @@ module Hamlit
       generator:  Temple::Generators::ArrayBuffer,
       format:     :html,
       attr_quote: "'",
-      ugly:       false,
+      ugly:       true,
     )
 
     use Parser
