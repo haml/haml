@@ -25,7 +25,7 @@ module Hamlit
       def xml_doctype_tag(format)
         case format
         when :html4, :html5
-          [:newline]
+          [:multi]
         else
           [:multi, [:static, "<?xml version='1.0' encoding='utf-8' ?>"], [:static, "\n"]]
         end

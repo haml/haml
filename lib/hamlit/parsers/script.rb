@@ -44,7 +44,7 @@ module Hamlit
         assert_scan!(scanner, /-/)
         if scanner.scan(/#/)
           with_indented { skip_lines }
-          return [:newline]
+          return [:multi]
         end
 
         ast = [:code]
