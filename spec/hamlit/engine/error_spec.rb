@@ -37,6 +37,7 @@ describe Hamlit::Engine do
           %9
         HAML
       rescue Hamlit::SyntaxError => e
+        return unless e.respond_to?(:backtrace_locations)
         line_number = e.backtrace_locations.first.to_s.match(/:(\d+):/)[1]
         expect(line_number).to eq('8')
       end
