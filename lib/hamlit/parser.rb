@@ -111,6 +111,7 @@ module Hamlit
     def skip_newline?(ast)
       SKIP_NEWLINE_EXPS.include?(ast.first) ||
         (ast[0..1] == [:haml, :doctype]) ||
+        (ast[0..2] == [:haml, :filter, 'ruby']) ||
         @outer_removal.include?(@current_indent)
     end
   end

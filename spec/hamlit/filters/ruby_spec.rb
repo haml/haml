@@ -1,13 +1,11 @@
 require 'spec_helper'
 
-# FIXME: newline should be removed
 describe Hamlit::Filters::Ruby do
   it 'renders ruby filter' do
     assert_render(<<-HAML, <<-HTML)
       :ruby
       hello
     HAML
-
       hello
     HTML
   end
@@ -20,7 +18,6 @@ describe Hamlit::Filters::Ruby do
         }
       = hash[:a]
     HAML
-
       3
     HTML
   end
