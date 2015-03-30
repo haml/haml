@@ -49,10 +49,11 @@ class Benchmarks
       def run_hamlit; #{Hamlit::Engine.new.call @haml_code}; end
     }
 
-    bench('hamlit', Hamlit::VERSION)        { context.run_hamlit }
-    bench('erubis', Erubis::VERSION)        { context.run_erubis }
-    bench('faml', Faml::VERSION)            { context.run_faml }
-    bench('slim', Slim::VERSION)            { context.run_slim_ugly }
+    bench('hamlit', Hamlit::VERSION) { context.run_hamlit }
+    bench('erubis', Erubis::VERSION) { context.run_erubis }
+    bench('slim', Slim::VERSION)     { context.run_slim_ugly }
+    bench('faml', Faml::VERSION)     { context.run_faml }
+    bench('haml', Haml::VERSION)     { context.run_haml_ugly }
 
     if ENV['ALL']
       erb_version = ERB.version.match(/\[([^ ]+)/)[1]
@@ -60,7 +61,6 @@ class Benchmarks
       bench('fast erubis', Erubis::VERSION) { context.run_fast_erubis }
       bench('temple erb', Temple::VERSION)  { context.run_temple_erb }
       bench('erb', erb_version)             { context.run_erb }
-      bench('haml', Haml::VERSION)          { context.run_haml_ugly }
     end
   end
 
