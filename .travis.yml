@@ -6,6 +6,20 @@ rvm:
 sudo: false
 cache: bundler
 script:
-  - "bundle exec rake spec"
-  - "bundle exec rake rails:spec"
-  - "TIME=10 bundle exec rake bench"
+  - "bundle exec rake $TASK"
+env:
+  - TASK=spec
+  - TASK=rails:spec
+  - TASK=bench TIME=10
+matrix:
+  allow_failures:
+    - env: TASK=bench TIME=10
+  exclude:
+    - rvm: 2.0.0
+      env: TASK=bench TIME=10
+    - rvm: 2.0.0
+      env: TASK=rails:spec
+    - rvm: 2.1
+      env: TASK=bench TIME=10
+    - rvm: 2.1
+      env: TASK=rails:spec
