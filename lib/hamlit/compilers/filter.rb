@@ -7,6 +7,7 @@ require 'hamlit/filters/plain'
 require 'hamlit/filters/preserve'
 require 'hamlit/filters/ruby'
 require 'hamlit/filters/sass'
+require 'hamlit/filters/scss'
 
 module Hamlit
   module Compilers
@@ -25,6 +26,7 @@ module Hamlit
         register :preserve,   Filters::Preserve
         register :ruby,       Filters::Ruby
         register :sass,       Filters::Sass
+        register :scss,       Filters::Scss
       end
 
       def on_haml_filter(name, lines)
