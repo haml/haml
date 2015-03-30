@@ -6,21 +6,18 @@ module Hamlit
     IGNORED_COMPILERS = ['HTML'].freeze
 
     desc 'render HAML', 'Render haml template'
-    option :ugly, type: :boolean, aliases: ['-u']
     def render(file)
       code = generate_code(file)
       puts eval(code)
     end
 
     desc 'compile HAML', 'Show generated rendering code'
-    option :ugly, type: :boolean, aliases: ['-u']
     def compile(file)
       code = generate_code(file)
       puts code
     end
 
     desc 'temple HAML', 'Show a compile result of hamlit AST'
-    option :ugly, type: :boolean, aliases: ['-u']
     def temple(file)
       pp generate_temple_ast(file)
     end
@@ -41,7 +38,7 @@ module Hamlit
 
     def generate_code(file)
       template = File.read(file)
-      Hamlit::Engine.new(options).call(template)
+      Hamlit::Engine.new.call(template)
     end
 
     def generate_temple_ast(file)
@@ -52,7 +49,7 @@ module Hamlit
 
       template = File.read(file)
       compilers.inject(template) do |exp, compiler|
-        Module.const_get(compiler).new(options).call(exp)
+        Module.const_get(compiler).new.call(exp)
       end
     end
 
@@ -76,10 +73,6 @@ module Hamlit
 
     def ignored_compilers
       IGNORED_COMPILERS.map { |name| "Hamlit::#{name}" }
-    end
-
-    def options
-      symbolize_keys(super)
     end
 
     def symbolize_keys(hash)
