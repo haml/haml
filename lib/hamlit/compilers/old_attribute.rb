@@ -6,22 +6,32 @@ require 'hamlit/concerns/ripperable'
 # This module compiles only old-style attribute, which is
 # surrounded by brackets.
 module Hamlit
+  # This error is raised when hamlit copmiler decide to
+  # copmile the attributes on runtime.
+  class RuntimeBuild < StandardError; end
+
   module Compilers
     module OldAttribute
       include Concerns::AttributeBuilder
       include Concerns::Balanceable
       include Concerns::Ripperable
 
+      # For performance, only data can be nested.
+      NESTABLE_ATTRIBUTES = %w[data].freeze
       IGNORED_EXPRESSIONS = %w[false nil].freeze
 
       def compile_old_attribute(str)
-        return runtime_build(str) unless Ripper.sexp(str)
+        raise RuntimeBuild unless Ripper.sexp(str)
 
         attrs = parse_old_attributes(str)
         format_attributes(attrs).map do |key, value|
           next true_attribute(key) if value == 'true'
+          assert_static_value!(value) if NESTABLE_ATTRIBUTES.include?(key)
+
           [:html, :attr, key, [:dynamic, value]]
         end
+      rescue RuntimeBuild
+        return runtime_build(str)
       end
 
       private
@@ -35,6 +45,14 @@ module Hamlit
         attributes = attributes.dup
         attributes.each do |key, value|
           attributes.delete(key) if IGNORED_EXPRESSIONS.include?(value)
+        end
+      end
+
+      # Give up static copmile when variables are detected.
+      def assert_static_value!(value)
+        tokens = Ripper.lex(value)
+        tokens.each do |(row, col), type, str|
+          raise RuntimeBuild if type == :on_ident
         end
       end
 

@@ -48,6 +48,15 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders nested hash whose value is variable' do
+      assert_render(<<-'HAML', <<-HTML)
+        - hash = { disable: true }
+        %span{ data: hash } bar
+      HAML
+        <span data-disable>bar</span>
+      HTML
+    end
+
     it 'renders false or nil attributes' do
       assert_render(<<-'HAML', <<-HTML)
         - hash = { checked: false }

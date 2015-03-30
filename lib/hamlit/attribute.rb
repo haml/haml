@@ -22,6 +22,11 @@ module Hamlit
     def build(attributes)
       result = ''
       flatten_attributes(attributes).each do |key, value|
+        if value == true
+          result += " #{key}"
+          next
+        end
+
         escaped = Temple::Utils.escape_html(value)
         result += " #{key}=#{@quote}#{escaped}#{@quote}"
       end
