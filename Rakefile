@@ -7,7 +7,7 @@ end
 
 desc 'Run RSpec code examples'
 task :spec do
-  system('bundle exec rspec --pattern spec/hamlit/**{,/\*/\*\*\}/\*_spec.rb')
+  exit system('bundle exec rspec --pattern spec/hamlit/**{,/\*/\*\*\}/\*_spec.rb')
 end
 
 namespace :spec do
@@ -27,7 +27,7 @@ end
 namespace :rails do
   desc 'Run Rails specs'
   task :spec do
-    system('cd spec/rails && rake spec')
+    exit system('cd spec/rails && rake spec')
   end
 end
 
