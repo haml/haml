@@ -57,7 +57,7 @@ module Hamlit
       end
 
       def read_hash_key!(tokens)
-        hash_skip_tokens!(tokens, :on_sp)
+        skip_tokens!(tokens, :on_sp)
 
         (row, col), type, str = tokens.shift
         case type
@@ -85,14 +85,8 @@ module Hamlit
         str
       end
 
-      def hash_skip_tokens!(tokens, *types)
-        while types.include?(type_of(tokens.first))
-          tokens.shift
-        end
-      end
-
       def assert_rocket!(tokens, *types)
-        hash_skip_tokens!(tokens, :on_sp)
+        skip_tokens!(tokens, :on_sp)
         (row, col), type, str = tokens.shift
 
         raise SyntaxError unless type == :on_op && str == '=>'
