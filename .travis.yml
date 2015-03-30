@@ -1,0 +1,7 @@
+language: ruby
+sudo: false
+cache: bundler
+script:
+  - "bundle exec rake spec"
+  - "bundle exec rake rails:spec"
+  - "TIME=10 bundle exec rake bench"
