@@ -4,6 +4,7 @@ PATH
     hamlit (0.0.1)
       temple
       thor
+      tilt
 
 GEM
   remote: https://rubygems.org/

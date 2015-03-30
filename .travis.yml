@@ -7,6 +7,9 @@ sudo: false
 cache: bundler
 script:
   - "bundle exec rake $TASK"
+gemfile:
+  - Gemfile
+  - spec/rails/Gemfile
 env:
   - TASK=spec
   - TASK=rails:spec
@@ -15,11 +18,17 @@ matrix:
   allow_failures:
     - env: TASK=bench TIME=10
   exclude:
-    - rvm: 2.0.0
-      env: TASK=bench TIME=10
-    - rvm: 2.0.0
+    - env: TASK=spec
+      gemfile: spec/rails/Gemfile
+    - env: TASK=rails:spec
+      gemfile: Gemfile
+    - env: TASK=bench TIME=10
+      gemfile: spec/rails/Gemfile
+    - rvm: 2.1
       env: TASK=rails:spec
     - rvm: 2.1
       env: TASK=bench TIME=10
-    - rvm: 2.1
+    - rvm: 2.0.0
       env: TASK=rails:spec
+    - rvm: 2.0.0
+      env: TASK=bench TIME=10
