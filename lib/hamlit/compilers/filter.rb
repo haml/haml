@@ -3,6 +3,7 @@ require 'hamlit/concerns/registerable'
 require 'hamlit/filters/css'
 require 'hamlit/filters/escaped'
 require 'hamlit/filters/javascript'
+require 'hamlit/filters/less'
 require 'hamlit/filters/plain'
 require 'hamlit/filters/preserve'
 require 'hamlit/filters/ruby'
@@ -22,6 +23,7 @@ module Hamlit
         register :css,        Filters::Css
         register :escaped,    Filters::Escaped
         register :javascript, Filters::Javascript
+        register :less,       Filters::Less
         register :plain,      Filters::Plain
         register :preserve,   Filters::Preserve
         register :ruby,       Filters::Ruby

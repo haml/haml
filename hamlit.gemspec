@@ -26,11 +26,13 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "erubis"
   spec.add_development_dependency "faml"
   spec.add_development_dependency "haml"
+  spec.add_development_dependency "less"
   spec.add_development_dependency "pry"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", ">= 3"
   spec.add_development_dependency "sass"
   spec.add_development_dependency "slim"
   spec.add_development_dependency "tenjin"
+  spec.add_development_dependency "therubyracer"
   spec.add_development_dependency "unindent"
 end
