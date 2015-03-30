@@ -40,6 +40,25 @@ so it can able to parse such an attribute.
 [haml/haml-spec](https://github.com/haml/haml-spec) is a basic suite of tests for Haml interpreters.
 For all test cases in haml-spec, Hamlit behaves the same as Haml (ugly mode only, which is used on production).
 
+Hamlit is used on [githubranking.com](http://githubranking.com/).
+
+## Why high performance?
+### Less work on runtime
+Haml's rendering is very slow because generated code by haml runs many operations on runtime.
+For example, Haml::Util is extended on view, attribute rendering runs even if it is a
+static value and the values in attribute is sorted. All of them is achieved on runtime.
+
+Hamlit extends ActionView beforehand, attribute rendering is done when compiled if it
+is a static hash and no unnecessary operation is done on runtime.
+
+### Temple optimizers
+Hamlit is implemented with [temple](https://github.com/judofyr/temple), which is a template
+engine framework for Ruby. Temple has some great optimizers for generated code. Thus generated
+code by Hamlit is very fast.
+
+Not only relying on temple optimizers, but also Hamlit's compiler cares about many cases
+to optimize performance such as string interpolation.
+
 ## License
 
 MIT License
