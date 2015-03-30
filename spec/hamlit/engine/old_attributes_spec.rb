@@ -63,5 +63,14 @@ describe Hamlit::Engine do
         <body class='bb' data-confirm='really?' data-disable id='a'></body>
       HTML
     end
+
+    it 'renders runtime hash attribute' do
+      assert_render(<<-'HAML', <<-HTML)
+        - hash = { foo: 'bar' }
+        %span{ hash }
+      HAML
+        <span foo='bar'></span>
+      HTML
+    end
   end
 end

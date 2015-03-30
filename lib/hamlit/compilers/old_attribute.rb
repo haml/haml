@@ -1,3 +1,5 @@
+require 'hamlit/attribute'
+require 'hamlit/concerns/attribute_builder'
 require 'hamlit/concerns/balanceable'
 require 'hamlit/concerns/ripperable'
 
@@ -6,9 +8,13 @@ require 'hamlit/concerns/ripperable'
 module Hamlit
   module Compilers
     module OldAttribute
+      include Concerns::AttributeBuilder
       include Concerns::Balanceable
+      include Concerns::Ripperable
 
       def compile_old_attribute(str)
+        return runtime_build(str) unless Ripper.sexp(str)
+
         attrs = parse_old_attributes(str)
         flatten_attributes(attrs).map do |key, value|
           next true_attribute(key) if value == 'true'
@@ -38,22 +44,6 @@ module Hamlit
         end
 
         attributes
-      end
-
-      def flatten_attributes(attributes)
-        flattened = {}
-
-        attributes.each do |key, value|
-          case value
-          when Hash
-            flatten_attributes(value).each do |k, v|
-              flattened["#{key}-#{k}"] = v
-            end
-          else
-            flattened[key] = value
-          end
-        end
-        flattened
       end
 
       def read_hash_key!(tokens)
@@ -90,6 +80,13 @@ module Hamlit
         (row, col), type, str = tokens.shift
 
         raise SyntaxError unless type == :on_op && str == '=>'
+      end
+
+      def runtime_build(str)
+        str = str.gsub(/(\A\{|\}\Z)/, '')
+        quote = options[:attr_quote].inspect
+        code = "::Hamlit::Attribute.build(#{quote}, #{str})"
+        [[:dynamic, code]]
       end
 
       def split_hash(str)

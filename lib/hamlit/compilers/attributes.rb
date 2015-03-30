@@ -10,7 +10,7 @@ module Hamlit
       include Compilers::OldAttribute
 
       included do
-        define_options :format
+        define_options :format, :attr_quote
       end
 
       def on_haml_attrs(*attrs)
