@@ -22,7 +22,8 @@ module Hamlit
     include Parsers::Text
     include Parsers::Whitespace
 
-    SKIP_NEWLINE_EXPS = %i[newline code multi].freeze
+    SKIP_NEWLINE_EXPS    = %i[newline code multi].freeze
+    SKIP_NEWLINE_FILTERS = %w[ruby markdown erb].freeze
 
     define_options :format
 
@@ -111,9 +112,12 @@ module Hamlit
     def skip_newline?(ast)
       SKIP_NEWLINE_EXPS.include?(ast.first) ||
         (ast[0..1] == [:haml, :doctype]) ||
-        (ast[0..2] == [:haml, :filter, 'ruby']) ||
-        (ast[0..2] == [:haml, :filter, 'markdown']) ||
+        newline_skip_filter?(ast) ||
         @outer_removal.include?(@current_indent)
+    end
+
+    def newline_skip_filter?(ast)
+      ast[0..1] == [:haml, :filter] && SKIP_NEWLINE_FILTERS.include?(ast[2])
     end
   end
 end

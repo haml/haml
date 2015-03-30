@@ -1,6 +1,7 @@
 require 'hamlit/concerns/included'
 require 'hamlit/concerns/registerable'
 require 'hamlit/filters/css'
+require 'hamlit/filters/erb'
 require 'hamlit/filters/escaped'
 require 'hamlit/filters/javascript'
 require 'hamlit/filters/less'
@@ -22,6 +23,7 @@ module Hamlit
         define_options :format
 
         register :css,        Filters::Css
+        register :erb,        Filters::Erb
         register :escaped,    Filters::Escaped
         register :javascript, Filters::Javascript
         register :less,       Filters::Less
