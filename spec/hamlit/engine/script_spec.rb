@@ -61,5 +61,27 @@ describe Hamlit::Engine do
         3
       HTML
     end
+
+    it 'renders !=' do
+      assert_render(<<-HAML, <<-HTML, escape_html: true)
+        != '<"&>'
+        != '<"&>'.tap do |str|
+          -# no operation
+      HAML
+        <"&>
+        <"&>
+      HTML
+    end
+
+    it 'renders &=' do
+      assert_render(<<-HAML, <<-HTML, escape_html: false)
+        &= '<"&>'
+        &= '<"&>'.tap do |str|
+          -# no operation
+      HAML
+        &lt;&quot;&amp;&gt;
+        &lt;&quot;&amp;&gt;
+      HTML
+    end
   end
 end

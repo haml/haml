@@ -10,13 +10,12 @@ module Hamlit
         include Concerns::Escapable
       end
 
-      def on_haml_script(*exps)
-        exps     = exps.dup
+      def on_haml_script(code, options, *exps)
         variable = result_identifier
-        code     = exps.shift
 
         assign = [:code, "#{variable} = #{code}"]
-        result = escape_html([:dynamic, variable])
+        result = escape_html([:dynamic, variable], options[:force_escape])
+        result = [:dynamic, variable] if options[:disable_escape]
         [:multi, assign, *exps.map { |exp| compile(exp) }, compile(result)]
       end
 

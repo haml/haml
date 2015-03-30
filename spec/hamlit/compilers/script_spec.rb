@@ -1,10 +1,15 @@
 describe Hamlit::Compiler do
   describe 'script' do
+    let(:options) do
+      { force_escape: false, disable_escape: false }
+    end
+
     it 'compiles hamlit script ast into assigning' do
       assert_compile(
         [:haml,
          :script,
          'link_to user_path do',
+         options,
          [:static, 'user']],
         [:multi,
          [:code, "_hamlit_compiler0 = link_to user_path do"],
@@ -19,10 +24,12 @@ describe Hamlit::Compiler do
          [:haml,
           :script,
           'link_to user_path do',
+          options,
           [:static, 'user']],
          [:haml,
           :script,
           'link_to repo_path do',
+          options,
           [:static, 'repo']]],
         [:multi,
          [:multi,

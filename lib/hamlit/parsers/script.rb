@@ -10,24 +10,25 @@ module Hamlit
       include Concerns::Error
       include Concerns::Indentable
 
-      INTERNAL_STATEMENTS = %w[else elsif when].freeze
+      INTERNAL_STATEMENTS    = %w[else elsif when].freeze
+      DEFAULT_SCRIPT_OPTIONS = { force_escape: false, disable_escape: false }.freeze
 
       included do
         include Concerns::Escapable
       end
 
-      def parse_script(scanner, force_escape: false, disable_escape: false)
+      def parse_script(scanner, options = {})
         assert_scan!(scanner, /=|&=|!=/)
+        options = DEFAULT_SCRIPT_OPTIONS.merge(options)
 
         code = scan_code(scanner)
         return syntax_error("There's no Ruby code for = to evaluate.") if code.empty?
         unless has_block?
-          return [:dynamic, code] if disable_escape
-          return escape_html([:dynamic, code], force_escape)
+          return [:dynamic, code] if options[:disable_escape]
+          return escape_html([:dynamic, code], options[:force_escape])
         end
 
-        # FIXME: parse != or &= for block
-        ast = [:haml, :script, code]
+        ast = [:haml, :script, code, options]
         ast += with_indented { parse_lines }
         ast << [:code, 'end']
         ast
