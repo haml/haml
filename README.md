@@ -15,18 +15,19 @@ or just replace `gem "haml"` with `gem "hamlit"`.
 ## Features
 ### Fast rendering
 
-Hamlit's rendering is **7.0x times faster** than original haml.
+Hamlit's rendering is **8.47x times faster** than original haml.
 
 ```
-   hamlit:    94047.0 i/s
-   erubis:    87136.3 i/s - 1.08x slower
-     slim:    83996.0 i/s - 1.12x slower
-     faml:    68861.1 i/s - 1.37x slower
-     haml:    13428.6 i/s - 7.00x slower
+    hamlit:   133922.9 i/s
+    erubis:   123464.1 i/s - 1.08x slower
+      slim:   110404.3 i/s - 1.21x slower
+      faml:    92009.3 i/s - 1.46x slower
+      haml:    15810.4 i/s - 8.47x slower
 ```
 
-[This benchmark](https://github.com/k0kubun/hamlit/blob/6d7d5ca7601dad9fe04d67621255ac2a69cd8d85/benchmarks/benchmark.rb)
+[This benchmark](https://github.com/k0kubun/hamlit/blob/74ede1101f228828e343ceb1af481c45eaf0a1dd/benchmarks/benchmark.rb)
 is the same as [slim-template/slim](https://github.com/slim-template/slim)'s one for fairness.
+([The result on travis CI](https://travis-ci.org/k0kubun/hamlit/jobs/56403724))
 
 ### Better parser
 
