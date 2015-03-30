@@ -1,5 +1,6 @@
 require 'hamlit/concerns/included'
 require 'hamlit/concerns/registerable'
+require 'hamlit/filters/coffee'
 require 'hamlit/filters/css'
 require 'hamlit/filters/erb'
 require 'hamlit/filters/escaped'
@@ -22,17 +23,19 @@ module Hamlit
 
         define_options :format
 
-        register :css,        Filters::Css
-        register :erb,        Filters::Erb
-        register :escaped,    Filters::Escaped
-        register :javascript, Filters::Javascript
-        register :less,       Filters::Less
-        register :markdown,   Filters::Markdown
-        register :plain,      Filters::Plain
-        register :preserve,   Filters::Preserve
-        register :ruby,       Filters::Ruby
-        register :sass,       Filters::Sass
-        register :scss,       Filters::Scss
+        register :coffee,       Filters::Coffee
+        register :coffeescript, Filters::Coffee
+        register :css,          Filters::Css
+        register :erb,          Filters::Erb
+        register :escaped,      Filters::Escaped
+        register :javascript,   Filters::Javascript
+        register :less,         Filters::Less
+        register :markdown,     Filters::Markdown
+        register :plain,        Filters::Plain
+        register :preserve,     Filters::Preserve
+        register :ruby,         Filters::Ruby
+        register :sass,         Filters::Sass
+        register :scss,         Filters::Scss
       end
 
       def on_haml_filter(name, lines)
