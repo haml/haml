@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Hamlit::VERSION
   spec.authors       = ["Takashi Kokubun"]
   spec.email         = ["takashikkbn@gmail.com"]
-  spec.summary       = %q{Yet another haml implementation}
-  spec.description   = %q{Yet another haml implementation}
+  spec.summary       = %q{High Performance Haml Implementation}
+  spec.description   = %q{High Performance Haml Implementation}
   spec.homepage      = "https://github.com/k0kubun/hamlit"
   spec.license       = "MIT"
 
