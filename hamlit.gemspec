@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "temple"
   spec.add_dependency "thor"
-
+  spec.add_dependency "tilt"
   spec.add_development_dependency "benchmark-ips"
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "erubis"
@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", ">= 3"
+  spec.add_development_dependency "sass"
   spec.add_development_dependency "slim"
   spec.add_development_dependency "tenjin"
   spec.add_development_dependency "unindent"

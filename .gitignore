@@ -13,3 +13,4 @@
 *.a
 *.cache
 mkmf.log
+.sass-cache/
