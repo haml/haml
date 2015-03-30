@@ -51,7 +51,7 @@ module Hamlit
         width = next_width
         if width != @current_indent * 2
           if width != Hamlit::EOF && (width > @current_indent * 2 || width.odd?)
-            ast << [:newline]
+            ast << [:multi, [:newline], [:newline]]
             ast << syntax_error(
               "inconsistent indentation: #{2 * @current_indent} spaces used for indentation, "\
               "but the rest of the document was indented using #{width} spaces"
