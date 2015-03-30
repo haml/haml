@@ -34,7 +34,7 @@ module Hamlit
         width = count_width(line)
 
         return (width + 1) / 2 unless strict
-        assert!('Expected to count even-width indent') if width.odd?
+        compile_error!('Expected to count even-width indent') if width.odd?
 
         width / 2
       end

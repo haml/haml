@@ -11,7 +11,7 @@ module Hamlit
         [:code, code]
       end
 
-      def assert!(message)
+      def copmile_error!(message)
         raise CompileError.new(message)
       end
 
