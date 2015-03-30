@@ -1,11 +1,11 @@
-require 'ripper'
+require 'hamlit/concerns/ripperable'
 
 # This module compiles new-style attributes, which is
 # surrounded by parentheses.
 module Hamlit
   module Compilers
     module NewAttribute
-      TYPE_POSITION = 1
+      include Concerns::Ripperable
 
       def compile_new_attribute(str)
         str    = str.gsub(/\A\(|\)\Z/, '')
@@ -92,17 +92,6 @@ module Hamlit
         end
 
         tokens
-      end
-
-      def skip_tokens!(tokens, *types)
-        while types.include?(type_of(tokens.first))
-          tokens.shift
-        end
-      end
-
-      def type_of(token)
-        return nil unless token
-        token[TYPE_POSITION]
       end
 
       def true_attribute(key)

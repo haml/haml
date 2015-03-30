@@ -1,15 +1,12 @@
-require 'ripper'
 require 'hamlit/concerns/balanceable'
+require 'hamlit/concerns/ripperable'
 
 # This module compiles only old-style attribute, which is
 # surrounded by brackets.
-# FIXME: remove duplicated code with NewAttribute
 module Hamlit
   module Compilers
     module OldAttribute
       include Concerns::Balanceable
-
-      TYPE_POSITION = 1
 
       def compile_old_attribute(str)
         attrs = parse_old_attributes(str)
@@ -32,8 +29,8 @@ module Hamlit
           key = read_hash_key!(tokens)
           val = tokens.map(&:last).join.strip
 
-          tokens = tokens.reject { |t| t[TYPE_POSITION] == :on_sp }
-          if tokens.first[TYPE_POSITION] == :on_lbrace
+          skip_tokens!(tokens, :on_sp)
+          if type_of(tokens.first) == :on_lbrace
             val = parse_old_attributes(val)
           end
 
@@ -84,12 +81,12 @@ module Hamlit
         (row, col), type, str = tokens.shift
         return '' if type == :on_tstring_end
 
-        raise SyntaxError if hash_type_of(tokens.shift) != :on_tstring_end
+        raise SyntaxError if type_of(tokens.shift) != :on_tstring_end
         str
       end
 
       def hash_skip_tokens!(tokens, *types)
-        while types.include?(hash_type_of(tokens.first))
+        while types.include?(type_of(tokens.first))
           tokens.shift
         end
       end
@@ -99,11 +96,6 @@ module Hamlit
         (row, col), type, str = tokens.shift
 
         raise SyntaxError unless type == :on_op && str == '=>'
-      end
-
-      def hash_type_of(token)
-        return nil unless token
-        token[TYPE_POSITION]
       end
 
       def split_hash(str)
