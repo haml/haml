@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       get :form
       get :helpers
       get :safe_buffer
+      get :old_attributes
     end
   end
 end

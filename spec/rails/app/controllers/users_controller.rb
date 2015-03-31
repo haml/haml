@@ -17,4 +17,7 @@ class UsersController < ApplicationController
 
   def safe_buffer
   end
+
+  def old_attributes
+  end
 end

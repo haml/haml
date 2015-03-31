@@ -24,6 +24,13 @@ describe 'Hamlit rails integration', type: :request do
     expect(response.body).to include('<safe>')
   end
 
+  it 'renders a complex old attributes' do
+    get old_attributes_users_path
+    expect(response.body).to include("<a value='foo 1'></a>")
+    expect(response.body).to include("<span data-value='foo 2'></span>")
+    expect(response.body).to include("<div class='foo' data-value='foo 3'></div>")
+  end
+
   describe 'escaping' do
     it 'escapes script' do
       get users_path(q: '<script>alert("a");</script>')
