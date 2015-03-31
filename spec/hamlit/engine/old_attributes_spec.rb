@@ -40,23 +40,6 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'renders true attributes' do
-      assert_render(<<-'HAML', <<-HTML)
-        %span{ data: { disable: true } } bar
-      HAML
-        <span data-disable>bar</span>
-      HTML
-    end
-
-    it 'renders nested hash whose value is variable' do
-      assert_render(<<-'HAML', <<-HTML)
-        - hash = { disable: true }
-        %span{ data: hash } bar
-      HAML
-        <span data-disable>bar</span>
-      HTML
-    end
-
     it 'renders false or nil attributes' do
       assert_render(<<-'HAML', <<-HTML)
         - hash = { checked: false }
@@ -102,6 +85,42 @@ describe Hamlit::Engine do
       HAML
         <span '<foo>'='&lt;bar&gt;'></span>
       HTML
+    end
+
+    describe 'nested attributes' do
+      it 'renders true attributes' do
+        assert_render(<<-'HAML', <<-HTML)
+          %span{ data: { disable: true } } bar
+        HAML
+          <span data-disable>bar</span>
+        HTML
+      end
+
+      it 'renders nested hash whose value is variable' do
+        assert_render(<<-'HAML', <<-HTML)
+          - hash = { disable: true }
+          %span{ data: hash } bar
+        HAML
+          <span data-disable>bar</span>
+        HTML
+      end
+
+      it 'changes an underscore in a nested key to a hyphen' do
+        assert_render(<<-'HAML', <<-HTML)
+          %div{ data: { raw_src: 'foo' } }
+        HAML
+          <div data-raw-src='foo'></div>
+        HTML
+      end
+
+      it 'changes an underscore in a nested dynamic attribute' do
+        assert_render(<<-'HAML', <<-HTML)
+          - hash = { raw_src: 'foo' }
+          %div{ data: hash }
+        HAML
+          <div data-raw-src='foo'></div>
+        HTML
+      end
     end
 
     describe 'element class with attributes class' do

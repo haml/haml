@@ -8,6 +8,7 @@ module Hamlit
           case value
           when Hash
             flatten_attributes(value).each do |k, v|
+              k = k.to_s.gsub(/_/, '-')
               flattened["#{key}-#{k}"] = v if v
             end
           else
