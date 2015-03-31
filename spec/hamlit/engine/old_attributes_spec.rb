@@ -103,5 +103,24 @@ describe Hamlit::Engine do
         <span '<foo>'='&lt;bar&gt;'></span>
       HTML
     end
+
+    describe 'element class with attributes class' do
+      it 'does not generate double classes' do
+        assert_render(<<-HAML, <<-HTML)
+          .item{ class: 'first' }
+        HAML
+          <div class='first item'></div>
+        HTML
+      end
+
+      it 'does not generate double classes for a variable' do
+        assert_render(<<-HAML, <<-HTML)
+          - val = 'val'
+          .element{ class: val }
+        HAML
+          <div class='element val'></div>
+        HTML
+      end
+    end
   end
 end
