@@ -128,7 +128,11 @@ module Hamlit
         splitted  = []
         start_pos = 1
         columns.each do |end_pos|
-          splitted << str[start_pos..(end_pos - 1)]
+          if str.ascii_only?
+            splitted << str[start_pos..(end_pos - 1)]
+          else
+            splitted << str.unpack("C*")[start_pos..(end_pos - 1)].pack("C*").force_encoding('utf-8')
+          end
           start_pos = end_pos + 1
         end
 

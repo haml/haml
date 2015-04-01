@@ -87,6 +87,14 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders multi-byte chars as static attribute value' do
+      assert_render(<<-'HAML', <<-HTML)
+        %img{ alt: 'こんにちは' }
+      HAML
+        <img alt='こんにちは'>
+      HTML
+    end
+
     describe 'nested attributes' do
       it 'renders true attributes' do
         assert_render(<<-'HAML', <<-HTML)
