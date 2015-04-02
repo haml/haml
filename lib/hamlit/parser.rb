@@ -39,7 +39,9 @@ module Hamlit
 
     # Reset the parser state.
     def reset(template)
+      validate_indentation!(template)
       template = preprocess_multilines(template)
+
       reset_lines(template.split("\n"))
       reset_indent
       reset_outer_removal

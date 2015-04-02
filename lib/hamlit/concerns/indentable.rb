@@ -48,6 +48,30 @@ module Hamlit
         return false unless line
         count_indent(line) == @current_indent
       end
+
+      # Validate the template is using consitent indentation, 2 spaces or a tab.
+      def validate_indentation!(template)
+        last_indent = ''
+
+        indents = template.scan(/^[ \t]+/)
+        indents.each do |indent|
+          if last_indent.include?(' ') && indent.include?("\t") ||
+              last_indent.include?("\t") && indent.include?(' ')
+            syntax_error!(%Q{Inconsistent indentation: #{indent_label(indent)} used for indentation, but the rest of the document was indented using #{indent_label(last_indent)}.})
+          end
+
+          last_indent = indent
+        end
+      end
+
+      def indent_label(indent)
+        return %Q{"#{indent}"} if indent.include?(' ') && indent.include?("\t")
+
+        label  = indent.include?(' ') ? 'space' : 'tab'
+        length = indent.match(/[ \t]+/).to_s.length
+
+        "#{length} #{label}#{'s' if length > 1}"
+      end
     end
   end
 end

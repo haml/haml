@@ -43,5 +43,14 @@ describe Hamlit::Engine do
         end
       end
     end
+
+    it 'raises syntax error for an inconsistent indentation' do
+      expect { render_string(<<-HAML.unindent) }.
+        %a
+          %b
+        \t\t%b
+      HAML
+        to raise_error(Hamlit::SyntaxError, 'Inconsistent indentation: 2 tabs used for indentation, but the rest of the document was indented using 2 spaces.')
+    end
   end
 end

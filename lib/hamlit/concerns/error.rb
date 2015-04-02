@@ -11,6 +11,10 @@ module Hamlit
         [:code, code]
       end
 
+      def syntax_error!(message)
+        raise Hamlit::SyntaxError.new(message)
+      end
+
       def copmile_error!(message)
         raise CompileError.new(message)
       end
