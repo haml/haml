@@ -72,6 +72,17 @@ module Hamlit
 
         "#{length} #{label}#{'s' if length > 1}"
       end
+
+      # Replace hard tabs into 2 spaces
+      def replace_hard_tabs(template)
+        lines = []
+        template.each_line do |line|
+          lines << line.gsub(/^\t+/) do |match|
+            ' ' * (match.length * 2)
+          end
+        end
+        lines.join
+      end
     end
   end
 end

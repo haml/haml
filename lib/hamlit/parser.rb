@@ -40,6 +40,7 @@ module Hamlit
     # Reset the parser state.
     def reset(template)
       validate_indentation!(template)
+      template = replace_hard_tabs(template)
       template = preprocess_multilines(template)
 
       reset_lines(template.split("\n"))
