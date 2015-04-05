@@ -1,3 +1,5 @@
 %a{ value: "#{I18n.t "foo", count: 1}" }
 %span{ data: { value: "#{I18n.t "foo", count: 2}" } }
 .foo{ data: { value: "#{I18n.t "foo", count: 3}"}}
+%a{ data: { value: t('foo', count: 4) } }
+%a{ data: { value: [count: 1] } }

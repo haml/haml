@@ -29,6 +29,8 @@ describe 'Hamlit rails integration', type: :request do
     expect(response.body).to include("<a value='foo 1'></a>")
     expect(response.body).to include("<span data-value='foo 2'></span>")
     expect(response.body).to include("<div class='foo' data-value='foo 3'></div>")
+    expect(response.body).to include("<a data-value='foo 4'></a>")
+    expect(response.body).to include("<a data-value='[{:count=>1}]'></a>")
   end
 
   describe 'escaping' do
