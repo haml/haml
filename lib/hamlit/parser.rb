@@ -82,7 +82,7 @@ module Hamlit
 
       scanner = StringScanner.new(line)
       scanner.scan(/ +/)
-      if scanner.match?(/\#{/)
+      if scanner.scan(/\\/) || scanner.match?(/\#{/)
         return parse_text(scanner)
       elsif scanner.match?(/&=/)
         return parse_script(scanner, force_escape: true)

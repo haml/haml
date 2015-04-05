@@ -25,5 +25,18 @@ describe Hamlit::Engine do
         #+
       HTML
     end
+
+    it 'escapes all operators by backslash' do
+      assert_render(<<-'HAML', <<-HTML)
+        = 'a'
+        -
+        \= 'a'
+        \-
+      HAML
+        a
+        = 'a'
+        -
+      HTML
+    end
   end
 end
