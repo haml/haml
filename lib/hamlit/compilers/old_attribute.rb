@@ -136,12 +136,16 @@ module Hamlit
       end
 
       def reject_nested_columns(str, columns)
-        result     = []
+        result = []
         open_count = 0
-        emb_count  = 0
+        count = {
+          emb:     0,
+          paren:   0,
+          bracket: 0,
+        }
 
         Ripper.lex(str).each do |(row, col), type, str|
-          if columns.include?(col) && open_count == 1 && emb_count == 0
+          if columns.include?(col) && open_count == 1 && count.values.all?(&:zero?)
             result << col
           end
 
@@ -151,9 +155,17 @@ module Hamlit
           when :on_rbrace
             open_count -= 1
           when :on_embexpr_beg
-            emb_count += 1
+            count[:emb] += 1
           when :on_embexpr_end
-            emb_count -= 1
+            count[:emb] -= 1
+          when :on_lparen
+            count[:paren] += 1
+          when :on_rparen
+            count[:paren] -= 1
+          when :on_lbracket
+            count[:bracket] += 1
+          when :on_rbracket
+            count[:bracket] -= 1
           end
         end
         result
