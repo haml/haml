@@ -1,3 +1,9 @@
+## v0.4.2
+
+- Bugfix about parsing nested attributes
+  - https://github.com/k0kubun/hamlit/issues/12
+  - Thanks to @creasty
+
 ## v0.4.1
 
 - Escape haml operators by backslash
