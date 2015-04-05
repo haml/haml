@@ -49,6 +49,21 @@ Hamlit is used on [githubranking.com](http://githubranking.com/).
 Basically the same as [haml](https://github.com/haml/haml).
 Check out the [reference documentation](http://haml.info/docs/yardoc/file.REFERENCE.html) for details.
 
+### Rails
+
+Just update Gemfile.
+
+### Sinatra
+
+For compatibility with Haml, Hamlit does not escape html automatically in sinatra.
+You can enable html escaping manually:
+
+```ruby
+configure do
+  Hamlit::Engine.set_default_options(escape_html: true)
+end
+```
+
 ## Why high performance?
 ### Less work on runtime
 Haml's rendering is very slow because generated code by haml runs many operations on runtime.
