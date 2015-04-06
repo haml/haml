@@ -13,22 +13,22 @@ gemfile:
 env:
   - TASK=spec
   - TASK=rails:spec
-  - TASK=bench TIME=10
+  - TASK=bench TIME=20
 matrix:
   allow_failures:
-    - env: TASK=bench TIME=10
+    - env: TASK=bench TIME=20
   exclude:
     - env: TASK=spec
       gemfile: spec/rails/Gemfile
     - env: TASK=rails:spec
       gemfile: Gemfile
-    - env: TASK=bench TIME=10
+    - env: TASK=bench TIME=20
       gemfile: spec/rails/Gemfile
     - rvm: 2.1
       env: TASK=rails:spec
     - rvm: 2.1
-      env: TASK=bench TIME=10
+      env: TASK=bench TIME=20
     - rvm: 2.0.0
       env: TASK=rails:spec
     - rvm: 2.0.0
-      env: TASK=bench TIME=10
+      env: TASK=bench TIME=20
