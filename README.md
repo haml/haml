@@ -59,9 +59,7 @@ For compatibility with Haml, Hamlit does not escape html automatically in sinatr
 You can enable html escaping manually:
 
 ```ruby
-configure do
-  Hamlit::Engine.set_default_options(escape_html: true)
-end
+set :haml, { escape_html: true }
 ```
 
 ## Why high performance?
