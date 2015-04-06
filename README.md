@@ -15,21 +15,22 @@ or just replace `gem "haml"` with `gem "hamlit"`.
 ## Features
 ### Fast rendering
 
-Hamlit's rendering is **8.47x times faster** than original haml.
-
-![](http://i.gyazo.com/57b726102a4a169d4b85cc22fcbb3ff3.png)
+Hamlit's rendering is **7.24x times faster** than original haml.
 
 ```
-    hamlit:   133922.9 i/s
-    erubis:   123464.1 i/s - 1.08x slower
-      slim:   110404.3 i/s - 1.21x slower
-      faml:    92009.3 i/s - 1.46x slower
-      haml:    15810.4 i/s - 8.47x slower
+    erubis:   114417.8 i/s
+    hamlit:   107367.5 i/s - 1.07x slower
+      slim:   104728.0 i/s - 1.09x slower
+      faml:    87624.2 i/s - 1.31x slower
+      haml:    15796.0 i/s - 7.24x slower
 ```
 
-[This benchmark](https://github.com/k0kubun/hamlit/blob/74ede1101f228828e343ceb1af481c45eaf0a1dd/benchmarks/benchmark.rb)
+[This benchmark](https://github.com/k0kubun/hamlit/blob/b6f112aa1f51816ab9a3a81bd7810ed9cffd26aa/benchmarks/benchmark.rb)
 is the same as [slim-template/slim](https://github.com/slim-template/slim)'s one for fairness.
-([The result on travis CI](https://travis-ci.org/k0kubun/hamlit/jobs/56403724))
+([The result on travis CI](https://travis-ci.org/k0kubun/hamlit/jobs/57333515))
+
+Note that there are [some incompatibilities](https://github.com/k0kubun/hamlit/issues) related to performance.
+You may want [faml](https://github.com/eagletmt/faml) for a better compatibility.
 
 ### Better parser
 
@@ -78,6 +79,13 @@ code by Hamlit is very fast.
 
 Not only relying on temple optimizers, but also Hamlit's compiler cares about many cases
 to optimize performance such as string interpolation.
+
+## TODO
+
+Currently there are some important incompatibilities that should be fixed.
+
+- Remove falsy attributes [#2](https://github.com/k0kubun/hamlit/issues/2)
+- Escape attribute values [#10](https://github.com/k0kubun/hamlit/issues/10)
 
 ## License
 
