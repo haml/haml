@@ -12,10 +12,12 @@ describe Hamlit::Engine do
 
     it 'renders one-line script with comment' do
       assert_render(<<-HAML, <<-HTML)
+        = # comment_only
         = '#' + "#" # = 3 #
         = ['#',
           "#"]  # comment
       HAML
+
         ##
         ["#", "#"]
       HTML

@@ -21,8 +21,8 @@ module Hamlit
         assert_scan!(scanner, /=|&=|!=/)
         options = DEFAULT_SCRIPT_OPTIONS.merge(options)
 
-        code = scan_code(scanner)
-        return syntax_error("There's no Ruby code for = to evaluate.") if code.empty?
+        code, with_comment = scan_code(scanner, comment_check: true)
+        return syntax_error("There's no Ruby code for = to evaluate.") if code.empty? && !with_comment
         unless has_block?
           return [:dynamic, code] if options[:disable_escape]
           return escape_html([:dynamic, code], options[:force_escape])
@@ -61,7 +61,7 @@ module Hamlit
 
       private
 
-      def scan_code(scanner)
+      def scan_code(scanner, comment_check: false)
         code = ''
         loop do
           code += (scanner.scan(/.+/) || '').strip
@@ -71,15 +71,21 @@ module Hamlit
           scanner = StringScanner.new(current_line)
           code += ' '
         end
-        remove_comment(code)
+        remove_comment(code, comment_check: comment_check)
       end
 
-      def remove_comment(code)
+      def remove_comment(code, comment_check: false)
         result = ''
+        with_comment = false
         Ripper.lex(code).each do |(row, col), type, str|
-          next if type == :on_comment
+          if type == :on_comment
+            with_comment = true
+            next
+          end
           result += str
         end
+
+        return [result, with_comment] if comment_check
         result
       end
 
