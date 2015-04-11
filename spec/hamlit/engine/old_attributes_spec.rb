@@ -160,7 +160,7 @@ describe Hamlit::Engine do
       end
     end
 
-    describe 'element class with attributes class' do
+    describe 'element class with attribute class' do
       it 'does not generate double classes' do
         assert_render(<<-HAML, <<-HTML)
           .item{ class: 'first' }
@@ -175,6 +175,52 @@ describe Hamlit::Engine do
           .element{ class: val }
         HAML
           <div class='element val'></div>
+        HTML
+      end
+
+      it 'does not generate double classes for hash attributes' do
+        assert_render(<<-HAML, <<-HTML)
+          - hash = { class: 'val' }
+          .element{ hash }
+        HAML
+          <div class='element val'></div>
+        HTML
+      end
+    end
+
+    describe 'element id with attribute id' do
+      it 'does not generate double ids' do
+        assert_render(<<-HAML, <<-HTML)
+          #item{ id: 'first' }
+        HAML
+          <div id='item_first'></div>
+        HTML
+      end
+
+      it 'does not generate double ids for a variable' do
+        assert_render(<<-HAML, <<-HTML)
+          - val = 'first'
+          #item{ id: val }
+        HAML
+          <div id='item_first'></div>
+        HTML
+      end
+
+      it 'does not generate double ids for hash attributes' do
+        assert_render(<<-HAML, <<-HTML)
+          - hash = { id: 'first' }
+          #item{ hash }
+        HAML
+          <div id='item_first'></div>
+        HTML
+      end
+
+      it 'does not generate double ids and classes for hash attributes' do
+        assert_render(<<-HAML, <<-HTML)
+          - hash = { id: 'first', class: 'foo' }
+          #item.bar{ hash }
+        HAML
+          <div class='bar foo' id='item_first'></div>
         HTML
       end
     end

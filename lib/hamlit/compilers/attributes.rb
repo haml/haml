@@ -1,5 +1,6 @@
 require 'hamlit/compilers/new_attribute'
 require 'hamlit/compilers/old_attribute'
+require 'hamlit/compilers/runtime_attribute'
 require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/included'
 
@@ -9,6 +10,7 @@ module Hamlit
       extend Concerns::Included
       include Compilers::NewAttribute
       include Compilers::OldAttribute
+      include Compilers::RuntimeAttribute
 
       included do
         include Concerns::Escapable
@@ -21,6 +23,13 @@ module Hamlit
         attrs = join_ids(attrs)
         attrs = combine_classes(attrs)
         attrs = pull_class_first(attrs)
+
+        if has_runtime_attribute?(attrs) && has_attr?(attrs, 'class', 'id')
+          attrs = merge_runtime_attributes(attrs)
+          return [:html, :attrs, *escape_attribute_values(attrs)]
+        end
+        attrs = attrs.map { |a| compile(a) }
+
         [:html, :attrs, *escape_attribute_values(attrs)]
       end
 
@@ -72,9 +81,13 @@ module Hamlit
         [[:html, :attr, 'id', [:multi, *insert_static(values, '_')]]] + (attrs - id_attrs)
       end
 
-      def filter_attrs(attrs, target)
-        class_attrs = attrs.select do |html, attr, name, content|
-          name == target
+      def has_attr?(attrs, *targets)
+        filter_attrs(attrs, *targets).any?
+      end
+
+      def filter_attrs(attrs, *targets)
+        attrs.select do |html, attr, name, content|
+          targets.include?(name)
         end
       end
 

@@ -1,4 +1,3 @@
-require 'hamlit/attribute'
 require 'hamlit/concerns/attribute_builder'
 require 'hamlit/concerns/balanceable'
 require 'hamlit/concerns/ripperable'
@@ -31,7 +30,8 @@ module Hamlit
           [:html, :attr, key, [:dynamic, value]]
         end
       rescue RuntimeBuild
-        return runtime_build(str)
+        # Give up static compilation when given string is invalid as ruby hash
+        [[:runtime, str]]
       end
 
       private
@@ -48,7 +48,7 @@ module Hamlit
         end
       end
 
-      # Give up static copmile when variables are detected.
+      # Give up static compilation when variables are detected.
       def assert_static_value!(value)
         tokens = Ripper.lex(value)
         tokens.each do |(row, col), type, str|
@@ -112,13 +112,6 @@ module Hamlit
         (row, col), type, str = tokens.shift
 
         raise SyntaxError unless type == :on_op && str == '=>'
-      end
-
-      def runtime_build(str)
-        str = str.gsub(/(\A\{|\}\Z)/, '')
-        quote = options[:attr_quote].inspect
-        code = "::Hamlit::Attribute.build(#{quote}, #{str})"
-        [[:dynamic, code]]
       end
 
       def split_hash(str)

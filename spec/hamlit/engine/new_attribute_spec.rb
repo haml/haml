@@ -41,5 +41,43 @@ describe Hamlit::Engine do
         HTML
       end
     end
+
+    describe 'element class with attribute class' do
+      it 'does not generate double classes' do
+        assert_render(<<-HAML, <<-HTML)
+          .item(class='first')
+        HAML
+          <div class='first item'></div>
+        HTML
+      end
+
+      it 'does not generate double classes for a variable' do
+        assert_render(<<-HAML, <<-HTML)
+          - val = 'val'
+          .element(class=val)
+        HAML
+          <div class='element val'></div>
+        HTML
+      end
+    end
+
+    describe 'element id with attribute id' do
+      it 'concatenates ids with underscore' do
+        assert_render(<<-HAML, <<-HTML)
+          #item(id='first')
+        HAML
+          <div id='item_first'></div>
+        HTML
+      end
+
+      it 'concatenates ids with underscore for a variable' do
+        assert_render(<<-HAML, <<-HTML)
+          - val = 'first'
+          #item(id=val)
+        HAML
+          <div id='item_first'></div>
+        HTML
+      end
+    end
   end
 end
