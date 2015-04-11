@@ -1,5 +1,6 @@
 require 'hamlit/compilers/new_attribute'
 require 'hamlit/compilers/old_attribute'
+require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/included'
 
 module Hamlit
@@ -10,6 +11,8 @@ module Hamlit
       include Compilers::OldAttribute
 
       included do
+        include Concerns::Escapable
+
         define_options :format, :attr_quote
       end
 
@@ -18,10 +21,20 @@ module Hamlit
         attrs = join_ids(attrs)
         attrs = combine_classes(attrs)
         attrs = pull_class_first(attrs)
-        [:html, :attrs, *attrs]
+        [:html, :attrs, *escape_attribute_values(attrs)]
       end
 
       private
+
+      def escape_attribute_values(attrs)
+        attrs.map do |attr|
+          _, _, name, value = attr
+          type, arg = value
+          next attr unless name && type && type && arg
+
+          [:html, :attr, name, escape_html(value, true)]
+        end
+      end
 
       def compile_attributes(exps)
         attrs = []
