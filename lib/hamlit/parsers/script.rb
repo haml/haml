@@ -48,11 +48,12 @@ module Hamlit
           return [:multi]
         end
 
-        ast = [:code]
-        ast << scan_code(scanner)
-        return ast unless has_block?
+        ast = [:multi, [:code, scan_code(scanner)]]
+        unless has_block?
+          ast << [:code, 'end'] if @current_indent > next_indent
+          return ast
+        end
 
-        ast = [:multi, ast]
         ast += with_indented { parse_lines }
         ast << [:code, 'end'] unless same_indent?(next_line) && internal_statement?(next_line)
         ast

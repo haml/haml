@@ -67,6 +67,18 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders empty else statement' do
+      assert_render(<<-'HAML', <<-HTML)
+        %span
+          - if false
+            ng
+          - else
+      HAML
+        <span>
+        </span>
+      HTML
+    end
+
     it 'accept if inside if-else' do
       assert_render(<<-'HAML', <<-HTML)
         - if false
