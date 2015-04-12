@@ -1,5 +1,14 @@
 describe Hamlit::Engine do
   describe 'silent script' do
+    it 'renders nothing' do
+      assert_render(<<-HAML, <<-HTML)
+        - nil
+        - 3
+        - 'foo'
+      HAML
+      HTML
+    end
+
     it 'renders silent script' do
       assert_render(<<-HAML, <<-HTML)
         - foo = 3
@@ -67,12 +76,34 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders empty elsif statement' do
+      assert_render(<<-'HAML', <<-HTML)
+        %span
+          - if false
+          - elsif false
+      HAML
+        <span>
+        </span>
+      HTML
+    end
+
     it 'renders empty else statement' do
       assert_render(<<-'HAML', <<-HTML)
         %span
           - if false
             ng
           - else
+      HAML
+        <span>
+        </span>
+      HTML
+    end
+
+    it 'renders empty when statement' do
+      assert_render(<<-'HAML', <<-HTML)
+        %span
+          - case
+          - when false
       HAML
         <span>
         </span>

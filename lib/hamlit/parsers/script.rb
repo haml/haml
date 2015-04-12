@@ -48,14 +48,19 @@ module Hamlit
           return [:multi]
         end
 
-        ast = [:multi, [:code, scan_code(scanner)]]
+        code = scan_code(scanner)
+        ast = [:multi, [:code, code]]
         unless has_block?
-          ast << [:code, 'end'] if @current_indent > next_indent
+          if internal_statement?(code) && !statement_continuing?
+            ast << [:code, 'end']
+          end
           return ast
         end
 
         ast += with_indented { parse_lines }
-        ast << [:code, 'end'] unless same_indent?(next_line) && internal_statement?(next_line)
+        unless statement_continuing?
+          ast << [:code, 'end']
+        end
         ast
       end
 
@@ -93,12 +98,18 @@ module Hamlit
         next_indent == @current_indent + 1
       end
 
-      def internal_statement?(line)
+      def statement_continuing?
+        same_indent?(next_line) && internal_statement?(next_line, silent_script: true)
+      end
+
+      def internal_statement?(line, silent_script: false)
         return false unless line
 
         scanner = StringScanner.new(line)
         scanner.scan(/ +/)
-        return false unless scanner.scan(/-/)
+        if silent_script
+          return false unless scanner.scan(/-/)
+        end
 
         scanner.scan(/ +/)
         statement = scanner.scan(/[^ ]+/)
