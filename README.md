@@ -29,9 +29,6 @@ Hamlit's rendering is **7.24x times faster** than original haml.
 is the same as [slim-template/slim](https://github.com/slim-template/slim)'s one for fairness.
 ([The result on travis CI](https://travis-ci.org/k0kubun/hamlit/jobs/57333515))
 
-Note that there are [some incompatibilities](https://github.com/k0kubun/hamlit/issues) related to performance.
-You may want [faml](https://github.com/eagletmt/faml) for a better compatibility.
-
 ### Better parser
 
 Haml's attribute parser is not so good. For example, raises syntax error for `%a{ b: '}' }`.
@@ -70,12 +67,6 @@ code by Hamlit is very fast.
 
 Not only relying on temple optimizers, but also Hamlit's compiler cares about many cases
 to optimize performance such as string interpolation.
-
-## TODO
-
-Currently there are some important incompatibilities that should be fixed.
-
-- Remove falsy attributes [#2](https://github.com/k0kubun/hamlit/issues/2)
 
 ## License
 
