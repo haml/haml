@@ -10,7 +10,6 @@ module Hamlit
         register_as: :haml,
         escape_html: true,
         streaming:   true,
-        ugly:        true,
       )
 
       # Haml extends Haml::Helpers in ActionView each time.

@@ -97,10 +97,8 @@ module Hamlit
         parse_doctype(scanner)
       when '%', '.', '#'
         parse_tag(scanner)
-      when '='
+      when '=', '~'
         parse_script(scanner)
-      when '~'
-        parse_preserve(scanner)
       when '-'
         parse_silent_script(scanner)
       when '/'

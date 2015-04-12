@@ -18,7 +18,7 @@ module Hamlit
       end
 
       def parse_script(scanner, options = {})
-        assert_scan!(scanner, /=|&=|!=/)
+        assert_scan!(scanner, /=|&=|!=|~/)
         options = DEFAULT_SCRIPT_OPTIONS.merge(options)
 
         code, with_comment = scan_code(scanner, comment_check: true)
@@ -32,13 +32,6 @@ module Hamlit
         ast += with_indented { parse_lines }
         ast << [:code, 'end']
         ast
-      end
-
-      def parse_preserve(scanner)
-        assert_scan!(scanner, /~/)
-
-        code = scan_code(scanner)
-        escape_html([:haml, :preserve, code])
       end
 
       def parse_silent_script(scanner)

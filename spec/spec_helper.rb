@@ -2,16 +2,11 @@ require 'hamlit'
 require 'unindent'
 
 module HamlitSpecHelper
-  DEFAULT_OPTIONS = {
-    ugly: true,
-  }.freeze
-
   def parse_string(str)
     Hamlit::Parser.new.call(str)
   end
 
   def render_string(str, options = {})
-    options = DEFAULT_OPTIONS.merge(options)
     eval Hamlit::Engine.new(options).call(str)
   end
 

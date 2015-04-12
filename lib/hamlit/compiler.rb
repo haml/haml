@@ -3,7 +3,6 @@ require 'hamlit/compilers/comment'
 require 'hamlit/compilers/doctype'
 require 'hamlit/compilers/dynamic'
 require 'hamlit/compilers/filter'
-require 'hamlit/compilers/preserve'
 require 'hamlit/compilers/script'
 require 'hamlit/compilers/strip'
 require 'hamlit/compilers/text'
@@ -16,7 +15,6 @@ module Hamlit
     include Compilers::Doctype
     include Compilers::Dynamic
     include Compilers::Filter
-    include Compilers::Preserve
     include Compilers::Script
     include Compilers::Strip
     include Compilers::Text

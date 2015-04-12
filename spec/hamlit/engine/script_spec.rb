@@ -96,5 +96,14 @@ describe Hamlit::Engine do
         &lt;&quot;&amp;&gt;
       HTML
     end
+
+    it 'regards ~ operator as =' do
+      assert_render(<<-'HAML', <<-HTML)
+        ~ "<code>hello\nworld</code>"
+      HAML
+        &lt;code&gt;hello
+        world&lt;/code&gt;
+      HTML
+    end
   end
 end
