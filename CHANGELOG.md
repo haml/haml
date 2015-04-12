@@ -1,3 +1,9 @@
+## v0.5.2
+
+- Bugfix for silent script without block
+  - https://github.com/k0kubun/hamlit/issues/16
+  - Thanks to @eagletmt
+
 ## v0.5.1
 
 - Bugfix about duplicated id and class
