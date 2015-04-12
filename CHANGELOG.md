@@ -1,3 +1,9 @@
+## v0.5.1
+
+- Bugfix about duplicated id and class
+  - https://github.com/k0kubun/hamlit/issues/4
+  - Thanks to @os0x
+
 ## v0.5.0
 
 - Escape special characters in attribute values
