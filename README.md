@@ -41,7 +41,7 @@ so it is able to parse such an attribute.
 ### Passing haml-spec
 
 [haml/haml-spec](https://github.com/haml/haml-spec) is a basic suite of tests for Haml interpreters.
-For all test cases in haml-spec, Hamlit behaves the same as Haml (ugly mode only, which is used on production).
+For all test cases in haml-spec, Hamlit behaves the same as Haml (ugly and escape\_html mode only, which is used on production).
 
 Hamlit is used on [githubranking.com](http://githubranking.com/).
 
