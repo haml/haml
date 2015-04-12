@@ -1,3 +1,8 @@
+## v0.6.1
+
+- Bugfix of line numbers for better error backtrace
+  - https://github.com/k0kubun/hamlit/pull/19
+
 ## v0.6.0
 
 - Automatically escape html in all situations
