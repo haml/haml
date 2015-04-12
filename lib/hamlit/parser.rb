@@ -85,7 +85,7 @@ module Hamlit
       if scanner.scan(/\\/) || scanner.match?(/\#{/)
         return parse_text(scanner)
       elsif scanner.match?(/&=/)
-        return parse_script(scanner, force_escape: true)
+        return parse_script(scanner)
       elsif scanner.match?(/!=/)
         return parse_script(scanner, disable_escape: true)
       elsif scanner.match?(/[.#](\Z|[^a-zA-Z0-9_-])/)
@@ -97,10 +97,8 @@ module Hamlit
         parse_doctype(scanner)
       when '%', '.', '#'
         parse_tag(scanner)
-      when '='
+      when '=', '~'
         parse_script(scanner)
-      when '~'
-        parse_preserve(scanner)
       when '-'
         parse_silent_script(scanner)
       when '/'

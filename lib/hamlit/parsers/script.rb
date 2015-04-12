@@ -1,44 +1,30 @@
-require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/error'
-require 'hamlit/concerns/included'
 require 'hamlit/concerns/indentable'
 
 module Hamlit
   module Parsers
     module Script
-      extend Concerns::Included
       include Concerns::Error
       include Concerns::Indentable
 
       INTERNAL_STATEMENTS    = %w[else elsif when].freeze
-      DEFAULT_SCRIPT_OPTIONS = { force_escape: false, disable_escape: false }.freeze
-
-      included do
-        include Concerns::Escapable
-      end
+      DEFAULT_SCRIPT_OPTIONS = { disable_escape: false }.freeze
 
       def parse_script(scanner, options = {})
-        assert_scan!(scanner, /=|&=|!=/)
+        assert_scan!(scanner, /=|&=|!=|~/)
         options = DEFAULT_SCRIPT_OPTIONS.merge(options)
 
         code, with_comment = scan_code(scanner, comment_check: true)
         return syntax_error("There's no Ruby code for = to evaluate.") if code.empty? && !with_comment
         unless has_block?
           return [:dynamic, code] if options[:disable_escape]
-          return escape_html([:dynamic, code], options[:force_escape])
+          return [:escape, true, [:dynamic, code]]
         end
 
         ast = [:haml, :script, code, options]
         ast += with_indented { parse_lines }
         ast << [:code, 'end']
         ast
-      end
-
-      def parse_preserve(scanner)
-        assert_scan!(scanner, /~/)
-
-        code = scan_code(scanner)
-        escape_html([:haml, :preserve, code])
       end
 
       def parse_silent_script(scanner)

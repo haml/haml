@@ -19,7 +19,7 @@ describe Hamlit::Engine do
       HAML
 
         ##
-        ["#", "#"]
+        [&quot;#&quot;, &quot;#&quot;]
       HTML
     end
 
@@ -76,7 +76,7 @@ describe Hamlit::Engine do
     end
 
     it 'renders !=' do
-      assert_render(<<-HAML, <<-HTML, escape_html: true)
+      assert_render(<<-HAML, <<-HTML)
         != '<"&>'
         != '<"&>'.tap do |str|
           -# no operation
@@ -87,13 +87,22 @@ describe Hamlit::Engine do
     end
 
     it 'renders &=' do
-      assert_render(<<-HAML, <<-HTML, escape_html: false)
+      assert_render(<<-HAML, <<-HTML)
         &= '<"&>'
         &= '<"&>'.tap do |str|
           -# no operation
       HAML
         &lt;&quot;&amp;&gt;
         &lt;&quot;&amp;&gt;
+      HTML
+    end
+
+    it 'regards ~ operator as =' do
+      assert_render(<<-'HAML', <<-HTML)
+        ~ "<code>hello\nworld</code>"
+      HAML
+        &lt;code&gt;hello
+        world&lt;/code&gt;
       HTML
     end
   end

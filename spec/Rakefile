@@ -10,15 +10,21 @@ def generate_spec(mode)
 
     # This is a spec converted by haml-spec.
     # See: https://github.com/haml/haml-spec
-    describe "haml #{mode} mode" do
-      def assert_pretty(haml, locals, options)
-        engine = Haml::Engine.new(haml, options)
-        hamlit = Hamlit::Template.new(options) { haml }
+    describe "haml #{mode} mode with escape_html" do
+      DEFAULT_OPTIONS = { ugly: true, escape_html: true }.freeze
+
+      def assert_haml(haml, locals, options)
+        engine  = Haml::Engine.new(haml, DEFAULT_OPTIONS.merge(options))
+        hamlit  = Hamlit::Template.new(suppress_warnings(options)) { haml }
         expect(hamlit.render(Object.new, locals)).to eq(engine.render(Object.new, locals))
       end
 
-      def assert_ugly(haml, locals, options)
-        assert_pretty(haml, locals, { ugly: true }.merge(options))
+      # NOTE: Hamlit only supports escape_html mode.
+      # Thus the option is not supporeted and prints noisy warnings.
+      def suppress_warnings(options)
+        options = options.dup
+        options.delete(:escape_html)
+        options
       end
 
   SPEC
@@ -51,7 +57,7 @@ def generate_spec(mode)
   end
 
   spec += "end\n"
-  File.write("hamlit/#{mode}_spec.rb", spec)
+  File.write("hamlit/haml_spec.rb", spec)
 end
 
 def generate_specify(test, locals, options, mode)
@@ -61,7 +67,7 @@ def generate_specify(test, locals, options, mode)
       html    = %q{#{test[:html]}}
       locals  = #{locals}
       options = #{options}
-      assert_#{mode}(haml, locals, options)
+      assert_haml(haml, locals, options)
     end
   SPEC
 end
@@ -71,9 +77,4 @@ task :ugly do
   generate_spec(:ugly)
 end
 
-desc 'Convert tests.json into pretty rspec tests'
-task :pretty do
-  generate_spec(:pretty)
-end
-
-task default: [:ugly, :pretty]
+task default: :ugly

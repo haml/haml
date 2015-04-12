@@ -1,7 +1,6 @@
 require 'hamlit/compilers/new_attribute'
 require 'hamlit/compilers/old_attribute'
 require 'hamlit/compilers/runtime_attribute'
-require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/included'
 
 module Hamlit
@@ -13,8 +12,6 @@ module Hamlit
       include Compilers::RuntimeAttribute
 
       included do
-        include Concerns::Escapable
-
         define_options :format, :attr_quote
       end
 
@@ -41,7 +38,7 @@ module Hamlit
           type, arg = value
           next attr unless name && type && type && arg
 
-          [:html, :attr, name, escape_html(value, true)]
+          [:html, :attr, name, [:escape, true, value]]
         end
       end
 

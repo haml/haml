@@ -7,7 +7,6 @@ describe Hamlit::Engine do
       {
         buffer:    buffer,
         generator: Temple::Generators::ArrayBuffer,
-        ugly:      true,
       }
     end
 
