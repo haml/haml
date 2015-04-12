@@ -2,6 +2,7 @@ require 'temple'
 require 'hamlit/compiler'
 require 'hamlit/html'
 require 'hamlit/parser'
+require 'hamlit/temple'
 
 module Hamlit
   class Engine < Temple::Engine
