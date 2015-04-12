@@ -15,14 +15,27 @@ module Hamlit
       include Concerns::Balanceable
       include Concerns::Ripperable
 
-      # For performance, only data can be nested.
+      # Only data can be nested for performance.
       NESTABLE_ATTRIBUTES = %w[data].freeze
       IGNORED_EXPRESSIONS = %w[false nil].freeze
+
+      # Only boolean attributes can be deleted for performance.
+      BOOLEAN_ATTRIBUTES  = %w[
+        autofocus
+        checked
+        data
+        disabled
+        formnovalidate
+        multiple
+        readonly
+      ].freeze
 
       def compile_old_attribute(str)
         raise RuntimeBuild unless Ripper.sexp(str)
 
         attrs = parse_old_attributes(str)
+        assert_no_boolean_attributes!(attrs)
+
         format_attributes(attrs).map do |key, value|
           next true_attribute(key) if value == 'true'
           assert_static_value!(value) if NESTABLE_ATTRIBUTES.include?(key)
@@ -53,6 +66,14 @@ module Hamlit
         tokens = Ripper.lex(value)
         tokens.each do |(row, col), type, str|
           raise RuntimeBuild if type == :on_ident
+        end
+      end
+
+      # Give up static compilation when attributes have deletable
+      # attributes, such as 'checked'.
+      def assert_no_boolean_attributes!(attrs)
+        if BOOLEAN_ATTRIBUTES.any? { |key| attrs.keys.include?(key) }
+          raise RuntimeBuild
         end
       end
 

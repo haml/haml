@@ -40,19 +40,6 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'renders false or nil attributes' do
-      assert_render(<<-'HAML', <<-HTML)
-        - hash = { checked: false }
-        %input{ hash }
-        %input{ checked: false }
-        %input{ checked: nil }
-      HAML
-        <input>
-        <input>
-        <input>
-      HTML
-    end
-
     it 'accepts even illegal input for haml' do
       assert_render(<<-'HAML', <<-HTML)
         %span{ class: '}}}', id: '{}}' } }{
@@ -84,6 +71,64 @@ describe Hamlit::Engine do
       HAML
         <img alt='こんにちは'>
       HTML
+    end
+
+    describe 'deletable attributes' do
+      it 'deletes attributes whose value is nil or false' do
+        assert_render(<<-'HAML', <<-HTML)
+          - hash = { checked: false }
+          %input{ hash }
+          %input{ checked: false }
+          %input{ checked: nil }
+          - checked = nil
+          %input{ checked: checked }
+          - checked = false
+          %input{ checked: checked }
+        HAML
+          <input>
+          <input>
+          <input>
+          <input>
+          <input>
+        HTML
+      end
+
+      it 'deletes some limited attributes with dynamic value' do
+        assert_render(<<-'HAML', <<-HTML)
+          - val = false
+          #foo.bar{ autofocus: val }
+          #foo.bar{ checked: val }
+          #foo.bar{ data: { disabled: val } }
+          #foo.bar{ disabled: val }
+          #foo.bar{ formnovalidate: val }
+          #foo.bar{ multiple: val }
+          #foo.bar{ readonly: val }
+        HAML
+          <div class='bar' id='foo'></div>
+          <div class='bar' id='foo'></div>
+          <div class='bar' id='foo'></div>
+          <div class='bar' id='foo'></div>
+          <div class='bar' id='foo'></div>
+          <div class='bar' id='foo'></div>
+          <div class='bar' id='foo'></div>
+        HTML
+      end
+
+      it 'does not delete some attributes, for optimization' do
+        assert_render(<<-'HAML', <<-HTML)
+          - val = false
+          %a{ href: val }
+          %a{ class: val }
+          - val = nil
+          %a{ href: val }
+          %a{ class: val }
+        HAML
+          <a href='false'></a>
+          <a class='false'></a>
+          <a href=''></a>
+          <a class=''></a>
+        HTML
+      end
     end
 
     describe 'html escape' do
