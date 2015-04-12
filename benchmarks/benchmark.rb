@@ -34,7 +34,6 @@ class Benchmarks
     fast_erubis = Erubis::FastEruby.new(@erb_code)
     haml_ugly   = Haml::Engine.new(@haml_code, format: :html5, ugly: true)
     tenjin      = Tenjin::Engine.new.get_template(@rbhtml_path)
-    hamlit      = Hamlit::Engine.new(escape_html: true)
 
     context = Context.new
 
@@ -47,7 +46,7 @@ class Benchmarks
       def run_slim_ugly; #{Slim::Engine.new.call @slim_code}; end
       def run_faml; #{Faml::Engine.new.call @haml_code}; end
       def run_tenjin; _buf = ''; #{tenjin.script}; end
-      def run_hamlit; #{hamlit.call @haml_code}; end
+      def run_hamlit; #{Hamlit::Engine.new.call @haml_code}; end
     }
 
     bench('hamlit', Hamlit::VERSION) { context.run_hamlit }
