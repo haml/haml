@@ -55,7 +55,7 @@ module Hamlit
         width = next_width
         if width != @current_indent * 2
           if width != Hamlit::EOF && (width > @current_indent * 2 || width.odd?)
-            ast << [:multi, [:newline], [:newline]]
+            ast << [:newline]
             ast << syntax_error(
               "inconsistent indentation: #{2 * @current_indent} spaces used for indentation, "\
               "but the rest of the document was indented using #{width} spaces"
@@ -69,8 +69,9 @@ module Hamlit
         if @outer_removal.include?(@current_indent) && ast.last == [:static, "\n"]
           ast.delete_at(-1)
         end
+        ast << [:newline] if @current_indent > 0
         ast << node
-        ast << [:newline]
+        ast << [:newline] if @current_indent == 0
         ast << [:static, "\n"] unless skip_newline?(node)
       end
       ast
