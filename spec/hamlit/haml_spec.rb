@@ -2,13 +2,21 @@ require "haml"
 
 # This is a spec converted by haml-spec.
 # See: https://github.com/haml/haml-spec
-describe "haml ugly mode with ecape_html" do
+describe "haml ugly mode with escape_html" do
   DEFAULT_OPTIONS = { ugly: true, escape_html: true }.freeze
 
   def assert_haml(haml, locals, options)
     engine  = Haml::Engine.new(haml, DEFAULT_OPTIONS.merge(options))
-    hamlit  = Hamlit::Template.new(options) { haml }
+    hamlit  = Hamlit::Template.new(suppress_warnings(options)) { haml }
     expect(hamlit.render(Object.new, locals)).to eq(engine.render(Object.new, locals))
+  end
+
+  # NOTE: Hamlit only supports escape_html mode.
+  # Thus the option is not supporeted and prints noisy warnings.
+  def suppress_warnings(options)
+    options = options.dup
+    options.delete(:escape_html)
+    options
   end
 
   context "headers" do

@@ -9,7 +9,6 @@ module Hamlit
       generator:   Temple::Generators::ArrayBuffer,
       format:      :html,
       attr_quote:  "'",
-      escape_html: true,
     )
 
     use Parser
