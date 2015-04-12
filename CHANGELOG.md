@@ -1,3 +1,9 @@
+## v0.6.2
+
+- Don't render falsy attributes
+  - https://github.com/k0kubun/hamlit/issues/2
+  - Thanks to @eagletmt
+
 ## v0.6.1
 
 - Bugfix of line numbers for better error backtrace
