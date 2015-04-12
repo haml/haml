@@ -1,3 +1,7 @@
+## v1.0.0
+
+- Use escape\_utils gem for faster escape\_html
+
 ## v0.6.2
 
 - Don't render falsy attributes
