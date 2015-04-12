@@ -19,7 +19,7 @@ describe Hamlit::Engine do
       HAML
 
         ##
-        ["#", "#"]
+        [&quot;#&quot;, &quot;#&quot;]
       HTML
     end
 

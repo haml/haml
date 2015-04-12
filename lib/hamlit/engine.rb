@@ -7,10 +7,11 @@ require 'hamlit/parser'
 module Hamlit
   class Engine < Temple::Engine
     define_options(
-      generator:  Temple::Generators::ArrayBuffer,
-      format:     :html,
-      attr_quote: "'",
-      ugly:       true,
+      generator:   Temple::Generators::ArrayBuffer,
+      format:      :html,
+      attr_quote:  "'",
+      ugly:        true,
+      escape_html: true,
     )
 
     use Parser

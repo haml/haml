@@ -154,7 +154,7 @@ describe Hamlit::Engine do
 
     it 'joins a next line if a current line ends with ","' do
       assert_render("- foo = [',  \n     ']\n= foo", <<-HTML)
-        [", "]
+        [&quot;, &quot;]
       HTML
     end
 

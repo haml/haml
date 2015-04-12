@@ -11,16 +11,9 @@ task :spec do
 end
 
 namespace :spec do
-  namespace :update do
-    desc 'Generate converted ugly haml-spec'
-    task :ugly do
-      system('cd spec && rake ugly')
-    end
-
-    desc 'Generate converted pretty haml-spec'
-    task :pretty do
-      system('cd spec && rake pretty')
-    end
+  desc 'Generate converted ugly haml-spec'
+  task :update do
+    system('cd spec && rake ugly')
   end
 end
 

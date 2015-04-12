@@ -51,7 +51,7 @@ def generate_spec(mode)
   end
 
   spec += "end\n"
-  File.write("hamlit/#{mode}_spec.rb", spec)
+  File.write("hamlit/haml_spec.rb", spec)
 end
 
 def generate_specify(test, locals, options, mode)
@@ -71,9 +71,4 @@ task :ugly do
   generate_spec(:ugly)
 end
 
-desc 'Convert tests.json into pretty rspec tests'
-task :pretty do
-  generate_spec(:pretty)
-end
-
-task default: [:ugly, :pretty]
+task default: :ugly

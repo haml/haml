@@ -4,7 +4,7 @@ describe Hamlit::Parser do
       assert_render(<<-'HAML', <<-HTML)
         ~ "<code>hello\nworld</code>"
       HAML
-        <code>hello&#x000A;world</code>
+        &lt;code&gt;hello&amp;#x000A;world&lt;/code&gt;
       HTML
     end
   end
