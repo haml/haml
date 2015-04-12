@@ -85,7 +85,6 @@ to optimize performance such as string interpolation.
 Currently there are some important incompatibilities that should be fixed.
 
 - Remove falsy attributes [#2](https://github.com/k0kubun/hamlit/issues/2)
-- Escape attribute values [#10](https://github.com/k0kubun/hamlit/issues/10)
 
 ## License
 
