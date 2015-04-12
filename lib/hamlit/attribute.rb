@@ -10,16 +10,16 @@ module Hamlit
   class Attribute
     include Concerns::AttributeBuilder
 
-    def self.build(quote, attributes, base = {})
+    def self.build(quote, base, attributes = {})
       builder = self.new(quote)
-      builder.build(attributes, base)
+      builder.build(base, attributes)
     end
 
     def initialize(quote)
       @quote = quote
     end
 
-    def build(attributes, base)
+    def build(base, attributes)
       result = ''
       merge_attributes(base, attributes).each do |key, value|
         if value == true

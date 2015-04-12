@@ -30,7 +30,7 @@ module Hamlit
       def compile_runtime_attribute(str, base = nil)
         str = str.gsub(/(\A\{|\}\Z)/, '')
         quote = options[:attr_quote].inspect
-        code = "::Hamlit::Attribute.build(#{[quote, str, base].compact.join(', ')})"
+        code = "::Hamlit::Attribute.build(#{[quote, base, str].compact.join(', ')})"
         [:dynamic, code]
       end
 

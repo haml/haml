@@ -125,6 +125,15 @@ describe Hamlit::Engine do
     end
 
     describe 'nested attributes' do
+      it 'renders data attribute by hash' do
+        assert_render(<<-'HAML', <<-HTML)
+          - hash = { bar: 'baz' }
+          %span.foo{ data: hash }
+        HAML
+          <span class='foo' data-bar='baz'></span>
+        HTML
+      end
+
       it 'renders true attributes' do
         assert_render(<<-'HAML', <<-HTML)
           %span{ data: { disable: true } } bar
