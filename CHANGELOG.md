@@ -1,3 +1,9 @@
+## v0.5.0
+
+- Escape special characters in attribute values
+ - https://github.com/k0kubun/hamlit/issues/10
+ - Thanks to @mono0x, @eagletmt
+
 ## v0.4.3
 
 - Allow empty else statement
