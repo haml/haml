@@ -1,3 +1,8 @@
+## v0.6.0
+
+- Automatically escape html in all situations
+  - https://github.com/k0kubun/hamlit/pull/18
+
 ## v0.5.3
 
 - Bugfix for syntax error in data attribute hash
