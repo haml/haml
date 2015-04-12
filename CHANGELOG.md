@@ -1,3 +1,12 @@
+## v0.4.3
+
+- Allow empty else statement
+  - https://github.com/k0kubun/hamlit/issues/14
+  - Thanks to @jeffblake
+- Accept comment-only script
+  - https://github.com/k0kubun/hamlit/issues/13
+  - Thanks to @jeffblake
+
 ## v0.4.2
 
 - Bugfix about parsing nested attributes
@@ -18,41 +27,41 @@
 
 ## v0.3.4
 
-- Allow tab indentation.
+- Allow tab indentation
   - https://github.com/k0kubun/hamlit/issues/9
   - Thanks to @tdtds
 
 ## v0.3.3
 
-- Accept multi byte parsing.
+- Accept multi byte parsing
   - https://github.com/k0kubun/hamlit/issues/8
   - Thanks to @machu
 
 ## v0.3.2
 
-- Bugfix for compiling old attributes.
+- Bugfix for compiling old attributes
   - https://github.com/k0kubun/hamlit/issues/7
   - Thanks to @creasty
 
 ## v0.3.1
 
-- Hyphenate data attributes.
+- Hyphenate data attributes
   - https://github.com/k0kubun/hamlit/issues/5
   - Thanks to @os0x
 
 ## v0.3.0
 
-- Specify a version in dependency of temple.
+- Specify a version in dependency of temple
 
 ## v0.2.0
 
-- Allow comments in script.
+- Allow comments in script
   - https://github.com/k0kubun/hamlit/issues/3
   - Thanks to @eagletmt
 
 ## v0.1.3
 
-- Bugfix for attribute nesting on runtime.
+- Bugfix for attribute nesting on runtime
   - https://github.com/k0kubun/hamlit/issues/1
   - Thanks to @eagletmt
 
@@ -64,10 +73,10 @@
 
 ## v0.1.1
 
-- Drop obsolete `--ugly` option for CLI.
+- Drop obsolete `--ugly` option for CLI
   - Currently pretty mode is not implemented.
 
 ## v0.1.0
 
-- Initial release.
+- Initial release
   - Passing haml-spec with ugly mode.
