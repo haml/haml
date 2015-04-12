@@ -1,3 +1,9 @@
+## v0.5.3
+
+- Bugfix for syntax error in data attribute hash
+  - https://github.com/k0kubun/hamlit/issues/17
+  - Thanks to @eagletmt
+
 ## v0.5.2
 
 - Bugfix for silent script without block
