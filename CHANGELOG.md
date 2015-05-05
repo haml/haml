@@ -17,6 +17,7 @@
 * Add a tracing option. When enabled, Haml will output a data-trace attribute on each tag showing the path
   to the source Haml file from which it was generated. Thanks [Alex Babkin](https://github.com/ababkin).
 * Fix #@foo and #$foo style interpolation that was not working in html_safe mode. (Akira Matsuda)
+* Add `haml_tag_if` to render a block, conditionally wrapped in another element (Matt Wildig)
 
 ## 4.0.6
 
