@@ -42,6 +42,8 @@ module Hamlit
         value = value.join('_')
       when :class
         value = value.join(' ')
+      else
+        value
       end
     end
 

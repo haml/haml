@@ -99,6 +99,14 @@ describe Hamlit::Engine do
           <p id='a_b_c'></p>
         HTML
       end
+
+      it 'does not join others' do
+        assert_render(<<-'HAML', <<-HTML)
+          %a{ data: { value: [count: 1] } }
+        HAML
+          <a data-value='[{:count=&gt;1}]'></a>
+        HTML
+      end
     end
 
     describe 'deletable attributes' do
