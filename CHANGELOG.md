@@ -1,3 +1,9 @@
+## v1.1.0
+
+- Join id and class attributes
+  - https://github.com/k0kubun/hamlit/issues/23
+  - Thanks to @felixbuenemann
+
 ## v1.0.0
 
 - Use escape\_utils gem for faster escape\_html
