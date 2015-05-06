@@ -19,6 +19,10 @@ module Hamlit
       NESTABLE_ATTRIBUTES = %w[data].freeze
       IGNORED_EXPRESSIONS = %w[false nil].freeze
 
+      # Class and id are joined if the value is an array.
+      JOIN_ATTRIBUTES = %w[class id].freeze
+      JOINABLE_TOKENS = %i[on_ident on_qwords_beg on_lbracket].freeze
+
       # Only boolean attributes can be deleted for performance.
       BOOLEAN_ATTRIBUTES  = %w[
         autofocus
@@ -38,7 +42,8 @@ module Hamlit
 
         format_attributes(attrs).map do |key, value|
           next true_attribute(key) if value == 'true'
-          assert_static_value!(value) if NESTABLE_ATTRIBUTES.include?(key)
+          assert_static_value!(value)   if NESTABLE_ATTRIBUTES.include?(key)
+          detect_joinable_value!(value) if JOIN_ATTRIBUTES.include?(key)
 
           [:html, :attr, key, [:dynamic, value]]
         end
@@ -66,6 +71,14 @@ module Hamlit
         tokens = Ripper.lex(value)
         tokens.each do |(row, col), type, str|
           raise RuntimeBuild if type == :on_ident
+        end
+      end
+
+      # Give up static compilation when the value is a variable or an array.
+      def detect_joinable_value!(value)
+        tokens = Ripper.lex(value)
+        tokens.each do |(row, col), type, str|
+          raise RuntimeBuild if JOINABLE_TOKENS.include?(type)
         end
       end
 

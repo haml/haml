@@ -73,6 +73,34 @@ describe Hamlit::Engine do
       HTML
     end
 
+    describe 'joinable attributes' do
+      it 'joins class with a space' do
+        assert_render(<<-'HAML', <<-HTML)
+          - val = ['a', 'b', 'c']
+          %p{ class: val }
+          %p{ class: %w[a b c] }
+          %p{ class: ['a', 'b', 'c'] }
+        HAML
+          <p class='a b c'></p>
+          <p class='a b c'></p>
+          <p class='a b c'></p>
+        HTML
+      end
+
+      it 'joins id with an underscore' do
+        assert_render(<<-'HAML', <<-HTML)
+          - val = ['a', 'b', 'c']
+          %p{ id: val }
+          %p{ id: %w[a b c] }
+          %p{ id: ['a', 'b', 'c'] }
+        HAML
+          <p id='a_b_c'></p>
+          <p id='a_b_c'></p>
+          <p id='a_b_c'></p>
+        HTML
+      end
+    end
+
     describe 'deletable attributes' do
       it 'deletes attributes whose value is nil or false' do
         assert_render(<<-'HAML', <<-HTML)
@@ -118,15 +146,11 @@ describe Hamlit::Engine do
         assert_render(<<-'HAML', <<-HTML)
           - val = false
           %a{ href: val }
-          %a{ class: val }
           - val = nil
           %a{ href: val }
-          %a{ class: val }
         HAML
           <a href='false'></a>
-          <a class='false'></a>
           <a href=''></a>
-          <a class=''></a>
         HTML
       end
     end

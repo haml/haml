@@ -27,6 +27,7 @@ module Hamlit
           next
         end
 
+        value = refine_joinable_value(key, value) if value.is_a?(Array)
         escaped = Temple::Utils.escape_html(value)
         result += " #{key}=#{@quote}#{escaped}#{@quote}"
       end
@@ -34,6 +35,15 @@ module Hamlit
     end
 
     private
+
+    def refine_joinable_value(key, value)
+      case key
+      when :id
+        value = value.join('_')
+      when :class
+        value = value.join(' ')
+      end
+    end
 
     def merge_attributes(base, target)
       result = {}
@@ -46,7 +56,7 @@ module Hamlit
           when :id
             result[key] = [base[key], target[key]].compact.join('_')
           else
-            result[key] = [base[key], target[key]].compact.join(' ')
+            result[key] = [base[key], target[key]].compact.map(&:to_s).sort.join(' ')
           end
         else
           result[key] = base[key].nil? ? target[key] : base[key]
