@@ -1,3 +1,7 @@
+## v1.1.1
+
+- Bugfix of rendering array attributes
+
 ## v1.1.0
 
 - Join id and class attributes
