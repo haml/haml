@@ -29,6 +29,20 @@ module Hamlit
       s
     end
 
+    def surround(front, back = front, &block)
+      output = capture_haml(&block)
+
+      "#{front}#{output.chomp}#{back}\n"
+    end
+
+    def precede(str, &block)
+      "#{str}#{capture_haml(&block).chomp}\n"
+    end
+
+    def succeed(str, &block)
+      "#{capture_haml(&block).chomp}#{str}\n"
+    end
+
     # NOTE: currently Hamlit::Helpers is enabled by default on only
     # Rails environment. Thus you can use capture.
     def capture_haml(*args, &block)
