@@ -1,3 +1,9 @@
+## v1.2.0
+
+- Support `succeed`, `precede` and `surround`
+  - https://github.com/k0kubun/hamlit/issues/22
+  - Thanks to @sneakernets
+
 ## v1.1.1
 
 - Bugfix of rendering array attributes
