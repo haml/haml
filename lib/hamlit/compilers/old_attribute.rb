@@ -24,15 +24,12 @@ module Hamlit
       JOINABLE_TOKENS = %i[on_ident on_qwords_beg on_lbracket].freeze
 
       # Only boolean attributes can be deleted for performance.
-      BOOLEAN_ATTRIBUTES  = %w[
-        autofocus
-        checked
-        data
-        disabled
-        formnovalidate
-        multiple
-        readonly
-      ].freeze
+      BOOLEAN_ATTRIBUTES = %w[disabled readonly multiple checked autobuffer
+                           autoplay controls loop selected hidden scoped async
+                           defer reversed ismap seamless muted required
+                           autofocus novalidate formnovalidate open pubdate
+                           itemscope allowfullscreen default inert sortable
+                           truespeed typemustmatch data].freeze
 
       def compile_old_attribute(str)
         raise RuntimeBuild unless Ripper.sexp(str)

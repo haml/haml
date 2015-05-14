@@ -139,7 +139,9 @@ describe Hamlit::Engine do
           #foo.bar{ formnovalidate: val }
           #foo.bar{ multiple: val }
           #foo.bar{ readonly: val }
+          #foo.bar{ required: val }
         HAML
+          <div class='bar' id='foo'></div>
           <div class='bar' id='foo'></div>
           <div class='bar' id='foo'></div>
           <div class='bar' id='foo'></div>
