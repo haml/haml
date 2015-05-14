@@ -1,3 +1,9 @@
+## v1.2.1
+
+- Fix the list of boolean attributes
+  - https://github.com/k0kubun/hamlit/issues/24
+  - Thanks to @jeffblake
+
 ## v1.2.0
 
 - Support `succeed`, `precede` and `surround`
