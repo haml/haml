@@ -86,7 +86,7 @@ module Hamlit
       if scanner.scan(/\\/) || scanner.match?(/\#{/)
         return parse_text(scanner)
       elsif scanner.match?(/&=/)
-        return parse_script(scanner)
+        return parse_script(scanner, force_escape: true)
       elsif scanner.match?(/!=/)
         return parse_script(scanner, disable_escape: true)
       elsif scanner.match?(/[.#](\Z|[^a-zA-Z0-9_-])/)

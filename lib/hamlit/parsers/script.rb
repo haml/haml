@@ -1,14 +1,21 @@
+require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/error'
+require 'hamlit/concerns/included'
 require 'hamlit/concerns/indentable'
 
 module Hamlit
   module Parsers
     module Script
+      extend Concerns::Included
       include Concerns::Error
       include Concerns::Indentable
 
       INTERNAL_STATEMENTS    = %w[else elsif when].freeze
-      DEFAULT_SCRIPT_OPTIONS = { disable_escape: false }.freeze
+      DEFAULT_SCRIPT_OPTIONS = { force_escape: false, disable_escape: false }.freeze
+
+      included do
+        include Concerns::Escapable
+      end
 
       def parse_script(scanner, options = {})
         assert_scan!(scanner, /=|&=|!=|~/)
@@ -18,7 +25,7 @@ module Hamlit
         return syntax_error("There's no Ruby code for = to evaluate.") if code.empty? && !with_comment
         unless has_block?
           return [:dynamic, code] if options[:disable_escape]
-          return [:escape, true, [:dynamic, code]]
+          return escape_html([:dynamic, code], options[:force_escape])
         end
 
         ast = [:haml, :script, code, options]
