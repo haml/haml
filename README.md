@@ -49,9 +49,16 @@ Hamlit is used on [githubranking.com](http://githubranking.com/).
 Basically the same as [haml](https://github.com/haml/haml).
 Check out the [reference documentation](http://haml.info/docs/yardoc/file.REFERENCE.html) for details.
 
-### Rails, Sinatra
+### Rails
+Just update Gemfile.
 
-Just update Gemfile. Html escaping is enabled by default.
+### Sinatra
+Update Gemfile. Html escaping is enabled by default.
+If you want to disable it, add following code.
+
+```rb
+set :haml, { escape_html: false }
+```
 
 ## Why high performance?
 ### Less work on runtime
