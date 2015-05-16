@@ -1,3 +1,11 @@
+## v1.3.0
+
+- Resurrect escape_html option
+  - Still enabled by default
+  - This has been dropped since v0.6.0
+  - https://github.com/k0kubun/hamlit/issues/25
+  - Thanks to @resistorsoftware
+
 ## v1.2.1
 
 - Fix the list of boolean attributes
