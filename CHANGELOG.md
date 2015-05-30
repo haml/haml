@@ -1,3 +1,7 @@
+## v1.3.2
+
+- Render `begin`, `rescue` and `ensure`
+
 ## v1.3.1
 
 - Bugfix about a backslash-only comment
