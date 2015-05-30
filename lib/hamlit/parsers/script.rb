@@ -10,7 +10,7 @@ module Hamlit
       include Concerns::Error
       include Concerns::Indentable
 
-      INTERNAL_STATEMENTS    = %w[else elsif when].freeze
+      INTERNAL_STATEMENTS    = %w[else elsif rescue ensure when].freeze
       DEFAULT_SCRIPT_OPTIONS = { force_escape: false, disable_escape: false }.freeze
 
       included do

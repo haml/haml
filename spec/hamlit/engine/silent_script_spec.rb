@@ -152,6 +152,20 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders begin-rescue' do
+      assert_render(<<-'HAML', <<-HTML)
+        - begin
+          - raise 'error'
+        - rescue
+          hello
+        - ensure
+          world
+      HAML
+        hello
+        world
+      HTML
+    end
+
     it 'joins a next line if a current line ends with ","' do
       assert_render("- foo = [',  \n     ']\n= foo", <<-HTML)
         [&quot;, &quot;]
