@@ -1,3 +1,8 @@
+## v1.3.1
+
+- Bugfix about a backslash-only comment
+- Don't strip a plain text
+
 ## v1.3.0
 
 - Resurrect escape_html option
