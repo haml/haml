@@ -14,6 +14,17 @@ describe Hamlit::Parser do
       HTML
     end
 
+    it 'accepts backslash-only line in a comment' do
+      assert_render(<<-'HAML', <<-HTML)
+        /
+          \
+      HAML
+        <!--
+
+        -->
+      HTML
+    end
+
     it 'ignores multiline comment' do
       assert_render(<<-'HAML', <<-HTML)
         -# if true
