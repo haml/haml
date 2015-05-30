@@ -25,6 +25,22 @@ describe Hamlit::Parser do
       HTML
     end
 
+    it 'renders a deeply indented comment starting with backslash' do
+      assert_render(<<-'HAML', <<-HTML)
+        /
+          \       a
+        /
+          a
+      HAML
+        <!--
+               a
+        -->
+        <!--
+        a
+        -->
+      HTML
+    end
+
     it 'ignores multiline comment' do
       assert_render(<<-'HAML', <<-HTML)
         -# if true

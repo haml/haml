@@ -3,7 +3,7 @@ module Hamlit
     module Text
       def parse_text(scanner)
         ast = [:haml, :text]
-        ast << (scanner.scan(/.+/) || '').strip
+        ast << (scanner.scan(/.+/) || '')
         ast
       end
     end

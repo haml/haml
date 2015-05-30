@@ -38,5 +38,9 @@ describe Hamlit::Engine do
         -
       HTML
     end
+
+    it 'leaves empty spaces after backslash' do
+      expect(render_string('\       a')).to eq("       a\n")
+    end
   end
 end
