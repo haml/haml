@@ -31,7 +31,7 @@ module Hamlit
         pre  = exp.byteslice(0...open_pos)
         body = exp.byteslice((open_pos + 2)...close_pos)
         post = exp.byteslice((close_pos + 1)...exp.bytesize)
-        [:multi, [:static, pre], escape_html([:dynamic, body]) on_haml_text(post)]
+        [:multi, [:static, pre], escape_html([:dynamic, body]), on_haml_text(post)]
       end
 
       def find_interpolation(exp, marker)
