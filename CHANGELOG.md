@@ -1,3 +1,8 @@
+## v1.4.2
+
+- Support `!` operator
+  - It disables html escaping for interpolated text
+
 ## v1.4.1
 
 - Fix code mistake in 1.4.0
