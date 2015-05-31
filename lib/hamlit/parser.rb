@@ -87,15 +87,17 @@ module Hamlit
         return parse_text(scanner)
       elsif scanner.match?(/&=/)
         return parse_script(scanner, force_escape: true)
+      elsif scanner.match?(/!!!/)
+        return parse_doctype(scanner)
       elsif scanner.match?(/!=/)
         return parse_script(scanner, disable_escape: true)
+      elsif scanner.match?(/! /)
+        return parse_unescaped_text(scanner)
       elsif scanner.match?(/[.#](\Z|[^a-zA-Z0-9_-])/)
         return parse_text(scanner)
       end
 
       case scanner.peek(1)
-      when '!'
-        parse_doctype(scanner)
       when '%', '.', '#'
         parse_tag(scanner)
       when '=', '~'

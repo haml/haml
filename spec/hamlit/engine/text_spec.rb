@@ -43,6 +43,22 @@ describe Hamlit::Engine do
       expect(render_string('\       a')).to eq("       a\n")
     end
 
+    it 'renders ! operator' do
+      assert_render(<<-'HAML', <<-HTML)
+        aaa#{'<a>'}
+        !aaa#{'<a>'}
+        ! aaa#{'<a>'}
+        !  aaa#{'<a>'}
+        !!aa
+      HAML
+        aaa&lt;a&gt;
+        !aaa&lt;a&gt;
+        aaa<a>
+        aaa<a>
+        !!aa
+      HTML
+    end
+
     describe 'string interpolation' do
       specify { assert_render('#{}', "\n") }
       specify { assert_render('1#{}', "1\n") }

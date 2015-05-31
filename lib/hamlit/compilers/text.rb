@@ -19,7 +19,7 @@ module Hamlit
 
       # Return static and dynamic temple ast.
       # It splits expression to optimize because string interpolation is slow.
-      def on_haml_text(exp)
+      def on_haml_text(exp, escape_html = true)
         return static_text(exp) unless contains_interpolation?(exp)
 
         marker = find_string_marker(exp)
@@ -31,7 +31,9 @@ module Hamlit
         pre  = exp.byteslice(0...open_pos)
         body = exp.byteslice((open_pos + 2)...close_pos)
         post = exp.byteslice((close_pos + 1)...exp.bytesize)
-        [:multi, [:static, pre], escape_html([:dynamic, body]), on_haml_text(post)]
+
+        body_ast = escape_html ? escape_html([:dynamic, body]) : [:dynamic, body]
+        [:multi, [:static, pre], body_ast, on_haml_text(post)]
       end
 
       def find_interpolation(exp, marker)
