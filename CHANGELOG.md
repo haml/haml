@@ -1,4 +1,8 @@
-## v1.4.0
+## v1.4.1
+
+- Fix code mistake in 1.4.0
+
+## v1.4.0 (yanked)
 
 - Escape interpolated string in plain text
 
