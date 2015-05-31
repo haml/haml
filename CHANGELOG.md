@@ -1,3 +1,7 @@
+## v1.4.0
+
+- Escape interpolated string in plain text
+
 ## v1.3.2
 
 - Render `begin`, `rescue` and `ensure`
