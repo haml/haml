@@ -152,11 +152,7 @@ module Hamlit
         splitted  = []
         start_pos = 1
         columns.each do |end_pos|
-          if str.ascii_only?
-            splitted << str[start_pos..(end_pos - 1)]
-          else
-            splitted << str.unpack("C*")[start_pos..(end_pos - 1)].pack("C*").force_encoding('utf-8')
-          end
+          splitted << str.byteslice(start_pos...end_pos)
           start_pos = end_pos + 1
         end
 
