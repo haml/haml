@@ -1,3 +1,8 @@
+## v1.4.3
+
+- Allow `when` to have multiple candidates
+- Allow `rescue` to specify an error variable
+
 ## v1.4.2
 
 - Support `!` operator
