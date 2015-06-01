@@ -14,6 +14,7 @@ module Hamlit
       DEFAULT_SCRIPT_OPTIONS = { force_escape: false, disable_escape: false }.freeze
       PREFIX_BY_STATEMENT    = {
         'when'   => 'case',
+        'rescue' => 'begin',
       }.freeze
 
       included do
