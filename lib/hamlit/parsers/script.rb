@@ -12,6 +12,9 @@ module Hamlit
 
       INTERNAL_STATEMENTS    = %w[else elsif rescue ensure when].freeze
       DEFAULT_SCRIPT_OPTIONS = { force_escape: false, disable_escape: false }.freeze
+      PREFIX_BY_STATEMENT    = {
+        'when'   => 'case',
+      }.freeze
 
       included do
         include Concerns::Escapable
@@ -73,8 +76,11 @@ module Hamlit
       end
 
       def remove_comment(code, comment_check: false)
-        result = ''
+        result       = ''
         with_comment = false
+        prefix       = find_prefix(code)
+        code         = "#{prefix}#{code}"
+
         Ripper.lex(code).each do |(row, col), type, str|
           if type == :on_comment
             with_comment = true
@@ -82,9 +88,19 @@ module Hamlit
           end
           result += str
         end
+        result = result.gsub(/\A#{prefix}/, '') if prefix
 
         return [result, with_comment] if comment_check
         result
+      end
+
+      # Code starting with `when` can't be properly understood by Ripper.lex.
+      # This method returns `case;` to fix that.
+      def find_prefix(code)
+        PREFIX_BY_STATEMENT.each do |statement, prefix|
+          return "#{prefix};" if code =~ /\A#{statement} /
+        end
+        nil
       end
 
       def has_block?

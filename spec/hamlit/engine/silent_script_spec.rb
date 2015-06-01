@@ -152,6 +152,16 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders case-when with multiple candidates' do
+      assert_render(<<-'HAML', <<-HTML)
+        - case 'a'
+        - when 'a', 'b'
+          ok
+      HAML
+        ok
+      HTML
+    end
+
     it 'renders begin-rescue' do
       assert_render(<<-'HAML', <<-HTML)
         - begin
