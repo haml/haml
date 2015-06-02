@@ -84,6 +84,17 @@ describe Hamlit::Engine do
           <span a='b' c='d' e='f'></span>
         HTML
       end
+
+      it 'renders multiples hashes and literal hash' do
+        assert_render(<<-'HAML', <<-HTML)
+          - h1 = { a: 'b' }
+          - h2 = { c: 'd' }
+          - h3 = { e: 'f' }
+          %span{ h1, h2, h3, g: 'h', i: 'j' }
+        HAML
+          <span a='b' c='d' e='f' g='h' i='j'></span>
+        HTML
+      end
     end
 
     describe 'joinable attributes' do

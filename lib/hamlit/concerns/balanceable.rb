@@ -11,12 +11,22 @@ module Hamlit
         fetch_balanced_tokens(all_tokens, :on_lparen, :on_rparen)
       end
 
+      def fetch_balanced_embexprs(all_tokens)
+        tokens = all_tokens[1..-1] # ignore first `"`
+        fetch_balanced_tokens(tokens, :on_embexpr_beg, :on_embexpr_end)
+      end
+
       def balanced_braces_exist?(tokens)
         balanced_tokens_exist?(tokens, :on_lbrace, :on_rbrace)
       end
 
       def balanced_parens_exist?(tokens)
         balanced_tokens_exist?(tokens, :on_lparen, :on_rparen)
+      end
+
+      def balanced_embexprs_exist?(tokens)
+        tokens = tokens[1..-1] # ignore first `"`
+        balanced_tokens_exist?(tokens, :on_embexpr_beg, :on_embexpr_end)
       end
 
       private
