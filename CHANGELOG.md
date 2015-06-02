@@ -1,3 +1,8 @@
+## v1.4.6
+
+- Support `!==`, `==` operator
+- Avoid regarding spaced block as multiline
+
 ## v1.4.5
 
 - Support Ruby 2.0 and 2.1 for v1.4.4
