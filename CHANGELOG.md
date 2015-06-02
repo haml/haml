@@ -1,3 +1,9 @@
+## v1.4.4
+
+- Fix old attribute parser to be more flexible
+  - Accept multiple hashes as old attributes
+  - Accept old attributes with hash and literal
+
 ## v1.4.3
 
 - Allow `when` to have multiple candidates
