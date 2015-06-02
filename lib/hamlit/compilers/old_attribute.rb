@@ -32,7 +32,7 @@ module Hamlit
                            truespeed typemustmatch data].freeze
 
       def compile_old_attribute(str)
-        raise RuntimeBuild unless Ripper.sexp(str)
+        raise RuntimeBuild unless valid_hash?(str)
 
         attrs = parse_old_attributes(str)
         assert_no_boolean_attributes!(attrs)
@@ -50,6 +50,13 @@ module Hamlit
       end
 
       private
+
+      def valid_hash?(str)
+        sexp = Ripper.sexp(str)
+        return false unless sexp
+
+        sexp.flatten[1] == :hash
+      end
 
       def format_attributes(attributes)
         attributes = flatten_attributes(attributes)
