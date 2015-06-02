@@ -1,4 +1,8 @@
-## v1.4.4
+## v1.4.5
+
+- Support Ruby 2.0 and 2.1 for v1.4.4
+
+## v1.4.4 (yanked)
 
 - Fix old attribute parser to be more flexible
   - Accept multiple hashes as old attributes
