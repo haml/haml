@@ -18,7 +18,7 @@ module Hamlit
 
       private
 
-      # NOTE: Old attributes is not valid as Ruby expression.
+      # NOTE: Old attributes are not valid as Ruby expression.
       # So Ripper is broken if you give an original expression to it.
       # This method bypasses it by changing expression to string interpolation.
       # Ideally you should implement an original lexer for haml old attributes.
