@@ -29,8 +29,7 @@ module Hamlit
         elsif scanner.scan(/\//)
           return ast
         elsif scanner.rest.match(/[^ ]/)
-          scanner.scan(/ +/)
-          ast << parse_text(scanner)
+          ast << parse_text(scanner, lstrip: true)
           return ast
         elsif next_indent <= @current_indent
           return ast << [:multi]

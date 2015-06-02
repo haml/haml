@@ -15,9 +15,8 @@ module Hamlit
 
       def parse_unescaped_text(scanner)
         assert_scan!(scanner, /! /)
-        scanner.scan(/ +/)
 
-        text = (scanner.scan(/.+/) || '')
+        text = (scanner.scan(/.+/) || '').lstrip
         [:haml, :text, text, false]
       end
     end
