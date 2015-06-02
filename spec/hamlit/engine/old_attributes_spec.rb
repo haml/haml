@@ -56,21 +56,34 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'renders runtime hash attribute' do
-      assert_render(<<-'HAML', <<-HTML)
-        - hash = { foo: 'bar' }
-        %span{ hash }
-      HAML
-        <span foo='bar'></span>
-      HTML
-    end
-
     it 'renders multi-byte chars as static attribute value' do
       assert_render(<<-'HAML', <<-HTML)
         %img{ alt: 'こんにちは' }
       HAML
         <img alt='こんにちは'>
       HTML
+    end
+
+    describe 'runtime attributes' do
+      it 'renders runtime hash attribute' do
+        assert_render(<<-'HAML', <<-HTML)
+          - hash = { foo: 'bar' }
+          %span{ hash }
+        HAML
+          <span foo='bar'></span>
+        HTML
+      end
+
+      it 'renders multiples hashes' do
+        assert_render(<<-'HAML', <<-HTML)
+          - h1 = { a: 'b' }
+          - h2 = { c: 'd' }
+          - h3 = { e: 'f' }
+          %span{ h1, h2, h3 }
+        HAML
+          <span a='b' c='d' e='f'></span>
+        HTML
+      end
     end
 
     describe 'joinable attributes' do

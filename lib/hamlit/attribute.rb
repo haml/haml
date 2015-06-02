@@ -10,18 +10,22 @@ module Hamlit
   class Attribute
     include Concerns::AttributeBuilder
 
-    def self.build(quote, base, attributes = {})
+    def self.build(quote, *args)
       builder = self.new(quote)
-      builder.build(base, attributes)
+      builder.build(*args)
     end
 
     def initialize(quote)
       @quote = quote
     end
 
-    def build(base, attributes)
+    def build(*args)
       result = ''
-      merge_attributes(base, attributes).each do |key, value|
+      attributes = args.inject({}) do |attributes, arg|
+        merge_attributes(attributes, arg)
+      end
+
+      attributes.each do |key, value|
         if value == true
           result += " #{key}"
           next
