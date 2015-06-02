@@ -65,6 +65,15 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders block and a variable with spaces' do
+      assert_render(<<-HAML, <<-HTML)
+        - 1.times do | i |
+          = i
+      HAML
+        0
+      HTML
+    end
+
     it 'accepts a continuing script' do
       assert_render(<<-HAML, <<-HTML)
         - def foo(a, b); a + b; end

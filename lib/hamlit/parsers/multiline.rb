@@ -5,6 +5,8 @@ module Hamlit
     module Multiline
       include Concerns::LineReader
 
+      SPACED_BLOCK_REGEXP = /do +\| *[^\|]+ *\|\Z/
+
       def preprocess_multilines(template)
         reset_lines(template.split("\n"))
         result = []
@@ -30,6 +32,8 @@ module Hamlit
 
       def end_with_pipe?(line)
         return false unless line
+        return false if line =~ SPACED_BLOCK_REGEXP
+
         line.strip =~ / \|\Z/
       end
 
