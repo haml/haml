@@ -5,19 +5,10 @@ module Hamlit
     module Text
       include Concerns::Error
 
-      def parse_text(scanner, lstrip: false)
-        scanner.scan(/ +/) if lstrip
-
-        ast = [:haml, :text]
-        ast << (scanner.scan(/.+/) || '')
-        ast
-      end
-
-      def parse_unescaped_text(scanner)
-        assert_scan!(scanner, /! /)
-
-        text = (scanner.scan(/.+/) || '').lstrip
-        [:haml, :text, text, false]
+      def parse_text(scanner, lstrip: false, escape: true)
+        text = (scanner.scan(/.+/) || '')
+        text = text.lstrip if lstrip
+        [:haml, :text, text, escape]
       end
     end
   end
