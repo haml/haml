@@ -91,6 +91,8 @@ module Hamlit
         return parse_doctype(scanner)
       elsif scanner.match?(/!=/)
         return parse_script(scanner, disable_escape: true)
+      elsif scanner.scan(/==/)
+        return parse_text(scanner, lstrip: true)
       elsif scanner.match?(/! /)
         return parse_unescaped_text(scanner)
       elsif scanner.match?(/[.#](\Z|[^a-zA-Z0-9_-])/)

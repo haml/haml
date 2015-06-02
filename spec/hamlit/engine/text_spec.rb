@@ -39,6 +39,20 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders == operator' do
+      assert_render(<<-'HAML', <<-HTML)
+        ===
+        == =
+        == <a>
+        == #{'<a>'}
+      HAML
+        =
+        =
+        <a>
+        &lt;a&gt;
+      HTML
+    end
+
     it 'leaves empty spaces after backslash' do
       expect(render_string('\       a')).to eq("       a\n")
     end

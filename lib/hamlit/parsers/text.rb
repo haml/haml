@@ -5,7 +5,9 @@ module Hamlit
     module Text
       include Concerns::Error
 
-      def parse_text(scanner)
+      def parse_text(scanner, lstrip: false)
+        scanner.scan(/ +/) if lstrip
+
         ast = [:haml, :text]
         ast << (scanner.scan(/.+/) || '')
         ast
