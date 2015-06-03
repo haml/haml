@@ -22,8 +22,7 @@ module Hamlit
         attrs = compile_attributes(attrs)
         attrs = join_ids(attrs)
         attrs = combine_classes(attrs)
-        attrs = pull_class_first(attrs)
-        attrs = sort_attributes(attrs) unless has_runtime_attribute?(attrs)
+        attrs = sort_attributes(attrs)
 
         if has_runtime_attribute?(attrs) && has_attr?(attrs, 'class', 'id')
           attrs = merge_runtime_attributes(attrs)
@@ -61,11 +60,6 @@ module Hamlit
         attrs
       end
 
-      def pull_class_first(attrs)
-        class_attrs = filter_attrs(attrs, 'class')
-        combine_classes(class_attrs) + (attrs - class_attrs)
-      end
-
       def combine_classes(attrs)
         class_attrs = filter_attrs(attrs, 'class')
         return attrs if class_attrs.length <= 1
@@ -101,9 +95,12 @@ module Hamlit
         result
       end
 
+      # Sort attributes by attribute name.
+      # Move runtime attributes to last.
       def sort_attributes(attrs)
-        attrs.sort_by do |(html, attr, name, content)|
-          name
+        attrs.sort_by do |(sexp, _, attr_name, _)|
+          next '' if sexp == :runtime
+          attr_name
         end
       end
     end
