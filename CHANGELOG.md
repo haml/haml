@@ -1,3 +1,7 @@
+## v1.5.0
+
+- Remake implementation of outer whitespace removal
+
 ## v1.4.7
 
 - Sort static old attributes by name
