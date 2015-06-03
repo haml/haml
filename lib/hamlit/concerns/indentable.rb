@@ -23,10 +23,9 @@ module Hamlit
 
       def with_indented(&block)
         @current_indent += 1
-        result = block.call
+        block.call
+      ensure
         @current_indent -= 1
-
-        result
       end
 
       def count_indent(line, strict: false)
