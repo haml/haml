@@ -66,9 +66,8 @@ module Hamlit
 
         @current_lineno += 1
         node = parse_line(current_line)
-        if @outer_removal.include?(@current_indent) && ast.last == [:static, "\n"]
-          ast.delete_at(-1)
-        end
+        remove_last_outer_space!(ast) if outer_remove?
+
         ast << [:newline] if @current_indent > 0
         ast << node
         ast << [:newline] if @current_indent == 0
@@ -119,7 +118,7 @@ module Hamlit
       SKIP_NEWLINE_EXPS.include?(ast.first) ||
         (ast[0..1] == [:haml, :doctype]) ||
         newline_skip_filter?(ast) ||
-        @outer_removal.include?(@current_indent)
+        outer_remove?
     end
 
     def newline_skip_filter?(ast)

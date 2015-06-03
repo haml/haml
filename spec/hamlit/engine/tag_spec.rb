@@ -206,5 +206,22 @@ describe Hamlit::Engine do
         <span>f</span>
       HTML
     end
+
+    it 'removes outer whitespace by > from inside of block' do
+      assert_render(<<-HAML, <<-HTML)
+        %span a
+        - if true
+          %span>
+            b
+        %span
+          c
+      HAML
+        <span>a</span><span>
+        b
+        </span><span>
+        c
+        </span>
+      HTML
+    end
   end
 end

@@ -39,7 +39,7 @@ module Hamlit
         if inner_removal || Helpers::DEFAULT_PRESERVE_TAGS.include?(tag)
           content[0, 1] = [:haml, :strip]
         end
-        content += with_indented { parse_lines }
+        content += with_tag_nested { parse_lines }
         ast << content
         ast
       end
