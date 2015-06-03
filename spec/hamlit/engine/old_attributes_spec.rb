@@ -64,6 +64,16 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'sorts static attributes by name' do
+      assert_render(<<-HAML, <<-HTML)
+        %span{ :foo => "bar", :hoge => "piyo"}
+        %span{ :hoge => "piyo", :foo => "bar"}
+      HAML
+        <span foo='bar' hoge='piyo'></span>
+        <span foo='bar' hoge='piyo'></span>
+      HTML
+    end
+
     describe 'runtime attributes' do
       it 'renders runtime hash attribute' do
         assert_render(<<-'HAML', <<-HTML)

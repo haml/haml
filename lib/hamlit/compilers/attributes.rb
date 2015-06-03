@@ -23,6 +23,7 @@ module Hamlit
         attrs = join_ids(attrs)
         attrs = combine_classes(attrs)
         attrs = pull_class_first(attrs)
+        attrs = sort_attributes(attrs) unless has_runtime_attribute?(attrs)
 
         if has_runtime_attribute?(attrs) && has_attr?(attrs, 'class', 'id')
           attrs = merge_runtime_attributes(attrs)
@@ -98,6 +99,12 @@ module Hamlit
           result << value
         end
         result
+      end
+
+      def sort_attributes(attrs)
+        attrs.sort_by do |(html, attr, name, content)|
+          name
+        end
       end
     end
   end
