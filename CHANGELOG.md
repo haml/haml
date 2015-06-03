@@ -1,3 +1,8 @@
+## v1.4.7
+
+- Sort static old attributes by name
+- Bugfix for old array attributes with class element
+
 ## v1.4.6
 
 - Support `!==`, `==` operator
