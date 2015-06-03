@@ -121,6 +121,18 @@ describe Hamlit::Engine do
         HTML
       end
 
+      it 'joins attribute class and element class' do
+        assert_render(<<-HAML, <<-HTML)
+          .foo{ class: ['bar'] }
+          .foo{ class: ['bar', nil] }
+          .foo{ class: ['bar', 'baz'] }
+        HAML
+          <div class='bar foo'></div>
+          <div class='bar foo'></div>
+          <div class='bar baz foo'></div>
+        HTML
+      end
+
       it 'joins id with an underscore' do
         assert_render(<<-'HAML', <<-HTML)
           - val = ['a', 'b', 'c']

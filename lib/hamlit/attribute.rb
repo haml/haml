@@ -61,8 +61,8 @@ module Hamlit
           case key
           when :id
             result[key] = [base[key], target[key]].compact.join('_')
-          else
-            result[key] = [base[key], target[key]].compact.map(&:to_s).sort.join(' ')
+          when :class
+            result[key] = [base[key], target[key]].flatten.compact.map(&:to_s).sort.join(' ')
           end
         else
           result[key] = base[key].nil? ? target[key] : base[key]
