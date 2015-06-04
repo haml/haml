@@ -16,26 +16,36 @@ module Hamlit
         inner_removal
       end
 
-      def remove_last_outer_space!(ast)
-        index = find_last_newline_index(ast)
-        return unless index
-
-        ast.delete_at(index)
+      def remove_last_outer_space!(exps)
+        exps.reverse!
+        remove_first_outer_space!(exps)
+      ensure
+        exps.reverse!
       end
 
       private
 
-      # Find [:static, "\n"]'s position ignoring [:code].
-      # If it is not found, return nil.
-      def find_last_newline_index(ast)
-        ast.reverse_each.with_index do |node, index|
-          sexp, *args = node
-          next if sexp == :code
-          return if node != [:static, "\n"]
+      def remove_first_outer_space!(exps)
+        deleted = false
+        exps.delete_if do |exp|
+          break if deleted
 
-          return ast.length - index - 1
+          name, *args = exp
+          case name
+          when :static
+            break if args != ["\n"]
+            deleted = true
+            next true
+          when :code
+            next false
+          when :newline
+            next false
+          when :haml
+            remove_last_outer_space!(exp) if args.first == :script
+          end
+          break
         end
-        nil
+        remove_last_outer_space!(exps) if deleted
       end
 
       def reset_outer_removal

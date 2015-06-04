@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       get :helpers
       get :safe_buffer
       get :old_attributes
+      get :whitespace
     end
   end
 end

@@ -1,3 +1,5 @@
+# This module is created to compile [:haml, :strip],
+# which is sexp for whitespace inner removal.module Hamlit
 module Hamlit
   module Compilers
     module Strip
@@ -10,7 +12,6 @@ module Hamlit
 
       def strip_newline(content)
         indexes = newline_indexes(content)
-        return content if indexes.length < 2
 
         content = content.dup
         content.delete_at(indexes.last)

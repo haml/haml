@@ -186,42 +186,55 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'removes outer whitespace by >' do
-      assert_render(<<-HAML, <<-HTML)
-        %span> a
-        %span b
-        %span c
-        %span>
-          d
-        %span
-          e
-        %span f
-      HAML
-        <span>a</span><span>b</span>
-        <span>c</span><span>
-        d
-        </span><span>
-        e
-        </span>
-        <span>f</span>
-      HTML
-    end
-
-    it 'removes outer whitespace by > from inside of block' do
-      assert_render(<<-HAML, <<-HTML)
-        %span a
-        - if true
+    describe 'whitespace removal' do
+      it 'removes outer whitespace by >' do
+        assert_render(<<-HAML, <<-HTML)
+          %span> a
+          %span b
+          %span c
           %span>
-            b
-        %span
+            d
+          %span
+            e
+          %span f
+        HAML
+          <span>a</span><span>b</span>
+          <span>c</span><span>
+          d
+          </span><span>
+          e
+          </span>
+          <span>f</span>
+        HTML
+      end
+
+      it 'removes outer whitespace by > from inside of block' do
+        assert_render(<<-HAML, <<-HTML)
+          %span a
+          - if true
+            %span>
+              b
+          %span
+            c
+        HAML
+          <span>a</span><span>
+          b
+          </span><span>
           c
-      HAML
-        <span>a</span><span>
-        b
-        </span><span>
-        c
-        </span>
-      HTML
+          </span>
+        HTML
+      end
+
+      it 'removes whitespaces inside block script' do
+        assert_render(<<-HAML, <<-HTML)
+          %span<
+            = 2.times do
+              = 'foo'
+            %span> bar
+        HAML
+          <span>foofoo2<span>bar</span></span>
+        HTML
+      end
     end
   end
 end

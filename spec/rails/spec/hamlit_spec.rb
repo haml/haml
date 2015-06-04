@@ -72,6 +72,11 @@ describe 'Hamlit rails integration', type: :request do
       get form_users_path
       expect(response.body).to include('row')
     end
+
+    it 'renders whitespace removal inside #capture' do
+      get whitespace_users_path
+      expect(response.body).to include('<a href="#">foo</a>')
+    end
   end
 
   describe 'haml helpers' do
