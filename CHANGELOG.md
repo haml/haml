@@ -1,3 +1,7 @@
+## v1.5.1
+
+- Remove outer whitespace in the block
+
 ## v1.5.0
 
 - Remake implementation of outer whitespace removal
