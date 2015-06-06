@@ -104,10 +104,6 @@ module Hamlit
         nil
       end
 
-      def has_block?
-        next_indent == @current_indent + 1
-      end
-
       def statement_continuing?
         same_indent?(next_line) && internal_statement?(next_line, silent_script: true)
       end

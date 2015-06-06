@@ -97,6 +97,10 @@ module Hamlit
         end
         lines.join
       end
+
+      def has_block?
+        next_indent > @current_indent
+      end
     end
   end
 end

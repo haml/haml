@@ -20,6 +20,7 @@ module Hamlit
       end
 
       def empty_line?(line)
+        line = line.rest if line.respond_to?(:rest)
         line =~ /\A *\Z/
       end
 

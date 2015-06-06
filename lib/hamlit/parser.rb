@@ -67,38 +67,50 @@ module Hamlit
     end
 
     # Parse current line and return AST.
-    def parse_line(line)
+    def parse_line(line, inline: false)
       return [:multi] if empty_line?(line)
 
-      scanner = StringScanner.new(line)
+      scanner = wrap_scanner(line)
       scanner.scan(/ +/)
-      if scanner.scan(/\\/) || scanner.match?(/\#{/)
-        return parse_text(scanner)
-      elsif scanner.match?(/&=/)
-        return parse_script(scanner, force_escape: true)
-      elsif scanner.match?(/!!!/)
-        return parse_doctype(scanner)
-      elsif scanner.scan(/!( |==)/)
-        return parse_text(scanner, lstrip: true, escape: false)
-      elsif scanner.match?(/!=/)
-        return parse_script(scanner, disable_escape: true)
-      elsif scanner.scan(/==/)
-        return parse_text(scanner, lstrip: true)
-      elsif scanner.match?(/[.#](\Z|[^a-zA-Z0-9_-])/)
-        return parse_text(scanner)
+
+      unless inline
+        ast = parse_outer_line(scanner)
+        return ast if ast
       end
+
+      parse_inner_line(scanner, inline: inline)
+    end
+
+    # Parse a line and return ast if it is acceptable outside an inline tag
+    def parse_outer_line(scanner)
+      return parse_text(scanner)    if scanner.scan(/\\/)
+      return parse_text(scanner)    if scanner.match?(/\#{/)
+      return parse_text(scanner)    if scanner.match?(/[.#]($|[^a-zA-Z0-9_-])/)
+      return parse_doctype(scanner) if scanner.match?(/!!!/)
 
       case scanner.peek(1)
       when '%', '.', '#'
         parse_tag(scanner)
-      when '=', '~'
-        parse_script(scanner)
-      when '-'
-        parse_silent_script(scanner)
       when '/'
         parse_comment(scanner)
       when ':'
         parse_filter(scanner)
+      end
+    end
+
+    # Parse a line and return ast which is acceptable inside an inline tag
+    def parse_inner_line(scanner, inline: false)
+      return parse_text(scanner, lstrip: true)                if scanner.scan(/==/)
+      return parse_text(scanner, lstrip: true, escape: false) if scanner.scan(/!( |==)/)
+      return parse_script(scanner, force_escape: true)        if scanner.match?(/&=/)
+      return parse_script(scanner, disable_escape: true)      if scanner.match?(/!=/)
+      return parse_text(scanner, lstrip: true, escape: false) if inline && scanner.scan(/!/)
+
+      case scanner.peek(1)
+      when '=', '~'
+        parse_script(scanner)
+      when '-'
+        parse_silent_script(scanner)
       else
         parse_text(scanner)
       end
@@ -113,6 +125,11 @@ module Hamlit
 
     def newline_skip_filter?(ast)
       ast[0..1] == [:haml, :filter] && SKIP_NEWLINE_FILTERS.include?(ast[2])
+    end
+
+    def wrap_scanner(str)
+      return str if str.is_a?(StringScanner)
+      StringScanner.new(str)
     end
   end
 end

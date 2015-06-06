@@ -20,19 +20,12 @@ module Hamlit
         attrs += parse_tag_id_and_class(scanner)
         attrs += parse_attributes(scanner)
 
-        inner_removal = parse_whitespace_removal(scanner)
         ast = [:html, :tag, tag, attrs]
+        inner_removal = parse_whitespace_removal(scanner)
 
-        if scanner.match?(/=/)
-          ast << parse_script(scanner)
-          return ast
-        elsif scanner.scan(/\//)
-          return ast
-        elsif scanner.rest.match(/[^ ]/)
-          ast << parse_text(scanner, lstrip: true)
-          return ast
-        elsif next_indent <= @current_indent
-          return ast << [:multi]
+        unless has_block?
+          return ast if scanner.scan(/\//)
+          return ast << parse_line(scanner, inline: true)
         end
 
         content = [:multi, [:static, "\n"]]
