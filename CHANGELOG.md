@@ -1,3 +1,7 @@
+## v1.5.2
+
+- Disable html escaping in CSS and JavaScript filter
+
 ## v1.5.1
 
 - Remove outer whitespace in the block
