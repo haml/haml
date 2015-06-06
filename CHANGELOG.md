@@ -1,3 +1,7 @@
+## v1.5.3
+
+- Support !, !=, !==, &= and ~ as inline operators
+
 ## v1.5.2
 
 - Disable html escaping in CSS and JavaScript filter
