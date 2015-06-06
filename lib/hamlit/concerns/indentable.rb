@@ -48,8 +48,23 @@ module Hamlit
         count_indent(line) == @current_indent
       end
 
+      # Validate current line's indentation
+      def validate_indentation!(ast)
+        width = next_width
+        return false if width == @current_indent * 2
+
+        if width != Hamlit::EOF && (width > @current_indent * 2 || width.odd?)
+          ast << [:newline]
+          ast << syntax_error(
+            "inconsistent indentation: #{2 * @current_indent} spaces used for indentation, "\
+            "but the rest of the document was indented using #{width} spaces"
+          )
+        end
+        true
+      end
+
       # Validate the template is using consitent indentation, 2 spaces or a tab.
-      def validate_indentation!(template)
+      def validate_indentation_consistency!(template)
         last_indent = ''
 
         indents = template.scan(/^[ \t]+/)

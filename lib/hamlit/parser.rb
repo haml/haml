@@ -39,7 +39,7 @@ module Hamlit
 
     # Reset the parser state.
     def reset(template)
-      validate_indentation!(template)
+      validate_indentation_consistency!(template)
       template = replace_hard_tabs(template)
       template = preprocess_multilines(template)
 
@@ -52,17 +52,7 @@ module Hamlit
     def parse_lines
       ast = []
       loop do
-        width = next_width
-        if width != @current_indent * 2
-          if width != Hamlit::EOF && (width > @current_indent * 2 || width.odd?)
-            ast << [:newline]
-            ast << syntax_error(
-              "inconsistent indentation: #{2 * @current_indent} spaces used for indentation, "\
-              "but the rest of the document was indented using #{width} spaces"
-            )
-          end
-          break
-        end
+        break if validate_indentation!(ast)
 
         @current_lineno += 1
         node = parse_line(current_line)
