@@ -17,5 +17,21 @@ describe Hamlit::Filters::Scss do
         </style>
       HTML
     end
+
+    it 'parses string interpolation' do
+      assert_render(<<-'HAML', <<-HTML)
+        :scss
+          .users_controller {
+            .show_action {
+              content: "#{'<&>'}";
+            }
+          }
+      HAML
+        <style>
+          .users_controller .show_action {
+            content: "<&>"; }
+        </style>
+      HTML
+    end
   end
 end

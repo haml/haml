@@ -18,5 +18,20 @@ describe Hamlit::Filters::Less do
         </style>
       HTML
     end
+
+    it 'parses string interpolation' do
+      assert_render(<<-'HAML', <<-HTML)
+        :less
+          .foo {
+            content: "#{'<&>'}";
+          }
+      HAML
+        <style>
+          .foo {
+            content: "<&>";
+          }
+        </style>
+      HTML
+    end
   end
 end

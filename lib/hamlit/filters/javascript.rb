@@ -12,7 +12,7 @@ module Hamlit
       private
 
       def compile_html(lines)
-        ast = [:haml, :text, compile_lines(lines, indent_width: 2)]
+        ast = [:haml, :text, compile_lines(lines, indent_width: 2), false]
         ast = [:multi, [:static, "\n"], ast]
         ast = [:html, :tag, 'script', [:html, :attrs], ast]
         ast

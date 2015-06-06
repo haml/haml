@@ -18,18 +18,14 @@ describe Hamlit::Filters::Sass do
 
     it 'renders sass filter with string interpolation' do
       assert_render(<<-'HAML', <<-HTML)
-        - width = 1200
-        - height = 800
         :sass
           .users_controller
             .show_action
-              width: #{width}px
-              height: #{height}px
+              content: "#{'<&>'}"
       HAML
         <style>
           .users_controller .show_action {
-            width: 1200px;
-            height: 800px; }
+            content: "<&>"; }
         </style>
       HTML
     end

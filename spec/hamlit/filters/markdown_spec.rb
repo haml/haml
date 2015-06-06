@@ -14,14 +14,16 @@ describe Hamlit::Filters::Markdown do
 
     it 'renders markdown filter with string interpolation' do
       assert_render(<<-'HAML', <<-HTML)
-        - project = 'Hamlit'
+        - project = '<Hamlit>'
         :markdown
           # #{project}
+          #{'<&>'}
           Yet another haml implementation
       HAML
-        <h1>Hamlit</h1>
+        <h1><Hamlit></h1>
 
-        <p>Yet another haml implementation</p>
+        <p>&lt;&amp;&gt;
+        Yet another haml implementation</p>
       HTML
     end
   end

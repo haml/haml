@@ -71,10 +71,10 @@ describe Hamlit::Filters::Javascript do
     it 'parses string interpolation' do
       assert_render(<<-'HAML', <<-HTML)
         :javascript
-          var a = #{[1, 2]};
+          var a = "#{'<&>'}";
       HAML
         <script>
-          var a = [1, 2];
+          var a = "<&>";
         </script>
       HTML
     end

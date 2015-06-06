@@ -11,14 +11,14 @@ describe Hamlit::Filters::Ruby do
   end
 
   it 'renders ruby filter' do
-    assert_render(<<-HAML, <<-HTML)
+    assert_render(<<-'HAML', <<-HTML)
       :ruby
         hash = {
-          a: 3,
+          a: "#{'<&>'}",
         }
       = hash[:a]
     HAML
-      3
+      &lt;&amp;&gt;
     HTML
   end
 end

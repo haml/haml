@@ -19,12 +19,12 @@ describe Hamlit::Filters::Css do
       assert_render(<<-'HAML', <<-HTML)
         :css
           .foo {
-            width: #{100 * 3}px;
+            content: "#{'<&>'}";
           }
       HAML
         <style>
           .foo {
-            width: 300px;
+            content: "<&>";
           }
         </style>
       HTML
