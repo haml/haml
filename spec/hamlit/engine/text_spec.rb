@@ -100,7 +100,7 @@ describe Hamlit::Engine do
       specify { assert_render('あ#{1}', "あ1\n") }
       specify { assert_render('あ#{"い"}う', "あいう\n") }
       specify { assert_render('a#{"<b>"}c', "a&lt;b&gt;c\n") }
-      specify { assert_render(":plain\n  あ\n  \#{'い'}", "あ\nい\n\n", compatible_only: :haml) }
+      specify(skipdoc: true) { assert_render(":plain\n  あ\n  \#{'い'}", "あ\nい\n\n", compatible_only: :haml) }
     end
   end
 end

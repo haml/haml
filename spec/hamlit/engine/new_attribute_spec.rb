@@ -17,7 +17,7 @@ describe Hamlit::Engine do
     end
 
     describe 'html escape' do
-      it 'escapes attribute values on static attributes' do
+      it 'escapes attribute values on static attributes', skipdoc: true do
         assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
           %a(title="'")
           %a(title = "'\"")
@@ -29,7 +29,7 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'escapes attribute values on dynamic attributes' do
+      it 'escapes attribute values on dynamic attributes', skipdoc: true do
         assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
           - title = "'\""
           - href  = '/search?foo=bar&hoge=<fuga>'

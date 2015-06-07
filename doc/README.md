@@ -5,8 +5,6 @@ Showing incompatibilities against [Haml](https://github.com/haml/haml) and [Faml
 
 ## engine
 
-- [engine/indent\_spec.rb](https://github.com/k0kubun/hamlit/blob/master/doc/engine/indent.md)
-- [engine/new\_attribute\_spec.rb](https://github.com/k0kubun/hamlit/blob/master/doc/engine/new_attribute.md)
 - [engine/old\_attributes\_spec.rb](https://github.com/k0kubun/hamlit/blob/master/doc/engine/old_attributes.md)
 - [engine/script\_spec.rb](https://github.com/k0kubun/hamlit/blob/master/doc/engine/script.md)
 - [engine/silent\_script\_spec.rb](https://github.com/k0kubun/hamlit/blob/master/doc/engine/silent_script.md)

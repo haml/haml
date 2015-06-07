@@ -30,7 +30,7 @@ module HamlitSpecHelper
 
     if TestCase.generate_docs? && (errs.any? || fails.any?)
       write_caller!(test)
-      TestCase.incompatibilities << test
+      TestCase.register_test!(test)
     end
   end
 
@@ -134,6 +134,17 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
       ENV['AUTODOC']
     end
 
+    def register_test!(test)
+      incompatibilities << test unless @skipdoc
+    end
+
+    def skipdoc(&block)
+      @skipdoc = true
+      block.call
+    ensure
+      @skipdoc = false
+    end
+
     private
 
     def generate_toc!
@@ -224,6 +235,12 @@ RSpec.configure do |config|
 
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
+  end
+
+  config.around(:each, skipdoc: true) do |example|
+    TestCase.skipdoc do
+      example.run
+    end
   end
 
   config.after(:suite) do
