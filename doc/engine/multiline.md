@@ -7,20 +7,15 @@ a |
 ```
 
 ## Output
+### Haml, Faml
+```html
+a b 
+
+```
+
 ### Hamlit
 ```html
 a b
 
 ```
 
-### Haml
-```html
-a b 
-
-```
-
-### Faml
-```html
-a b 
-
-```

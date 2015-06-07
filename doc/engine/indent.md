@@ -7,15 +7,7 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<p>
-<a></a>
-</p>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <p>
 <a></a>
@@ -29,3 +21,4 @@
 %a
 
 ```
+

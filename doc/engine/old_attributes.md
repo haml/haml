@@ -6,12 +6,6 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<span class='}}}' id='{}}'>}{</span>
-
-```
-
 ### Haml
 ```html
 Haml::SyntaxError: (haml):1: syntax error, unexpected tSTRING_DEND, expecting ')'
@@ -25,6 +19,13 @@ Haml::SyntaxError: (haml):1: syntax error, unexpected tSTRING_DEND, expecting ')
 Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:  class: '
 ```
 
+### Hamlit
+```html
+<span class='}}}' id='{}}'>}{</span>
+
+```
+
+
 # old\_attributes\_spec.rb:125
 ## Input
 ```haml
@@ -35,15 +36,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 ## Output
-### Hamlit
-```html
-<div class='bar foo'></div>
-<div class='bar foo'></div>
-<div class='bar baz foo'></div>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <div class='bar foo'></div>
 <div class='bar foo'></div>
@@ -59,6 +52,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 
 ```
 
+
 # old\_attributes\_spec.rb:203
 ## Input
 ```haml
@@ -70,6 +64,13 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 ## Output
+### Haml, Faml
+```html
+<a></a>
+<a></a>
+
+```
+
 ### Hamlit
 ```html
 <a href='false'></a>
@@ -77,19 +78,6 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 
 ```
 
-### Haml
-```html
-<a></a>
-<a></a>
-
-```
-
-### Faml
-```html
-<a></a>
-<a></a>
-
-```
 
 # old\_attributes\_spec.rb:217
 ## Input
@@ -101,14 +89,6 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 ## Output
-### Hamlit
-```html
-<a title='&#39;'></a>
-<a title='&#39;&quot;'></a>
-<a href='/search?foo=bar&amp;hoge=&lt;fuga&gt;'></a>
-
-```
-
 ### Haml
 ```html
 <a title="'"></a>
@@ -117,13 +97,14 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 
 ```
 
-### Faml
+### Faml, Hamlit
 ```html
 <a title='&#39;'></a>
 <a title='&#39;&quot;'></a>
 <a href='/search?foo=bar&amp;hoge=&lt;fuga&gt;'></a>
 
 ```
+
 
 # old\_attributes\_spec.rb:229
 ## Input
@@ -136,13 +117,6 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 ## Output
-### Hamlit
-```html
-<a title='&#39;&quot;'></a>
-<a href='/search?foo=bar&amp;hoge=&lt;fuga&gt;'></a>
-
-```
-
 ### Haml
 ```html
 <a title='&#x0027;"'></a>
@@ -150,12 +124,13 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 
 ```
 
-### Faml
+### Faml, Hamlit
 ```html
 <a title='&#39;&quot;'></a>
 <a href='/search?foo=bar&amp;hoge=&lt;fuga&gt;'></a>
 
 ```
+
 
 # old\_attributes\_spec.rb:241
 ## Input
@@ -168,13 +143,6 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 ## Output
-### Hamlit
-```html
-<a title='&#39;&quot;'></a>
-<a href='/search?foo=bar&amp;hoge=&lt;fuga&gt;'></a>
-
-```
-
 ### Haml
 ```html
 <a title='&#x0027;"'></a>
@@ -182,12 +150,13 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 
 ```
 
-### Faml
+### Faml, Hamlit
 ```html
 <a title='&#39;&quot;'></a>
 <a href='/search?foo=bar&amp;hoge=&lt;fuga&gt;'></a>
 
 ```
+
 
 # old\_attributes\_spec.rb:264
 ## Input
@@ -197,13 +166,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 ## Output
-### Hamlit
-```html
-<span data-disable>bar</span>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <span data-disable>bar</span>
 
@@ -214,3 +177,4 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 <span data-disable='true'>bar</span>
 
 ```
+

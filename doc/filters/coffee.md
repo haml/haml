@@ -8,22 +8,7 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<script>
-  (function() {
-    var foo;
-  
-    foo = function() {
-      return alert('hello');
-    };
-  
-  }).call(this);
-</script>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <script>
   (function() {
@@ -53,6 +38,7 @@
 </script>
 
 ```
+
 
 # coffee\_spec.rb:23
 ## Input
@@ -64,22 +50,7 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<script>
-  (function() {
-    var foo;
-  
-    foo = function() {
-      return alert('hello');
-    };
-  
-  }).call(this);
-</script>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <script>
   (function() {
@@ -110,6 +81,7 @@
 
 ```
 
+
 # coffee\_spec.rb:42
 ## Input
 ```haml
@@ -120,22 +92,7 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<script>
-  (function() {
-    var foo;
-  
-    foo = function() {
-      return alert("<&>");
-    };
-  
-  }).call(this);
-</script>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <script>
   (function() {
@@ -165,3 +122,4 @@
 </script>
 
 ```
+

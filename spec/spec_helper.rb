@@ -169,7 +169,7 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
   end
 
   def document
-    <<-DOC
+    doc = <<-DOC
 # #{escape_markdown("#{file}:#{lineno}")}
 ## Input
 ```haml
@@ -177,21 +177,21 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
 ```
 
 ## Output
-### Hamlit
-```html
-#{hamlit_html}
-```
-
-### Haml
-```html
-#{haml_html}
-```
-
-### Faml
-```html
-#{faml_html}
-```
     DOC
+
+    html_by_name = {
+      'Haml' => haml_html,
+      'Faml' => faml_html,
+      'Hamlit' => hamlit_html,
+    }
+    html_by_name.group_by(&:last).each do |html, pairs|
+      doc << "### #{pairs.map(&:first).join(', ')}\n"
+      doc << "```html\n"
+      doc << "#{html}\n"
+      doc << "```\n\n"
+    end
+
+    doc
   end
 
   def doc_path

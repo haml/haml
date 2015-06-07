@@ -8,6 +8,15 @@
 ```
 
 ## Output
+### Haml, Faml
+```html
+0
+1
+2
+34
+
+```
+
 ### Hamlit
 ```html
 0
@@ -18,23 +27,6 @@
 
 ```
 
-### Haml
-```html
-0
-1
-2
-34
-
-```
-
-### Faml
-```html
-0
-1
-2
-34
-
-```
 
 # script\_spec.rb:56
 ## Input
@@ -46,6 +38,14 @@
 ```
 
 ## Output
+### Haml, Faml
+```html
+<span>
+0
+1</span>
+
+```
+
 ### Hamlit
 ```html
 <span>
@@ -55,21 +55,6 @@
 
 ```
 
-### Haml
-```html
-<span>
-0
-1</span>
-
-```
-
-### Faml
-```html
-<span>
-0
-1</span>
-
-```
 
 # script\_spec.rb:88
 ## Input
@@ -81,6 +66,12 @@
 ```
 
 ## Output
+### Haml, Faml
+```html
+<"&>
+<"&>
+```
+
 ### Hamlit
 ```html
 <"&>
@@ -88,17 +79,6 @@
 
 ```
 
-### Haml
-```html
-<"&>
-<"&>
-```
-
-### Faml
-```html
-<"&>
-<"&>
-```
 
 # script\_spec.rb:99
 ## Input
@@ -110,6 +90,12 @@
 ```
 
 ## Output
+### Haml, Faml
+```html
+&lt;&quot;&amp;&gt;
+&lt;&quot;&amp;&gt;
+```
+
 ### Hamlit
 ```html
 &lt;&quot;&amp;&gt;
@@ -117,14 +103,3 @@
 
 ```
 
-### Haml
-```html
-&lt;&quot;&amp;&gt;
-&lt;&quot;&amp;&gt;
-```
-
-### Faml
-```html
-&lt;&quot;&amp;&gt;
-&lt;&quot;&amp;&gt;
-```

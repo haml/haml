@@ -9,15 +9,6 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<span><nyaa></span>
-<span><nyaa></span>
-<nyaa>
-<nyaa>
-
-```
-
 ### Haml
 ```html
 <span><nyaa></span>
@@ -27,7 +18,7 @@
 
 ```
 
-### Faml
+### Faml, Hamlit
 ```html
 <span><nyaa></span>
 <span><nyaa></span>
@@ -35,3 +26,4 @@
 <nyaa>
 
 ```
+

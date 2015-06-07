@@ -10,17 +10,7 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<style>
-  .users_controller .show_action {
-    margin: 10px;
-    padding: 20px; }
-</style>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <style>
   .users_controller .show_action {
@@ -40,6 +30,7 @@
 
 ```
 
+
 # sass\_spec.rb:20
 ## Input
 ```haml
@@ -51,16 +42,7 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<style>
-  .users_controller .show_action {
-    content: "<&>"; }
-</style>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <style>
   .users_controller .show_action {
@@ -77,3 +59,4 @@
 </style>
 
 ```
+

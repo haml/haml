@@ -8,14 +8,6 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<a title='&#39;'></a>
-<a title='&#39;&quot;'></a>
-<a href='/search?foo=bar&amp;hoge=&lt;fuga&gt;'></a>
-
-```
-
 ### Haml
 ```html
 <a title="'"></a>
@@ -24,13 +16,14 @@
 
 ```
 
-### Faml
+### Faml, Hamlit
 ```html
 <a title='&#39;'></a>
 <a title='&#39;&quot;'></a>
 <a href='/search?foo=bar&amp;hoge=&lt;fuga&gt;'></a>
 
 ```
+
 
 # new\_attribute\_spec.rb:33
 ## Input
@@ -43,13 +36,6 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<a title='&#39;&quot;'></a>
-<a href='/search?foo=bar&amp;hoge=&lt;fuga&gt;'></a>
-
-```
-
 ### Haml
 ```html
 <a title='&#x0027;"'></a>
@@ -57,9 +43,10 @@
 
 ```
 
-### Faml
+### Faml, Hamlit
 ```html
 <a title='&#39;&quot;'></a>
 <a href='/search?foo=bar&amp;hoge=&lt;fuga&gt;'></a>
 
 ```
+

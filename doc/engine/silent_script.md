@@ -8,14 +8,7 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<span>
-</span>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <span>
 </span>
@@ -29,6 +22,7 @@ SyntaxError: (eval):4: syntax error, unexpected end-of-input, expecting keyword_
                                                 ^
 ```
 
+
 # silent\_script\_spec.rb:91
 ## Input
 ```haml
@@ -40,14 +34,7 @@ SyntaxError: (eval):4: syntax error, unexpected end-of-input, expecting keyword_
 ```
 
 ## Output
-### Hamlit
-```html
-<span>
-</span>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <span>
 </span>
@@ -61,6 +48,7 @@ SyntaxError: (eval):5: syntax error, unexpected end-of-input, expecting keyword_
                                                 ^
 ```
 
+
 # silent\_script\_spec.rb:103
 ## Input
 ```haml
@@ -71,14 +59,7 @@ SyntaxError: (eval):5: syntax error, unexpected end-of-input, expecting keyword_
 ```
 
 ## Output
-### Hamlit
-```html
-<span>
-</span>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <span>
 </span>
@@ -92,6 +73,7 @@ SyntaxError: (eval):4: syntax error, unexpected end-of-input, expecting keyword_
                                                 ^
 ```
 
+
 # silent\_script\_spec.rb:191
 ## Input
 ```haml
@@ -101,13 +83,7 @@ SyntaxError: (eval):4: syntax error, unexpected end-of-input, expecting keyword_
 ```
 
 ## Output
-### Hamlit
-```html
-[&quot;, &quot;]
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 [&quot;, &quot;]
 
@@ -118,3 +94,4 @@ SyntaxError: (eval):4: syntax error, unexpected end-of-input, expecting keyword_
 [&quot;,\n     &quot;]
 
 ```
+

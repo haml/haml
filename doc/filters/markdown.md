@@ -10,15 +10,6 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<h1><Hamlit></h1>
-
-<p>&lt;&amp;&gt;
-Yet another haml implementation</p>
-
-```
-
 ### Haml
 ```html
 <h1><Hamlit></h1>
@@ -29,7 +20,7 @@ Yet another haml implementation</p>
 
 ```
 
-### Faml
+### Faml, Hamlit
 ```html
 <h1><Hamlit></h1>
 
@@ -37,3 +28,4 @@ Yet another haml implementation</p>
 Yet another haml implementation</p>
 
 ```
+

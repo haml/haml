@@ -8,16 +8,6 @@ after
 ```
 
 ## Output
-### Hamlit
-```html
-before
-<script>
-
-</script>
-after
-
-```
-
 ### Haml
 ```html
 before
@@ -35,6 +25,17 @@ after
 
 ```
 
+### Hamlit
+```html
+before
+<script>
+
+</script>
+after
+
+```
+
+
 # javascript\_spec.rb:33
 ## Input
 ```haml
@@ -50,21 +51,6 @@ after
 ```
 
 ## Output
-### Hamlit
-```html
-<script>
-  if {
-   alert('hello');
-    }
-</script>
-<script>
-  if {
-   alert('hello');
-    }
-</script>
-
-```
-
 ### Haml
 ```html
 <script>
@@ -80,7 +66,7 @@ after
 
 ```
 
-### Faml
+### Faml, Hamlit
 ```html
 <script>
   if {
@@ -94,3 +80,4 @@ after
 </script>
 
 ```
+

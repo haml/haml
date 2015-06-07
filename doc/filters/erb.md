@@ -11,12 +11,6 @@
 ```
 
 ## Output
-### Hamlit
-```html
-ok
-
-```
-
 ### Haml
 ```html
 ok
@@ -28,3 +22,10 @@ ok
 ```html
 Faml::FilterCompilers::NotFound: Unable to find compiler for erb
 ```
+
+### Hamlit
+```html
+ok
+
+```
+

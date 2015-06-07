@@ -12,18 +12,7 @@
 ```
 
 ## Output
-### Hamlit
-```html
-<style>
-  .users_controller .show_action {
-    margin: 10px;
-    padding: 20px;
-  }
-</style>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <style>
   .users_controller .show_action {
@@ -38,6 +27,7 @@
 ```html
 Faml::FilterCompilers::NotFound: Unable to find compiler for less
 ```
+
 
 # less\_spec.rb:23
 ## Input
@@ -50,17 +40,7 @@ Faml::FilterCompilers::NotFound: Unable to find compiler for less
 ```
 
 ## Output
-### Hamlit
-```html
-<style>
-  .foo {
-    content: "<&>";
-  }
-</style>
-
-```
-
-### Haml
+### Haml, Hamlit
 ```html
 <style>
   .foo {
@@ -74,3 +54,4 @@ Faml::FilterCompilers::NotFound: Unable to find compiler for less
 ```html
 Faml::FilterCompilers::NotFound: Unable to find compiler for less
 ```
+
