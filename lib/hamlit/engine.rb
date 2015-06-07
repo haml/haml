@@ -20,15 +20,6 @@ module Hamlit
     filter :ControlFlow
     filter :MultiFlattener
     filter :StaticMerger
-    use :Generator, -> { create(options[:generator]) }
-
-    private
-
-    def create(klass)
-      valid_options = options.to_hash.select do |key, value|
-        klass.options.valid_key?(key)
-      end
-      klass.new(valid_options)
-    end
+    use :Generator, -> { options[:generator] }
   end
 end
