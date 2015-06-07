@@ -58,16 +58,24 @@ module HamlitSpecHelper
   def expect_compatibility(impl, test, options, type: :success)
     case impl
     when :haml
-      expect_implementation(impl, test, options, type) do |test, options|
-        options = DEFAULT_OPTIONS.merge(options)
-        Haml::Engine.new(test.src_haml, options).render(Object.new, {})
-      end
+      expect_haml(impl, test, options, type)
     when :faml
-      expect_implementation(impl, test, options, type) do |test, options|
-        options = options.dup
-        options.delete(:escape_html)
-        eval Faml::Engine.new(options).call(test.src_haml)
-      end
+      expect_faml(impl, test, options, type)
+    end
+  end
+
+  def expect_haml(impl, test, options, type)
+    expect_implementation(impl, test, options, type) do |test, options|
+      options = DEFAULT_OPTIONS.merge(options)
+      Haml::Engine.new(test.src_haml, options).render(Object.new, {})
+    end
+  end
+
+  def expect_faml(impl, test, options, type)
+    expect_implementation(impl, test, options, type) do |test, options|
+      options = options.dup
+      options.delete(:escape_html)
+      eval Faml::Engine.new(options).call(test.src_haml)
     end
   end
 
