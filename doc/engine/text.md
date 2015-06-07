@@ -1,4 +1,4 @@
-# text\_spec.rb:16
+# [text\_spec.rb:15](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L15)
 ## Input
 ```haml
 .
@@ -33,7 +33,7 @@ Haml::SyntaxError: Illegal element: classes and ids must have values.
 ```
 
 
-# text\_spec.rb:75
+# [text\_spec.rb:74](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L74)
 ## Input
 ```haml
 aaa#{'<a>'}
@@ -66,7 +66,7 @@ aaa<a>
 ```
 
 
-# text\_spec.rb:94
+# [text\_spec.rb:93](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L93)
 ## Input
 ```haml
 1#{2
@@ -90,7 +90,7 @@ Faml::TextCompiler::InvalidInterpolation: 1#{2
 ```
 
 
-# text\_spec.rb:103
+# [text\_spec.rb:102](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L102)
 ## Input
 ```haml
 :plain

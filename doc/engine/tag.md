@@ -1,4 +1,4 @@
-# tag\_spec.rb:229
+# [tag\_spec.rb:228](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/tag_spec.rb#L228)
 ## Input
 ```haml
 %span!#{'<nyaa>'}

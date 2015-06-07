@@ -51,7 +51,7 @@ module HamlitSpecHelper
   def write_caller!(test)
     line = caller.find{ |l| l =~ %r{spec/hamlit} }
     path, lineno = line.match(/^([^:]+):([0-9]+)/).to_a.last(2)
-    test.lineno = lineno.to_i
+    test.lineno = lineno.to_i - 1
     test.dir, test.file = path.gsub(%r{^.+spec/hamlit/}, '').split('/')
   end
 
@@ -169,8 +169,10 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
   end
 
   def document
+    base_url = 'https://github.com/k0kubun/hamlit/blob/master/spec/hamlit'
+    url = File.join(base_url, dir, file)
     doc = <<-DOC
-# #{escape_markdown("#{file}:#{lineno}")}
+# [#{escape_markdown("#{file}:#{lineno}")}](#{url}#L#{lineno})
 ## Input
 ```haml
 #{src_haml}

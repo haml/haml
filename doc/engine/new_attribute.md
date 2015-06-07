@@ -1,4 +1,4 @@
-# new\_attribute\_spec.rb:21
+# [new\_attribute\_spec.rb:20](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/new_attribute_spec.rb#L20)
 ## Input
 ```haml
 %a(title="'")
@@ -25,7 +25,7 @@
 ```
 
 
-# new\_attribute\_spec.rb:33
+# [new\_attribute\_spec.rb:32](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/new_attribute_spec.rb#L32)
 ## Input
 ```haml
 - title = "'\""

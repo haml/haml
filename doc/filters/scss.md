@@ -1,4 +1,4 @@
-# scss\_spec.rb:4
+# [scss\_spec.rb:3](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/filters/scss_spec.rb#L3)
 ## Input
 ```haml
 :scss
@@ -34,7 +34,7 @@
 ```
 
 
-# scss\_spec.rb:22
+# [scss\_spec.rb:21](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/filters/scss_spec.rb#L21)
 ## Input
 ```haml
 :scss
