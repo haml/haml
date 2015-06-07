@@ -1,7 +1,7 @@
 describe Hamlit::Engine do
   describe 'tab indent' do
     it 'accepts tab indentation' do
-      assert_render(<<-HAML, <<-HTML, compatible_with: :haml)
+      assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
         %p
         \t%a
       HAML

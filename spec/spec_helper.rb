@@ -16,7 +16,7 @@ module HamlitSpecHelper
 
   def assert_render(haml, html, options = {})
     errs  = array_wrap(options.delete(:error_with) || [])
-    impls = array_wrap(options.delete(:compatible_with) || [:haml, :faml] - errs)
+    impls = array_wrap(options.delete(:compatible_only) || [:haml, :faml] - errs)
     haml  = haml.unindent
     html  = html.unindent
 

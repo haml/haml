@@ -226,7 +226,7 @@ describe Hamlit::Engine do
       end
 
       it 'accepts ! operator' do
-        assert_render(<<-'HAML', <<-'HTML', compatible_with: :faml)
+        assert_render(<<-'HAML', <<-'HTML', compatible_only: :faml)
           %span!#{'<nyaa>'}
           %span! #{'<nyaa>'}
           !#{'<nyaa>'}
@@ -299,7 +299,7 @@ describe Hamlit::Engine do
       end
 
       it 'removes whitespace inside script inside silent script' do
-        assert_render(<<-HAML, <<-HTML, compatible_with: [:haml, :faml])
+        assert_render(<<-HAML, <<-HTML, compatible_only: [:haml, :faml])
           .bar<
             - 3.times do
               = 'foo'
@@ -309,7 +309,7 @@ describe Hamlit::Engine do
       end
 
       it 'removes whitespace inside script recursively' do
-        assert_render(<<-HAML, <<-HTML, compatible_with: [:haml, :faml])
+        assert_render(<<-HAML, <<-HTML, compatible_only: [:haml, :faml])
           .foo<
             - 1.times do
               = 2.times do

@@ -1,7 +1,7 @@
 describe Hamlit::Filters::Sass do
   describe '#compile' do
     it 'renders sass filter' do
-      assert_render(<<-HAML, <<-HTML, compatible_with: :haml)
+      assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
         :sass
           .users_controller
             .show_action
@@ -17,7 +17,7 @@ describe Hamlit::Filters::Sass do
     end
 
     it 'renders sass filter with string interpolation' do
-      assert_render(<<-'HAML', <<-HTML, compatible_with: :haml)
+      assert_render(<<-'HAML', <<-HTML, compatible_only: :haml)
         :sass
           .users_controller
             .show_action

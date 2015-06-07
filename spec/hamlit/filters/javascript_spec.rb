@@ -1,7 +1,7 @@
 describe Hamlit::Filters::Javascript do
   describe '#compile' do
     it 'just renders script tag for empty filter' do
-      assert_render(<<-HAML, <<-HTML, compatible_with: [])
+      assert_render(<<-HAML, <<-HTML, compatible_only: [])
         before
         :javascript
         after
@@ -30,7 +30,7 @@ describe Hamlit::Filters::Javascript do
     end
 
     it 'accepts illegal indentation' do
-      assert_render(<<-HAML, <<-HTML, compatible_with: :faml)
+      assert_render(<<-HAML, <<-HTML, compatible_only: :faml)
         :javascript
          if {
           alert('hello');

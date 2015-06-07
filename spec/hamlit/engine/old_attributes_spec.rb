@@ -122,7 +122,7 @@ describe Hamlit::Engine do
       end
 
       it 'joins attribute class and element class' do
-        assert_render(<<-HAML, <<-HTML, compatible_with: :haml)
+        assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
           .foo{ class: ['bar'] }
           .foo{ class: ['bar', nil] }
           .foo{ class: ['bar', 'baz'] }
@@ -200,7 +200,7 @@ describe Hamlit::Engine do
 
       # NOTE: This incompatibility will not be fixed for performance.
       it 'does not delete non-boolean attributes, for optimization' do
-        assert_render(<<-'HAML', <<-HTML, compatible_with: []) # wontfix
+        assert_render(<<-'HAML', <<-HTML, compatible_only: []) # wontfix
           - val = false
           %a{ href: val }
           - val = nil
@@ -214,7 +214,7 @@ describe Hamlit::Engine do
 
     describe 'html escape' do
       it 'escapes attribute values on static attributes' do
-        assert_render(<<-'HAML', <<-HTML, compatible_with: :faml)
+        assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
           %a{title: "'"}
           %a{title: "'\""}
           %a{href: '/search?foo=bar&hoge=<fuga>'}
@@ -226,7 +226,7 @@ describe Hamlit::Engine do
       end
 
       it 'escapes attribute values on dynamic attributes' do
-        assert_render(<<-'HAML', <<-HTML, compatible_with: :faml)
+        assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
           - title = "'\""
           - href  = '/search?foo=bar&hoge=<fuga>'
           %a{title: title}
@@ -238,7 +238,7 @@ describe Hamlit::Engine do
       end
 
       it 'escapes attribute values on hash attributes' do
-        assert_render(<<-'HAML', <<-HTML, compatible_with: :faml)
+        assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
           - title = { title: "'\"" }
           - href  = { href:  '/search?foo=bar&hoge=<fuga>' }
           %a{ title }
@@ -261,7 +261,7 @@ describe Hamlit::Engine do
       end
 
       it 'renders true attributes' do
-        assert_render(<<-'HAML', <<-HTML, compatible_with: :haml)
+        assert_render(<<-'HAML', <<-HTML, compatible_only: :haml)
           %span{ data: { disable: true } } bar
         HAML
           <span data-disable>bar</span>

@@ -39,7 +39,7 @@ describe Hamlit::Engine do
     end
 
     it 'renders block script' do
-      assert_render(<<-HAML, <<-HTML, compatible_with: [])
+      assert_render(<<-HAML, <<-HTML, compatible_only: [])
         = 3.times do |i|
           = i
         4
@@ -53,7 +53,7 @@ describe Hamlit::Engine do
     end
 
     it 'renders tag internal block script' do
-      assert_render(<<-HAML, <<-HTML, compatible_with: [])
+      assert_render(<<-HAML, <<-HTML, compatible_only: [])
         %span
           = 1.times do |i|
             = i
@@ -85,7 +85,7 @@ describe Hamlit::Engine do
     end
 
     it 'renders !=' do
-      assert_render(<<-HAML, <<-HTML, escape_html: true, compatible_with: [])
+      assert_render(<<-HAML, <<-HTML, escape_html: true, compatible_only: [])
         != '<"&>'
         != '<"&>'.tap do |str|
           -# no operation
@@ -96,7 +96,7 @@ describe Hamlit::Engine do
     end
 
     it 'renders &=' do
-      assert_render(<<-HAML, <<-HTML, escape_html: false, compatible_with: [])
+      assert_render(<<-HAML, <<-HTML, escape_html: false, compatible_only: [])
         &= '<"&>'
         &= '<"&>'.tap do |str|
           -# no operation
