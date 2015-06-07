@@ -53,19 +53,30 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# old\_attributes\_spec.rb:203
+# old\_attributes\_spec.rb:202
 ## Input
 ```haml
+/ wontfix: Non-boolean attributes are not escaped for optimization.
 - val = false
 %a{ href: val }
 - val = nil
 %a{ href: val }
+
+/ Boolean attributes are escaped correctly.
+- val = false
+%a{ disabled: val }
+- val = nil
+%a{ disabled: val }
 
 ```
 
 ## Output
 ### Haml, Faml
 ```html
+<!-- wontfix: Non-boolean attributes are not escaped for optimization. -->
+<a></a>
+<a></a>
+<!-- Boolean attributes are escaped correctly. -->
 <a></a>
 <a></a>
 
@@ -73,13 +84,17 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 
 ### Hamlit
 ```html
+<!-- wontfix: Non-boolean attributes are not escaped for optimization. -->
 <a href='false'></a>
 <a href=''></a>
+<!-- Boolean attributes are escaped correctly. -->
+<a></a>
+<a></a>
 
 ```
 
 
-# old\_attributes\_spec.rb:217
+# old\_attributes\_spec.rb:227
 ## Input
 ```haml
 %a{title: "'"}
@@ -106,7 +121,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# old\_attributes\_spec.rb:229
+# old\_attributes\_spec.rb:239
 ## Input
 ```haml
 - title = "'\""
@@ -132,7 +147,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# old\_attributes\_spec.rb:241
+# old\_attributes\_spec.rb:251
 ## Input
 ```haml
 - title = { title: "'\"" }
@@ -158,7 +173,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# old\_attributes\_spec.rb:264
+# old\_attributes\_spec.rb:274
 ## Input
 ```haml
 %span{ data: { disable: true } } bar
