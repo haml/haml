@@ -36,7 +36,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", ">= 3"
   spec.add_development_dependency "sass"
   spec.add_development_dependency "slim"
-  spec.add_development_dependency "tenjin"
   spec.add_development_dependency "therubyracer"
   spec.add_development_dependency "unindent"
 end
