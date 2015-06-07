@@ -24,7 +24,7 @@
 
 ### Faml
 ```html
-(eval):4: syntax error, unexpected end-of-input, expecting keyword_end
+SyntaxError: (eval):4: syntax error, unexpected end-of-input, expecting keyword_end
 ; _buf << ("</span>\n".freeze); _buf = _buf.join
                                                 ^
 ```
@@ -56,7 +56,7 @@
 
 ### Faml
 ```html
-(eval):5: syntax error, unexpected end-of-input, expecting keyword_end
+SyntaxError: (eval):5: syntax error, unexpected end-of-input, expecting keyword_end
 ; _buf << ("</span>\n".freeze); _buf = _buf.join
                                                 ^
 ```
@@ -87,7 +87,7 @@
 
 ### Faml
 ```html
-(eval):4: syntax error, unexpected end-of-input, expecting keyword_end
+SyntaxError: (eval):4: syntax error, unexpected end-of-input, expecting keyword_end
 ; _buf << ("</span>\n".freeze); _buf = _buf.join
                                                 ^
 ```

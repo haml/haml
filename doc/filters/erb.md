@@ -26,5 +26,5 @@ ok
 
 ### Faml
 ```html
-Unable to find compiler for erb
+Faml::FilterCompilers::NotFound: Unable to find compiler for erb
 ```

@@ -20,7 +20,7 @@
 
 ### Haml
 ```html
-Illegal element: classes and ids must have values.
+Haml::SyntaxError: Illegal element: classes and ids must have values.
 ```
 
 ### Faml
@@ -89,12 +89,12 @@ aaa<a>
 
 ### Haml
 ```html
-Unbalanced brackets.
+Haml::SyntaxError: Unbalanced brackets.
 ```
 
 ### Faml
 ```html
-1#{2
+Faml::TextCompiler::InvalidInterpolation: 1#{2
 ```
 
 # text\_spec.rb:103

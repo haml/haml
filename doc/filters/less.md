@@ -36,7 +36,7 @@
 
 ### Faml
 ```html
-Unable to find compiler for less
+Faml::FilterCompilers::NotFound: Unable to find compiler for less
 ```
 
 # less\_spec.rb:23
@@ -72,5 +72,5 @@ Unable to find compiler for less
 
 ### Faml
 ```html
-Unable to find compiler for less
+Faml::FilterCompilers::NotFound: Unable to find compiler for less
 ```

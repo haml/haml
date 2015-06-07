@@ -77,7 +77,8 @@ module HamlitSpecHelper
       begin
         block.call(test, options)
       rescue Exception => e
-        test.send(:"#{impl}_html=", e.to_s)
+        err = "#{e.class}: #{e.message}"
+        test.send(:"#{impl}_html=", err)
       end
       return
     end

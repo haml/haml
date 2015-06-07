@@ -14,7 +14,7 @@
 
 ### Haml
 ```html
-(haml):1: syntax error, unexpected tSTRING_DEND, expecting ')'
+Haml::SyntaxError: (haml):1: syntax error, unexpected tSTRING_DEND, expecting ')'
 ...l,  class: ')}>}}', id: '{}}' } }{</span>\n";;_erbout
 ...                               ^
 (haml):1: unterminated regexp meets end of file
@@ -22,7 +22,7 @@
 
 ### Faml
 ```html
-Unparsable Ruby code is given to attributes:  class: '
+Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:  class: '
 ```
 
 # old\_attributes\_spec.rb:125
