@@ -89,28 +89,3 @@ Faml::TextCompiler::InvalidInterpolation: 1#{2
 
 ```
 
-
-# [text\_spec.rb:102](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L102)
-## Input
-```haml
-:plain
-  あ
-  #{'い'}
-```
-
-## Output
-### Haml, Hamlit
-```html
-あ
-い
-
-
-```
-
-### Faml
-```html
-あ
-い
-
-```
-

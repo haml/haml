@@ -18,5 +18,6 @@ Showing incompatibilities against [Haml](https://github.com/haml/haml) and [Faml
 - [filters/javascript\_spec.rb](https://github.com/k0kubun/hamlit/blob/master/doc/filters/javascript.md)
 - [filters/less\_spec.rb](https://github.com/k0kubun/hamlit/blob/master/doc/filters/less.md)
 - [filters/markdown\_spec.rb](https://github.com/k0kubun/hamlit/blob/master/doc/filters/markdown.md)
+- [filters/plain\_spec.rb](https://github.com/k0kubun/hamlit/blob/master/doc/filters/plain.md)
 - [filters/sass\_spec.rb](https://github.com/k0kubun/hamlit/blob/master/doc/filters/sass.md)
 - [filters/scss\_spec.rb](https://github.com/k0kubun/hamlit/blob/master/doc/filters/scss.md)
