@@ -102,7 +102,7 @@ module Hamlit
       return parse_text(scanner, lstrip: true, escape: false) if scanner.scan(/!( |==)/)
       return parse_script(scanner, force_escape: true)        if scanner.match?(/&=/)
       return parse_script(scanner, disable_escape: true)      if scanner.match?(/!=/)
-      return parse_text(scanner, lstrip: true, escape: false) if inline && scanner.scan(/!/)
+      return parse_text(scanner, lstrip: true, escape: false) if scanner.scan(/!/)
 
       case scanner.peek(1)
       when '=', '~'

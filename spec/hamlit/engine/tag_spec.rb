@@ -226,7 +226,7 @@ describe Hamlit::Engine do
       end
 
       it 'accepts ! operator' do
-        assert_render(<<-'HAML', <<-'HTML', compatible_with: :haml)
+        assert_render(<<-'HAML', <<-'HTML', compatible_with: :faml)
           %span!#{'<nyaa>'}
           %span! #{'<nyaa>'}
           !#{'<nyaa>'}
@@ -234,7 +234,7 @@ describe Hamlit::Engine do
         HAML
           <span><nyaa></span>
           <span><nyaa></span>
-          !&lt;nyaa&gt;
+          <nyaa>
           <nyaa>
         HTML
       end

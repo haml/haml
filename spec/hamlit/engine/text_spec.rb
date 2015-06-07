@@ -72,7 +72,7 @@ describe Hamlit::Engine do
     end
 
     it 'renders ! operator' do
-      assert_render(<<-'HAML', <<-HTML, compatible_with: :haml)
+      assert_render(<<-'HAML', <<-HTML, compatible_with: :faml)
         aaa#{'<a>'}
         !aaa#{'<a>'}
         ! aaa#{'<a>'}
@@ -80,10 +80,10 @@ describe Hamlit::Engine do
         !!aa
       HAML
         aaa&lt;a&gt;
-        !aaa&lt;a&gt;
         aaa<a>
         aaa<a>
-        !!aa
+        aaa<a>
+        !aa
       HTML
     end
 
