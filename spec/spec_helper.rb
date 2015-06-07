@@ -113,6 +113,7 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
 
     def generate_docs!
       prepare_dirs!
+      generate_toc!
 
       incompatibilities.group_by(&:doc_path).each do |path, tests|
         doc = tests.sort_by(&:lineno).map(&:document).join("\n")
@@ -127,6 +128,30 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
 
     private
 
+    def generate_toc!
+      table_of_contents = <<-TOC.unindent
+        # Hamlit incompatibilities
+
+        This is a document generated from RSpec test cases.  
+        Showing incompatibilities against [Haml](https://github.com/haml/haml) and [Faml](https://github.com/eagletmt/faml).
+      TOC
+
+      incompatibilities.group_by(&:dir).each do |dir, tests|
+        table_of_contents << "\n## #{dir}\n"
+
+        tests.group_by(&:doc_path).each do |path, tests|
+          test = tests.first
+          file_path = File.join(test.dir, test.file)
+          base_url  = 'https://github.com/k0kubun/hamlit/blob/master/doc/'
+          table_of_contents << "\n- [#{escape_markdown(file_path)}](#{File.join(base_url, path)})"
+        end
+        table_of_contents << "\n"
+      end
+
+      path = File.join(doc_dir, 'README.md')
+      File.write(path, table_of_contents)
+    end
+
     def prepare_dirs!
       system("rm -rf #{doc_dir}")
       incompatibilities.map(&:dir).uniq.each do |dir|
@@ -136,6 +161,10 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
 
     def doc_dir
       @doc_dir ||= File.expand_path('./doc')
+    end
+
+    def escape_markdown(text)
+      text.gsub(/_/, '\\_')
     end
   end
 
@@ -172,7 +201,7 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
   private
 
   def escape_markdown(text)
-    text.gsub(/_/, '\\_')
+    self.class.send(:escape_markdown, text)
   end
 end
 
