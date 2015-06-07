@@ -10,6 +10,11 @@ task :spec do
   exit system('bundle exec rspec --pattern spec/hamlit/**{,/\*/\*\*\}/\*_spec.rb')
 end
 
+desc 'Automatically generate documents from rspec'
+task :doc do
+  system('AUTODOC=1 bundle exec rake spec')
+end
+
 namespace :spec do
   desc 'Generate converted ugly haml-spec'
   task :update do
