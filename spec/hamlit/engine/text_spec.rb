@@ -72,7 +72,7 @@ describe Hamlit::Engine do
     end
 
     describe 'inline operator' do
-      it 'render ! operator' do
+      it 'renders ! operator' do
         assert_render(<<-'HAML', <<-'HTML')
           %span!#{'<nyaa>'}
           %span! #{'<nyaa>'}
@@ -84,7 +84,7 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'render & operator' do
+      it 'renders & operator' do
         assert_render(<<-'HAML', <<-'HTML')
           %span& #{'<nyaa>'}
           %span&#{'<nyaa>'}
@@ -96,7 +96,7 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'render !, & operator right before a non-space character' do
+      it 'renders !, & operator right before a non-space character' do
         assert_render(<<-'HAML', <<-'HTML', compatible_only: :faml)
           &nbsp;
           \&nbsp;
@@ -118,7 +118,7 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'accepts != operator' do
+      it 'renders != operator' do
         assert_render(<<-'HAML', <<-'HTML')
           %span!= '<nyaa>'
         HAML
@@ -126,7 +126,7 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'accepts !== operator' do
+      it 'renders !== operator' do
         assert_render(<<-'HAML', <<-'HTML')
           %span!==#{'<nyaa>'}
           %span!== #{'<nyaa>'}
@@ -140,7 +140,7 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'accepts &= operator' do
+      it 'renders &= operator' do
         assert_render(<<-'HAML', <<-'HTML', escape_html: false)
           %span&= '<nyaa>'
         HAML
@@ -148,7 +148,19 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'accepts ~ operator' do
+      it 'renders &== operator' do
+        assert_render(<<-'HAML', <<-'HTML')
+          &===
+          &== =
+          &== #{'<p>'}
+        HAML
+          =
+          =
+          &lt;p&gt;
+        HTML
+      end
+
+      it 'renders ~ operator' do
         assert_render(<<-HAML, <<-HTML, escape_html: false)
           %span~ 1
         HAML
