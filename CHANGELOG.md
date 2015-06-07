@@ -1,3 +1,9 @@
+## v1.5.5
+
+- Support &, &== operator
+- Depend on v0.7.6 of temple for refactoring
+- Fix a trivial diff of rendering multiline operator
+
 ## v1.5.4
 
 - Recursively remove whitespace inside a tag
