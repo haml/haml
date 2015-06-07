@@ -51,7 +51,7 @@ module Hamlit
         lines = lines.map do |line|
           line.strip.gsub(/ *\|\Z/, '')
         end
-        lines.join(' ')
+        lines.map { |l| "#{l} "}.join
       end
     end
   end
