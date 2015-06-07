@@ -1,4 +1,4 @@
-# [plain\_spec.rb:3](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/filters/plain_spec.rb#L3)
+# [plain\_spec.rb:3](/spec/hamlit/filters/plain_spec.rb#L3)
 ## Input
 ```haml
 :plain

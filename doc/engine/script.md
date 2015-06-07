@@ -1,4 +1,4 @@
-# [script\_spec.rb:41](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/script_spec.rb#L41)
+# [script\_spec.rb:41](/spec/hamlit/engine/script_spec.rb#L41)
 ## Input
 ```haml
 = 3.times do |i|
@@ -28,7 +28,7 @@
 ```
 
 
-# [script\_spec.rb:55](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/script_spec.rb#L55)
+# [script\_spec.rb:55](/spec/hamlit/engine/script_spec.rb#L55)
 ## Input
 ```haml
 %span
@@ -56,7 +56,7 @@
 ```
 
 
-# [script\_spec.rb:87](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/script_spec.rb#L87)
+# [script\_spec.rb:87](/spec/hamlit/engine/script_spec.rb#L87)
 ## Input
 ```haml
 != '<"&>'
@@ -80,7 +80,7 @@
 ```
 
 
-# [script\_spec.rb:98](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/script_spec.rb#L98)
+# [script\_spec.rb:98](/spec/hamlit/engine/script_spec.rb#L98)
 ## Input
 ```haml
 &= '<"&>'

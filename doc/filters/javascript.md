@@ -1,4 +1,4 @@
-# [javascript\_spec.rb:3](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/filters/javascript_spec.rb#L3)
+# [javascript\_spec.rb:3](/spec/hamlit/filters/javascript_spec.rb#L3)
 ## Input
 ```haml
 before
@@ -36,7 +36,7 @@ after
 ```
 
 
-# [javascript\_spec.rb:32](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/filters/javascript_spec.rb#L32)
+# [javascript\_spec.rb:32](/spec/hamlit/filters/javascript_spec.rb#L32)
 ## Input
 ```haml
 :javascript

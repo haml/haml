@@ -1,4 +1,4 @@
-# [sass\_spec.rb:3](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/filters/sass_spec.rb#L3)
+# [sass\_spec.rb:3](/spec/hamlit/filters/sass_spec.rb#L3)
 ## Input
 ```haml
 :sass
@@ -31,7 +31,7 @@
 ```
 
 
-# [sass\_spec.rb:19](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/filters/sass_spec.rb#L19)
+# [sass\_spec.rb:19](/spec/hamlit/filters/sass_spec.rb#L19)
 ## Input
 ```haml
 :sass

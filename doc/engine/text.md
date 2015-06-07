@@ -1,4 +1,4 @@
-# [text\_spec.rb:15](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L15)
+# [text\_spec.rb:15](/spec/hamlit/engine/text_spec.rb#L15)
 ## Input
 ```haml
 .
@@ -33,7 +33,7 @@ Haml::SyntaxError: Illegal element: classes and ids must have values.
 ```
 
 
-# [text\_spec.rb:99](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L99)
+# [text\_spec.rb:99](/spec/hamlit/engine/text_spec.rb#L99)
 ## Input
 ```haml
 &nbsp;
@@ -63,7 +63,7 @@ hello
 ```
 
 
-# [text\_spec.rb:175](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L175)
+# [text\_spec.rb:175](/spec/hamlit/engine/text_spec.rb#L175)
 ## Input
 ```haml
 1#{2

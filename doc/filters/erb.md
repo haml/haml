@@ -1,4 +1,4 @@
-# [erb\_spec.rb:3](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/filters/erb_spec.rb#L3)
+# [erb\_spec.rb:3](/spec/hamlit/filters/erb_spec.rb#L3)
 ## Input
 ```haml
 :erb

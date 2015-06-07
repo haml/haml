@@ -1,4 +1,4 @@
-# [less\_spec.rb:3](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/filters/less_spec.rb#L3)
+# [less\_spec.rb:3](/spec/hamlit/filters/less_spec.rb#L3)
 ## Input
 ```haml
 :less
@@ -29,7 +29,7 @@ Faml::FilterCompilers::NotFound: Unable to find compiler for less
 ```
 
 
-# [less\_spec.rb:22](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/filters/less_spec.rb#L22)
+# [less\_spec.rb:22](/spec/hamlit/filters/less_spec.rb#L22)
 ## Input
 ```haml
 :less

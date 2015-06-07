@@ -1,4 +1,4 @@
-# [old\_attributes\_spec.rb:43](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/old_attributes_spec.rb#L43)
+# [old\_attributes\_spec.rb:43](/spec/hamlit/engine/old_attributes_spec.rb#L43)
 ## Input
 ```haml
 %span{ class: '}}}', id: '{}}' } }{
@@ -26,7 +26,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# [old\_attributes\_spec.rb:201](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/old_attributes_spec.rb#L201)
+# [old\_attributes\_spec.rb:201](/spec/hamlit/engine/old_attributes_spec.rb#L201)
 ## Input
 ```haml
 / wontfix: Non-boolean attributes are not escaped for optimization.

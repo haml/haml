@@ -165,8 +165,7 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
         tests.group_by(&:doc_path).each do |path, tests|
           test = tests.first
           file_path = File.join(test.dir, test.file)
-          base_url  = 'https://github.com/k0kubun/hamlit/blob/master/doc/'
-          table_of_contents << "\n- [#{escape_markdown(file_path)}](#{File.join(base_url, path)})"
+          table_of_contents << "\n- [#{escape_markdown(file_path)}](#{path})"
         end
         table_of_contents << "\n"
       end
@@ -192,10 +191,10 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
   end
 
   def document
-    base_url = 'https://github.com/k0kubun/hamlit/blob/master/spec/hamlit'
-    url = File.join(base_url, dir, file)
+    base_path = '/spec/hamlit'
+    path = File.join(base_path, dir, file)
     doc = <<-DOC
-# [#{escape_markdown("#{file}:#{lineno}")}](#{url}#L#{lineno})
+# [#{escape_markdown("#{file}:#{lineno}")}](#{path}#L#{lineno})
 ## Input
 ```haml
 #{src_haml}
