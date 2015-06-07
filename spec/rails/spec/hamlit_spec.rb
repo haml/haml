@@ -46,8 +46,7 @@ describe 'Hamlit rails integration', type: :request do
       expect(response.body).to include(<<-HTML.strip_heredoc)
         <i>
         &lt;&gt;
-        &lt;&gt;
-        </i>
+        &lt;&gt;</i>
       HTML
     end
   end
