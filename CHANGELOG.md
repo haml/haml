@@ -1,3 +1,8 @@
+## v1.5.6
+
+- Raise error for unbalanced brackets
+- Don't render newline after block script
+
 ## v1.5.5
 
 - Support &, &== operator
