@@ -156,6 +156,10 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
       TOC
 
       incompatibilities.group_by(&:dir).each do |dir, tests|
+        # TODO: Split incompatibility documents into haml and faml
+        # There are too many noisy documents now.
+        next if dir == 'filters'
+
         table_of_contents << "\n## #{dir}\n"
 
         tests.group_by(&:doc_path).each do |path, tests|

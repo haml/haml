@@ -76,7 +76,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'renders empty elsif statement' do
+    it 'renders empty elsif statement', skipdoc: true do
       assert_render(<<-'HAML', <<-HTML, compatible_only: :haml, error_with: :faml)
         %span
           - if false
@@ -87,7 +87,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'renders empty else statement' do
+    it 'renders empty else statement', skipdoc: true do
       assert_render(<<-'HAML', <<-HTML, compatible_only: :haml, error_with: :faml)
         %span
           - if false
@@ -99,7 +99,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'renders empty when statement' do
+    it 'renders empty when statement', skipdoc: true do
       assert_render(<<-'HAML', <<-HTML, compatible_only: :haml, error_with: :faml)
         %span
           - case
@@ -187,7 +187,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'joins a next line if a current line ends with ","' do
+    it 'joins a next line if a current line ends with ","', skipdoc: true do
       assert_render("- foo = [',  \n     ']\n= foo", <<-HTML, compatible_only: :haml)
         [&quot;, &quot;]
       HTML
