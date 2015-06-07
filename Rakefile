@@ -15,6 +15,11 @@ namespace :spec do
   task :update do
     system('cd spec && rake ugly')
   end
+
+  desc 'Check all specs'
+  task :release do
+    abort 'Spec failed!' unless system('./test.sh')
+  end
 end
 
 namespace :rails do
@@ -25,3 +30,4 @@ namespace :rails do
 end
 
 task default: [:spec, 'rails:spec']
+task release: ['spec:release']
