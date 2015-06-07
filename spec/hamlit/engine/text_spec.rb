@@ -72,6 +72,44 @@ describe Hamlit::Engine do
     end
 
     describe 'inline operator' do
+      it 'render ! operator' do
+        assert_render(<<-'HAML', <<-'HTML')
+          %span!#{'<nyaa>'}
+          %span! #{'<nyaa>'}
+          ! #{'<nyaa>'}
+        HAML
+          <span><nyaa></span>
+          <span><nyaa></span>
+          <nyaa>
+        HTML
+      end
+
+      it 'render & operator' do
+        assert_render(<<-'HAML', <<-'HTML')
+          %span& #{'<nyaa>'}
+          %span&#{'<nyaa>'}
+          & #{'<nyaa>'}
+        HAML
+          <span>&lt;nyaa&gt;</span>
+          <span>&lt;nyaa&gt;</span>
+          &lt;nyaa&gt;
+        HTML
+      end
+
+      it 'render !, & operator right before a non-space character' do
+        assert_render(<<-'HAML', <<-'HTML', compatible_only: :faml)
+          &nbsp;
+          \&nbsp;
+          !hello
+          \!hello
+        HAML
+          nbsp;
+          &nbsp;
+          hello
+          !hello
+        HTML
+      end
+
       it 'does not accept backslash operator' do
         assert_render(<<-'HAML', <<-'HTML')
           %span\    foo
@@ -107,20 +145,6 @@ describe Hamlit::Engine do
           %span&= '<nyaa>'
         HAML
           <span>&lt;nyaa&gt;</span>
-        HTML
-      end
-
-      it 'accepts ! operator' do
-        assert_render(<<-'HAML', <<-'HTML', compatible_only: :faml)
-          %span!#{'<nyaa>'}
-          %span! #{'<nyaa>'}
-          !#{'<nyaa>'}
-          ! #{'<nyaa>'}
-        HAML
-          <span><nyaa></span>
-          <span><nyaa></span>
-          <nyaa>
-          <nyaa>
         HTML
       end
 

@@ -33,37 +33,37 @@ Haml::SyntaxError: Illegal element: classes and ids must have values.
 ```
 
 
-# [text\_spec.rb:113](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L113)
+# [text\_spec.rb:99](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L99)
 ## Input
 ```haml
-%span!#{'<nyaa>'}
-%span! #{'<nyaa>'}
-!#{'<nyaa>'}
-! #{'<nyaa>'}
+&nbsp;
+\&nbsp;
+!hello
+\!hello
 
 ```
 
 ## Output
 ### Haml
 ```html
-<span><nyaa></span>
-<span><nyaa></span>
-!&lt;nyaa&gt;
-<nyaa>
+&nbsp;
+&nbsp;
+!hello
+!hello
 
 ```
 
 ### Faml, Hamlit
 ```html
-<span><nyaa></span>
-<span><nyaa></span>
-<nyaa>
-<nyaa>
+nbsp;
+&nbsp;
+hello
+!hello
 
 ```
 
 
-# [text\_spec.rb:139](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L139)
+# [text\_spec.rb:163](https://github.com/k0kubun/hamlit/blob/master/spec/hamlit/engine/text_spec.rb#L163)
 ## Input
 ```haml
 1#{2
