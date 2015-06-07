@@ -1,3 +1,4 @@
+require 'hamlit/concerns/error'
 require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/included'
 require 'hamlit/concerns/string_interpolation'
@@ -6,6 +7,7 @@ module Hamlit
   module Compilers
     module Text
       extend Concerns::Included
+      include Concerns::Error
       include Concerns::StringInterpolation
 
       included do
@@ -20,6 +22,7 @@ module Hamlit
       # Return static and dynamic temple ast.
       # It splits expression to optimize because string interpolation is slow.
       def on_haml_text(exp, escape_html = true)
+        return syntax_error('Unbalanced brackets.') unless valid_interpolation?(exp)
         return static_text(exp) unless contains_interpolation?(exp)
 
         marker = find_string_marker(exp)
@@ -61,6 +64,24 @@ module Hamlit
       end
 
       private
+
+      def valid_interpolation?(exp)
+        marker = find_string_marker(exp)
+        return true unless marker # give up checking
+
+        literal = literalify_string(exp, marker)
+        open_count = 0
+
+        Ripper.lex(literal).each do |(row, col), type, str|
+          case type
+          when :on_embexpr_beg
+            open_count += 1
+          when :on_embexpr_end
+            open_count -= 1
+          end
+        end
+        open_count == 0
+      end
 
       # :static can't treat backslash properly
       def static_text(exp)

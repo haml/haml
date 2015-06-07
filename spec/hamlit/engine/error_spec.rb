@@ -52,5 +52,12 @@ describe Hamlit::Engine do
       HAML
         to raise_error(Hamlit::SyntaxError, 'Inconsistent indentation: 2 tabs used for indentation, but the rest of the document was indented using 2 spaces.')
     end
+
+    it 'raises syntax error for an inconsistent indentation' do
+      expect { render_string(<<-'HAML'.unindent) }.
+        1#{2
+      HAML
+        to raise_error(Hamlit::SyntaxError, 'Unbalanced brackets.')
+    end
   end
 end

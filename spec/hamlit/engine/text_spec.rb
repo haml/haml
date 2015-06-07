@@ -173,7 +173,6 @@ describe Hamlit::Engine do
       specify { assert_render('#{}', "\n") }
       specify { assert_render('1#{}', "1\n") }
       specify { assert_render('1#{2}', "12\n") }
-      specify { assert_render('1#{2', "1\#{2\n", error_with: [:haml, :faml]) }
       specify { assert_render('}#{1}', "}1\n") }
       specify { assert_render('#{1}2', "12\n") }
       specify { assert_render('1#{ "2#{3}4" }5', "12345\n") }

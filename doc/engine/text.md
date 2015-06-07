@@ -62,27 +62,3 @@ hello
 
 ```
 
-
-# [text\_spec.rb:175](/spec/hamlit/engine/text_spec.rb#L175)
-## Input
-```haml
-1#{2
-```
-
-## Output
-### Haml
-```html
-Haml::SyntaxError: Unbalanced brackets.
-```
-
-### Faml
-```html
-Faml::TextCompiler::InvalidInterpolation: 1#{2
-```
-
-### Hamlit
-```html
-1#{2
-
-```
-
