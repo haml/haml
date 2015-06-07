@@ -71,20 +71,66 @@ describe Hamlit::Engine do
       expect(render_string('\       a')).to eq("       a\n")
     end
 
-    it 'renders ! operator' do
-      assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
-        aaa#{'<a>'}
-        !aaa#{'<a>'}
-        ! aaa#{'<a>'}
-        !  aaa#{'<a>'}
-        !!aa
-      HAML
-        aaa&lt;a&gt;
-        aaa<a>
-        aaa<a>
-        aaa<a>
-        !aa
-      HTML
+    describe 'inline operator' do
+      it 'does not accept backslash operator' do
+        assert_render(<<-'HAML', <<-'HTML')
+          %span\    foo
+        HAML
+          <span>\    foo</span>
+        HTML
+      end
+
+      it 'accepts != operator' do
+        assert_render(<<-'HAML', <<-'HTML')
+          %span!= '<nyaa>'
+        HAML
+          <span><nyaa></span>
+        HTML
+      end
+
+      it 'accepts !== operator' do
+        assert_render(<<-'HAML', <<-'HTML')
+          %span!==#{'<nyaa>'}
+          %span!== #{'<nyaa>'}
+          !==#{'<nyaa>'}
+          !== #{'<nyaa>'}
+        HAML
+          <span><nyaa></span>
+          <span><nyaa></span>
+          <nyaa>
+          <nyaa>
+        HTML
+      end
+
+      it 'accepts &= operator' do
+        assert_render(<<-'HAML', <<-'HTML', escape_html: false)
+          %span&= '<nyaa>'
+        HAML
+          <span>&lt;nyaa&gt;</span>
+        HTML
+      end
+
+      it 'accepts ! operator' do
+        assert_render(<<-'HAML', <<-'HTML', compatible_only: :faml)
+          %span!#{'<nyaa>'}
+          %span! #{'<nyaa>'}
+          !#{'<nyaa>'}
+          ! #{'<nyaa>'}
+        HAML
+          <span><nyaa></span>
+          <span><nyaa></span>
+          <nyaa>
+          <nyaa>
+        HTML
+      end
+
+      it 'accepts ~ operator' do
+        assert_render(<<-HAML, <<-HTML, escape_html: false)
+          %span~ 1
+        HAML
+          <span>1</span>
+        HTML
+      end
     end
 
     describe 'string interpolation' do

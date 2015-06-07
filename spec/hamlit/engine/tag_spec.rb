@@ -186,68 +186,6 @@ describe Hamlit::Engine do
       HTML
     end
 
-    describe 'inline operator' do
-      it 'does not accept backslash operator' do
-        assert_render(<<-'HAML', <<-'HTML')
-          %span\    foo
-        HAML
-          <span>\    foo</span>
-        HTML
-      end
-
-      it 'accepts != operator' do
-        assert_render(<<-'HAML', <<-'HTML')
-          %span!= '<nyaa>'
-        HAML
-          <span><nyaa></span>
-        HTML
-      end
-
-      it 'accepts !== operator' do
-        assert_render(<<-'HAML', <<-'HTML')
-          %span!==#{'<nyaa>'}
-          %span!== #{'<nyaa>'}
-          !==#{'<nyaa>'}
-          !== #{'<nyaa>'}
-        HAML
-          <span><nyaa></span>
-          <span><nyaa></span>
-          <nyaa>
-          <nyaa>
-        HTML
-      end
-
-      it 'accepts &= operator' do
-        assert_render(<<-'HAML', <<-'HTML', escape_html: false)
-          %span&= '<nyaa>'
-        HAML
-          <span>&lt;nyaa&gt;</span>
-        HTML
-      end
-
-      it 'accepts ! operator' do
-        assert_render(<<-'HAML', <<-'HTML', compatible_only: :faml)
-          %span!#{'<nyaa>'}
-          %span! #{'<nyaa>'}
-          !#{'<nyaa>'}
-          ! #{'<nyaa>'}
-        HAML
-          <span><nyaa></span>
-          <span><nyaa></span>
-          <nyaa>
-          <nyaa>
-        HTML
-      end
-
-      it 'accepts ~ operator' do
-        assert_render(<<-HAML, <<-HTML, escape_html: false)
-          %span~ 1
-        HAML
-          <span>1</span>
-        HTML
-      end
-    end
-
     describe 'whitespace removal' do
       it 'removes outer whitespace by >' do
         assert_render(<<-HAML, <<-HTML)
