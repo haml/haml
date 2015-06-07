@@ -2,6 +2,8 @@ require 'set'
 
 # Hamlit::Parsers::Whitespace cares about "whitespace removal",
 # which is achieved by '<' or '>' after html tag.
+# NOTE: Whitespace means [:static, "\n"] because it is rendered
+# as whitespace on browsers.
 module Hamlit
   module Parsers
     module Whitespace
@@ -21,15 +23,16 @@ module Hamlit
         remove_first_outer_space!(exps)
       ensure
         exps.reverse!
+        exps
       end
 
       private
 
+      # `<` removes spaces inside script or silent script recursively.
       def remove_first_outer_space!(exps)
         deleted = false
-        exps.delete_if do |exp|
-          break if deleted
 
+        exps.delete_if do |exp|
           name, *args = exp
           case name
           when :static
@@ -41,10 +44,17 @@ module Hamlit
           when :newline
             next false
           when :haml
+            # recursive call for script
             remove_last_outer_space!(exp) if args.first == :script
+          when :multi
+            break if exp == :multi
+            # to flatten multi
+            remove_last_outer_space!(exp)
           end
           break
         end
+
+        # recursive call for silent script
         remove_last_outer_space!(exps) if deleted
       end
 

@@ -297,6 +297,29 @@ describe Hamlit::Engine do
           <span>foofoo2<span>bar</span></span>
         HTML
       end
+
+      it 'removes whitespace inside script inside silent script' do
+        assert_render(<<-HAML, <<-HTML)
+          .bar<
+            - 3.times do
+              = 'foo'
+        HAML
+          <div class='bar'>foofoofoo</div>
+        HTML
+      end
+
+      it 'removes whitespace inside script recursively' do
+        assert_render(<<-HAML, <<-HTML)
+          .foo<
+            - 1.times do
+              = 2.times do
+                - 2.times do
+                  = 1.times do
+                    = 'bar'
+        HAML
+          <div class='foo'>bar1bar1bar1bar12</div>
+        HTML
+      end
     end
   end
 end
