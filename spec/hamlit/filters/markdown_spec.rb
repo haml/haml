@@ -13,7 +13,7 @@ describe Hamlit::Filters::Markdown do
     end
 
     it 'renders markdown filter with string interpolation' do
-      assert_render(<<-'HAML', <<-HTML)
+      assert_render(<<-'HAML', <<-HTML, compatible_with: :faml)
         - project = '<Hamlit>'
         :markdown
           # #{project}

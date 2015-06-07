@@ -41,7 +41,7 @@ describe Hamlit::Engine do
     end
 
     it 'accepts even illegal input for haml' do
-      assert_render(<<-'HAML', <<-HTML)
+      assert_render(<<-'HAML', <<-HTML, error_with: [:haml, :faml])
         %span{ class: '}}}', id: '{}}' } }{
       HAML
         <span class='}}}' id='{}}'>}{</span>
@@ -122,7 +122,7 @@ describe Hamlit::Engine do
       end
 
       it 'joins attribute class and element class' do
-        assert_render(<<-HAML, <<-HTML)
+        assert_render(<<-HAML, <<-HTML, compatible_with: :haml)
           .foo{ class: ['bar'] }
           .foo{ class: ['bar', nil] }
           .foo{ class: ['bar', 'baz'] }
@@ -198,8 +198,9 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'does not delete some attributes, for optimization' do
-        assert_render(<<-'HAML', <<-HTML)
+      # NOTE: This incompatibility will not be fixed for performance.
+      it 'does not delete non-boolean attributes, for optimization' do
+        assert_render(<<-'HAML', <<-HTML, compatible_with: []) # wontfix
           - val = false
           %a{ href: val }
           - val = nil
@@ -213,7 +214,7 @@ describe Hamlit::Engine do
 
     describe 'html escape' do
       it 'escapes attribute values on static attributes' do
-        assert_render(<<-'HAML', <<-HTML)
+        assert_render(<<-'HAML', <<-HTML, compatible_with: :faml)
           %a{title: "'"}
           %a{title: "'\""}
           %a{href: '/search?foo=bar&hoge=<fuga>'}
@@ -225,7 +226,7 @@ describe Hamlit::Engine do
       end
 
       it 'escapes attribute values on dynamic attributes' do
-        assert_render(<<-'HAML', <<-HTML)
+        assert_render(<<-'HAML', <<-HTML, compatible_with: :faml)
           - title = "'\""
           - href  = '/search?foo=bar&hoge=<fuga>'
           %a{title: title}
@@ -237,7 +238,7 @@ describe Hamlit::Engine do
       end
 
       it 'escapes attribute values on hash attributes' do
-        assert_render(<<-'HAML', <<-HTML)
+        assert_render(<<-'HAML', <<-HTML, compatible_with: :faml)
           - title = { title: "'\"" }
           - href  = { href:  '/search?foo=bar&hoge=<fuga>' }
           %a{ title }
@@ -260,7 +261,7 @@ describe Hamlit::Engine do
       end
 
       it 'renders true attributes' do
-        assert_render(<<-'HAML', <<-HTML)
+        assert_render(<<-'HAML', <<-HTML, compatible_with: :haml)
           %span{ data: { disable: true } } bar
         HAML
           <span data-disable>bar</span>

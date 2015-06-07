@@ -1,7 +1,7 @@
 describe Hamlit::Engine do
   describe 'multiline' do
     it 'joins multi-lines ending with pipe' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HAML, <<-HTML, compatible_with: [])
         a |
           b |
       HAML

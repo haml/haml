@@ -9,7 +9,7 @@ describe Hamlit::Engine do
     end
 
     it 'renders xml doctype' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HAML, <<-HTML, format: :xhtml)
         !!! XML
       HAML
         <?xml version='1.0' encoding='utf-8' ?>

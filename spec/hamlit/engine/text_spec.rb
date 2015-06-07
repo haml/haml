@@ -13,7 +13,7 @@ describe Hamlit::Engine do
     end
 
     it 'renders . or # which is not continued by tag name' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HAML, <<-HTML, compatible_with: [], error_with: :haml)
         .
         .*
         #
@@ -72,7 +72,7 @@ describe Hamlit::Engine do
     end
 
     it 'renders ! operator' do
-      assert_render(<<-'HAML', <<-HTML)
+      assert_render(<<-'HAML', <<-HTML, compatible_with: :haml)
         aaa#{'<a>'}
         !aaa#{'<a>'}
         ! aaa#{'<a>'}
@@ -91,7 +91,7 @@ describe Hamlit::Engine do
       specify { assert_render('#{}', "\n") }
       specify { assert_render('1#{}', "1\n") }
       specify { assert_render('1#{2}', "12\n") }
-      specify { assert_render('1#{2', "1\#{2\n") }
+      specify { assert_render('1#{2', "1\#{2\n", error_with: [:haml, :faml]) }
       specify { assert_render('}#{1}', "}1\n") }
       specify { assert_render('#{1}2', "12\n") }
       specify { assert_render('1#{ "2#{3}4" }5', "12345\n") }
@@ -100,7 +100,7 @@ describe Hamlit::Engine do
       specify { assert_render('あ#{1}', "あ1\n") }
       specify { assert_render('あ#{"い"}う', "あいう\n") }
       specify { assert_render('a#{"<b>"}c', "a&lt;b&gt;c\n") }
-      specify { assert_render(":plain\n  あ\n  \#{'い'}", "あ\nい\n\n") }
+      specify { assert_render(":plain\n  あ\n  \#{'い'}", "あ\nい\n\n", compatible_with: :haml) }
     end
   end
 end

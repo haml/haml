@@ -1,7 +1,7 @@
 describe Hamlit::Filters::Coffee do
   describe '#compile' do
     it 'renders coffee filter' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HAML, <<-HTML, compatible_with: :haml)
         :coffee
           foo = ->
             alert('hello')
@@ -20,7 +20,7 @@ describe Hamlit::Filters::Coffee do
     end
 
     it 'renders coffeescript filter' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HAML, <<-HTML, compatible_with: :haml)
         :coffee
           foo = ->
             alert('hello')
@@ -39,7 +39,7 @@ describe Hamlit::Filters::Coffee do
     end
 
     it 'renders coffeescript filter' do
-      assert_render(<<-'HAML', <<-HTML)
+      assert_render(<<-'HAML', <<-HTML, compatible_with: :haml)
         :coffee
           foo = ->
             alert("#{'<&>'}")
