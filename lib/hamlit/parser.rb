@@ -121,8 +121,9 @@ module Hamlit
 
     def skip_newline?(ast)
       SKIP_NEWLINE_EXPS.include?(ast.first) ||
-        (ast[0..1] == [:haml, :doctype]) ||
         newline_skip_filter?(ast) ||
+        doctype?(ast) ||
+        block_script?(ast) ||
         outer_remove?
     end
 
@@ -133,6 +134,14 @@ module Hamlit
     def wrap_scanner(str)
       return str if str.is_a?(StringScanner)
       StringScanner.new(str)
+    end
+
+    def doctype?(ast)
+      ast[0..1] == [:haml, :doctype]
+    end
+
+    def block_script?(ast)
+      ast[0..1] == [:haml, :script]
     end
   end
 end

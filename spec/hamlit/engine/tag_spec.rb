@@ -237,7 +237,7 @@ describe Hamlit::Engine do
       end
 
       it 'removes whitespace inside script inside silent script' do
-        assert_render(<<-HAML, <<-HTML, compatible_only: [:haml, :faml])
+        assert_render(<<-HAML, <<-HTML)
           .bar<
             - 3.times do
               = 'foo'
@@ -247,7 +247,7 @@ describe Hamlit::Engine do
       end
 
       it 'removes whitespace inside script recursively' do
-        assert_render(<<-HAML, <<-HTML, compatible_only: [:haml, :faml])
+        assert_render(<<-HAML, <<-HTML)
           .foo<
             - 1.times do
               = 2.times do
