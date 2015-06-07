@@ -8,7 +8,6 @@ require 'hamlit/parsers/multiline'
 require 'hamlit/parsers/script'
 require 'hamlit/parsers/tag'
 require 'hamlit/parsers/text'
-require 'hamlit/parsers/whitespace'
 
 module Hamlit
   class Parser < Temple::Parser
@@ -20,7 +19,6 @@ module Hamlit
     include Parsers::Script
     include Parsers::Tag
     include Parsers::Text
-    include Parsers::Whitespace
 
     SKIP_NEWLINE_EXPS    = %i[newline code multi].freeze
     SKIP_NEWLINE_FILTERS = %w[ruby markdown erb].freeze
@@ -56,7 +54,7 @@ module Hamlit
 
         @current_lineno += 1
         node = parse_line(current_line)
-        remove_last_outer_space!(ast) if outer_remove?
+        remove_last_space!(ast) if outer_remove?
 
         ast << [:newline] if @current_indent > 0
         ast << node

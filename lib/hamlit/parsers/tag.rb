@@ -1,5 +1,6 @@
 require 'hamlit/concerns/error'
 require 'hamlit/concerns/indentable'
+require 'hamlit/concerns/whitespace'
 require 'hamlit/helpers'
 
 module Hamlit
@@ -7,6 +8,7 @@ module Hamlit
     module Tag
       include Concerns::Error
       include Concerns::Indentable
+      include Concerns::Whitespace
 
       TAG_ID_CLASS_REGEXP = /[a-zA-Z0-9_-]+/
       TAG_REGEXP  = /[a-zA-Z0-9\-_:]+/
