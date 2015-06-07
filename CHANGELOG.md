@@ -1,3 +1,8 @@
+## v1.5.4
+
+- Recursively remove whitespace inside a tag
+- Fix ! operator immediately before whitespace
+
 ## v1.5.3
 
 - Support !, !=, !==, &= and ~ as inline operators
