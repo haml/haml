@@ -81,7 +81,6 @@ module Hamlit
 
     # Parse a line and return ast if it is acceptable outside an inline tag
     def parse_outer_line(scanner)
-      return parse_text(scanner)    if scanner.scan(/\\/)
       return parse_text(scanner)    if scanner.match?(/\#{/)
       return parse_text(scanner)    if scanner.match?(/[.#]($|[^a-zA-Z0-9_-])/)
       return parse_doctype(scanner) if scanner.match?(/!!!/)
@@ -89,6 +88,8 @@ module Hamlit
       case scanner.peek(1)
       when '%', '.', '#'
         parse_tag(scanner)
+      when '\\'
+        parse_text(scanner, scan: /\\/)
       when '/'
         parse_comment(scanner)
       when ':'
@@ -99,7 +100,7 @@ module Hamlit
     # Parse a line and return ast which is acceptable inside an inline tag
     def parse_inner_line(scanner)
       return parse_text(scanner, lstrip: true)                if scanner.scan(/==/)
-      return parse_text(scanner, lstrip: true, escape: false) if scanner.scan(/!( |==)/)
+      return parse_text(scanner, lstrip: true, escape: false) if scanner.scan(/!==/)
       return parse_script(scanner, force_escape: true)        if scanner.match?(/&=/)
       return parse_script(scanner, disable_escape: true)      if scanner.match?(/!=/)
 
@@ -109,11 +110,9 @@ module Hamlit
       when '-'
         parse_silent_script(scanner)
       when '!'
-        scanner.scan(/!/)
-        parse_text(scanner, lstrip: true, escape: false)
+        parse_text(scanner, lstrip: true, escape: false, scan: /!/)
       when '&'
-        scanner.scan(/&/)
-        parse_text(scanner, lstrip: true, escape: true)
+        parse_text(scanner, lstrip: true, escape: true, scan: /&/)
       else
         parse_text(scanner)
       end
