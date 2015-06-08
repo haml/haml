@@ -336,8 +336,7 @@ END
       def validate_ruby(code)
         begin
           eval("BEGIN {return nil}; #{code}")
-        # Not sure why, but rescuing "SyntaxError" does not work here.
-        rescue Exception
+        rescue ::SyntaxError # Not to be confused with Haml::SyntaxError
           $!
         end
       end
