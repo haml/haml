@@ -1,3 +1,7 @@
+## v1.5.7
+
+- Fix the behavior for multi-line script
+
 ## v1.5.6
 
 - Raise error for unbalanced brackets
