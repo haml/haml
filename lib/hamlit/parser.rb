@@ -92,6 +92,8 @@ module Hamlit
         parse_text(scanner, scan: /\\/)
       when '/'
         parse_comment(scanner)
+      when '-'
+        parse_silent_script(scanner)
       when ':'
         parse_filter(scanner)
       end
@@ -108,8 +110,6 @@ module Hamlit
       case scanner.peek(1)
       when '=', '~'
         parse_script(scanner)
-      when '-'
-        parse_silent_script(scanner)
       when '!'
         parse_text(scanner, lstrip: true, escape: false, scan: /!/)
       when '&'

@@ -71,6 +71,21 @@ describe Hamlit::Engine do
       expect(render_string('\       a')).to eq("       a\n")
     end
 
+    it 'renders spaced - properly' do
+      assert_render(<<-HAML, <<-'HTML')
+        %div
+          foo
+          .test - bar
+          .test - baz
+      HAML
+        <div>
+        foo
+        <div class='test'>- bar</div>
+        <div class='test'>- baz</div>
+        </div>
+      HTML
+    end
+
     describe 'inline operator' do
       it 'renders ! operator' do
         assert_render(<<-'HAML', <<-'HTML')
