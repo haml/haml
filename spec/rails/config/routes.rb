@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       get :safe_buffer
       get :old_attributes
       get :whitespace
+      get :inline
     end
   end
 end

@@ -33,6 +33,14 @@ describe 'Hamlit rails integration', type: :request do
     expect(response.body).to include("<a data-value='[{:count=&gt;1}]'></a>")
   end
 
+  it 'renders multi-line script inside a tag' do
+    get inline_users_path
+    expect(response.body).to include('<span><a data-url="2" href="#">1</a></span>')
+    expect(response.body).to include('<span><a data-url="4" href="#">3</a></span>')
+    expect(response.body).to include('<span><a data-url="6" href="#">5</a></span>')
+    expect(response.body).to include('<span><a data-url="6" href="#">5</a></span>')
+  end
+
   describe 'escaping' do
     it 'escapes script' do
       get users_path(q: '<script>alert("a");</script>')
