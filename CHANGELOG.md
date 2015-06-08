@@ -1,3 +1,7 @@
+## v1.5.8
+
+- Fix parsing inline script for != and &=
+
 ## v1.5.7
 
 - Fix the behavior for multi-line script
