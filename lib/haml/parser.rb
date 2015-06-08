@@ -236,7 +236,7 @@ module Haml
         return push plain(line.strip!(3), :escape_html) if line.text[1, 2] == '=='
         return push script(line.strip!(2), :escape_html) if line.text[1] == SCRIPT
         return push flat_script(line.strip!(2), :escape_html) if line.text[1] == FLAT_SCRIPT
-        return push plain(line.strip!(1), :escape_html) if line.text[1] == ?\s
+        return push plain(line.strip!(1), :escape_html) if line.text[1] == ?\s || line.text[1..2] == '#{'
         push plain(line)
       when SCRIPT
         return push plain(line.strip!(2)) if line.text[1] == SCRIPT
@@ -252,7 +252,7 @@ module Haml
         return push plain(line.strip!(3), false) if line.text[1, 2] == '=='
         return push script(line.strip!(2), false) if line.text[1] == SCRIPT
         return push flat_script(line.strip!(2), false) if line.text[1] == FLAT_SCRIPT
-        return push plain(line.strip!(1), false) if line.text[1] == ?\s
+        return push plain(line.strip!(1), false) if line.text[1] == ?\s || line.text[1..2] == '#{'
         push plain(line)
       when ESCAPE
         line.text = line.text[1..-1]

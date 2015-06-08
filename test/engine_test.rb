@@ -1032,9 +1032,19 @@ HAML
     assert_equal("<p>\n  4&&lt;\n</p>\n", render("%p\n  & \#{2+2}&\#{'<'}", :escape_html => false))
   end
 
+  def test_escaped_string_interpolation_with_no_space
+    assert_equal("&lt;br&gt;\n", render('&#{"<br>"}'))
+    assert_equal("<span>&lt;br&gt;</span>\n", render('%span&#{"<br>"}'))
+  end
+
   def test_unescaped_string_interpolation
     assert_equal("<p>\n  4&<\n</p>\n", render("%p\n  ! \#{2+2}&\#{'<'}", :escape_html => true))
     assert_equal("<p>\n  4&<\n</p>\n", render("%p\n  ! \#{2+2}&\#{'<'}", :escape_html => false))
+  end
+
+  def test_unescaped_string_interpolation_with_no_space
+    assert_equal("<br>\n", render('!#{"<br>"}'))
+    assert_equal("<span><br></span>\n", render('%span!#{"<br>"}'))
   end
 
   def test_scripts_should_respect_escape_html_option
