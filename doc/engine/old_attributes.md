@@ -1,31 +1,3 @@
-# [old\_attributes\_spec.rb:43](/spec/hamlit/engine/old_attributes_spec.rb#L43)
-## Input
-```haml
-%span{ class: '}}}', id: '{}}' } }{
-
-```
-
-## Output
-### Haml
-```html
-Haml::SyntaxError: (haml):1: syntax error, unexpected tSTRING_DEND, expecting ')'
-...l,  class: ')}>}}', id: '{}}' } }{</span>\n";;_erbout
-...                               ^
-(haml):1: unterminated regexp meets end of file
-```
-
-### Faml
-```html
-Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:  class: '
-```
-
-### Hamlit
-```html
-<span class='}}}' id='{}}'>}{</span>
-
-```
-
-
 # [old\_attributes\_spec.rb:201](/spec/hamlit/engine/old_attributes_spec.rb#L201)
 ## Input
 ```haml

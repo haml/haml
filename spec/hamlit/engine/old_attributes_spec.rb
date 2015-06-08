@@ -40,7 +40,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'accepts even illegal input for haml' do
+    it 'accepts even illegal input for haml', skipdoc: true do
       assert_render(<<-'HAML', <<-HTML, error_with: [:haml, :faml])
         %span{ class: '}}}', id: '{}}' } }{
       HAML

@@ -267,6 +267,29 @@ describe Hamlit::Engine do
           <div class='foo'>bar1bar1bar1bar12</div>
         HTML
       end
+
+      it 'does not remove whitespace after string interpolation' do
+        assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
+          %div<
+            #{'hello'}
+            world
+        HAML
+          <div>hello
+          world</div>
+        HTML
+      end
+
+      it 'removes whitespace inside script inside silent script' do
+        assert_render(<<-HAML, <<-HTML, compatible_only: :faml)
+          .bar<
+            - 1.times do
+              = '1'
+              = '2'
+        HAML
+          <div class='bar'>1
+          2</div>
+        HTML
+      end
     end
   end
 end
