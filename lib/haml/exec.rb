@@ -309,7 +309,12 @@ END
 
           if @options[:debug]
             puts engine.precompiled
-            puts '=' * 100
+            error = validate_ruby(engine.precompiled)
+            if error
+              puts '=' * 100
+              puts error.message.split("\n")[0]
+            end
+            return
           end
 
           result = engine.to_html
@@ -325,6 +330,15 @@ END
 
         output.write(result)
         output.close() if output.is_a? File
+      end
+
+      def validate_ruby(code)
+        begin
+          eval("BEGIN {return nil}; #{code}")
+        # Not sure why, but rescuing "SyntaxError" does not work here.
+        rescue Exception
+          $!
+        end
       end
     end
   end
