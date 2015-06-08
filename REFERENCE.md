@@ -1021,6 +1021,21 @@ might compile to:
       //]]>
     </script>
 
+#### Gotchas
+
+Haml uses an overly simplistic regular expression to indentify string
+interpolation rather than a full-blown Ruby parser. This is fast and works for
+most code but you may have errors with code like the following:
+
+    %span #{'{'}
+
+This code will generate a syntax error, complaining about unbalanced brackets.
+In cases like this, the recommended workaround is output the code as a Ruby
+string to foce Haml to parse the code with Ruby.
+
+    %span= "#{'{'}"
+
+
 ### Escaping HTML: `&=` {#escaping_html}
 
 An ampersand followed by one or two equals characters evaluates Ruby code just
