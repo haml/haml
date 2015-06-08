@@ -5,7 +5,6 @@ rvm:
   - 2.2
   - 2.1
   - 2.0.0
-  - 1.9.3
   - jruby
   - rbx-2
 gemfile:
@@ -17,8 +16,6 @@ matrix:
   exclude:
     - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
     - { rvm: rbx-2, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
-    - { rvm: 1.9.3, gemfile: test/gemfiles/Gemfile.rails-4.1.x }
-    - { rvm: 1.9.3, gemfile: test/gemfiles/Gemfile.rails-4.2.x }
     - { rvm: 2.0.0, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
     - { rvm: 2.1, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
     - { rvm: 2.2, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
