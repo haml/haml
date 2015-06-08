@@ -270,7 +270,7 @@ END
           Encoding.default_internal = internal if internal && !internal.empty?
         end
 
-        opts.on('-d', '--debug', "Print out the precompiled Ruby source.") do
+        opts.on('-d', '--debug', "Print out the precompiled Ruby source, and show syntax errors in the Ruby code.") do
           @options[:debug] = true
         end
 
