@@ -82,11 +82,9 @@ module ActionView
       end
     end
 
-    if ActionPack::VERSION::MAJOR == 4
-      module Tags
-        class TextArea
-          include HamlSupport
-        end
+    module Tags
+      class TextArea
+        include HamlSupport
       end
     end
 

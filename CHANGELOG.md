@@ -2,8 +2,8 @@
 
 ## 5.0.0 (Unreleased)
 
-* Haml now requires Ruby 1.9.2 or above.
-* Rails 3.0 and 3.1 are no longer supported, matching the official
+* Haml now requires Ruby 2.0.0 or above.
+* Rails 3 is no longer supported, matching the official
   [Maintenance Policy for Ruby on Rails](http://weblog.rubyonrails.org/2013/2/24/maintenance-policy-for-ruby-on-rails/).
   (Tee Parham)
 * Fix for attribute merging. When an attribute method (or literal nested hash)

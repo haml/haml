@@ -5,8 +5,9 @@ class FormModel
   extend ActiveModel::Naming
 end
 
-
 class HelperTest < Haml::TestCase
+  TEXT_AREA_CONTENT_REGEX = /<(textarea)[^>]*>\n(.*?)<\/\1>/im
+
   Post = Struct.new('Post', :body, :error_field, :errors)
   class PostErrors
     def on(name)
@@ -164,29 +165,15 @@ HAML
                  render('= content_tag "pre", "Foo bar\n   baz"', :action_view))
   end
 
-  # Rails >= 3.2.3 adds a newline after opening textarea tags.
-  def self.rails_text_area_helpers_emit_a_newline?
-    major, minor, tiny = ActionPack::VERSION::MAJOR, ActionPack::VERSION::MINOR, ActionPack::VERSION::TINY
-    major == 4 || ((major == 3) && (minor >= 2) && (tiny >= 3))
-  end
-
-  def text_area_content_regex
-    @text_area_content_regex ||= if self.class.rails_text_area_helpers_emit_a_newline?
-      /<(textarea)[^>]*>\n(.*?)<\/\1>/im
-    else
-      /<(textarea)[^>]*>(.*?)<\/\1>/im
-    end
-  end
-
   def test_text_area_tag
     output = render('= text_area_tag "body", "Foo\nBar\n Baz\n   Boom"', :action_view)
-    match_data = output.match(text_area_content_regex)
+    match_data = output.match(TEXT_AREA_CONTENT_REGEX)
     assert_equal "Foo&#x000A;Bar&#x000A; Baz&#x000A;   Boom", match_data[2]
   end
 
   def test_text_area
     output = render('= text_area :post, :body', :action_view)
-    match_data = output.match(text_area_content_regex)
+    match_data = output.match(TEXT_AREA_CONTENT_REGEX)
     assert_equal "Foo bar&#x000A;baz", match_data[2]
   end
 
@@ -194,26 +181,24 @@ HAML
     # non-indentation of textareas rendered inside partials
     @base.instance_variable_set(:@post, Post.new("Foo", nil, PostErrors.new))
     output = render(".foo\n  .bar\n    = render '/text_area_helper'", :action_view)
-    match_data = output.match(text_area_content_regex)
+    match_data = output.match(TEXT_AREA_CONTENT_REGEX)
     assert_equal 'Foo', match_data[2]
   end
 
-  if rails_text_area_helpers_emit_a_newline?
-    def test_textareas_should_preserve_leading_whitespace
-      # leading whitespace preservation
-      @base.instance_variable_set(:@post, Post.new("    Foo", nil, PostErrors.new))
-      output = render(".foo\n  = text_area :post, :body", :action_view)
-      match_data = output.match(text_area_content_regex)
-      assert_equal '&#x0020;   Foo', match_data[2]
-    end
+  def test_textareas_should_preserve_leading_whitespace
+    # leading whitespace preservation
+    @base.instance_variable_set(:@post, Post.new("    Foo", nil, PostErrors.new))
+    output = render(".foo\n  = text_area :post, :body", :action_view)
+    match_data = output.match(TEXT_AREA_CONTENT_REGEX)
+    assert_equal '&#x0020;   Foo', match_data[2]
+  end
 
-    def test_textareas_should_preserve_leading_whitespace_in_partials
-      # leading whitespace in textareas rendered inside partials
-      @base.instance_variable_set(:@post, Post.new("    Foo", nil, PostErrors.new))
-      output = render(".foo\n  .bar\n    = render '/text_area_helper'", :action_view)
-      match_data = output.match(text_area_content_regex)
-      assert_equal '&#x0020;   Foo', match_data[2]
-    end
+  def test_textareas_should_preserve_leading_whitespace_in_partials
+    # leading whitespace in textareas rendered inside partials
+    @base.instance_variable_set(:@post, Post.new("    Foo", nil, PostErrors.new))
+    output = render(".foo\n  .bar\n    = render '/text_area_helper'", :action_view)
+    match_data = output.match(TEXT_AREA_CONTENT_REGEX)
+    assert_equal '&#x0020;   Foo', match_data[2]
   end
 
   def test_capture_haml

@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'tilt'
 
-  spec.add_development_dependency 'rails', '>= 3.2.0'
+  spec.add_development_dependency 'rails', '>= 4.0.0'
   spec.add_development_dependency 'rbench'
   spec.add_development_dependency 'minitest', '>= 4.0'
   spec.add_development_dependency 'nokogiri', '~> 1.6.0'
