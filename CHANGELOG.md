@@ -1,3 +1,7 @@
+## v1.5.9
+
+- Reject silent script after a tag
+
 ## v1.5.8
 
 - Fix parsing inline script for != and &=
