@@ -313,6 +313,7 @@ END
             if error
               puts '=' * 100
               puts error.message.split("\n")[0]
+              exit 1
             end
             return
           end
