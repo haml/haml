@@ -8,6 +8,15 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'accepts multi-line =' do
+      assert_render(<<-HAML, <<-HTML)
+        %span= 'hello'.gsub('hell',
+          '')
+      HAML
+        <span>o</span>
+      HTML
+    end
+
     it 'renders multi-line tag' do
       assert_render(<<-HAML, <<-HTML)
         %span

@@ -25,7 +25,9 @@ module Hamlit
         ast = [:html, :tag, tag, attrs]
         inner_removal = parse_whitespace_removal(scanner)
 
-        unless has_block?
+        if scanner.match?(/=/)
+          return ast << parse_script(scanner)
+        elsif !has_block?
           return ast if scanner.scan(/\//)
           return ast << parse_line(scanner, inline: true)
         end
