@@ -1,6 +1,6 @@
 # Haml Changelog
 
-## 4.1.0 (Unreleased)
+## 5.0.0 (Unreleased)
 
 * Haml now requires Ruby 1.9.2 or above.
 * Rails 3.0 and 3.1 are no longer supported, matching the official
