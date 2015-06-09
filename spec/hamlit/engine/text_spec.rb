@@ -16,13 +16,17 @@ describe Hamlit::Engine do
       assert_render(<<-HAML, <<-HTML, compatible_only: [], error_with: :haml)
         .
         .*
+        ..
         #
         #+
+        ##
       HAML
         .
         .*
+        ..
         #
         #+
+        ##
       HTML
     end
 

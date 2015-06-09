@@ -3,8 +3,10 @@
 ```haml
 .
 .*
+..
 #
 #+
+##
 
 ```
 
@@ -18,13 +20,15 @@ Haml::SyntaxError: Illegal element: classes and ids must have values.
 ```html
 .
 .*
+..
 #
 #+
+##
 
 ```
 
 
-# [text\_spec.rb:114](/spec/hamlit/engine/text_spec.rb#L114)
+# [text\_spec.rb:118](/spec/hamlit/engine/text_spec.rb#L118)
 ## Input
 ```haml
 &nbsp;
