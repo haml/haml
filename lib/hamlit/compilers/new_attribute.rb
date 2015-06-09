@@ -1,11 +1,11 @@
-require 'hamlit/concerns/ripperable'
+require 'hamlit/concerns/lexable'
 
 # This module compiles new-style attributes, which is
 # surrounded by parentheses.
 module Hamlit
   module Compilers
     module NewAttribute
-      include Concerns::Ripperable
+      include Concerns::Lexable
 
       def compile_new_attribute(str)
         str   = str.gsub(/\A\(|\)\Z/, '')

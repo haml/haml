@@ -2,7 +2,7 @@ require 'ripper'
 
 module Hamlit
   module Concerns
-    module Ripperable
+    module Lexable
       TYPE_POSITION = 1
 
       def skip_tokens!(tokens, *types)

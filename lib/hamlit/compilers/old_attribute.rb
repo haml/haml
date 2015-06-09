@@ -1,6 +1,6 @@
 require 'hamlit/concerns/attribute_builder'
 require 'hamlit/concerns/balanceable'
-require 'hamlit/concerns/ripperable'
+require 'hamlit/concerns/lexable'
 
 # This module compiles only old-style attribute, which is
 # surrounded by brackets.
@@ -13,7 +13,7 @@ module Hamlit
     module OldAttribute
       include Concerns::AttributeBuilder
       include Concerns::Balanceable
-      include Concerns::Ripperable
+      include Concerns::Lexable
 
       # Only data can be nested for performance.
       NESTABLE_ATTRIBUTES = %w[data].freeze
