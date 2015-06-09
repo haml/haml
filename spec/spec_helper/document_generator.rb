@@ -8,12 +8,10 @@ class DocumentGenerator
 
     def generate_docs!
       prepare_dirs!
-      generate_toc!
 
-      incompatibilities.group_by(&:doc_path).each do |path, tests|
-        doc = tests.sort_by(&:lineno).map(&:document).join("\n")
-        full_path = File.join(doc_dir, path)
-        File.write(full_path, doc)
+      [nil, 'haml', 'faml'].each do |impl|
+        generate_toc!(impl)
+        generate_doc!(impl)
       end
     end
 
@@ -34,33 +32,57 @@ class DocumentGenerator
 
     private
 
-    def generate_toc!
-      table_of_contents = <<-TOC.unindent
-        # Hamlit incompatibilities
-
-        This is a document generated from RSpec test cases.  
-        Showing incompatibilities against [Haml](https://github.com/haml/haml) and [Faml](https://github.com/eagletmt/faml).
-      TOC
-
-      incompatibilities.group_by(&:dir).each do |dir, tests|
-        # TODO: Split incompatibility documents into haml and faml
-        # There are too many noisy documents now.
-        table_of_contents << "\n## #{dir}\n"
-
-        tests.group_by(&:doc_path).each do |path, tests|
-          table_of_contents << "\n- [#{tests.first.spec_path}](#{path})"
-        end
-        table_of_contents << "\n"
+    def generate_doc!(impl)
+      incompatibilities_for(impl).group_by(&:doc_path).each do |path, tests|
+        doc = tests.sort_by(&:lineno).map { |t| t.document(impl) }.join("\n")
+        full_path = File.join(*[doc_dir, impl, path].compact)
+        File.write(full_path, doc)
       end
+    end
 
-      path = File.join(doc_dir, 'README.md')
-      File.write(path, table_of_contents)
+    def generate_toc!(impl = nil)
+      path = File.join(*[doc_dir, impl, 'README.md'].compact)
+      File.write(path, table_of_contents_for(impl))
+    end
+
+    def table_of_contents_for(impl = nil)
+      toc = "# Hamlit incompatibilities\nThis is a document generated from RSpec test cases.  "
+      toc << "\n#{target_description(impl)}"
+
+      incompatibilities_for(impl).group_by(&:dir).each do |dir, tests|
+        toc << "\n\n## #{dir}\n"
+        tests.map { |t| [t.spec_path, t.doc_path] }.uniq.each do |spec_path, doc_path|
+          toc << "- [#{spec_path}](#{doc_path})\n"
+        end
+      end
+      toc
+    end
+
+    def incompatibilities_for(impl)
+      return incompatibilities unless impl
+      incompatibilities.select { |t| t.send(:"#{impl}_html") != t.hamlit_html }
+    end
+
+    def target_description(impl)
+      case impl
+      when 'haml'
+        'Showing incompatibilities against [Haml](https://github.com/haml/haml).'
+      when 'faml'
+        'Showing incompatibilities against [Faml](https://github.com/eagletmt/faml).'
+      else
+        'Showing incompatibilities against [Haml](https://github.com/haml/haml) and [Faml](https://github.com/eagletmt/faml).'
+      end
     end
 
     def prepare_dirs!
       system("rm -rf #{doc_dir}")
       incompatibilities.map(&:dir).uniq.each do |dir|
-        system("mkdir -p #{doc_dir}/#{dir}")
+        system("mkdir -p #{File.join(doc_dir, dir)}")
+      end
+      %w[haml faml].each do |impl|
+        incompatibilities.map(&:dir).uniq.each do |dir|
+          system("mkdir -p #{File.join(doc_dir, impl, dir)}")
+        end
       end
     end
 

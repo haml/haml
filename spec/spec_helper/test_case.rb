@@ -2,7 +2,7 @@ require 'unindent'
 
 # This is used to generate a document automatically.
 class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_html, :hamlit_html)
-  def document
+  def document(impl)
     base_path = '/spec/hamlit'
     path = File.join(base_path, dir, file)
     doc = <<-DOC
@@ -20,6 +20,14 @@ class TestCase < Struct.new(:file, :dir, :lineno, :src_haml, :haml_html, :faml_h
       'Faml' => faml_html,
       'Hamlit' => hamlit_html,
     }
+
+    case impl
+    when 'haml'
+      html_by_name.delete('Faml')
+    when 'faml'
+      html_by_name.delete('Haml')
+    end
+
     html_by_name.group_by(&:last).each do |html, pairs|
       doc << "### #{pairs.map(&:first).join(', ')}\n"
       doc << "```html\n"

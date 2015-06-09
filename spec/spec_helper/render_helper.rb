@@ -49,10 +49,9 @@ module RenderHelper
   private
 
   def write_caller!(test)
-    line = caller.find{ |l| l =~ %r{spec/hamlit} }
-    path, lineno = line.match(/^([^:]+):([0-9]+)/).to_a.last(2)
-    test.lineno = lineno.to_i - 1
-    test.dir, test.file = path.gsub(%r{^.+spec/hamlit/}, '').split('/')
+    example = RSpec.current_example
+    test.lineno = example.metadata[:line_number]
+    test.dir, test.file = example.file_path.gsub(%r{^.+spec/hamlit/}, '').split('/')
   end
 
   def expect_compatibility(impl, test, options, type: :success)
