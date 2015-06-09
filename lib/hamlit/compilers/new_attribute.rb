@@ -8,8 +8,8 @@ module Hamlit
       include Concerns::Ripperable
 
       def compile_new_attribute(str)
-        str    = str.gsub(/\A\(|\)\Z/, '')
-        attrs  = parse_new_attributes(str)
+        str   = str.gsub(/\A\(|\)\Z/, '')
+        attrs = parse_new_attributes(str)
         attrs.map do |key, value|
           next true_attribute(key) if value == 'true'
           [:html, :attr, key, [:dynamic, value]]
