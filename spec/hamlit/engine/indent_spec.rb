@@ -1,6 +1,6 @@
 describe Hamlit::Engine do
   describe 'tab indent' do
-    it 'accepts tab indentation', skipdoc: true do
+    it 'accepts tab indentation' do
       assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
         %p
         \t%a

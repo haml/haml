@@ -40,7 +40,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'accepts even illegal input for haml', skipdoc: true do
+    it 'accepts even illegal input for haml' do
       assert_render(<<-'HAML', <<-HTML, error_with: [:haml, :faml])
         %span{ class: '}}}', id: '{}}' } }{
       HAML
@@ -121,7 +121,7 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'joins attribute class and element class', skipdoc: true do
+      it 'joins attribute class and element class' do
         assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
           .foo{ class: ['bar'] }
           .foo{ class: ['bar', nil] }
@@ -223,7 +223,7 @@ describe Hamlit::Engine do
     end
 
     describe 'html escape' do
-      it 'escapes attribute values on static attributes', skipdoc: true do
+      it 'escapes attribute values on static attributes' do
         assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
           %a{title: "'"}
           %a{title: "'\""}
@@ -235,7 +235,7 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'escapes attribute values on dynamic attributes', skipdoc: true do
+      it 'escapes attribute values on dynamic attributes' do
         assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
           - title = "'\""
           - href  = '/search?foo=bar&hoge=<fuga>'
@@ -247,7 +247,7 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'escapes attribute values on hash attributes', skipdoc: true do
+      it 'escapes attribute values on hash attributes' do
         assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
           - title = { title: "'\"" }
           - href  = { href:  '/search?foo=bar&hoge=<fuga>' }
@@ -270,7 +270,7 @@ describe Hamlit::Engine do
         HTML
       end
 
-      it 'renders true attributes', skipdoc: true do
+      it 'renders true attributes' do
         assert_render(<<-'HAML', <<-HTML, compatible_only: :haml)
           %span{ data: { disable: true } } bar
         HAML
