@@ -5,6 +5,7 @@ Showing incompatibilities against [Haml](https://github.com/haml/haml) and [Faml
 
 ## engine
 
+- [engine/new\_attribute\_spec.rb](engine/new_attribute.md)
 - [engine/old\_attributes\_spec.rb](engine/old_attributes.md)
 - [engine/tag\_spec.rb](engine/tag.md)
 - [engine/text\_spec.rb](engine/text.md)

@@ -16,6 +16,17 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders multi-line attributes properly' do
+      assert_render(<<-HAML, <<-HTML, compatible_only: :faml)
+        %span(a=__LINE__
+         b=__LINE__)
+        = __LINE__
+      HAML
+        <span a='1' b='2'></span>
+        3
+      HTML
+    end
+
     describe 'html escape' do
       it 'escapes attribute values on static attributes', skipdoc: true do
         assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)

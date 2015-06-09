@@ -49,7 +49,7 @@ module Hamlit
         attrs = []
         exps.each do |exp|
           case exp
-          when /\A\(.+\)\Z/
+          when /\A\(.+\)\Z/m
             attrs += compile_new_attribute(exp)
           when /\A{.+}\Z/
             attrs += compile_old_attribute(exp)

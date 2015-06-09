@@ -15,6 +15,18 @@ module Hamlit
         return nil unless token
         token[TYPE_POSITION]
       end
+
+      # Convert ripper's position to StringScanner's one.
+      def convert_position(text, row, col)
+        return col if row <= 1
+
+        pos   = col
+        lines = text.split("\n")
+        (0..(row - 2)).each do |row_index|
+          pos += lines[row_index].bytesize + 1
+        end
+        pos
+      end
     end
   end
 end

@@ -34,7 +34,7 @@ module Hamlit
           token = tokens.first
           break unless token
 
-          pos = token.first.last
+          pos = convert_position(str, *token.first)
           str = str[pos..-1]
         end
 
@@ -42,7 +42,7 @@ module Hamlit
       end
 
       def read_key!(tokens)
-        skip_tokens!(tokens, :on_sp)
+        skip_tokens!(tokens, :on_sp, :on_nl, :on_ignored_nl)
         (row, col), type, key = tokens.shift
         key
       end

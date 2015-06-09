@@ -1,10 +1,12 @@
 require 'ripper'
 require 'hamlit/concerns/balanceable'
+require 'hamlit/concerns/lexable'
 
 module Hamlit
   module Parsers
     module Attribute
       include Concerns::Balanceable
+      include Concerns::Lexable
 
       EMBEXPR_PREFIX = '"#'.freeze
 
@@ -45,13 +47,14 @@ module Hamlit
         until balanced_parens_exist?(tokens)
           @current_lineno += 1
           break unless @lines[@current_lineno]
-          scanner.concat(current_line)
+          scanner.concat("\n#{current_line}")
           tokens = Ripper.lex(scanner.rest)
         end
 
         tokens = fetch_balanced_parentheses(tokens)
-        scanner.pos += tokens.last.first.last + 1
-        [tokens.map(&:last).join]
+        text   = tokens.map(&:last).join
+        scanner.pos += convert_position(text, *tokens.last.first) + 1
+        [text]
       end
 
       # Ripper.lex and reject tokens whose row is 0 (invalid).

@@ -1,6 +1,7 @@
 require 'hamlit/concerns/error'
 require 'hamlit/concerns/escapable'
 require 'hamlit/concerns/included'
+require 'hamlit/concerns/lexable'
 require 'hamlit/concerns/string_interpolation'
 
 module Hamlit
@@ -8,6 +9,7 @@ module Hamlit
     module Text
       extend Concerns::Included
       include Concerns::Error
+      include Concerns::Lexable
       include Concerns::StringInterpolation
 
       included do
@@ -51,11 +53,11 @@ module Hamlit
         Ripper.lex(literal).each do |(row, col), type, str|
           case type
           when :on_embexpr_beg
-            open_pos = calc_position(exp, row, col, offset) if open_count == 0
+            open_pos = shifted_position(exp, row, col, offset) if open_count == 0
             open_count += 1
           when :on_embexpr_end
             open_count -= 1
-            return [open_pos, calc_position(exp, row, col, offset)] if open_count == 0
+            return [open_pos, shifted_position(exp, row, col, offset)] if open_count == 0
           end
           open_count
         end
@@ -100,15 +102,10 @@ module Hamlit
         "%#{marker}#{exp}#{marker}"
       end
 
-      def calc_position(exp, row, col, offset)
+      # In this compiler, only first line is shifted 2 chars.
+      def shifted_position(exp, row, col, offset)
         return col - offset if row <= 1
-
-        pos   = col
-        lines = exp.split("\n")
-        (0..(row - 2)).each do |row_index|
-          pos += lines[row_index].bytesize + 1
-        end
-        pos
+        convert_position(exp, row, col)
       end
     end
   end
