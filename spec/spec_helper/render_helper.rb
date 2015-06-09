@@ -28,9 +28,9 @@ module RenderHelper
     errs.each  { |i| expect_compatibility(i, test, options, type: :error) }
     fails.each { |i| expect_compatibility(i, test, options, type: :failure) }
 
-    if TestCase.generate_docs? && (errs.any? || fails.any?)
+    if DocumentGenerator.generate_docs? && (errs.any? || fails.any?)
       write_caller!(test)
-      TestCase.register_test!(test)
+      DocumentGenerator.register_test!(test)
     end
   end
 

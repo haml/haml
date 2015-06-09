@@ -1,4 +1,5 @@
 require 'unindent'
+require_relative 'spec_helper/document_generator'
 require_relative 'spec_helper/render_helper'
 require_relative 'spec_helper/test_case'
 
@@ -20,6 +21,8 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    TestCase.generate_docs! if TestCase.generate_docs?
+    if DocumentGenerator.generate_docs?
+      DocumentGenerator.generate_docs!
+    end
   end
 end
