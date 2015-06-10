@@ -50,7 +50,7 @@ Haml::SyntaxError: Illegal element: classes and ids must have values.
 ```
 
 ## Output
-### Haml
+### Haml, Hamlit
 ```html
 &nbsp;
 &nbsp;
@@ -59,7 +59,7 @@ Haml::SyntaxError: Illegal element: classes and ids must have values.
 
 ```
 
-### Faml, Hamlit
+### Faml
 ```html
 nbsp;
 &nbsp;
