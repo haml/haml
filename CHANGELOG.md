@@ -2,6 +2,8 @@
 
 - Fix line number of compiled code for new attributes
 - Render HTML entities normally for plain text
+  - https://github.com/k0kubun/hamlit/issues/27
+  - Thanks to @jeffblake
 
 ## v1.5.9
 
