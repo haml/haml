@@ -1,3 +1,8 @@
+## v1.6.0
+
+- Fix line number of compiled code for new attributes
+- Render HTML entities normally for plain text
+
 ## v1.5.9
 
 - Reject silent script after a tag
