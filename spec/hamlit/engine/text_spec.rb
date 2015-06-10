@@ -116,15 +116,15 @@ describe Hamlit::Engine do
       end
 
       it 'renders !, & operator right before a non-space character' do
-        assert_render(<<-'HAML', <<-'HTML', compatible_only: :faml)
+        assert_render(<<-'HAML', <<-'HTML', compatible_only: :haml)
           &nbsp;
           \&nbsp;
           !hello
           \!hello
         HAML
-          nbsp;
           &nbsp;
-          hello
+          &nbsp;
+          !hello
           !hello
         HTML
       end

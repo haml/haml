@@ -76,7 +76,7 @@ module Hamlit
         return ast if ast
       end
 
-      parse_inner_line(scanner)
+      parse_inner_line(scanner, inline: inline)
     end
 
     # Parse a line and return ast if it is acceptable outside an inline tag
@@ -100,20 +100,21 @@ module Hamlit
     end
 
     # Parse a line and return ast which is acceptable inside an inline tag
-    def parse_inner_line(scanner)
+    def parse_inner_line(scanner, inline: false)
       return parse_text(scanner, lstrip: true)                if scanner.scan(/==/)
-      return parse_text(scanner, lstrip: true, escape: false) if scanner.scan(/!==/)
-      return parse_text(scanner, lstrip: true, escape: true)  if scanner.scan(/&==/)
+      return parse_text(scanner, lstrip: true, escape: false) if scanner.scan(/! |!==/)
+      return parse_text(scanner, lstrip: true, escape: true)  if scanner.scan(/& |&==/)
       return parse_script(scanner, disable_escape: true)      if scanner.match?(/!=/)
       return parse_script(scanner, force_escape: true)        if scanner.match?(/&=/)
+
+      if inline
+        return parse_text(scanner, lstrip: true, escape: false) if scanner.scan(/!/)
+        return parse_text(scanner, lstrip: true, escape: true)  if scanner.scan(/&/)
+      end
 
       case scanner.peek(1)
       when '=', '~'
         parse_script(scanner)
-      when '!'
-        parse_text(scanner, lstrip: true, escape: false, scan: /!/)
-      when '&'
-        parse_text(scanner, lstrip: true, escape: true, scan: /&/)
       else
         parse_text(scanner)
       end
