@@ -1,3 +1,7 @@
+## v1.6.1
+
+- Parse N-space indentation
+
 ## v1.6.0
 
 - Fix line number of compiled code for new attributes

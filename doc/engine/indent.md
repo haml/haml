@@ -22,3 +22,32 @@
 
 ```
 
+
+# [indent\_spec.rb:28](/spec/hamlit/engine/indent_spec.rb#L28)
+## Input
+```haml
+%p
+	%span
+		foo
+
+```
+
+## Output
+### Haml, Hamlit
+```html
+<p>
+<span>
+foo
+</span>
+</p>
+
+```
+
+### Faml
+```html
+<p></p>
+%span
+foo
+
+```
+
