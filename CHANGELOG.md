@@ -1,3 +1,8 @@
+## v1.6.2
+
+- Reject a content for self-closing tags
+- Reject nesing within self-closing tags
+
 ## v1.6.1
 
 - Parse N-space indentation
