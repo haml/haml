@@ -9,9 +9,7 @@
 ## Output
 ### Faml
 ```html
-<p></p>
-%a
-
+Faml::IndentTracker::HardTabNotAllowed: Indentation with hard tabs are not allowed :-p
 ```
 
 ### Hamlit
@@ -35,10 +33,7 @@
 ## Output
 ### Faml
 ```html
-<p></p>
-%span
-foo
-
+Faml::IndentTracker::HardTabNotAllowed: Indentation with hard tabs are not allowed :-p
 ```
 
 ### Hamlit
