@@ -19,10 +19,6 @@ module Hamlit
         count_indent(next_line)
       end
 
-      def next_width
-        count_width(next_line)
-      end
-
       def with_indented(&block)
         @current_indent += 1
         block.call
@@ -35,11 +31,6 @@ module Hamlit
         return 0 if indent_rule == 0
 
         line.match(/\A[ \t]+/).to_s.length / indent_rule
-      end
-
-      def count_width(line)
-        return EOF unless line
-        line[/\A[ \t]+/].to_s.length
       end
 
       def same_indent?(line)
@@ -65,6 +56,15 @@ module Hamlit
         next_indent != @current_indent
       end
 
+      def has_block?
+        return false unless next_line
+        return fetch_indent(next_line).length > 0 unless @indent_space
+
+        next_indent > @current_indent
+      end
+
+      private
+
       # Validate the template is using consitent indentation, 2 spaces or a tab.
       def validate_indentation_consistency!(indent)
         return false if indent.empty?
@@ -83,37 +83,6 @@ module Hamlit
         length = indent.match(/[ \t]+/).to_s.length
 
         "#{length} #{label}#{'s' if length > 1}"
-      end
-
-      def has_block?
-        return false unless next_line
-        return fetch_indent(next_line).length > 0 unless @indent_space
-
-        next_indent > @current_indent
-      end
-
-      private
-
-      def indent_label(indent)
-        return %Q{"#{indent}"} if indent.include?(' ') && indent.include?("\t")
-
-        label  = indent.include?(' ') ? 'space' : 'tab'
-        length = indent.match(/[ \t]+/).to_s.length
-
-        "#{length} #{label}#{'s' if length > 1}"
-      end
-
-      def count_width(line)
-        return EOF unless line
-        line[/\A +/].to_s.length
-      end
-
-      def next_space
-        next_line[/\A +/].to_s
-      end
-
-      def next_width
-        count_width(next_line)
       end
 
       def indent_rule
