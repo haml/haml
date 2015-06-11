@@ -26,6 +26,7 @@ module Hamlit
         inner_removal = parse_whitespace_removal(scanner)
 
         if !has_block? || scanner.match?(/=|&=|!=/)
+          return syntax_error("Self-closing tags can't have content.") if scanner.scan(/\/ *[^ ]/)
           return ast if scanner.scan(/\//)
           return ast << parse_line(scanner, inline: true)
         end

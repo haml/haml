@@ -69,5 +69,12 @@ describe Hamlit::Engine do
       HAML
         to raise_error(Hamlit::SyntaxError, "Indentation can't use both tabs and spaces.")
     end
+
+    it 'raises syntax error for an inconsistent indentation' do
+      expect { render_string(<<-HAML.unindent) }.
+        %p/ hello
+      HAML
+        to raise_error(Hamlit::SyntaxError, "Self-closing tags can't have content.")
+    end
   end
 end
