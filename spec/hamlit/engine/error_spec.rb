@@ -11,16 +11,18 @@ describe Hamlit::Engine do
       expect { render_string(<<-HAML.unindent) }.
         %a
             %b
+         %a
       HAML
-        to raise_error(Hamlit::SyntaxError, 'inconsistent indentation: 2 spaces used for indentation, but the rest of the document was indented using 4 spaces')
+        to raise_error(Hamlit::SyntaxError, 'Inconsistent indentation: 1 space used for indentation, but the rest of the document was indented using 4 spaces.')
     end
 
     it 'raises syntax error for illegal indentation' do
       expect { render_string(<<-HAML.unindent) }.
         %a
-         %b
+        \t\t%a
+        \t%a
       HAML
-        to raise_error(Hamlit::SyntaxError, 'inconsistent indentation: 2 spaces used for indentation, but the rest of the document was indented using 1 spaces')
+        to raise_error(Hamlit::SyntaxError, 'Inconsistent indentation: 1 tab used for indentation, but the rest of the document was indented using 2 tabs.')
     end
 
     it 'raises syntax error which has correct line number in backtrace' do
@@ -58,6 +60,14 @@ describe Hamlit::Engine do
         1#{2
       HAML
         to raise_error(Hamlit::SyntaxError, 'Unbalanced brackets.')
+    end
+
+    it 'raises syntax error for an inconsistent indentation' do
+      expect { render_string(<<-HAML.unindent) }.
+        %p
+        \t %span
+      HAML
+        to raise_error(Hamlit::SyntaxError, "Indentation can't use both tabs and spaces.")
     end
   end
 end

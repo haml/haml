@@ -25,7 +25,7 @@ module Hamlit
       end
 
       def skip_lines
-        while next_indent >= @current_indent
+        while next_line && next_indent >= @current_indent
           @current_lineno += 1
         end
       end
@@ -47,7 +47,8 @@ module Hamlit
       end
 
       def read_line?
-        return true if count_indent(next_line, strict: false) >= @current_indent
+        return false unless next_line
+        return true if next_line.index(/^#{@indent_logs.last}[ \t]/)
 
         line = @lines[@current_lineno + 1]
         return false unless line

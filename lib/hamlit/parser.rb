@@ -38,7 +38,6 @@ module Hamlit
     # Reset the parser state.
     def reset(template)
       validate_indentation_consistency!(template)
-      template = replace_hard_tabs(template)
       template = preprocess_multilines(template)
 
       reset_lines(template.split("\n"))
@@ -62,6 +61,9 @@ module Hamlit
         ast << [:static, "\n"] unless skip_newline?(node)
       end
       ast
+    rescue => e
+      ast << syntax_error(e.message)
+      ast
     end
 
     # Parse current line and return AST.
@@ -69,7 +71,7 @@ module Hamlit
       return [:multi] if empty_line?(line)
 
       scanner = wrap_scanner(line)
-      scanner.scan(/ +/)
+      scanner.scan(/[ \t]+/)
 
       unless inline
         ast = parse_outer_line(scanner)
