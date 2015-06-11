@@ -29,6 +29,8 @@ module Hamlit
           return syntax_error("Self-closing tags can't have content.") if scanner.scan(/\/ *[^ ]/)
           return ast if scanner.scan(/\//)
           return ast << parse_line(scanner, inline: true)
+        elsif scanner.match?(/\//)
+          return syntax_error("Illegal nesting: nesting within a self-closing tag is illegal.")
         end
 
         content = [:multi, [:static, "\n"]]

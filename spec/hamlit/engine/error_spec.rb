@@ -72,9 +72,17 @@ describe Hamlit::Engine do
 
     it 'raises syntax error for an inconsistent indentation' do
       expect { render_string(<<-HAML.unindent) }.
-        %p/ hello
+        %div/ foo
       HAML
         to raise_error(Hamlit::SyntaxError, "Self-closing tags can't have content.")
+    end
+
+    it 'raises syntax error for an inconsistent indentation' do
+      expect { render_string(<<-HAML.unindent) }.
+        %div/
+          foo
+      HAML
+        to raise_error(Hamlit::SyntaxError, "Illegal nesting: nesting within a self-closing tag is illegal.")
     end
   end
 end
