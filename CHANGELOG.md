@@ -1,6 +1,8 @@
 ## v1.6.1
 
 - Parse N-space indentation
+  - https://github.com/k0kubun/hamlit/issues/26
+  - Thanks to @eagletmt
 
 ## v1.6.0
 
