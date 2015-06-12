@@ -296,14 +296,16 @@ END
 
         begin
 
-          engine = ::Haml::Engine.new(template, @options[:for_engine])
-          if @options[:check_syntax]
-            puts "Syntax OK"
+          if @options[:parse]
+            parser = ::Haml::Parser.new(template, ::Haml::Options.new(@options))
+            pp parser.parse
             return
           end
 
-          if @options[:parse]
-            pp engine.parser.root
+          engine = ::Haml::Engine.new(template, @options[:for_engine])
+
+          if @options[:check_syntax]
+            puts "Syntax OK"
             return
           end
 
