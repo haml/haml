@@ -124,9 +124,11 @@ describe Hamlit::Engine do
       it 'joins attribute class and element class' do
         assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
           .foo{ class: ['bar'] }
+          .foo{ class: ['bar', 'foo'] }
           .foo{ class: ['bar', nil] }
           .foo{ class: ['bar', 'baz'] }
         HAML
+          <div class='bar foo'></div>
           <div class='bar foo'></div>
           <div class='bar foo'></div>
           <div class='bar baz foo'></div>

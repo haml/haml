@@ -62,7 +62,7 @@ module Hamlit
           when :id
             result[key] = [base[key], target[key]].compact.join('_')
           when :class
-            result[key] = [base[key], target[key]].flatten.compact.map(&:to_s).sort.join(' ')
+            result[key] = [base[key], target[key]].flatten.compact.map(&:to_s).sort.uniq.join(' ')
           end
         else
           result[key] = base[key].nil? ? target[key] : base[key]
