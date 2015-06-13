@@ -84,5 +84,18 @@ describe Hamlit::Engine do
       HAML
         to raise_error(Hamlit::SyntaxError, "Illegal nesting: nesting within a self-closing tag is illegal.")
     end
+
+    it 'rejects unexpected indentation' do
+      expect { render_string(<<-HAML.unindent) }.
+        hello
+          world
+      HAML
+        to raise_error(Hamlit::SyntaxError)
+    end
+
+    it 'rejects unexpected indentation' do
+      expect { render_string("  hello") }.
+        to raise_error(Hamlit::SyntaxError)
+    end
   end
 end

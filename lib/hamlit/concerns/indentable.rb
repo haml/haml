@@ -53,7 +53,11 @@ module Hamlit
         end
         validate_indentation_consistency!(indent)
 
-        next_indent != @current_indent
+        if next_indent > @current_indent
+          syntax_error!("Illegal nesting: indent level was deeper than expected")
+        end
+
+        next_indent < @current_indent
       end
 
       def has_block?
