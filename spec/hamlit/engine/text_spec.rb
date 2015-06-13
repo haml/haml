@@ -129,6 +129,24 @@ describe Hamlit::Engine do
         HTML
       end
 
+      it 'renders &, ! operator inside a tag' do
+        assert_render(<<-HAML, <<-HTML)
+          %span &nbsp;
+          %span&nbsp;
+          %span& nbsp;
+          %span !hello
+          %span!hello
+          %span! hello
+        HAML
+          <span>&nbsp;</span>
+          <span>nbsp;</span>
+          <span>nbsp;</span>
+          <span>!hello</span>
+          <span>hello</span>
+          <span>hello</span>
+        HTML
+      end
+
       it 'does not accept backslash operator' do
         assert_render(<<-'HAML', <<-'HTML')
           %span\    foo

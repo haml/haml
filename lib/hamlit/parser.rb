@@ -71,9 +71,8 @@ module Hamlit
       return [:multi] if empty_line?(line)
 
       scanner = wrap_scanner(line)
-      scanner.scan(/[ \t]+/)
-
       unless inline
+        scanner.scan(/[ \t]+/)
         ast = parse_outer_line(scanner)
         return ast if ast
       end
@@ -118,7 +117,7 @@ module Hamlit
       when '=', '~'
         parse_script(scanner)
       else
-        parse_text(scanner)
+        parse_text(scanner, lstrip: true)
       end
     end
 
