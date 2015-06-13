@@ -102,6 +102,24 @@ describe Hamlit::Engine do
     end
 
     it 'rejects illegal indentation' do
+      expect { render_string(<<-HAML.unindent) }.
+        %span
+          %span
+              %span
+      HAML
+        to raise_error(Hamlit::SyntaxError, 'The line was indented 2 levels deeper than the previous line.')
+    end
+
+    it 'rejects illegal indentation' do
+      expect { render_string(<<-HAML.unindent) }.
+        %span
+            %span
+              %span
+      HAML
+        to raise_error(Hamlit::SyntaxError, "Inconsistent indentation: 6 spaces used for indentation, but the rest of the document was indented using 4 spaces.")
+    end
+
+    it 'rejects illegal indentation' do
       expect { render_string('  hello') }.
         to raise_error(Hamlit::SyntaxError, 'Indenting at the beginning of the document is illegal.')
     end

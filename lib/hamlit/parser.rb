@@ -62,6 +62,7 @@ module Hamlit
       end
       ast
     rescue => e
+      ast << [:newline]
       ast << syntax_error(e.message)
       ast
     end
