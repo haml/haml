@@ -94,7 +94,7 @@ describe Hamlit::Engine do
     end
 
     it 'rejects unexpected indentation' do
-      expect { render_string("  hello") }.
+      expect { render_string('  hello') }.
         to raise_error(Hamlit::SyntaxError)
     end
   end
