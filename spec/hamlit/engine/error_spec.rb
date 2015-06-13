@@ -103,6 +103,14 @@ describe Hamlit::Engine do
 
     it 'rejects illegal indentation' do
       expect { render_string(<<-HAML.unindent) }.
+        / hello
+          world
+      HAML
+        to raise_error(Hamlit::SyntaxError, 'The line was indented 1 levels deeper than the previous line.')
+    end
+
+    it 'rejects illegal indentation' do
+      expect { render_string(<<-HAML.unindent) }.
         %span
           %span
               %span

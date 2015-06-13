@@ -91,7 +91,7 @@ module Hamlit
         if @indent_logs.length == 1
           syntax_error!('Indenting at the beginning of the document is illegal.')
         else
-          syntax_error!("The line was indented #{next_indent - @current_indent + 1} levels deeper than the previous line.")
+          syntax_error!("The line was indented #{next_indent - count_indent(current_line)} levels deeper than the previous line.")
         end
       end
 
