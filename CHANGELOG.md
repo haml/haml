@@ -1,3 +1,9 @@
+## v1.6.3
+
+- Fix ! and & parsing inside a tag
+  - https://github.com/k0kubun/hamlit/issues/27#issuecomment-111593458
+  - Thanks to @leesmith
+
 ## v1.6.2
 
 - Reject a content for self-closing tags
