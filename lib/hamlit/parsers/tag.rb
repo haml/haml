@@ -32,6 +32,7 @@ module Hamlit
         elsif scanner.match?(/\//)
           return syntax_error("Illegal nesting: nesting within a self-closing tag is illegal.")
         end
+        validate_content_existence!(tag, scanner)
 
         content = [:multi, [:static, "\n"]]
         if inner_removal || Helpers::DEFAULT_PRESERVE_TAGS.include?(tag)
@@ -63,6 +64,14 @@ module Hamlit
           ast << [:html, :attr, name, [:static, values.join(' ')]]
         end
         ast
+      end
+
+      def validate_content_existence!(tag, scanner)
+        scanner.scan(/ */)
+
+        if scanner.match?(/[^ ]/)
+          syntax_error!("Illegal nesting: content can't be both given on the same line as %#{tag} and nested within it.")
+        end
       end
     end
   end

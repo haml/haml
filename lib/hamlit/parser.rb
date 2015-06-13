@@ -117,7 +117,7 @@ module Hamlit
       when '=', '~'
         parse_script(scanner)
       else
-        parse_text(scanner, lstrip: true)
+        parse_text(scanner, lstrip: true, inline: inline)
       end
     end
 

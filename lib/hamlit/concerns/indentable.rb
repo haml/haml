@@ -52,10 +52,7 @@ module Hamlit
           @indent_space = @indent_logs.last
         end
         validate_indentation_consistency!(indent)
-
-        if next_indent > @current_indent
-          syntax_error!('Illegal nesting: indent level was deeper than expected')
-        end
+        reject_too_deep_indentation!
 
         next_indent < @current_indent
       end
@@ -77,6 +74,16 @@ module Hamlit
         if indent[0] != @indent_space[0] || indent.length < @indent_space.length
           syntax_error!("Inconsistent indentation: #{indent_label(indent)} used for indentation, "\
                         "but the rest of the document was indented using #{indent_label(@indent_space)}.")
+        end
+      end
+
+      def reject_too_deep_indentation!
+        return if next_indent <= @current_indent
+
+        if @indent_logs.length == 1
+          syntax_error!('Indenting at the beginning of the document is illegal.')
+        else
+          syntax_error!('Illegal nesting: indent level was deeper than expected')
         end
       end
 

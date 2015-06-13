@@ -85,17 +85,25 @@ describe Hamlit::Engine do
         to raise_error(Hamlit::SyntaxError, "Illegal nesting: nesting within a self-closing tag is illegal.")
     end
 
-    it 'rejects unexpected indentation' do
+    it 'rejects illegal indentation' do
       expect { render_string(<<-HAML.unindent) }.
         hello
           world
       HAML
-        to raise_error(Hamlit::SyntaxError)
+        to raise_error(Hamlit::SyntaxError, 'Illegal nesting: nesting within plain text is illegal.')
     end
 
-    it 'rejects unexpected indentation' do
+    it 'rejects illegal indentation' do
+      expect { render_string(<<-HAML.unindent) }.
+        %span hello
+          world
+      HAML
+        to raise_error(Hamlit::SyntaxError, "Illegal nesting: content can't be both given on the same line as %span and nested within it.")
+    end
+
+    it 'rejects illegal indentation' do
       expect { render_string('  hello') }.
-        to raise_error(Hamlit::SyntaxError)
+        to raise_error(Hamlit::SyntaxError, 'Indenting at the beginning of the document is illegal.')
     end
   end
 end
