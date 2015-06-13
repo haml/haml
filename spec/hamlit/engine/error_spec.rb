@@ -106,7 +106,7 @@ describe Hamlit::Engine do
         / hello
           world
       HAML
-        to raise_error(Hamlit::SyntaxError, 'The line was indented 1 levels deeper than the previous line.')
+        to raise_error(Hamlit::SyntaxError, 'Illegal nesting: nesting within a tag that already has content is illegal.')
     end
 
     it 'rejects illegal indentation' do

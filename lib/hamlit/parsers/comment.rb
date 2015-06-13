@@ -16,6 +16,9 @@ module Hamlit
           content = with_indented { parse_lines }
           return ast << [:multi, [:static, "\n"], *content]
         elsif !text.match(/\[.*\]/)
+          if has_block?
+            syntax_error!('Illegal nesting: nesting within a tag that already has content is illegal.')
+          end
           return ast << [:static, " #{text} "]
         end
 
