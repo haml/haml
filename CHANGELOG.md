@@ -1,3 +1,10 @@
+## v1.6.4
+
+- Show human-friendly error messages
+- Fix line number of runtime syntax error
+- Increase the number of checked cases for illegal nesting
+  - Thanks to @eagletmt
+
 ## v1.6.3
 
 - Fix ! and & parsing inside a tag
