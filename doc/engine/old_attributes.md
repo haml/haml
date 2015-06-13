@@ -30,6 +30,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ## Input
 ```haml
 .foo{ class: ['bar'] }
+.foo{ class: ['bar', 'foo'] }
 .foo{ class: ['bar', nil] }
 .foo{ class: ['bar', 'baz'] }
 
@@ -40,6 +41,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```html
 <div class='bar foo'></div>
 <div class='bar foo'></div>
+<div class='bar foo'></div>
 <div class='bar baz foo'></div>
 
 ```
@@ -47,13 +49,14 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ### Faml
 ```html
 <div class='bar foo'></div>
+<div class='bar foo'></div>
 <div class=' bar foo'></div>
 <div class='bar baz foo'></div>
 
 ```
 
 
-# [old\_attributes\_spec.rb:201](/spec/hamlit/engine/old_attributes_spec.rb#L201)
+# [old\_attributes\_spec.rb:203](/spec/hamlit/engine/old_attributes_spec.rb#L203)
 ## Input
 ```haml
 / wontfix: Non-boolean attributes are not escaped for optimization.
@@ -94,7 +97,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# [old\_attributes\_spec.rb:226](/spec/hamlit/engine/old_attributes_spec.rb#L226)
+# [old\_attributes\_spec.rb:228](/spec/hamlit/engine/old_attributes_spec.rb#L228)
 ## Input
 ```haml
 %a{title: "'"}
@@ -121,7 +124,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# [old\_attributes\_spec.rb:238](/spec/hamlit/engine/old_attributes_spec.rb#L238)
+# [old\_attributes\_spec.rb:240](/spec/hamlit/engine/old_attributes_spec.rb#L240)
 ## Input
 ```haml
 - title = "'\""
@@ -147,7 +150,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# [old\_attributes\_spec.rb:250](/spec/hamlit/engine/old_attributes_spec.rb#L250)
+# [old\_attributes\_spec.rb:252](/spec/hamlit/engine/old_attributes_spec.rb#L252)
 ## Input
 ```haml
 - title = { title: "'\"" }
@@ -173,7 +176,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# [old\_attributes\_spec.rb:273](/spec/hamlit/engine/old_attributes_spec.rb#L273)
+# [old\_attributes\_spec.rb:275](/spec/hamlit/engine/old_attributes_spec.rb#L275)
 ## Input
 ```haml
 %span{ data: { disable: true } } bar
