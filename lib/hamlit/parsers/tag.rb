@@ -15,8 +15,13 @@ module Hamlit
       DEFAULT_TAG = 'div'
 
       def parse_tag(scanner)
-        tag = DEFAULT_TAG
-        tag = scanner.scan(TAG_REGEXP) if scanner.scan(/%/)
+        if scanner.scan(/%/)
+          tag = scanner.scan(TAG_REGEXP)
+          unless tag
+            syntax_error!(%Q{Invalid tag: "#{scanner.string}".})
+          end
+        end
+        tag ||= DEFAULT_TAG
 
         attrs = [:haml, :attrs]
         attrs += parse_tag_id_and_class(scanner)

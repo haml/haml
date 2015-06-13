@@ -219,5 +219,21 @@ describe Hamlit::Engine do
       specify { assert_render('あ#{"い"}う', "あいう\n") }
       specify { assert_render('a#{"<b>"}c', "a&lt;b&gt;c\n") }
     end
+
+    describe 'illegal inputs' do
+      it 'rejects an invalid tag' do
+        expect { render_string(<<-HAML.unindent) }.
+          % a
+        HAML
+          to raise_error(Hamlit::SyntaxError, 'Invalid tag: "% a".')
+      end
+
+      it 'rejects an invalid tag' do
+        expect { render_string(<<-HAML.unindent) }.
+          %.foo
+        HAML
+          to raise_error(Hamlit::SyntaxError, 'Invalid tag: "%.foo".')
+      end
+    end
   end
 end
