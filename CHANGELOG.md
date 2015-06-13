@@ -1,3 +1,8 @@
+## v1.6.5
+
+- Don't duplicate element class and attribute class
+- Raise an error for an empty tag name
+
 ## v1.6.4
 
 - Show human-friendly error messages
