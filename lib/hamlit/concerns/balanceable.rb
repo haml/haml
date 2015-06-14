@@ -11,9 +11,8 @@ module Hamlit
         fetch_balanced_tokens(all_tokens, :on_lparen, :on_rparen)
       end
 
-      def fetch_balanced_embexprs(all_tokens)
-        tokens = all_tokens[1..-1] # ignore first `"`
-        fetch_balanced_tokens(tokens, :on_embexpr_beg, :on_embexpr_end)
+      def fetch_balanced_embexprs(all_tokens, start_count: 0)
+        fetch_balanced_tokens(all_tokens, :on_embexpr_beg, :on_embexpr_end, start_count: start_count)
       end
 
       def balanced_braces_exist?(tokens)
@@ -24,16 +23,15 @@ module Hamlit
         balanced_tokens_exist?(tokens, :on_lparen, :on_rparen)
       end
 
-      def balanced_embexprs_exist?(tokens)
-        tokens = tokens[1..-1] # ignore first `"`
-        balanced_tokens_exist?(tokens, :on_embexpr_beg, :on_embexpr_end)
+      def balanced_embexprs_exist?(tokens, start_count: 0)
+        balanced_tokens_exist?(tokens, :on_embexpr_beg, :on_embexpr_end, start_count: start_count)
       end
 
       private
 
-      def fetch_balanced_tokens(all_tokens, open_token, close_token)
+      def fetch_balanced_tokens(all_tokens, open_token, close_token, start_count: 0)
         tokens     = []
-        open_count = 0
+        open_count = start_count
 
         all_tokens.each_with_index do |token, index|
           (row, col), type, str = token
@@ -49,8 +47,8 @@ module Hamlit
         tokens
       end
 
-      def balanced_tokens_exist?(tokens, open_token, close_token)
-        open_count = 0
+      def balanced_tokens_exist?(tokens, open_token, close_token, start_count: 0)
+        open_count = start_count
 
         tokens.each do |token|
           (row, col), type, str = token

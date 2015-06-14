@@ -8,7 +8,9 @@ module Hamlit
       include Concerns::Balanceable
       include Concerns::Lexable
 
-      EMBEXPR_PREFIX = '"#'.freeze
+      ATTRIBUTE_BEGIN     = '{'.freeze
+      METHOD_CALL_PREFIX  = 'a('.freeze
+      BALANCE_START_COUNT = 1
 
       def parse_attributes(scanner)
         if scanner.match?(/{/)
@@ -22,22 +24,22 @@ module Hamlit
 
       # NOTE: Old attributes are not valid as Ruby expression.
       # So Ripper is broken if you give an original expression to it.
-      # This method bypasses it by changing expression to string interpolation.
+      # This method bypasses it by changing expression to method call.
       # Ideally you should implement an original lexer for haml old attributes.
       def parse_old_attributes(scanner)
         return [] unless scanner.match?(/{/)
 
-        tokens = try_lex(EMBEXPR_PREFIX + scanner.rest)
-        until balanced_embexprs_exist?(tokens)
+        tokens = Ripper.lex(scanner.rest.sub(ATTRIBUTE_BEGIN, METHOD_CALL_PREFIX))
+        until balanced_embexprs_exist?(tokens, start_count: BALANCE_START_COUNT)
           @current_lineno += 1
           break unless @lines[@current_lineno]
           scanner.concat(current_line)
-          tokens = try_lex(EMBEXPR_PREFIX + scanner.rest)
+          tokens = Ripper.lex(scanner.rest.sub(ATTRIBUTE_BEGIN, METHOD_CALL_PREFIX))
         end
 
-        tokens = fetch_balanced_embexprs(tokens)
-        scanner.pos += tokens.last.first.last - 1 # remove EMBEXPR_PREFIX's offset
-        [tokens.map(&:last).join.gsub(/\A#/, '')]
+        tokens = fetch_balanced_embexprs(tokens, start_count: BALANCE_START_COUNT)
+        scanner.pos += tokens.last.first.last
+        [tokens.map(&:last).join.sub(METHOD_CALL_PREFIX, ATTRIBUTE_BEGIN)]
       end
 
       def parse_new_attributes(scanner)
@@ -55,15 +57,6 @@ module Hamlit
         text   = tokens.map(&:last).join
         scanner.pos += convert_position(text, *tokens.last.first) + 1
         [text]
-      end
-
-      # Ripper.lex and reject tokens whose row is 0 (invalid).
-      # This should be used only for an expression which can
-      # be invalid as Ruby and valid as haml.
-      def try_lex(str)
-        Ripper.lex(str).reject do |(row, col), type, str|
-          row == 0
-        end
       end
     end
   end
