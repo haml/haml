@@ -10,10 +10,7 @@ Showing incompatibilities against [Faml](https://github.com/eagletmt/faml).
 
 
 ## filters
-- [filters/coffee\_spec.rb](filters/coffee.md)
 - [filters/erb\_spec.rb](filters/erb.md)
 - [filters/javascript\_spec.rb](filters/javascript.md)
 - [filters/less\_spec.rb](filters/less.md)
 - [filters/plain\_spec.rb](filters/plain.md)
-- [filters/sass\_spec.rb](filters/sass.md)
-- [filters/scss\_spec.rb](filters/scss.md)

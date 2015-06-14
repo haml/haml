@@ -13,7 +13,7 @@ describe Hamlit::Engine do
     end
 
     it 'renders . or # which is not continued by tag name' do
-      assert_render(<<-HAML, <<-HTML, compatible_only: [], error_with: :haml)
+      assert_render(<<-HAML, <<-HTML, error_with: [:haml, :faml])
         .
         .*
         ..

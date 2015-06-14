@@ -13,13 +13,7 @@
 ## Output
 ### Faml
 ```html
-<div></div>
-<div>*</div>
-<div></div>
-<div></div>
-<div>+</div>
-<div></div>
-
+Faml::SyntaxError: Illegal element: classes and ids must have values.
 ```
 
 ### Hamlit

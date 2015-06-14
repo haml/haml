@@ -1,7 +1,7 @@
 describe Hamlit::Filters::Scss do
   describe '#compile' do
     it 'renders scss filter' do
-      assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
+      assert_render(<<-HAML, <<-HTML)
         :scss
           .users_controller {
             .show_action {
@@ -19,7 +19,7 @@ describe Hamlit::Filters::Scss do
     end
 
     it 'parses string interpolation' do
-      assert_render(<<-'HAML', <<-HTML, compatible_only: :haml)
+      assert_render(<<-'HAML', <<-HTML)
         :scss
           .users_controller {
             .show_action {
