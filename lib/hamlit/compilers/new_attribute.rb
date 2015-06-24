@@ -44,6 +44,15 @@ module Hamlit
       def read_key!(tokens)
         skip_tokens!(tokens, :on_sp, :on_nl, :on_ignored_nl)
         (row, col), type, key = tokens.shift
+
+        while tokens.any? && tokens.first[2] == '-'
+          tokens.shift
+
+          (row, col), type, part = tokens.shift
+
+          key = "#{key}-#{part}"
+        end
+
         key
       end
 

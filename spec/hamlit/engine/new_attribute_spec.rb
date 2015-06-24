@@ -27,6 +27,22 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders hyphenated attributes properly' do
+      assert_render(<<-HAML, <<-HTML)
+        %p(data-foo='bar') bar
+      HAML
+        <p data-foo='bar'>bar</p>
+      HTML
+    end
+
+    it 'renders multiply hyphenated attributes properly' do
+      assert_render(<<-HAML, <<-HTML)
+        %p(data-x-foo='bar') bar
+      HAML
+        <p data-x-foo='bar'>bar</p>
+      HTML
+    end
+
     describe 'html escape' do
       it 'escapes attribute values on static attributes' do
         assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
