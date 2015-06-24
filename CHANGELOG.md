@@ -1,3 +1,9 @@
+## v1.6.6
+
+- Allow hyphenated HTML-style attributes
+  - https://github.com/k0kubun/hamlit/pull/29
+  - Thanks to @babelfish
+
 ## v1.6.5
 
 - Don't duplicate element class and attribute class
