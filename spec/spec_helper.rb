@@ -1,5 +1,4 @@
 require 'unindent'
-require 'pry'
 require_relative 'spec_helper/document_generator'
 require_relative 'spec_helper/render_helper'
 require_relative 'spec_helper/test_case'
