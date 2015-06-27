@@ -1,4 +1,9 @@
-# Hamlit [![Build Status](https://travis-ci.org/k0kubun/hamlit.svg?branch=master)](https://travis-ci.org/k0kubun/hamlit)
+# Hamlit
+
+[![Gem Version](https://badge.fury.io/rb/hamlit.svg)](http://badge.fury.io/rb/hamlit)
+[![Build Status](https://travis-ci.org/k0kubun/hamlit.svg?branch=master)](https://travis-ci.org/k0kubun/hamlit)
+[![Coverage Status](https://coveralls.io/repos/k0kubun/hamlit/badge.svg?branch=master)](https://coveralls.io/r/k0kubun/hamlit?branch=master)
+[![Code Climate](https://codeclimate.com/github/k0kubun/hamlit/badges/gpa.svg)](https://codeclimate.com/github/k0kubun/hamlit)
 
 Hamlit is a high performance [haml](https://github.com/haml/haml) implementation.
 
