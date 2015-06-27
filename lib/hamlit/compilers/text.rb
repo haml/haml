@@ -46,7 +46,6 @@ module Hamlit
 
         offset     = 2 # 2 is the length of '%' and marker
         open_pos   = nil
-        close_pos  = nil
         open_count = 0
         literal    = literalify_string(exp, marker)
 
@@ -74,7 +73,7 @@ module Hamlit
         literal = literalify_string(exp, marker)
         open_count = 0
 
-        Ripper.lex(literal).each do |(row, col), type, str|
+        Ripper.lex(literal).each do |_, type, str|
           case type
           when :on_embexpr_beg
             open_count += 1

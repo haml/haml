@@ -58,7 +58,7 @@ module Hamlit
 
       def read_value!(tokens)
         skip_tokens!(tokens, :on_sp)
-        (row, col), type, str = tokens.shift
+        _, _, str = tokens.shift
         return nil if str != '='
 
         skip_tokens!(tokens, :on_sp)
@@ -79,8 +79,7 @@ module Hamlit
         open_count = 0
 
         all_tokens.each do |token|
-          (row, col), type, str = token
-          case type
+          case type_of(token)
           when :on_tstring_beg then open_count += 1
           when :on_tstring_end then open_count -= 1
           end

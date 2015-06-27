@@ -1,8 +1,11 @@
 require 'ripper'
+require 'hamlit/concerns/lexable'
 
 module Hamlit
   module Concerns
     module Balanceable
+      include Lexable
+
       def fetch_balanced_braces(all_tokens)
         fetch_balanced_tokens(all_tokens, :on_lbrace, :on_rbrace)
       end
@@ -34,8 +37,7 @@ module Hamlit
         open_count = start_count
 
         all_tokens.each_with_index do |token, index|
-          (row, col), type, str = token
-          case type
+          case type_of(token)
           when open_token  then open_count += 1
           when close_token then open_count -= 1
           end
@@ -51,8 +53,7 @@ module Hamlit
         open_count = start_count
 
         tokens.each do |token|
-          (row, col), type, str = token
-          case type
+          case type_of(token)
           when open_token  then open_count += 1
           when close_token then open_count -= 1
           end

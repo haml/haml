@@ -15,7 +15,7 @@ module Hamlit
       # Return nearest line's indent level since next line. This method ignores
       # empty line. It returns -1 if next_line does not exist.
       def next_indent
-        return 1 if !@indent_space && fetch_indent(next_line).length > 0
+        return 1 if !defined?(@indent_space) && fetch_indent(next_line).length > 0
         count_indent(next_line)
       end
 
@@ -48,7 +48,7 @@ module Hamlit
         end
         @indent_logs << indent
 
-        if !@indent_space && @indent_logs.last != ''
+        if !defined?(@indent_space) && @indent_logs.last != ''
           @indent_space = @indent_logs.last
         end
         validate_indentation_consistency!(indent)
@@ -59,7 +59,7 @@ module Hamlit
 
       def has_block?
         return false unless next_line
-        return fetch_indent(next_line).length > 0 unless @indent_space
+        return fetch_indent(next_line).length > 0 unless defined?(@indent_space)
 
         next_indent > @current_indent
       end
@@ -69,7 +69,7 @@ module Hamlit
       # Validate the template is using consitent indentation, 2 spaces or a tab.
       def validate_indentation_consistency!(indent)
         return false if indent.empty?
-        return false if !@indent_space || @indent_space.empty?
+        return false if !defined?(@indent_space) || @indent_space.empty?
 
         unless acceptable_indent?(indent)
           syntax_error!("Inconsistent indentation: #{indent_label(indent)} used for indentation, "\
@@ -105,7 +105,8 @@ module Hamlit
       end
 
       def indent_rule
-        (@indent_space || '').length
+        return 0 unless defined?(@indent_space)
+        @indent_space.length
       end
 
       def fetch_indent(str)

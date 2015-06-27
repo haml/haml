@@ -82,7 +82,7 @@ module Hamlit
         prefix       = find_prefix(code)
         code         = "#{prefix}#{code}"
 
-        Ripper.lex(code).each do |(row, col), type, str|
+        Ripper.lex(code).each do |_, type, str|
           if type == :on_comment
             with_comment = true
             next

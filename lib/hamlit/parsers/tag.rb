@@ -65,8 +65,8 @@ module Hamlit
         end
 
         ast = []
-        attributes.each do |name, values|
-          ast << [:html, :attr, name, [:static, values.join(' ')]]
+        attributes.each do |attr, values|
+          ast << [:html, :attr, attr, [:static, values.join(' ')]]
         end
         ast
       end

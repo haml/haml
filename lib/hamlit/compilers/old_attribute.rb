@@ -73,16 +73,16 @@ module Hamlit
       # Give up static compilation when variables are detected.
       def assert_static_value!(value)
         tokens = Ripper.lex(value)
-        tokens.each do |(row, col), type, str|
-          raise RuntimeBuild if type == :on_ident
+        tokens.each do |token|
+          raise RuntimeBuild if type_of(token) == :on_ident
         end
       end
 
       # Give up static compilation when the value is a variable or an array.
       def detect_joinable_value!(value)
         tokens = Ripper.lex(value)
-        tokens.each do |(row, col), type, str|
-          raise RuntimeBuild if JOINABLE_TOKENS.include?(type)
+        tokens.each do |token|
+          raise RuntimeBuild if JOINABLE_TOKENS.include?(type_of(token))
         end
       end
 
@@ -138,7 +138,7 @@ module Hamlit
       end
 
       def read_string!(tokens)
-        (row, col), type, str = tokens.shift
+        _, type, str = tokens.shift
         return '' if type == :on_tstring_end
 
         raise SyntaxError if type_of(tokens.shift) != :on_tstring_end
@@ -147,7 +147,7 @@ module Hamlit
 
       def assert_rocket!(tokens, *types)
         skip_tokens!(tokens, :on_sp)
-        (row, col), type, str = tokens.shift
+        _, type, str = tokens.shift
 
         raise SyntaxError unless type == :on_op && str == '=>'
       end
@@ -175,7 +175,7 @@ module Hamlit
           bracket: 0,
         }
 
-        Ripper.lex(str).each do |(row, col), type, str|
+        Ripper.lex(str).each do |(_, col), type, _|
           if columns.include?(col) && open_count == 1 && count.values.all?(&:zero?)
             result << col
           end

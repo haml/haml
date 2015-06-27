@@ -21,8 +21,8 @@ module Hamlit
 
     def build(*args)
       result = ''
-      attributes = args.inject({}) do |attributes, arg|
-        merge_attributes(attributes, arg)
+      attributes = args.inject({}) do |attrs, arg|
+        merge_attributes(attrs, arg)
       end
 
       attributes.each do |key, value|
