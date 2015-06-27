@@ -57,18 +57,22 @@ module Hamlit
       target = flatten_attributes(target)
 
       (base.keys | target.keys).each do |key|
-        if base[key] && target[key]
-          case key
-          when :id
-            result[key] = [base[key], target[key]].compact.join('_')
-          when :class
-            result[key] = [base[key], target[key]].flatten.compact.map(&:to_s).sort.uniq.join(' ')
-          end
-        else
-          result[key] = base[key].nil? ? target[key] : base[key]
-        end
+        result[key] = merge_attribute_value(base, target, key)
       end
       result
+    end
+
+    def merge_attribute_value(base, target, key)
+      return target[key] unless base[key]
+      return base[key]   unless target[key]
+
+      values = [base[key], target[key]].flatten.compact
+      case key
+      when :id
+        values.join('_')
+      when :class
+        values.map(&:to_s).sort.uniq.join(' ')
+      end
     end
   end
 end

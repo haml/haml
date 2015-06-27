@@ -31,6 +31,27 @@ module Hamlit
                            itemscope allowfullscreen default inert sortable
                            truespeed typemustmatch data].freeze
 
+      DEFAULT_COUNTS = {
+        brace:  -1,
+        emb:     0,
+        paren:   0,
+        bracket: 0,
+      }.freeze
+
+      OPEN_TOKEN_TYPES = {
+        on_lbrace:      :brace,
+        on_embexpr_beg: :emb,
+        on_lparen:      :paren,
+        on_lbracket:    :bracket,
+      }.freeze
+
+      CLOSE_TOKEN_TYPES = {
+        on_rbrace:      :brace,
+        on_embexpr_end: :emb,
+        on_rparen:      :paren,
+        on_rbracket:    :bracket,
+      }.freeze
+
       def compile_old_attribute(str)
         raise RuntimeBuild unless valid_hash?(str)
 
@@ -99,21 +120,24 @@ module Hamlit
         attributes = {}
 
         split_hash(str).each do |attr|
-          tokens = Ripper.lex("{#{attr}")
-          tokens = tokens.drop(1)
-
+          tokens = Ripper.lex("{#{attr}").drop(1)
           key = read_hash_key!(tokens)
-          val = tokens.map(&:last).join.strip
-
-          skip_tokens!(tokens, :on_sp)
-          if type_of(tokens.first) == :on_lbrace
-            val = parse_old_attributes(val)
-          end
+          val = read_hash_value!(tokens)
 
           attributes[key] = val if key
         end
 
         attributes
+      end
+
+      def read_hash_value!(tokens)
+        skip_tokens!(tokens, :on_sp)
+        val = tokens.map(&:last).join.strip
+
+        if type_of(tokens.first) == :on_lbrace
+          val = parse_old_attributes(val)
+        end
+        val
       end
 
       def read_hash_key!(tokens)
@@ -168,38 +192,24 @@ module Hamlit
 
       def reject_nested_columns(str, columns)
         result = []
-        open_count = 0
-        count = {
-          emb:     0,
-          paren:   0,
-          bracket: 0,
-        }
+        counts = DEFAULT_COUNTS.dup
 
         Ripper.lex(str).each do |(_, col), type, _|
-          if columns.include?(col) && open_count == 1 && count.values.all?(&:zero?)
+          if columns.include?(col) && counts.values.all?(&:zero?)
             result << col
           end
-
-          case type
-          when :on_lbrace
-            open_count += 1
-          when :on_rbrace
-            open_count -= 1
-          when :on_embexpr_beg
-            count[:emb] += 1
-          when :on_embexpr_end
-            count[:emb] -= 1
-          when :on_lparen
-            count[:paren] += 1
-          when :on_rparen
-            count[:paren] -= 1
-          when :on_lbracket
-            count[:bracket] += 1
-          when :on_rbracket
-            count[:bracket] -= 1
-          end
+          update_open_counts(counts, type)
         end
         result
+      end
+
+      def update_open_counts(counts, type)
+        case
+        when OPEN_TOKEN_TYPES[type]
+          counts[OPEN_TOKEN_TYPES[type]] += 1
+        when CLOSE_TOKEN_TYPES[type]
+          counts[CLOSE_TOKEN_TYPES[type]] -= 1
+        end
       end
 
       class HashParser < Ripper
