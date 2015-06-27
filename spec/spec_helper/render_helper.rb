@@ -80,7 +80,7 @@ module RenderHelper
 
   def expect_implementation(impl, test, options, type, &block)
     if type == :error
-      expect { block.call(test, options) }.to raise_error
+      expect_any_error { block.call(test, options) }
       begin
         block.call(test, options)
       rescue Exception => e
@@ -99,6 +99,14 @@ module RenderHelper
     when :failure
       expect(test.hamlit_html).to_not eq(result)
     end
+  end
+
+  def expect_any_error(&block)
+    origin = RSpec::Expectations.configuration.warn_about_potential_false_positives?
+    RSpec::Expectations.configuration.warn_about_potential_false_positives = false
+    expect { block.call(test, options) }.to raise_error
+  ensure
+    RSpec::Expectations.configuration.warn_about_potential_false_positives = origin
   end
 
   def array_wrap(arr)
