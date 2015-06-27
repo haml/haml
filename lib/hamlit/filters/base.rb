@@ -39,6 +39,31 @@ module Hamlit
         end
         lines
       end
+
+      def compile_html(tag, lines)
+        ast = [:haml, :text, compile_lines(lines, indent_width: 2), false]
+        ast = [:multi, [:static, "\n"], ast]
+        ast = [:html, :tag, tag, [:html, :attrs], ast]
+        ast
+      end
+
+      def compile_xhtml(tag, type, lines)
+        attr  = [:html, :attr, 'type', [:static, type]]
+        attrs = [:html, :attrs, attr]
+
+        content = [:haml, :text, compile_lines(lines, indent_width: 4)]
+        multi = [:multi, [:static, "\n"], *cdata_for(type, content)]
+        [:html, :tag, tag, attrs, multi]
+      end
+
+      def cdata_for(type, ast)
+        case type
+        when 'text/javascript'
+          [[:static, "  //<![CDATA[\n"], ast, [:static, "  //]]>\n"]]
+        when 'text/css'
+          [[:static, "  /*<![CDATA[*/\n"], ast, [:static, "  /*]]>*/\n"]]
+        end
+      end
     end
   end
 end
