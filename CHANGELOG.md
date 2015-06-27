@@ -1,3 +1,8 @@
+## v1.6.7
+
+- Remove unused variables and avoid shadowing
+  - To suppress warnings in application using `rspec --warnings`
+
 ## v1.6.6
 
 - Allow hyphenated HTML-style attributes
