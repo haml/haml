@@ -1,3 +1,8 @@
+## v1.7.0
+
+- Support Ruby 2.2.0 hash syntax
+  - like `{ "hyphened-key": "value" }`
+
 ## v1.6.7
 
 - Remove unused variables and avoid shadowing
