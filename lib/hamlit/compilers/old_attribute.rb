@@ -155,17 +155,21 @@ module Hamlit
           end
           assert_rocket!(tokens)
         when :on_tstring_beg
-          str = read_string!(tokens)
-          assert_rocket!(tokens)
+          str = read_string!(tokens, assert_rocket: true)
         end
         str
       end
 
-      def read_string!(tokens)
+      def read_string!(tokens, assert_rocket: false)
         _, type, str = tokens.shift
         return '' if type == :on_tstring_end
 
-        raise SyntaxError if type_of(tokens.shift) != :on_tstring_end
+        next_token = tokens.shift
+        return str if RUBY_VERSION >= "2.2.0" && type_of(next_token) == :on_label_end
+
+        raise SyntaxError if type_of(next_token) != :on_tstring_end
+        assert_rocket!(tokens) if assert_rocket
+
         str
       end
 

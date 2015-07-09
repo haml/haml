@@ -371,5 +371,26 @@ describe Hamlit::Engine do
         HTML
       end
     end
+
+    if RUBY_VERSION >= "2.2.0"
+      describe 'Ruby 2.2 syntax' do
+        it 'renders static attributes' do
+          assert_render(<<-HAML, <<-HTML)
+            %meta{ content: 'IE=edge', 'http-equiv': 'X-UA-Compatible' }
+          HAML
+            <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+          HTML
+        end
+
+        it 'renders dynamic attributes' do
+          assert_render(<<-HAML, <<-HTML)
+            - hash = { content: 'IE=edge' }
+            %meta{ hash, 'http-equiv': 'X-UA-Compatible' }
+          HAML
+            <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+          HTML
+        end
+      end
+    end
   end
 end
