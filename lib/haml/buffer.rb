@@ -273,16 +273,16 @@ module Haml
     # @since Haml 4.0.1
     # @private
     def fix_textareas!(input)
-      pattern = /([ ]*)<(textarea)([^>]*)>(\n|&#x000A;)(.*?)(<\/\2>)/im
+      pattern = /<(textarea)([^>]*)>(\n|&#x000A;)(.*?)<\/textarea>/im
       input.gsub!(pattern) do |s|
         match = pattern.match(s)
-        content = match[5]
-        if match[4] == '&#x000A;'
+        content = match[4]
+        if match[3] == '&#x000A;'
           content.sub!(/\A /, '&#x0020;')
         else
           content.sub!(/\A[ ]*/, '')
         end
-        "#{match[1]}<#{match[2]}#{match[3]}>\n#{content}</#{match[2]}>"
+        "<#{match[1]}#{match[2]}>\n#{content}</#{match[1]}>"
       end
     end
 
