@@ -1,10 +1,10 @@
 = raw find_and_preserve "Foo\n<pre>Bar\nBaz</pre>"
 
-= succeed '.' do
-  succeed
+= succeed '&' do
+  %i succeed
 
-= precede ',' do
-  precede
+= precede '&' do
+  %i precede
 
-= surround '[', ']' do
-  surround
+= surround '<', '>' do
+  %i surround

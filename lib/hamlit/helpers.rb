@@ -1,5 +1,10 @@
 # This is a module compatible with Haml::Helpers.
 # It is included by ActionView in initializer.
+#
+# NOTE: currently Hamlit::Helpers is enabled by default
+# on only Rails environment.
+# And currently this Hamlit::Helpers depends on
+# ActionView internal implementation. (not desired)
 module Hamlit
   module Helpers
     extend self
@@ -32,19 +37,17 @@ module Hamlit
     def surround(front, back = front, &block)
       output = capture_haml(&block)
 
-      "#{front}#{output.chomp}#{back}\n"
+      "#{escape_once(front)}#{output.chomp}#{escape_once(back)}\n".html_safe
     end
 
     def precede(str, &block)
-      "#{str}#{capture_haml(&block).chomp}\n"
+      "#{escape_once(str)}#{capture_haml(&block).chomp}\n".html_safe
     end
 
     def succeed(str, &block)
-      "#{capture_haml(&block).chomp}#{str}\n"
+      "#{capture_haml(&block).chomp}#{escape_once(str)}\n".html_safe
     end
 
-    # NOTE: currently Hamlit::Helpers is enabled by default on only
-    # Rails environment. Thus you can use capture.
     def capture_haml(*args, &block)
       capture(*args, &block)
     end

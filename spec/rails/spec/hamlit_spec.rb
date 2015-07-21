@@ -107,17 +107,17 @@ describe 'Hamlit rails integration', type: :request do
 
     it 'renders succeed' do
       get helpers_users_path
-      expect(response.body).to include('succeed.')
+      expect(response.body).to include('<i>succeed</i>&amp;')
     end
 
     it 'renders precede' do
       get helpers_users_path
-      expect(response.body).to include(',precede')
+      expect(response.body).to include('&amp;<i>precede</i>')
     end
 
     it 'renders surround' do
       get helpers_users_path
-      expect(response.body).to include('[surround]')
+      expect(response.body).to include('&lt;<i>surround</i>&gt;')
     end
   end
 end
