@@ -1,3 +1,9 @@
+## v1.7.1
+
+- Don't escape a block content of some helpers
+  - https://github.com/k0kubun/hamlit/issues/35
+  - Thanks to @felixbuenemann
+
 ## v1.7.0
 
 - Support Ruby 2.2.0 hash syntax
