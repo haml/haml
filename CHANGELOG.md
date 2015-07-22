@@ -1,3 +1,8 @@
+## v1.7.2
+
+- Bugfix about parsing a content of tag
+  - This was introduced in v1.6.6.
+
 ## v1.7.1
 
 - Don't escape a block content of some helpers
