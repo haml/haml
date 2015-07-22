@@ -29,12 +29,12 @@ module Hamlit
       def parse_old_attributes(scanner)
         return [] unless scanner.match?(/{/)
 
-        tokens = Ripper.lex(scanner.rest.sub(ATTRIBUTE_BEGIN, METHOD_CALL_PREFIX))
+        tokens = try_lex(scanner.rest.sub(ATTRIBUTE_BEGIN, METHOD_CALL_PREFIX))
         until balanced_embexprs_exist?(tokens, start_count: BALANCE_START_COUNT)
           @current_lineno += 1
           break unless @lines[@current_lineno]
           scanner.concat(current_line)
-          tokens = Ripper.lex(scanner.rest.sub(ATTRIBUTE_BEGIN, METHOD_CALL_PREFIX))
+          tokens = try_lex(scanner.rest.sub(ATTRIBUTE_BEGIN, METHOD_CALL_PREFIX))
         end
 
         tokens = fetch_balanced_embexprs(tokens, start_count: BALANCE_START_COUNT)
@@ -57,6 +57,14 @@ module Hamlit
         text   = tokens.map(&:last).join
         scanner.pos += convert_position(text, *tokens.last.first) + 1
         [text]
+      end
+
+      # Ripper.lex pulls invalid tokens first.
+      # This method rejects these invalid tokens.
+      def try_lex(str)
+        Ripper.lex(str).reject do |(row, col), type, str|
+          row == 0
+        end
       end
     end
   end

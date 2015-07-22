@@ -56,6 +56,14 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'accepts tag content' do
+      assert_render(<<-'HAML', <<-HTML)
+        %span{ class: 'foo' } <b>bar</b>
+      HAML
+        <span class='foo'><b>bar</b></span>
+      HTML
+    end
+
     it 'renders multi-byte chars as static attribute value' do
       assert_render(<<-'HAML', <<-HTML)
         %img{ alt: 'こんにちは' }
