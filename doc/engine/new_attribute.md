@@ -23,7 +23,7 @@
 ```
 
 
-# [new\_attribute\_spec.rb:31](/spec/hamlit/engine/new_attribute_spec.rb#L31)
+# [new\_attribute\_spec.rb:47](/spec/hamlit/engine/new_attribute_spec.rb#L47)
 ## Input
 ```haml
 %a(title="'")
@@ -50,7 +50,7 @@
 ```
 
 
-# [new\_attribute\_spec.rb:43](/spec/hamlit/engine/new_attribute_spec.rb#L43)
+# [new\_attribute\_spec.rb:59](/spec/hamlit/engine/new_attribute_spec.rb#L59)
 ## Input
 ```haml
 - title = "'\""

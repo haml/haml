@@ -21,7 +21,7 @@ Haml::SyntaxError: (haml):1: syntax error, unexpected tSTRING_DEND, expecting ')
 ```
 
 
-# [old\_attributes\_spec.rb:203](/spec/hamlit/engine/old_attributes_spec.rb#L203)
+# [old\_attributes\_spec.rb:211](/spec/hamlit/engine/old_attributes_spec.rb#L211)
 ## Input
 ```haml
 / wontfix: Non-boolean attributes are not escaped for optimization.
@@ -62,7 +62,7 @@ Haml::SyntaxError: (haml):1: syntax error, unexpected tSTRING_DEND, expecting ')
 ```
 
 
-# [old\_attributes\_spec.rb:228](/spec/hamlit/engine/old_attributes_spec.rb#L228)
+# [old\_attributes\_spec.rb:236](/spec/hamlit/engine/old_attributes_spec.rb#L236)
 ## Input
 ```haml
 %a{title: "'"}
@@ -89,7 +89,7 @@ Haml::SyntaxError: (haml):1: syntax error, unexpected tSTRING_DEND, expecting ')
 ```
 
 
-# [old\_attributes\_spec.rb:240](/spec/hamlit/engine/old_attributes_spec.rb#L240)
+# [old\_attributes\_spec.rb:248](/spec/hamlit/engine/old_attributes_spec.rb#L248)
 ## Input
 ```haml
 - title = "'\""
@@ -115,7 +115,7 @@ Haml::SyntaxError: (haml):1: syntax error, unexpected tSTRING_DEND, expecting ')
 ```
 
 
-# [old\_attributes\_spec.rb:252](/spec/hamlit/engine/old_attributes_spec.rb#L252)
+# [old\_attributes\_spec.rb:260](/spec/hamlit/engine/old_attributes_spec.rb#L260)
 ## Input
 ```haml
 - title = { title: "'\"" }

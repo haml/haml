@@ -18,7 +18,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# [old\_attributes\_spec.rb:124](/spec/hamlit/engine/old_attributes_spec.rb#L124)
+# [old\_attributes\_spec.rb:132](/spec/hamlit/engine/old_attributes_spec.rb#L132)
 ## Input
 ```haml
 .foo{ class: ['bar'] }
@@ -48,7 +48,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# [old\_attributes\_spec.rb:203](/spec/hamlit/engine/old_attributes_spec.rb#L203)
+# [old\_attributes\_spec.rb:211](/spec/hamlit/engine/old_attributes_spec.rb#L211)
 ## Input
 ```haml
 / wontfix: Non-boolean attributes are not escaped for optimization.
@@ -89,7 +89,7 @@ Faml::Compiler::UnparsableRubyCode: Unparsable Ruby code is given to attributes:
 ```
 
 
-# [old\_attributes\_spec.rb:275](/spec/hamlit/engine/old_attributes_spec.rb#L275)
+# [old\_attributes\_spec.rb:283](/spec/hamlit/engine/old_attributes_spec.rb#L283)
 ## Input
 ```haml
 %span{ data: { disable: true } } bar
