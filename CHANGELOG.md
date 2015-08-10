@@ -1,5 +1,12 @@
 # Haml Changelog
 
+## 4.0.7
+
+Released on August 10, 2015
+([diff](https://github.com/haml/haml/compare/4.0.6...4.0.7)).
+
+* Significantly improve performance of regexp used to fix whitespace handling in textareas (thanks [Stan Hu](https://github.com/stanhu)).
+
 ## 4.0.6
 
 Released on Dec 1, 2014 ([diff](https://github.com/haml/haml/compare/4.0.5...4.0.6)).
