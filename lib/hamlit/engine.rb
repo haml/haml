@@ -21,4 +21,15 @@ module Hamlit
     filter :StaticMerger
     use :Generator, -> { options[:generator] }
   end
+
+  class HamlEngine
+    def initialize(template, options = {})
+      @template = template
+      @options  = options
+    end
+
+    def render(scope = Object.new, locals = {}, &block)
+      eval Engine.new.call(@template)
+    end
+  end
 end

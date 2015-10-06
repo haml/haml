@@ -7,7 +7,7 @@ module Hamlit
     end
 
     def call(template)
-      Haml::Parser.new(template, {}).parse
+      Haml::Parser.new(template, Haml::Options.defaults).parse
     end
   end
 end
