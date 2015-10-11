@@ -7,6 +7,7 @@ Rake::TestTask.new do |t|
   t.libs << 'lib' << 'test'
   files = Dir['test/*_test.rb']
   files << 'test/haml-spec/hamlit_test.rb'
+  t.ruby_opts = %w[-rtest_helper]
   t.test_files = files
   t.verbose = true
 end
