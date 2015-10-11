@@ -69,31 +69,31 @@ basic Haml tags and CSS:
   a simple Haml tag:
     haml: "%p"
     html: "<p></p>"
-#   a self-closing tag (XHTML):
-#     haml: "%meta"
-#     html: "<meta />"
-#     config:
-#       format: xhtml
-#   a self-closing tag (HTML4):
-#     haml: "%meta"
-#     html: "<meta>"
-#     config:
-#       format: html4
-#   a self-closing tag (HTML5):
-#     haml: "%meta"
-#     html: "<meta>"
-#     config:
-#       format: html5
-#   a self-closing tag ('/' modifier + XHTML):
-#     haml: "%zzz/"
-#     html: "<zzz />"
-#     config:
-#       format: xhtml
-#   a self-closing tag ('/' modifier + HTML5):
-#     haml: "%zzz/"
-#     html: "<zzz>"
-#     config:
-#       format: html5
+  a self-closing tag (XHTML):
+    haml: "%meta"
+    html: "<meta />"
+    config:
+      format: xhtml
+  a self-closing tag (HTML4):
+    haml: "%meta"
+    html: "<meta>"
+    config:
+      format: html4
+  a self-closing tag (HTML5):
+    haml: "%meta"
+    html: "<meta>"
+    config:
+      format: html5
+  a self-closing tag ('/' modifier + XHTML):
+    haml: "%zzz/"
+    html: "<zzz />"
+    config:
+      format: xhtml
+  a self-closing tag ('/' modifier + HTML5):
+    haml: "%zzz/"
+    html: "<zzz>"
+    config:
+      format: html5
   a tag with a CSS class:
     haml: "%p.class1"
     html: "<p class='class1'></p>"

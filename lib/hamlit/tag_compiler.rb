@@ -1,8 +1,9 @@
 module Hamlit
   class TagCompiler
     def initialize(options = {})
-      @quote  = options[:attr_quote].inspect.freeze
-      @format = options[:format]
+      @quote     = options[:attr_quote].inspect.freeze
+      @format    = options[:format]
+      @autoclose = options[:autoclose]
     end
 
     def compile(node, &block)
@@ -28,9 +29,16 @@ module Hamlit
       case
       when !node.children.empty?
         yield(node)
+      when node.value[:value].nil? && self_closing?(node)
+        nil
       else
         [:dynamic, node.value[:value]]
       end
+    end
+
+    def self_closing?(node)
+      return true if @autoclose.include?(node.value[:name])
+      node.value[:self_closing]
     end
   end
 end
