@@ -52,7 +52,9 @@ module Hamlit
 
     def insert_whitespace?(node)
       case node.type
-      when :doctype, :plain, :tag
+      when :doctype
+        node.value[:type] != 'xml'
+      when :plain, :tag
         true
       else
         false

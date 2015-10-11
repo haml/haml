@@ -1,10 +1,10 @@
 ---
-# headers:
-#   an XHTML XML prolog:
-#     haml: "!!! XML"
-#     html: "<?xml version='1.0' encoding='utf-8' ?>"
-#     config:
-#       format: xhtml
+headers:
+  an XHTML XML prolog:
+    haml: "!!! XML"
+    html: "<?xml version='1.0' encoding='utf-8' ?>"
+    config:
+      format: xhtml
 #   an XHTML default (transitional) doctype:
 #     haml: "!!!"
 #     html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

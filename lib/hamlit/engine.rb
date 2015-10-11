@@ -29,7 +29,7 @@ module Hamlit
     end
 
     def precompiled
-      Engine.new.call(@template)
+      Engine.new(temple_options).call(@template)
     end
 
     def render(scope = Object.new, locals = {}, &block)
@@ -39,6 +39,13 @@ module Hamlit
     end
 
     private
+
+    def temple_options
+      @options.dup.tap do |options|
+        options[:pretty] = !options.delete(:ugly)
+        options[:format] = :html if options[:format] == :html5
+      end
+    end
 
     def wrap_binding(scope)
       return scope if scope.is_a?(Binding)
