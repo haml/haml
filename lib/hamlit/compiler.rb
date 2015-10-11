@@ -4,22 +4,23 @@ module Hamlit
       @options = options
     end
 
-    def call(ast)
-      temple = ast.children.map do |node|
-        compile_node(node)
-      end
-      [:multi, *temple]
-    end
-
-    private
-
-    def compile_node(node)
+    def compile(node)
       case node.type
+      when :root
+        compile_children(node)
       when :tag
         [:html, :tag, node.value[:name], [:html, :attrs], [:multi]]
       else
         [:static, "\n"]
       end
+    end
+    alias :call :compile
+
+    private
+
+    def compile_children(node)
+      temple = node.children.map { |n| compile(n) }
+      [:multi, *temple]
     end
   end
 end
