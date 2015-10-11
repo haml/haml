@@ -50,7 +50,7 @@ module Hamlit
 
     def insert_whitespace?(node)
       case node.type
-      when :plain, :tag
+      when :doctype, :plain, :tag
         true
       else
         false
