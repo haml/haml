@@ -11,7 +11,19 @@ class Benchmark
     Time.now - start_time
   end
 
-  def initialize
+  def self.ranking(*benchmarks)
+    benchmarks = benchmarks.sort_by(&:total)
+
+    base = benchmarks.first.total
+    benchmarks.each do |bench|
+      bench.report("%.2f" % (bench.total / base))
+    end
+  end
+
+  attr_reader :total
+
+  def initialize(name)
+    @name  = name
     @total = 0.0
     @times = 0
     @max   = 0.0
@@ -23,8 +35,8 @@ class Benchmark
     @times += 1
   end
 
-  def report(message)
-    puts "[#{message}] Count: #{@times}, Total: #{format(@total)}, Avg: #{format(@total / @times)}, Max: #{format(@max)}"
+  def report(times)
+    puts "[#{@name}] Count: #{@times}, Total: #{format(@total)}, Avg: #{format(@total / @times)}, Max: #{format(@max)} (#{times}x)"
   end
 
   private
@@ -37,9 +49,9 @@ end
 namespace :benchmark do
   desc 'Benchmark compilation'
   task :compile do
-    haml_benchmark   = Benchmark.new
-    faml_benchmark   = Benchmark.new
-    hamlit_benchmark = Benchmark.new
+    haml_benchmark   = Benchmark.new('haml  ')
+    faml_benchmark   = Benchmark.new('faml  ')
+    hamlit_benchmark = Benchmark.new('hamlit')
     json_path = File.expand_path('../test/haml-spec/tests.json', __dir__)
     contexts  = JSON.parse(File.read(json_path))
 
@@ -63,9 +75,6 @@ namespace :benchmark do
         end
       end
     end
-
-    haml_benchmark.report('Haml  ')
-    faml_benchmark.report('Faml  ')
-    hamlit_benchmark.report('Hamlit')
+    Benchmark.ranking(haml_benchmark, faml_benchmark, hamlit_benchmark)
   end
 end
