@@ -1,7 +1,10 @@
 require 'bundler/gem_tasks'
 require 'rake/testtask'
 
+Bundler.require
+
 task default: :test
+task bench: %w[benchmark:compile]
 
 Dir['benchmark/*.rake'].each { |b| import(b) }
 
