@@ -3,7 +3,7 @@ require 'hamlit/tag_compiler'
 module Hamlit
   class Compiler
     def initialize(options = {})
-      @options = options
+      @tag_compiler = TagCompiler.new(options[:attr_quote])
     end
 
     def call(ast)
@@ -41,7 +41,7 @@ module Hamlit
     end
 
     def compile_tag(node)
-      TagCompiler.compile(node) { |n| compile_children(n) }
+      @tag_compiler.compile(node) { |n| compile_children(n) }
     end
 
     def compile_plain(node)
