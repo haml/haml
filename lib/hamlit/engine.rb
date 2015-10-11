@@ -11,6 +11,9 @@ module Hamlit
       attr_quote:  "'",
       escape_html: true,
       pretty:      false,
+      autoclose:   %w(area base basefont br col command embed frame
+                      hr img input isindex keygen link menuitem meta
+                      param source track wbr),
     )
 
     use Parser

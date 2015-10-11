@@ -1,7 +1,8 @@
 module Hamlit
   class TagCompiler
     def initialize(options = {})
-      @quote = options[:attr_quote].inspect.freeze
+      @quote  = options[:attr_quote].inspect.freeze
+      @format = options[:format]
     end
 
     def compile(node, &block)
@@ -24,10 +25,12 @@ module Hamlit
     end
 
     def compile_contents(node, &block)
-      unless node.children.empty?
-        return yield(node)
+      case
+      when !node.children.empty?
+        yield(node)
+      else
+        [:dynamic, node.value[:value]]
       end
-      [:dynamic, node.value[:value]]
     end
   end
 end
