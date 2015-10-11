@@ -21,13 +21,17 @@ module Hamlit
       when :plain
         compile_plain(node)
       else
-        [:static, "\n"]
+        [:multi]
       end
     end
 
     def compile_children(node)
-      temple = node.children.map { |n| compile(n) }
-      [:multi, *temple]
+      temple = [:multi]
+      node.children.each do |n|
+        temple << compile(n)
+        temple << [:static, "\n"] if insert_whitespace?(n)
+      end
+      temple
     end
 
     def compile_doctype(node)
@@ -47,6 +51,15 @@ module Hamlit
 
     def compile_plain(node)
       [:static, node.value[:text]]
+    end
+
+    def insert_whitespace?(node)
+      case node.type
+      when :plain, :tag
+        true
+      else
+        false
+      end
     end
   end
 end
