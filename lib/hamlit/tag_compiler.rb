@@ -24,7 +24,10 @@ module Hamlit
     end
 
     def compile_contents(node, &block)
-      yield(node)
+      unless node.children.empty?
+        return yield(node)
+      end
+      [:dynamic, node.value[:value]]
     end
   end
 end
