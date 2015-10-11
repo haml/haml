@@ -36,6 +36,9 @@ module Hamlit
 
     def compile_tag(node)
       attrs = [:html, :attrs]
+      node.value[:attributes_hashes].each do |attribute_hash|
+        attrs << [:dynamic, "::Hamlit::AttributeBuilder.build(\"'\", #{attribute_hash})"]
+      end
       node.value[:attributes].each do |name, value|
         attrs << [:html, :attr, name, [:static, value]]
       end
