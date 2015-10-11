@@ -118,17 +118,17 @@ basic Haml tags and CSS:
   an implicit div with a CSS class:
     haml: ".class1"
     html: "<div class='class1'></div>"
-#   multiple simple Haml tags:
-#     haml: |-
-#       %div
-#         %div
-#           %p
-#     html: |-
-#       <div>
-#         <div>
-#           <p></p>
-#         </div>
-#       </div>
+  multiple simple Haml tags:
+    haml: |-
+      %div
+        %div
+          %p
+    html: |-
+      <div>
+        <div>
+          <p></p>
+        </div>
+      </div>
 tags with unusual HTML characters:
   a tag with colons:
     haml: "%ns:tag"
@@ -155,24 +155,24 @@ tags with unusual CSS identifiers:
   a class with dashes:
     haml: ".--"
     html: "<div class='--'></div>"
-# tags with inline content:
-#   Inline content simple tag:
-#     haml: "%p hello"
-#     html: "<p>hello</p>"
-#   Inline content tag with CSS:
-#     haml: "%p.class1 hello"
-#     html: "<p class='class1'>hello</p>"
-#   Inline content multiple simple tags:
-#     haml: |-
-#       %div
-#         %div
-#           %p text
-#     html: |-
-#       <div>
-#         <div>
-#           <p>text</p>
-#         </div>
-#       </div>
+tags with inline content:
+  Inline content simple tag:
+    haml: "%p hello"
+    html: "<p>hello</p>"
+  Inline content tag with CSS:
+    haml: "%p.class1 hello"
+    html: "<p class='class1'>hello</p>"
+  Inline content multiple simple tags:
+    haml: |-
+      %div
+        %div
+          %p text
+    html: |-
+      <div>
+        <div>
+          <p>text</p>
+        </div>
+      </div>
 tags with nested content:
   Nested content simple tag:
     haml: |-

@@ -1,3 +1,5 @@
+require 'haml/util'
+
 module Hamlit
   class TagCompiler
     def initialize(options = {})
@@ -31,8 +33,10 @@ module Hamlit
         yield(node)
       when node.value[:value].nil? && self_closing?(node)
         nil
-      else
+      when Haml::Util.contains_interpolation?(node.value[:value])
         [:dynamic, node.value[:value]]
+      else
+        [:static, node.value[:value]]
       end
     end
 
