@@ -1,11 +1,13 @@
-require 'hamlit/tag_compiler'
 require 'hamlit/doctype_compiler'
+require 'hamlit/tag_compiler'
+require 'hamlit/whitespace_handler'
 
 module Hamlit
   class Compiler
     def initialize(options = {})
-      @doctype_compiler = DoctypeCompiler.new(options)
-      @tag_compiler     = TagCompiler.new(options)
+      @doctype_compiler   = DoctypeCompiler.new(options)
+      @tag_compiler       = TagCompiler.new(options)
+      @whitespace_handler = WhitespaceHandler.new
     end
 
     def call(ast)
@@ -30,12 +32,7 @@ module Hamlit
     end
 
     def compile_children(node)
-      temple = [:multi]
-      node.children.each do |n|
-        temple << compile(n)
-        temple << [:static, "\n"] if insert_whitespace?(n)
-      end
-      temple
+      @whitespace_handler.compile_children(node) { |n| compile(n) }
     end
 
     def compile_doctype(node)
@@ -48,17 +45,6 @@ module Hamlit
 
     def compile_plain(node)
       [:static, node.value[:text]]
-    end
-
-    def insert_whitespace?(node)
-      case node.type
-      when :doctype
-        node.value[:type] != 'xml'
-      when :plain, :tag
-        true
-      else
-        false
-      end
     end
   end
 end
