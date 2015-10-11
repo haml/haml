@@ -1,9 +1,11 @@
 require 'hamlit/tag_compiler'
+require 'hamlit/doctype_compiler'
 
 module Hamlit
   class Compiler
     def initialize(options = {})
-      @tag_compiler = TagCompiler.new(options[:attr_quote])
+      @doctype_compiler = DoctypeCompiler.new(options[:format])
+      @tag_compiler     = TagCompiler.new(options[:attr_quote])
     end
 
     def call(ast)
@@ -37,7 +39,7 @@ module Hamlit
     end
 
     def compile_doctype(node)
-      [:html, :doctype, node.value[:type]]
+      @doctype_compiler.compile(node)
     end
 
     def compile_tag(node)
