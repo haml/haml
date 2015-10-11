@@ -335,20 +335,20 @@ silent comments:
         %div
             foo
     html: ''
-# markup comments:
-#   an inline markup comment:
-#     haml: "/ comment"
-#     html: "<!-- comment -->"
-#   a nested markup comment:
-#     haml: |-
-#       /
-#         comment
-#         comment2
-#     html: |-
-#       <!--
-#         comment
-#         comment2
-#       -->
+markup comments:
+  an inline markup comment:
+    haml: "/ comment"
+    html: "<!-- comment -->"
+  a nested markup comment:
+    haml: |-
+      /
+        comment
+        comment2
+    html: |-
+      <!--
+        comment
+        comment2
+      -->
 # conditional comments:
 #   a conditional comment:
 #     haml: |-

@@ -20,6 +20,8 @@ module Hamlit
       case node.type
       when :root
         compile_children(node)
+      when :comment
+        compile_comment(node)
       when :doctype
         compile_doctype(node)
       when :tag
@@ -37,6 +39,13 @@ module Hamlit
 
     def compile_doctype(node)
       @doctype_compiler.compile(node)
+    end
+
+    def compile_comment(node)
+      if node.children.empty?
+        return [:html, :comment, [:static, " #{node.value[:text]} "]]
+      end
+      [:html, :comment, compile_children(node)]
     end
 
     def compile_tag(node)

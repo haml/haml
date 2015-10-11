@@ -28,7 +28,7 @@ module Hamlit
     end
 
     def prepend_whitespace?(node)
-      return false if node.type != :tag
+      return false unless %i[comment tag].include?(node.type)
       !nuke_inner_whitespace?(node)
     end
 
@@ -54,7 +54,7 @@ module Hamlit
       case node.type
       when :doctype
         node.value[:type] != 'xml'
-      when :plain, :tag
+      when :plain, :tag, :comment
         true
       else
         false
