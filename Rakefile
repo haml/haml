@@ -1,10 +1,12 @@
 require 'bundler/gem_tasks'
 require 'rake/testtask'
 
-Bundler.require
-
-task default: :test
-task bench: %w[benchmark:compile]
+begin
+  origin, $stdout = $stdout, StringIO.new
+  Bundler.require
+ensure
+  $stdout = origin
+end
 
 Dir['benchmark/*.rake'].each { |b| import(b) }
 
@@ -16,3 +18,4 @@ Rake::TestTask.new do |t|
   t.test_files = files
   t.verbose = true
 end
+task default: :test

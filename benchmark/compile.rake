@@ -81,3 +81,4 @@ namespace :benchmark do
     Benchmark.ranking(haml_benchmark, faml_benchmark, hamlit_benchmark)
   end
 end
+task bench: 'benchmark:compile'
