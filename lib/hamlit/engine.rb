@@ -28,10 +28,14 @@ module Hamlit
       @options  = options
     end
 
+    def precompiled
+      Engine.new.call(@template)
+    end
+
     def render(scope = Object.new, locals = {}, &block)
       scope = wrap_binding(scope)
       set_locals(locals, scope)
-      eval(Engine.new.call(@template), scope)
+      eval(precompiled, scope)
     end
 
     private

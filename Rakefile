@@ -3,6 +3,8 @@ require 'rake/testtask'
 
 task default: :test
 
+Dir['benchmark/*.rake'].each { |b| import(b) }
+
 Rake::TestTask.new do |t|
   t.libs << 'lib' << 'test'
   files = Dir['test/*_test.rb']
