@@ -173,37 +173,37 @@ tags with unusual CSS identifiers:
 #           <p>text</p>
 #         </div>
 #       </div>
-# tags with nested content:
-#   Nested content simple tag:
-#     haml: |-
-#       %p
-#         hello
-#     html: |-
-#       <p>
-#         hello
-#       </p>
-#   Nested content tag with CSS:
-#     haml: |-
-#       %p.class1
-#         hello
-#     html: |-
-#       <p class='class1'>
-#         hello
-#       </p>
-#   Nested content multiple simple tags:
-#     haml: |-
-#       %div
-#         %div
-#           %p
-#             text
-#     html: |-
-#       <div>
-#         <div>
-#           <p>
-#             text
-#           </p>
-#         </div>
-#       </div>
+tags with nested content:
+  Nested content simple tag:
+    haml: |-
+      %p
+        hello
+    html: |-
+      <p>
+        hello
+      </p>
+  Nested content tag with CSS:
+    haml: |-
+      %p.class1
+        hello
+    html: |-
+      <p class='class1'>
+        hello
+      </p>
+  Nested content multiple simple tags:
+    haml: |-
+      %div
+        %div
+          %p
+            text
+    html: |-
+      <div>
+        <div>
+          <p>
+            text
+          </p>
+        </div>
+      </div>
 tags with HTML-style attributes:
   HTML-style one attribute:
     haml: "%p(a='b')"
@@ -477,17 +477,17 @@ Ruby-style interpolation:
 #     html: <"&>
 #     config:
 #       escape_html: 'true'
-# boolean attributes:
+boolean attributes:
 #   boolean attribute with XHTML:
 #     haml: "%input(checked=true)"
 #     html: "<input checked='checked' />"
 #     config:
 #       format: xhtml
-#   boolean attribute with HTML:
-#     haml: "%input(checked=true)"
-#     html: "<input checked>"
-#     config:
-#       format: html5
+  boolean attribute with HTML:
+    haml: "%input(checked=true)"
+    html: "<input checked>"
+    config:
+      format: html5
 # whitespace preservation:
 #   following the '~' operator:
 #     haml: ~ "Foo\n<pre>Bar\nBaz</pre>"
