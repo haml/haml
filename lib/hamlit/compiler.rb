@@ -4,6 +4,12 @@ module Hamlit
       @options = options
     end
 
+    def call(ast)
+      compile(ast)
+    end
+
+    private
+
     def compile(node)
       case node.type
       when :root
@@ -14,9 +20,6 @@ module Hamlit
         [:static, "\n"]
       end
     end
-    alias :call :compile
-
-    private
 
     def compile_children(node)
       temple = node.children.map { |n| compile(n) }
