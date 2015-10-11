@@ -373,15 +373,15 @@ markup comments:
 #     html: |-
 #       hello&#x000A;
 #       <p></p>
-#   content in a 'plain' filter:
-#     haml: |-
-#       :plain
-#         hello
-#
-#       %p
-#     html: |-
-#       hello
-#       <p></p>
+  content in a 'plain' filter:
+    haml: |-
+      :plain
+        hello
+
+      %p
+    html: |-
+      hello
+      <p></p>
 #   content in a 'css' filter (XHTML):
 #     haml: |-
 #       :css

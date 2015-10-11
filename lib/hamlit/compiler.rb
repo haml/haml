@@ -1,4 +1,5 @@
 require 'hamlit/doctype_compiler'
+require 'hamlit/filter_compiler'
 require 'hamlit/tag_compiler'
 require 'hamlit/whitespace_handler'
 
@@ -6,6 +7,7 @@ module Hamlit
   class Compiler
     def initialize(options = {})
       @doctype_compiler   = DoctypeCompiler.new(options)
+      @filter_compiler    = FilterCompiler.new
       @tag_compiler       = TagCompiler.new(options)
       @whitespace_handler = WhitespaceHandler.new
     end
@@ -24,6 +26,8 @@ module Hamlit
         compile_comment(node)
       when :doctype
         compile_doctype(node)
+      when :filter
+        compile_filter(node)
       when :tag
         compile_tag(node)
       when :plain
@@ -39,6 +43,10 @@ module Hamlit
 
     def compile_doctype(node)
       @doctype_compiler.compile(node)
+    end
+
+    def compile_filter(node)
+      @filter_compiler.compile(node)
     end
 
     def compile_comment(node)
