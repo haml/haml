@@ -9,7 +9,7 @@ module Hamlit
       when :root
         compile_children(node)
       when :tag
-        [:html, :tag, node.value[:name], [:html, :attrs], [:multi]]
+        compile_tag(node)
       else
         [:static, "\n"]
       end
@@ -21,6 +21,14 @@ module Hamlit
     def compile_children(node)
       temple = node.children.map { |n| compile(n) }
       [:multi, *temple]
+    end
+
+    def compile_tag(node)
+      attrs = [:html, :attrs]
+      node.value[:attributes].each do |name, value|
+        attrs << [:html, :attr, name, [:static, value]]
+      end
+      [:html, :tag, node.value[:name], attrs, [:multi]]
     end
   end
 end
