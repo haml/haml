@@ -1,12 +1,12 @@
 $:.unshift File.expand_path('../lib', __FILE__)
 
 require 'hamlit'
-require 'json'
+require 'yaml'
 
 desc 'Profile compilation'
 task :profile do
-  json_path = File.expand_path('../test/haml-spec/tests.json', __dir__)
-  contexts  = JSON.parse(File.read(json_path))
+  yaml_path = File.expand_path('../test/haml-spec/tests.yml', __dir__)
+  contexts  = YAML.load(File.read(yaml_path))
 
   hamlit_engine = Hamlit::Engine.new
 

@@ -1,16 +1,15 @@
-require 'rubygems'
 require 'minitest/autorun'
-require 'json'
+require 'yaml'
 require 'haml'
 require 'hamlit'
 
 class HamlTest < MiniTest::Test
-  contexts = JSON.parse(File.read(File.dirname(__FILE__) + '/tests.json'))
+  contexts = YAML.load(File.read(File.expand_path('./tests.yml', __dir__)))
 
   contexts.each do |context|
     context[1].each do |name, test|
       [{ ugly: true }].each do |base_options|
-        define_method("test_#{base_options[:ugly] ? 'ugly' : 'pretty'}_spec: #{name} (#{context[0]})") do
+        define_method("test_#{ base_options[:ugly] ? 'ugly' : 'pretty' }_spec: #{name} (#{context[0]})") do
           haml             = test['haml']
           locals           = Hash[(test['locals'] || {}).map {|x, y| [x.to_sym, y]}]
           options          = Hash[(test['config'] || {}).map {|x, y| [x.to_sym, y]}]
