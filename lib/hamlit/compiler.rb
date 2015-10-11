@@ -18,6 +18,8 @@ module Hamlit
         compile_doctype(node)
       when :tag
         compile_tag(node)
+      when :plain
+        compile_plain(node)
       else
         [:static, "\n"]
       end
@@ -37,7 +39,11 @@ module Hamlit
       node.value[:attributes].each do |name, value|
         attrs << [:html, :attr, name, [:static, value]]
       end
-      [:html, :tag, node.value[:name], attrs, [:multi]]
+      [:html, :tag, node.value[:name], attrs, compile_children(node)]
+    end
+
+    def compile_plain(node)
+      [:static, node.value[:text]]
     end
   end
 end
