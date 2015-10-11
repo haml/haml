@@ -488,51 +488,51 @@ boolean attributes:
     html: "<input checked>"
     config:
       format: html5
-# whitespace preservation:
+whitespace preservation:
 #   following the '~' operator:
 #     haml: ~ "Foo\n<pre>Bar\nBaz</pre>"
 #     html: |-
 #       Foo
 #       <pre>Bar&#x000A;Baz</pre>
 #     optional: true
-#   inside a textarea tag:
-#     haml: |-
-#       %textarea
-#         hello
-#         hello
-#     html: |-
-#       <textarea>hello
-#       hello</textarea>
-#   inside a pre tag:
-#     haml: |-
-#       %pre
-#         hello
-#         hello
-#     html: |-
-#       <pre>hello
-#       hello</pre>
-# whitespace removal:
-#   a tag with '>' appended and inline content:
-#     haml: |-
-#       %li hello
-#       %li> world
-#       %li again
-#     html: "<li>hello</li><li>world</li><li>again</li>"
-#   a tag with '>' appended and nested content:
-#     haml: |-
-#       %li hello
-#       %li>
-#         world
-#       %li again
-#     html: |-
-#       <li>hello</li><li>
-#         world
-#       </li><li>again</li>
-#   a tag with '<' appended:
-#     haml: |-
-#       %p<
-#         hello
-#         world
-#     html: |-
-#       <p>hello
-#       world</p>
+  inside a textarea tag:
+    haml: |-
+      %textarea
+        hello
+        hello
+    html: |-
+      <textarea>hello
+      hello</textarea>
+  inside a pre tag:
+    haml: |-
+      %pre
+        hello
+        hello
+    html: |-
+      <pre>hello
+      hello</pre>
+whitespace removal:
+  a tag with '>' appended and inline content:
+    haml: |-
+      %li hello
+      %li> world
+      %li again
+    html: "<li>hello</li><li>world</li><li>again</li>"
+  a tag with '>' appended and nested content:
+    haml: |-
+      %li hello
+      %li>
+        world
+      %li again
+    html: |-
+      <li>hello</li><li>
+        world
+      </li><li>again</li>
+  a tag with '<' appended:
+    haml: |-
+      %p<
+        hello
+        world
+    html: |-
+      <p>hello
+      world</p>

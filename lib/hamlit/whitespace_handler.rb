@@ -4,26 +4,53 @@ module Hamlit
       temple = [:multi]
       return temple if node.children.empty?
 
-      temple << [:static, "\n"] if prepend_whitespace?(node)
+      temple << :whitespace if prepend_whitespace?(node)
       node.children.each do |n|
+        rstrip_whitespace!(temple) if nuke_outer_whitespace?(n)
         temple << yield(n)
-        temple << [:static, "\n"] if insert_whitespace?(n)
+        temple << :whitespace if insert_whitespace?(n)
       end
-      temple
+      rstrip_whitespace!(temple) if nuke_inner_whitespace?(node)
+      confirm_whitespace(temple)
     end
 
     private
 
+    def confirm_whitespace(temple)
+      temple.map do |exp|
+        case exp
+        when :whitespace
+          [:static, "\n"]
+        else
+          exp
+        end
+      end
+    end
+
     def prepend_whitespace?(node)
-      case node.type
-      when :tag
-        true
-      else
-        false
+      return false if node.type != :tag
+      !nuke_inner_whitespace?(node)
+    end
+
+    def nuke_inner_whitespace?(node)
+      return false if node.type != :tag
+      node.value[:nuke_inner_whitespace]
+    end
+
+    def nuke_outer_whitespace?(node)
+      return false if node.type != :tag
+      node.value[:nuke_outer_whitespace]
+    end
+
+    def rstrip_whitespace!(temple)
+      if temple[-1] == :whitespace
+        temple.delete_at(-1)
       end
     end
 
     def insert_whitespace?(node)
+      return false if nuke_outer_whitespace?(node)
+
       case node.type
       when :doctype
         node.value[:type] != 'xml'
