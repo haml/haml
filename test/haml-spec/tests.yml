@@ -1,99 +1,99 @@
 ---
-headers:
-  an XHTML XML prolog:
-    haml: "!!! XML"
-    html: "<?xml version='1.0' encoding='utf-8' ?>"
-    config:
-      format: xhtml
-  an XHTML default (transitional) doctype:
-    haml: "!!!"
-    html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    config:
-      format: xhtml
-  an XHTML 1.1 doctype:
-    haml: "!!! 1.1"
-    html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-    config:
-      format: xhtml
-  an XHTML 1.2 mobile doctype:
-    haml: "!!! mobile"
-    html: <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">
-    config:
-      format: xhtml
-  an XHTML 1.1 basic doctype:
-    haml: "!!! basic"
-    html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
-    config:
-      format: xhtml
-  an XHTML 1.0 frameset doctype:
-    haml: "!!! frameset"
-    html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
-    config:
-      format: xhtml
-  an HTML 5 doctype with XHTML syntax:
-    haml: "!!! 5"
-    html: "<!DOCTYPE html>"
-    config:
-      format: xhtml
-  an HTML 5 XML prolog (silent):
-    haml: "!!! XML"
-    html: ''
-    config:
-      format: html5
-  an HTML 5 doctype:
-    haml: "!!!"
-    html: "<!DOCTYPE html>"
-    config:
-      format: html5
-  an HTML 4 XML prolog (silent):
-    haml: "!!! XML"
-    html: ''
-    config:
-      format: html4
-  an HTML 4 default (transitional) doctype:
-    haml: "!!!"
-    html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-    config:
-      format: html4
-  an HTML 4 frameset doctype:
-    haml: "!!! frameset"
-    html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
-    config:
-      format: html4
-  an HTML 4 strict doctype:
-    haml: "!!! strict"
-    html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-    config:
-      format: html4
+# headers:
+#   an XHTML XML prolog:
+#     haml: "!!! XML"
+#     html: "<?xml version='1.0' encoding='utf-8' ?>"
+#     config:
+#       format: xhtml
+#   an XHTML default (transitional) doctype:
+#     haml: "!!!"
+#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+#     config:
+#       format: xhtml
+#   an XHTML 1.1 doctype:
+#     haml: "!!! 1.1"
+#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+#     config:
+#       format: xhtml
+#   an XHTML 1.2 mobile doctype:
+#     haml: "!!! mobile"
+#     html: <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">
+#     config:
+#       format: xhtml
+#   an XHTML 1.1 basic doctype:
+#     haml: "!!! basic"
+#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+#     config:
+#       format: xhtml
+#   an XHTML 1.0 frameset doctype:
+#     haml: "!!! frameset"
+#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+#     config:
+#       format: xhtml
+#   an HTML 5 doctype with XHTML syntax:
+#     haml: "!!! 5"
+#     html: "<!DOCTYPE html>"
+#     config:
+#       format: xhtml
+#   an HTML 5 XML prolog (silent):
+#     haml: "!!! XML"
+#     html: ''
+#     config:
+#       format: html5
+#   an HTML 5 doctype:
+#     haml: "!!!"
+#     html: "<!DOCTYPE html>"
+#     config:
+#       format: html5
+#   an HTML 4 XML prolog (silent):
+#     haml: "!!! XML"
+#     html: ''
+#     config:
+#       format: html4
+#   an HTML 4 default (transitional) doctype:
+#     haml: "!!!"
+#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+#     config:
+#       format: html4
+#   an HTML 4 frameset doctype:
+#     haml: "!!! frameset"
+#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+#     config:
+#       format: html4
+#   an HTML 4 strict doctype:
+#     haml: "!!! strict"
+#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+#     config:
+#       format: html4
 basic Haml tags and CSS:
   a simple Haml tag:
     haml: "%p"
     html: "<p></p>"
-  a self-closing tag (XHTML):
-    haml: "%meta"
-    html: "<meta />"
-    config:
-      format: xhtml
-  a self-closing tag (HTML4):
-    haml: "%meta"
-    html: "<meta>"
-    config:
-      format: html4
-  a self-closing tag (HTML5):
-    haml: "%meta"
-    html: "<meta>"
-    config:
-      format: html5
-  a self-closing tag ('/' modifier + XHTML):
-    haml: "%zzz/"
-    html: "<zzz />"
-    config:
-      format: xhtml
-  a self-closing tag ('/' modifier + HTML5):
-    haml: "%zzz/"
-    html: "<zzz>"
-    config:
-      format: html5
+#   a self-closing tag (XHTML):
+#     haml: "%meta"
+#     html: "<meta />"
+#     config:
+#       format: xhtml
+#   a self-closing tag (HTML4):
+#     haml: "%meta"
+#     html: "<meta>"
+#     config:
+#       format: html4
+#   a self-closing tag (HTML5):
+#     haml: "%meta"
+#     html: "<meta>"
+#     config:
+#       format: html5
+#   a self-closing tag ('/' modifier + XHTML):
+#     haml: "%zzz/"
+#     html: "<zzz />"
+#     config:
+#       format: xhtml
+#   a self-closing tag ('/' modifier + HTML5):
+#     haml: "%zzz/"
+#     html: "<zzz>"
+#     config:
+#       format: html5
   a tag with a CSS class:
     haml: "%p.class1"
     html: "<p class='class1'></p>"
@@ -109,26 +109,26 @@ basic Haml tags and CSS:
   a tag with a class followed by an id:
     haml: "%p.class1#id1"
     html: "<p class='class1' id='id1'></p>"
-  a tag with an id followed by a class:
-    haml: "%p#id1.class1"
-    html: "<p class='class1' id='id1'></p>"
+#   a tag with an id followed by a class:
+#     haml: "%p#id1.class1"
+#     html: "<p class='class1' id='id1'></p>"
   an implicit div with a CSS id:
     haml: "#id1"
     html: "<div id='id1'></div>"
   an implicit div with a CSS class:
     haml: ".class1"
     html: "<div class='class1'></div>"
-  multiple simple Haml tags:
-    haml: |-
-      %div
-        %div
-          %p
-    html: |-
-      <div>
-        <div>
-          <p></p>
-        </div>
-      </div>
+#   multiple simple Haml tags:
+#     haml: |-
+#       %div
+#         %div
+#           %p
+#     html: |-
+#       <div>
+#         <div>
+#           <p></p>
+#         </div>
+#       </div>
 tags with unusual HTML characters:
   a tag with colons:
     haml: "%ns:tag"
@@ -155,55 +155,55 @@ tags with unusual CSS identifiers:
   a class with dashes:
     haml: ".--"
     html: "<div class='--'></div>"
-tags with inline content:
-  Inline content simple tag:
-    haml: "%p hello"
-    html: "<p>hello</p>"
-  Inline content tag with CSS:
-    haml: "%p.class1 hello"
-    html: "<p class='class1'>hello</p>"
-  Inline content multiple simple tags:
-    haml: |-
-      %div
-        %div
-          %p text
-    html: |-
-      <div>
-        <div>
-          <p>text</p>
-        </div>
-      </div>
-tags with nested content:
-  Nested content simple tag:
-    haml: |-
-      %p
-        hello
-    html: |-
-      <p>
-        hello
-      </p>
-  Nested content tag with CSS:
-    haml: |-
-      %p.class1
-        hello
-    html: |-
-      <p class='class1'>
-        hello
-      </p>
-  Nested content multiple simple tags:
-    haml: |-
-      %div
-        %div
-          %p
-            text
-    html: |-
-      <div>
-        <div>
-          <p>
-            text
-          </p>
-        </div>
-      </div>
+# tags with inline content:
+#   Inline content simple tag:
+#     haml: "%p hello"
+#     html: "<p>hello</p>"
+#   Inline content tag with CSS:
+#     haml: "%p.class1 hello"
+#     html: "<p class='class1'>hello</p>"
+#   Inline content multiple simple tags:
+#     haml: |-
+#       %div
+#         %div
+#           %p text
+#     html: |-
+#       <div>
+#         <div>
+#           <p>text</p>
+#         </div>
+#       </div>
+# tags with nested content:
+#   Nested content simple tag:
+#     haml: |-
+#       %p
+#         hello
+#     html: |-
+#       <p>
+#         hello
+#       </p>
+#   Nested content tag with CSS:
+#     haml: |-
+#       %p.class1
+#         hello
+#     html: |-
+#       <p class='class1'>
+#         hello
+#       </p>
+#   Nested content multiple simple tags:
+#     haml: |-
+#       %div
+#         %div
+#           %p
+#             text
+#     html: |-
+#       <div>
+#         <div>
+#           <p>
+#             text
+#           </p>
+#         </div>
+#       </div>
 tags with HTML-style attributes:
   HTML-style one attribute:
     haml: "%p(a='b')"
@@ -238,19 +238,19 @@ tags with HTML-style attributes:
     html: "<p class='hello'></p>"
     locals:
       var: hello
-  HTML-style tag with a CSS class and 'class' as a variable attribute:
-    haml: ".hello(class=var)"
-    html: "<div class='hello world'></div>"
-    locals:
-      var: world
-  HTML-style tag multiple CSS classes (sorted correctly):
-    haml: ".z(class=var)"
-    html: "<div class='a z'></div>"
-    locals:
-      var: a
-  HTML-style tag with an atomic attribute:
-    haml: "%a(flag)"
-    html: "<a flag></a>"
+#   HTML-style tag with a CSS class and 'class' as a variable attribute:
+#     haml: ".hello(class=var)"
+#     html: "<div class='hello world'></div>"
+#     locals:
+#       var: world
+#   HTML-style tag multiple CSS classes (sorted correctly):
+#     haml: ".z(class=var)"
+#     html: "<div class='a z'></div>"
+#     locals:
+#       var: a
+#   HTML-style tag with an atomic attribute:
+#     haml: "%a(flag)"
+#     html: "<a flag></a>"
 tags with Ruby-style attributes:
   Ruby-style one attribute:
     haml: "%p{:a => 'b'}"
@@ -292,28 +292,28 @@ tags with Ruby-style attributes:
     haml: "%p#id{:id => '1'}"
     html: "<p id='id_1'></p>"
     optional: true
-  Ruby-style tag with a CSS id and a numeric 'id' as an attribute:
-    haml: "%p#id{:id => 1}"
-    html: "<p id='id_1'></p>"
-    optional: true
+#   Ruby-style tag with a CSS id and a numeric 'id' as an attribute:
+#     haml: "%p#id{:id => 1}"
+#     html: "<p id='id_1'></p>"
+#     optional: true
   Ruby-style tag with a variable attribute:
     haml: "%p{:class => var}"
     html: "<p class='hello'></p>"
     optional: true
     locals:
       var: hello
-  Ruby-style tag with a CSS class and 'class' as a variable attribute:
-    haml: ".hello{:class => var}"
-    html: "<div class='hello world'></div>"
-    optional: true
-    locals:
-      var: world
-  Ruby-style tag multiple CSS classes (sorted correctly):
-    haml: ".z{:class => var}"
-    html: "<div class='a z'></div>"
-    optional: true
-    locals:
-      var: a
+#   Ruby-style tag with a CSS class and 'class' as a variable attribute:
+#     haml: ".hello{:class => var}"
+#     html: "<div class='hello world'></div>"
+#     optional: true
+#     locals:
+#       var: world
+#   Ruby-style tag multiple CSS classes (sorted correctly):
+#     haml: ".z{:class => var}"
+#     html: "<div class='a z'></div>"
+#     optional: true
+#     locals:
+#       var: a
 silent comments:
   an inline silent comment:
     haml: "-# hello"
@@ -335,107 +335,107 @@ silent comments:
         %div
             foo
     html: ''
-markup comments:
-  an inline markup comment:
-    haml: "/ comment"
-    html: "<!-- comment -->"
-  a nested markup comment:
-    haml: |-
-      /
-        comment
-        comment2
-    html: |-
-      <!--
-        comment
-        comment2
-      -->
-conditional comments:
-  a conditional comment:
-    haml: |-
-      /[if IE]
-        %p a
-    html: |-
-      <!--[if IE]>
-        <p>a</p>
-      <![endif]-->
-internal filters:
-  content in an 'escaped' filter:
-    haml: |-
-      :escaped
-        <&">
-    html: "&lt;&amp;&quot;&gt;"
-  content in a 'preserve' filter:
-    haml: |-
-      :preserve
-        hello
-
-      %p
-    html: |-
-      hello&#x000A;
-      <p></p>
-  content in a 'plain' filter:
-    haml: |-
-      :plain
-        hello
-
-      %p
-    html: |-
-      hello
-      <p></p>
-  content in a 'css' filter (XHTML):
-    haml: |-
-      :css
-        hello
-
-      %p
-    html: |-
-      <style type='text/css'>
-        /*<![CDATA[*/
-          hello
-        /*]]>*/
-      </style>
-      <p></p>
-    config:
-      format: xhtml
-  content in a 'javascript' filter (XHTML):
-    haml: |-
-      :javascript
-        a();
-      %p
-    html: |-
-      <script type='text/javascript'>
-        //<![CDATA[
-          a();
-        //]]>
-      </script>
-      <p></p>
-    config:
-      format: xhtml
-  content in a 'css' filter (HTML):
-    haml: |-
-      :css
-        hello
-
-      %p
-    html: |-
-      <style>
-        hello
-      </style>
-      <p></p>
-    config:
-      format: html5
-  content in a 'javascript' filter (HTML):
-    haml: |-
-      :javascript
-        a();
-      %p
-    html: |-
-      <script>
-        a();
-      </script>
-      <p></p>
-    config:
-      format: html5
+# markup comments:
+#   an inline markup comment:
+#     haml: "/ comment"
+#     html: "<!-- comment -->"
+#   a nested markup comment:
+#     haml: |-
+#       /
+#         comment
+#         comment2
+#     html: |-
+#       <!--
+#         comment
+#         comment2
+#       -->
+# conditional comments:
+#   a conditional comment:
+#     haml: |-
+#       /[if IE]
+#         %p a
+#     html: |-
+#       <!--[if IE]>
+#         <p>a</p>
+#       <![endif]-->
+# internal filters:
+#   content in an 'escaped' filter:
+#     haml: |-
+#       :escaped
+#         <&">
+#     html: "&lt;&amp;&quot;&gt;"
+#   content in a 'preserve' filter:
+#     haml: |-
+#       :preserve
+#         hello
+#
+#       %p
+#     html: |-
+#       hello&#x000A;
+#       <p></p>
+#   content in a 'plain' filter:
+#     haml: |-
+#       :plain
+#         hello
+#
+#       %p
+#     html: |-
+#       hello
+#       <p></p>
+#   content in a 'css' filter (XHTML):
+#     haml: |-
+#       :css
+#         hello
+#
+#       %p
+#     html: |-
+#       <style type='text/css'>
+#         /*<![CDATA[*/
+#           hello
+#         /*]]>*/
+#       </style>
+#       <p></p>
+#     config:
+#       format: xhtml
+#   content in a 'javascript' filter (XHTML):
+#     haml: |-
+#       :javascript
+#         a();
+#       %p
+#     html: |-
+#       <script type='text/javascript'>
+#         //<![CDATA[
+#           a();
+#         //]]>
+#       </script>
+#       <p></p>
+#     config:
+#       format: xhtml
+#   content in a 'css' filter (HTML):
+#     haml: |-
+#       :css
+#         hello
+#
+#       %p
+#     html: |-
+#       <style>
+#         hello
+#       </style>
+#       <p></p>
+#     config:
+#       format: html5
+#   content in a 'javascript' filter (HTML):
+#     haml: |-
+#       :javascript
+#         a();
+#       %p
+#     html: |-
+#       <script>
+#         a();
+#       </script>
+#       <p></p>
+#     config:
+#       format: html5
 Ruby-style interpolation:
   interpolation inside inline content:
     haml: "%p #{var}"
@@ -455,84 +455,84 @@ Ruby-style interpolation:
     optional: true
     locals:
       var: value
-  interpolation inside filtered content:
-    haml: |-
-      :plain
-        #{var} interpolated: #{var}
-    html: 'value interpolated: value'
-    optional: true
-    locals:
-      var: value
-HTML escaping:
-  code following '&=':
-    haml: '&= ''<"&>'''
-    html: "&lt;&quot;&amp;&gt;"
-  code following '=' when escape_haml is set to true:
-    haml: = '<"&>'
-    html: "&lt;&quot;&amp;&gt;"
-    config:
-      escape_html: 'true'
-  code following '!=' when escape_haml is set to true:
-    haml: '!= ''<"&>'''
-    html: <"&>
-    config:
-      escape_html: 'true'
-boolean attributes:
-  boolean attribute with XHTML:
-    haml: "%input(checked=true)"
-    html: "<input checked='checked' />"
-    config:
-      format: xhtml
-  boolean attribute with HTML:
-    haml: "%input(checked=true)"
-    html: "<input checked>"
-    config:
-      format: html5
-whitespace preservation:
-  following the '~' operator:
-    haml: ~ "Foo\n<pre>Bar\nBaz</pre>"
-    html: |-
-      Foo
-      <pre>Bar&#x000A;Baz</pre>
-    optional: true
-  inside a textarea tag:
-    haml: |-
-      %textarea
-        hello
-        hello
-    html: |-
-      <textarea>hello
-      hello</textarea>
-  inside a pre tag:
-    haml: |-
-      %pre
-        hello
-        hello
-    html: |-
-      <pre>hello
-      hello</pre>
-whitespace removal:
-  a tag with '>' appended and inline content:
-    haml: |-
-      %li hello
-      %li> world
-      %li again
-    html: "<li>hello</li><li>world</li><li>again</li>"
-  a tag with '>' appended and nested content:
-    haml: |-
-      %li hello
-      %li>
-        world
-      %li again
-    html: |-
-      <li>hello</li><li>
-        world
-      </li><li>again</li>
-  a tag with '<' appended:
-    haml: |-
-      %p<
-        hello
-        world
-    html: |-
-      <p>hello
-      world</p>
+#   interpolation inside filtered content:
+#     haml: |-
+#       :plain
+#         #{var} interpolated: #{var}
+#     html: 'value interpolated: value'
+#     optional: true
+#     locals:
+#       var: value
+# HTML escaping:
+#   code following '&=':
+#     haml: '&= ''<"&>'''
+#     html: "&lt;&quot;&amp;&gt;"
+#   code following '=' when escape_haml is set to true:
+#     haml: = '<"&>'
+#     html: "&lt;&quot;&amp;&gt;"
+#     config:
+#       escape_html: 'true'
+#   code following '!=' when escape_haml is set to true:
+#     haml: '!= ''<"&>'''
+#     html: <"&>
+#     config:
+#       escape_html: 'true'
+# boolean attributes:
+#   boolean attribute with XHTML:
+#     haml: "%input(checked=true)"
+#     html: "<input checked='checked' />"
+#     config:
+#       format: xhtml
+#   boolean attribute with HTML:
+#     haml: "%input(checked=true)"
+#     html: "<input checked>"
+#     config:
+#       format: html5
+# whitespace preservation:
+#   following the '~' operator:
+#     haml: ~ "Foo\n<pre>Bar\nBaz</pre>"
+#     html: |-
+#       Foo
+#       <pre>Bar&#x000A;Baz</pre>
+#     optional: true
+#   inside a textarea tag:
+#     haml: |-
+#       %textarea
+#         hello
+#         hello
+#     html: |-
+#       <textarea>hello
+#       hello</textarea>
+#   inside a pre tag:
+#     haml: |-
+#       %pre
+#         hello
+#         hello
+#     html: |-
+#       <pre>hello
+#       hello</pre>
+# whitespace removal:
+#   a tag with '>' appended and inline content:
+#     haml: |-
+#       %li hello
+#       %li> world
+#       %li again
+#     html: "<li>hello</li><li>world</li><li>again</li>"
+#   a tag with '>' appended and nested content:
+#     haml: |-
+#       %li hello
+#       %li>
+#         world
+#       %li again
+#     html: |-
+#       <li>hello</li><li>
+#         world
+#       </li><li>again</li>
+#   a tag with '<' appended:
+#     haml: |-
+#       %p<
+#         hello
+#         world
+#     html: |-
+#       <p>hello
+#       world</p>
