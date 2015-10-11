@@ -55,6 +55,9 @@ namespace :benchmark do
     json_path = File.expand_path('../test/haml-spec/tests.json', __dir__)
     contexts  = JSON.parse(File.read(json_path))
 
+    faml_engine   = Faml::Engine.new(filename: '')
+    hamlit_engine = Hamlit::Engine.new
+
     contexts.each do |context|
       context[1].each do |name, test|
         haml             = test['haml']
@@ -65,8 +68,8 @@ namespace :benchmark do
 
         begin
           haml_time   = Benchmark.bench { Haml::Engine.new(haml, options).precompiled }
-          faml_time   = Benchmark.bench { Faml::Engine.new(filename: '').call(haml) }
-          hamlit_time = Benchmark.bench { Hamlit::HamlEngine.new(haml, options).precompiled }
+          faml_time   = Benchmark.bench { faml_engine.call(haml) }
+          hamlit_time = Benchmark.bench { hamlit_engine.call(haml) }
 
           haml_benchmark.capture(haml_time)
           faml_benchmark.capture(faml_time)
