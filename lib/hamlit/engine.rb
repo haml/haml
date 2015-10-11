@@ -7,6 +7,7 @@ module Hamlit
     define_options(
       generator:   Temple::Generators::ArrayBuffer,
       format:      :html,
+      html_type:   nil,
       attr_quote:  "'",
       escape_html: true,
       pretty:      false,
@@ -43,7 +44,13 @@ module Hamlit
     def temple_options
       @options.dup.tap do |options|
         options[:pretty] = !options.delete(:ugly)
-        options[:format] = :html if options[:format] == :html5
+        case options[:format]
+        when :html5
+          options[:format] = :html
+        when :html4
+          options[:format] = :html
+          options[:html_type] = 'transitional'
+        end
       end
     end
 

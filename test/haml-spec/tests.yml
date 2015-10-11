@@ -5,66 +5,66 @@ headers:
     html: "<?xml version='1.0' encoding='utf-8' ?>"
     config:
       format: xhtml
-#   an XHTML default (transitional) doctype:
-#     haml: "!!!"
-#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-#     config:
-#       format: xhtml
-#   an XHTML 1.1 doctype:
-#     haml: "!!! 1.1"
-#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-#     config:
-#       format: xhtml
-#   an XHTML 1.2 mobile doctype:
-#     haml: "!!! mobile"
-#     html: <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">
-#     config:
-#       format: xhtml
-#   an XHTML 1.1 basic doctype:
-#     haml: "!!! basic"
-#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
-#     config:
-#       format: xhtml
-#   an XHTML 1.0 frameset doctype:
-#     haml: "!!! frameset"
-#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
-#     config:
-#       format: xhtml
-#   an HTML 5 doctype with XHTML syntax:
-#     haml: "!!! 5"
-#     html: "<!DOCTYPE html>"
-#     config:
-#       format: xhtml
-#   an HTML 5 XML prolog (silent):
-#     haml: "!!! XML"
-#     html: ''
-#     config:
-#       format: html5
-#   an HTML 5 doctype:
-#     haml: "!!!"
-#     html: "<!DOCTYPE html>"
-#     config:
-#       format: html5
-#   an HTML 4 XML prolog (silent):
-#     haml: "!!! XML"
-#     html: ''
-#     config:
-#       format: html4
-#   an HTML 4 default (transitional) doctype:
-#     haml: "!!!"
-#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-#     config:
-#       format: html4
-#   an HTML 4 frameset doctype:
-#     haml: "!!! frameset"
-#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
-#     config:
-#       format: html4
-#   an HTML 4 strict doctype:
-#     haml: "!!! strict"
-#     html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-#     config:
-#       format: html4
+  an XHTML default (transitional) doctype:
+    haml: "!!!"
+    html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    config:
+      format: xhtml
+  an XHTML 1.1 doctype:
+    haml: "!!! 1.1"
+    html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+    config:
+      format: xhtml
+  an XHTML 1.2 mobile doctype:
+    haml: "!!! mobile"
+    html: <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">
+    config:
+      format: xhtml
+  an XHTML 1.1 basic doctype:
+    haml: "!!! basic"
+    html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+    config:
+      format: xhtml
+  an XHTML 1.0 frameset doctype:
+    haml: "!!! frameset"
+    html: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+    config:
+      format: xhtml
+  an HTML 5 doctype with XHTML syntax:
+    haml: "!!! 5"
+    html: "<!DOCTYPE html>"
+    config:
+      format: xhtml
+  an HTML 5 XML prolog (silent):
+    haml: "!!! XML"
+    html: ''
+    config:
+      format: html5
+  an HTML 5 doctype:
+    haml: "!!!"
+    html: "<!DOCTYPE html>"
+    config:
+      format: html5
+  an HTML 4 XML prolog (silent):
+    haml: "!!! XML"
+    html: ''
+    config:
+      format: html4
+  an HTML 4 default (transitional) doctype:
+    haml: "!!!"
+    html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+    config:
+      format: html4
+  an HTML 4 frameset doctype:
+    haml: "!!! frameset"
+    html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+    config:
+      format: html4
+  an HTML 4 strict doctype:
+    haml: "!!! strict"
+    html: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+    config:
+      format: html4
 basic Haml tags and CSS:
   a simple Haml tag:
     haml: "%p"
