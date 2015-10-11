@@ -14,6 +14,8 @@ module Hamlit
       case node.type
       when :root
         compile_children(node)
+      when :doctype
+        compile_doctype(node)
       when :tag
         compile_tag(node)
       else
@@ -24,6 +26,10 @@ module Hamlit
     def compile_children(node)
       temple = node.children.map { |n| compile(n) }
       [:multi, *temple]
+    end
+
+    def compile_doctype(node)
+      [:html, :doctype, node.value[:type]]
     end
 
     def compile_tag(node)
