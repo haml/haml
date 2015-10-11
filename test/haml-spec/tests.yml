@@ -455,14 +455,14 @@ Ruby-style interpolation:
     optional: true
     locals:
       var: value
-#   interpolation inside filtered content:
-#     haml: |-
-#       :plain
-#         #{var} interpolated: #{var}
-#     html: 'value interpolated: value'
-#     optional: true
-#     locals:
-#       var: value
+  interpolation inside filtered content:
+    haml: |-
+      :plain
+        #{var} interpolated: #{var}
+    html: 'value interpolated: value'
+    optional: true
+    locals:
+      var: value
 # HTML escaping:
 #   code following '&=':
 #     haml: '&= ''<"&>'''
