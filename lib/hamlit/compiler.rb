@@ -4,8 +4,8 @@ require 'hamlit/doctype_compiler'
 module Hamlit
   class Compiler
     def initialize(options = {})
-      @doctype_compiler = DoctypeCompiler.new(options[:format])
-      @tag_compiler     = TagCompiler.new(options[:attr_quote])
+      @doctype_compiler = DoctypeCompiler.new(options)
+      @tag_compiler     = TagCompiler.new(options)
     end
 
     def call(ast)

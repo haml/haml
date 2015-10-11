@@ -1,7 +1,7 @@
 module Hamlit
   class DoctypeCompiler
-    def initialize(format)
-      @format = format
+    def initialize(options = {})
+      @format = options[:format]
     end
 
     def compile(node)

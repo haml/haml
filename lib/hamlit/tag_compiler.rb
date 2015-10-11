@@ -1,7 +1,7 @@
 module Hamlit
   class TagCompiler
-    def initialize(attr_quote)
-      @quote = attr_quote.inspect.freeze
+    def initialize(options = {})
+      @quote = options[:attr_quote].inspect.freeze
     end
 
     def compile(node, &block)
