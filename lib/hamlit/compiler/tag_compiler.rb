@@ -28,15 +28,15 @@ module Hamlit
         end
       end
 
+      def compile_dynamic_attributes!(temple, node)
+        attrs = [node.value[:attributes].inspect, *node.value[:attributes_hashes]]
+        temple << [:dynamic, "::Hamlit::AttributeBuilder.build(#{@quote}, #{@format.inspect}, #{attrs.join(', ')})"]
+      end
+
       def compile_static_attributes!(temple, node)
         node.value[:attributes].sort_by(&:first).each do |name, value|
           temple << [:html, :attr, name, [:static, value]]
         end
-      end
-
-      def compile_dynamic_attributes!(temple, node)
-        attrs = [node.value[:attributes].inspect, *node.value[:attributes_hashes]]
-        temple << [:dynamic, "::Hamlit::AttributeBuilder.build(#{@quote}, #{attrs.join(', ')})"]
       end
 
       def compile_contents(node, &block)

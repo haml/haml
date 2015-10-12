@@ -2,13 +2,14 @@ require 'temple/utils'
 
 module Hamlit
   class AttributeBuilder
-    def self.build(quote, *args)
-      builder = self.new(quote)
+    def self.build(quote, format, *args)
+      builder = self.new(quote, format)
       builder.build(*args)
     end
 
-    def initialize(quote)
-      @quote = quote
+    def initialize(quote, format)
+      @quote  = quote
+      @format = format
     end
 
     def build(*args)
