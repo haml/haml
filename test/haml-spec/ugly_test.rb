@@ -257,6 +257,16 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
+    def _test_a_tag_with_an_id_followed_by_a_class
+      haml    = %q{%p#id1.class1}
+      html    = %q{<p class='class1' id='id1'></p>}
+      locals  = {}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
     def test_an_implicit_div_with_a_CSS_id
       haml    = %q{#id1}
       html    = %q{<div id='id1'></div>}
@@ -554,6 +564,36 @@ class UglyTest < MiniTest::Test
       hamlit_result = UglyTest.hamlit_result(haml, options, locals)
       assert_equal haml_result, hamlit_result
     end
+
+    def _test_HTML_style_tag_with_a_CSS_class_and_class_as_a_variable_attribute
+      haml    = %q{.hello(class=var)}
+      html    = %q{<div class='hello world'></div>}
+      locals  = {:var=>"world"}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
+    def _test_HTML_style_tag_multiple_CSS_classes_sorted_correctly_
+      haml    = %q{.z(class=var)}
+      html    = %q{<div class='a z'></div>}
+      locals  = {:var=>"a"}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
+    def _test_HTML_style_tag_with_an_atomic_attribute
+      haml    = %q{%a(flag)}
+      html    = %q{<a flag></a>}
+      locals  = {}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
   end
 
   class Tagswithrubystyleattributes < MiniTest::Test
@@ -648,10 +688,40 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
+    def _test_Ruby_style_tag_with_a_CSS_id_and_a_numeric_id_as_an_attribute
+      haml    = %q{%p#id{:id => 1}}
+      html    = %q{<p id='id_1'></p>}
+      locals  = {}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
     def test_Ruby_style_tag_with_a_variable_attribute
       haml    = %q{%p{:class => var}}
       html    = %q{<p class='hello'></p>}
       locals  = {:var=>"hello"}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
+    def _test_Ruby_style_tag_with_a_CSS_class_and_class_as_a_variable_attribute
+      haml    = %q{.hello{:class => var}}
+      html    = %q{<div class='hello world'></div>}
+      locals  = {:var=>"world"}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
+    def _test_Ruby_style_tag_multiple_CSS_classes_sorted_correctly_
+      haml    = %q{.z{:class => var}}
+      html    = %q{<div class='a z'></div>}
+      locals  = {:var=>"a"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
       hamlit_result = UglyTest.hamlit_result(haml, options, locals)
@@ -731,6 +801,48 @@ class UglyTest < MiniTest::Test
       hamlit_result = UglyTest.hamlit_result(haml, options, locals)
       assert_equal haml_result, hamlit_result
     end
+  end
+
+  class Conditionalcomments < MiniTest::Test
+    def _test_a_conditional_comment
+      haml    = %q{/[if IE]
+  %p a}
+      html    = %q{<!--[if IE]>
+  <p>a</p>
+<![endif]-->}
+      locals  = {}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+  end
+
+  class Internalfilters < MiniTest::Test
+    def _test_content_in_an_escaped_filter
+      haml    = %q{:escaped
+  <&">}
+      html    = %q{&lt;&amp;&quot;&gt;}
+      locals  = {}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
+    def _test_content_in_a_preserve_filter
+      haml    = %q{:preserve
+  hello
+
+%p}
+      html    = %q{hello&#x000A;
+<p></p>}
+      locals  = {}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
 
     def test_content_in_a_plain_filter
       haml    = %q{:plain
@@ -741,6 +853,72 @@ class UglyTest < MiniTest::Test
 <p></p>}
       locals  = {}
       options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
+    def _test_content_in_a_css_filter_XHTML_
+      haml    = %q{:css
+  hello
+
+%p}
+      html    = %q{<style type='text/css'>
+  /*<![CDATA[*/
+    hello
+  /*]]>*/
+</style>
+<p></p>}
+      locals  = {}
+      options = {:format=>:xhtml}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
+    def _test_content_in_a_javascript_filter_XHTML_
+      haml    = %q{:javascript
+  a();
+%p}
+      html    = %q{<script type='text/javascript'>
+  //<![CDATA[
+    a();
+  //]]>
+</script>
+<p></p>}
+      locals  = {}
+      options = {:format=>:xhtml}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
+    def _test_content_in_a_css_filter_HTML_
+      haml    = %q{:css
+  hello
+
+%p}
+      html    = %q{<style>
+  hello
+</style>
+<p></p>}
+      locals  = {}
+      options = {:format=>:html5}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
+    def _test_content_in_a_javascript_filter_HTML_
+      haml    = %q{:javascript
+  a();
+%p}
+      html    = %q{<script>
+  a();
+</script>
+<p></p>}
+      locals  = {}
+      options = {:format=>:html5}
       haml_result = UglyTest.haml_result(haml, options, locals)
       hamlit_result = UglyTest.hamlit_result(haml, options, locals)
       assert_equal haml_result, hamlit_result
@@ -790,7 +968,49 @@ class UglyTest < MiniTest::Test
     end
   end
 
+  class Htmlescaping < MiniTest::Test
+    def _test_code_following_
+      haml    = %q{&= '<"&>'}
+      html    = %q{&lt;&quot;&amp;&gt;}
+      locals  = {}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
+    def _test_code_following_when_escape_haml_is_set_to_true
+      haml    = %q{= '<"&>'}
+      html    = %q{&lt;&quot;&amp;&gt;}
+      locals  = {}
+      options = {:escape_html=>"true"}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
+    def _test_code_following_!_when_escape_haml_is_set_to_true
+      haml    = %q{!= '<"&>'}
+      html    = %q{<"&>}
+      locals  = {}
+      options = {:escape_html=>"true"}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+  end
+
   class Booleanattributes < MiniTest::Test
+    def _test_boolean_attribute_with_XHTML
+      haml    = %q{%input(checked=true)}
+      html    = %q{<input checked='checked' />}
+      locals  = {}
+      options = {:format=>:xhtml}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
     def test_boolean_attribute_with_HTML
       haml    = %q{%input(checked=true)}
       html    = %q{<input checked>}
@@ -803,6 +1023,17 @@ class UglyTest < MiniTest::Test
   end
 
   class Whitespacepreservation < MiniTest::Test
+    def _test_following_the_operator
+      haml    = %q{~ "Foo\n<pre>Bar\nBaz</pre>"}
+      html    = %q{Foo
+<pre>Bar&#x000A;Baz</pre>}
+      locals  = {}
+      options = {}
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+
     def test_inside_a_textarea_tag
       haml    = %q{%textarea
   hello
