@@ -804,7 +804,7 @@ class UglyTest < MiniTest::Test
   end
 
   class Conditionalcomments < MiniTest::Test
-    def _test_a_conditional_comment
+    def test_a_conditional_comment
       haml    = %q{/[if IE]
   %p a}
       html    = %q{<!--[if IE]>
