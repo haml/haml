@@ -9,6 +9,16 @@ module Hamlit
 
       private
 
+      def compile_text(text)
+        text = text.rstrip + "\n"
+        case @format
+        when :xhtml
+          text.prepend('    ')
+        else
+          text.prepend('  ')
+        end
+      end
+
       def compile_html(tag, text)
         temple = [:multi, [:static, "\n"], [:static, text]]
         temple = [:html, :tag, tag, [:html, :attrs], temple]

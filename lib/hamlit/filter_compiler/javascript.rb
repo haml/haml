@@ -1,13 +1,13 @@
 module Hamlit
   class FilterCompiler
-    class Css < Base
+    class Javascript < Base
       def compile(node)
         text = compile_text(node.value[:text])
         case @format
         when :xhtml
-          compile_xhtml('style', 'text/css', text)
+          compile_xhtml('script', 'text/javascript', text)
         else
-          compile_html('style', text)
+          compile_html('script', text)
         end
       end
     end

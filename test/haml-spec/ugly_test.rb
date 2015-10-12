@@ -876,7 +876,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def _test_content_in_a_javascript_filter_XHTML_
+    def test_content_in_a_javascript_filter_XHTML_
       haml    = %q{:javascript
   a();
 %p}
@@ -909,7 +909,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def _test_content_in_a_javascript_filter_HTML_
+    def test_content_in_a_javascript_filter_HTML_
       haml    = %q{:javascript
   a();
 %p}

@@ -1,6 +1,7 @@
 require 'hamlit/filter_compiler/base'
 require 'hamlit/filter_compiler/css'
 require 'hamlit/filter_compiler/escaped'
+require 'hamlit/filter_compiler/javascript'
 require 'hamlit/filter_compiler/plain'
 require 'hamlit/filter_compiler/preserve'
 
@@ -18,10 +19,11 @@ module Hamlit
       end
     end
 
-    register :css,      Css
-    register :escaped,  Escaped
-    register :plain,    Plain
-    register :preserve, Preserve
+    register :css,        Css
+    register :escaped,    Escaped
+    register :javascript, Javascript
+    register :plain,      Plain
+    register :preserve,   Preserve
 
     def initialize(options = {})
       @format = options[:format]
