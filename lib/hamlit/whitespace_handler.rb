@@ -54,7 +54,7 @@ module Hamlit
       case node.type
       when :doctype
         node.value[:type] != 'xml'
-      when :plain, :tag, :comment
+      when :plain, :tag, :comment, :filter
         true
       else
         false

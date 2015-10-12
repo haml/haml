@@ -858,7 +858,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def _test_content_in_a_css_filter_XHTML_
+    def test_content_in_a_css_filter_XHTML_
       haml    = %q{:css
   hello
 
@@ -893,7 +893,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def _test_content_in_a_css_filter_HTML_
+    def test_content_in_a_css_filter_HTML_
       haml    = %q{:css
   hello
 

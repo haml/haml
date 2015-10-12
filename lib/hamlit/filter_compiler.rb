@@ -1,3 +1,5 @@
+require 'hamlit/filter_compiler/base'
+require 'hamlit/filter_compiler/css'
 require 'hamlit/filter_compiler/escaped'
 require 'hamlit/filter_compiler/plain'
 require 'hamlit/filter_compiler/preserve'
@@ -12,13 +14,18 @@ module Hamlit
       private
 
       def register(name, compiler)
-        registered[name] = compiler.new
+        registered[name] = compiler
       end
     end
 
+    register :css,      Css
     register :escaped,  Escaped
     register :plain,    Plain
     register :preserve, Preserve
+
+    def initialize(options = {})
+      @format = options[:format]
+    end
 
     def compile(node)
       find_compiler(node.value[:name]).compile(node)
@@ -27,10 +34,15 @@ module Hamlit
     private
 
     def find_compiler(name)
-      compiler = FilterCompiler.registered[name.to_sym]
+      name = name.to_sym
+      compiler = FilterCompiler.registered[name]
       raise NotFound.new("FilterCompiler for '#{name}' was not found") unless compiler
 
-      compiler
+      compilers[name] ||= compiler.new(@format)
+    end
+
+    def compilers
+      @compilers ||= {}
     end
 
     class NotFound < RuntimeError

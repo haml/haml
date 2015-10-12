@@ -7,7 +7,7 @@ module Hamlit
   class Compiler
     def initialize(options = {})
       @doctype_compiler   = DoctypeCompiler.new(options)
-      @filter_compiler    = FilterCompiler.new
+      @filter_compiler    = FilterCompiler.new(options)
       @tag_compiler       = TagCompiler.new(options)
       @whitespace_handler = WhitespaceHandler.new
     end
