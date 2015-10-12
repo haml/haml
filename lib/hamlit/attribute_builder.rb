@@ -78,7 +78,7 @@ module Hamlit
             flattened["#{key}-#{k}"] = v if v
           end
         else
-          flattened[key] = value if value
+          flattened[key.to_s] = value if value
         end
       end
       flattened
