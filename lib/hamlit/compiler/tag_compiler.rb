@@ -18,14 +18,26 @@ module Hamlit
       private
 
       def compile_attributes(node)
-        attrs = [:html, :attrs]
-        node.value[:attributes_hashes].each do |attribute_hash|
-          attrs << [:dynamic, "::Hamlit::AttributeBuilder.build(#{@quote}, #{attribute_hash})"]
+        [:html, :attrs].tap do |temple|
+          case
+          when !node.value[:attributes_hashes].empty?
+            compile_dynamic_attributes!(temple, node)
+          when !node.value[:attributes].empty?
+            compile_static_attributes!(temple, node)
+          end
         end
+      end
+
+      def compile_static_attributes!(temple, node)
         node.value[:attributes].sort_by(&:first).each do |name, value|
-          attrs << [:html, :attr, name, [:static, value]]
+          temple << [:html, :attr, name, [:static, value]]
         end
-        attrs
+      end
+
+      def compile_dynamic_attributes!(temple, node)
+        node.value[:attributes_hashes].each do |attribute_hash|
+          temple << [:dynamic, "::Hamlit::AttributeBuilder.build(#{@quote}, #{attribute_hash})"]
+        end
       end
 
       def compile_contents(node, &block)
