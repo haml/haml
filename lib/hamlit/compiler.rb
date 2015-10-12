@@ -34,8 +34,10 @@ module Hamlit
         compile_tag(node)
       when :plain
         compile_plain(node)
-      else
+      when :haml_comment
         [:multi]
+      else
+        raise InternalError.new("Unexpected node type: #{node.type}")
       end
     end
 
@@ -61,6 +63,9 @@ module Hamlit
 
     def compile_plain(node)
       [:static, node.value[:text]]
+    end
+
+    class InternalError < RuntimeError
     end
   end
 end
