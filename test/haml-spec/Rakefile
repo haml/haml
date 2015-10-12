@@ -16,7 +16,7 @@ def generate_spec(mode)
     # This is a spec converted by haml-spec.
     # See: https://github.com/haml/haml-spec
     class #{mode.capitalize}Test < MiniTest::Test
-      DEFAULT_OPTIONS = { ugly: true }.freeze
+      DEFAULT_OPTIONS = { ugly: #{mode == :ugly} }.freeze
 
       def self.haml_result(haml, options, locals)
         Haml::Engine.new(haml, DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
@@ -72,7 +72,12 @@ def generate_specify(test, locals, options, mode)
   SPEC
 end
 
-desc 'Convert tests.yml into ugly rspec tests'
+desc 'Convert tests.yml into ugly tests'
+task :pretty do
+  generate_spec(:pretty)
+end
+
+desc 'Convert tests.yml into ugly tests'
 task :ugly do
   generate_spec(:ugly)
 end
