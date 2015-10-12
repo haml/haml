@@ -1,7 +1,7 @@
 require 'haml/util'
 
 module Hamlit
-  class FilterCompiler
+  class Filters
     class Preserve < Base
       def compile(node)
         text = node.value[:text].rstrip + "\n"

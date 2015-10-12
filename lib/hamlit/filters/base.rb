@@ -1,7 +1,7 @@
 require 'haml/util'
 
 module Hamlit
-  class FilterCompiler
+  class Filters
     class Base
       def initialize(format)
         @format = format

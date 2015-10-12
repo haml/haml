@@ -1,5 +1,5 @@
 module Hamlit
-  class FilterCompiler
+  class Filters
     class Css < Base
       def compile(node)
         text = compile_text(node.value[:text])

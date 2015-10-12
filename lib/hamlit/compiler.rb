@@ -1,5 +1,5 @@
 require 'hamlit/doctype_compiler'
-require 'hamlit/filter_compiler'
+require 'hamlit/filters'
 require 'hamlit/tag_compiler'
 require 'hamlit/whitespace_handler'
 
@@ -7,7 +7,7 @@ module Hamlit
   class Compiler
     def initialize(options = {})
       @doctype_compiler   = DoctypeCompiler.new(options)
-      @filter_compiler    = FilterCompiler.new(options)
+      @filter_compiler    = Filters.new(options)
       @tag_compiler       = TagCompiler.new(options)
       @whitespace_handler = WhitespaceHandler.new
     end

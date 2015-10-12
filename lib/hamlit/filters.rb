@@ -1,12 +1,12 @@
-require 'hamlit/filter_compiler/base'
-require 'hamlit/filter_compiler/css'
-require 'hamlit/filter_compiler/escaped'
-require 'hamlit/filter_compiler/javascript'
-require 'hamlit/filter_compiler/plain'
-require 'hamlit/filter_compiler/preserve'
+require 'hamlit/filters/base'
+require 'hamlit/filters/css'
+require 'hamlit/filters/escaped'
+require 'hamlit/filters/javascript'
+require 'hamlit/filters/plain'
+require 'hamlit/filters/preserve'
 
 module Hamlit
-  class FilterCompiler
+  class Filters
     @registered = {}
 
     class << self
@@ -37,7 +37,7 @@ module Hamlit
 
     def find_compiler(name)
       name = name.to_sym
-      compiler = FilterCompiler.registered[name]
+      compiler = Filters.registered[name]
       raise NotFound.new("FilterCompiler for '#{name}' was not found") unless compiler
 
       compilers[name] ||= compiler.new(@format)
