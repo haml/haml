@@ -34,9 +34,9 @@ module Hamlit
 
     def refine_joinable_value(key, value)
       case key
-      when :id
+      when 'id'
         value = value.join('_')
-      when :class
+      when 'class'
         value = value.join(' ')
       else
         value
@@ -60,9 +60,9 @@ module Hamlit
 
       values = [base[key], target[key]].flatten.compact
       case key
-      when :id
+      when 'id'
         values.join('_')
-      when :class
+      when 'class'
         values.map(&:to_s).sort.uniq.join(' ')
       end
     end

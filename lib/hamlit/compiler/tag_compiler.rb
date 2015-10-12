@@ -35,9 +35,8 @@ module Hamlit
       end
 
       def compile_dynamic_attributes!(temple, node)
-        node.value[:attributes_hashes].each do |attribute_hash|
-          temple << [:dynamic, "::Hamlit::AttributeBuilder.build(#{@quote}, #{attribute_hash})"]
-        end
+        attrs = [node.value[:attributes].inspect, *node.value[:attributes_hashes]]
+        temple << [:dynamic, "::Hamlit::AttributeBuilder.build(#{@quote}, #{attrs.join(', ')})"]
       end
 
       def compile_contents(node, &block)

@@ -565,7 +565,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def _test_HTML_style_tag_with_a_CSS_class_and_class_as_a_variable_attribute
+    def test_HTML_style_tag_with_a_CSS_class_and_class_as_a_variable_attribute
       haml    = %q{.hello(class=var)}
       html    = %q{<div class='hello world'></div>}
       locals  = {:var=>"world"}
@@ -575,7 +575,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def _test_HTML_style_tag_multiple_CSS_classes_sorted_correctly_
+    def test_HTML_style_tag_multiple_CSS_classes_sorted_correctly_
       haml    = %q{.z(class=var)}
       html    = %q{<div class='a z'></div>}
       locals  = {:var=>"a"}
