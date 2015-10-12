@@ -22,7 +22,7 @@ module Hamlit
         node.value[:attributes_hashes].each do |attribute_hash|
           attrs << [:dynamic, "::Hamlit::AttributeBuilder.build(#{@quote}, #{attribute_hash})"]
         end
-        node.value[:attributes].each do |name, value|
+        node.value[:attributes].sort_by(&:first).each do |name, value|
           attrs << [:html, :attr, name, [:static, value]]
         end
         attrs

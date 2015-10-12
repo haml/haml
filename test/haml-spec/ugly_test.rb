@@ -257,7 +257,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def _test_a_tag_with_an_id_followed_by_a_class
+    def test_a_tag_with_an_id_followed_by_a_class
       haml    = %q{%p#id1.class1}
       html    = %q{<p class='class1' id='id1'></p>}
       locals  = {}
