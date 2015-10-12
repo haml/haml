@@ -1,3 +1,4 @@
+require 'hamlit/filter_compiler/escaped'
 require 'hamlit/filter_compiler/plain'
 
 module Hamlit
@@ -17,7 +18,8 @@ module Hamlit
       end
     end
 
-    register :plain, Plain
+    register :escaped, Escaped
+    register :plain,   Plain
 
     def compile(node)
       find_compiler(node.value[:name]).compile(node)

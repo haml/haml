@@ -819,7 +819,7 @@ class UglyTest < MiniTest::Test
   end
 
   class Internalfilters < MiniTest::Test
-    def _test_content_in_an_escaped_filter
+    def test_content_in_an_escaped_filter
       haml    = %q{:escaped
   <&">}
       html    = %q{&lt;&amp;&quot;&gt;}
