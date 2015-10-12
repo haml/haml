@@ -5,7 +5,7 @@ require 'unindent'
 require 'open-uri'
 
 def escape_name(name, replacer)
-  name.gsub(/[\s\-\(\)\.\.+'\/<>&=~]+/, replacer)
+  name.gsub(/[\s\-\(\)\.\.+'\/<>&=~\!]+/, replacer)
 end
 
 def generate_spec(mode)

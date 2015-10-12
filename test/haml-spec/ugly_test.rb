@@ -969,7 +969,7 @@ class UglyTest < MiniTest::Test
   end
 
   class Htmlescaping < MiniTest::Test
-    def _test_code_following_
+    def test_code_following_
       haml    = %q{&= '<"&>'}
       html    = %q{&lt;&quot;&amp;&gt;}
       locals  = {}
@@ -979,7 +979,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def _test_code_following_when_escape_haml_is_set_to_true
+    def test_code_following_when_escape_haml_is_set_to_true
       haml    = %q{= '<"&>'}
       html    = %q{&lt;&quot;&amp;&gt;}
       locals  = {}
@@ -989,7 +989,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def _test_code_following_!_when_escape_haml_is_set_to_true
+    def test_code_following_when_escape_haml_is_set_to_true
       haml    = %q{!= '<"&>'}
       html    = %q{<"&>}
       locals  = {}

@@ -30,10 +30,12 @@ module Hamlit
         compile_doctype(node)
       when :filter
         compile_filter(node)
-      when :tag
-        compile_tag(node)
       when :plain
         compile_plain(node)
+      when :script
+        compile_script(node)
+      when :tag
+        compile_tag(node)
       when :haml_comment
         [:multi]
       else
@@ -45,6 +47,10 @@ module Hamlit
       @whitespace_handler.compile_children(node) { |n| compile(n) }
     end
 
+    def compile_comment(node)
+      @comment_compiler.compile(node) { |n| compile_children(n) }
+    end
+
     def compile_doctype(node)
       @doctype_compiler.compile(node)
     end
@@ -53,16 +59,20 @@ module Hamlit
       @filter_compiler.compile(node)
     end
 
-    def compile_comment(node)
-      @comment_compiler.compile(node) { |n| compile_children(n) }
+    def compile_plain(node)
+      [:static, node.value[:text]]
+    end
+
+    def compile_script(node)
+      if node.value[:escape_html]
+        [:escape, true, [:dynamic, node.value[:text]]]
+      else
+        [:dynamic, node.value[:text]]
+      end
     end
 
     def compile_tag(node)
       @tag_compiler.compile(node) { |n| compile_children(n) }
-    end
-
-    def compile_plain(node)
-      [:static, node.value[:text]]
     end
 
     class InternalError < RuntimeError
