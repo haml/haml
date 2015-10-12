@@ -4,4 +4,5 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'lineprof'
+gem 'minitest-line'
 gem 'pry'
