@@ -74,7 +74,7 @@ namespace :benchmark do
           haml_benchmark.capture(haml_time)
           faml_benchmark.capture(faml_time)
           hamlit_benchmark.capture(hamlit_time)
-        rescue Temple::FilterError, TypeError
+        rescue Temple::FilterError, TypeError, Hamlit::FilterCompiler::NotFound
         end
       end
     end

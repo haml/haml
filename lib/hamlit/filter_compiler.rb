@@ -4,6 +4,9 @@ module Hamlit
   class FilterCompiler
     @registered = {}
 
+    class NotFound < RuntimeError
+    end
+
     class << self
       attr_reader :registered
 
@@ -24,7 +27,7 @@ module Hamlit
 
     def find_compiler(name)
       compiler = FilterCompiler.registered[name.to_sym]
-      raise "FilterCompiler for '#{name}' was not found" unless compiler
+      raise NotFound.new("FilterCompiler for '#{name}' was not found") unless compiler
 
       compiler
     end
