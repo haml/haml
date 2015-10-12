@@ -35,7 +35,11 @@ module Hamlit
 
       def compile_static_attributes!(temple, node)
         node.value[:attributes].sort_by(&:first).each do |name, value|
-          temple << [:html, :attr, name, [:static, value]]
+          if value == true
+            temple << [:html, :attr, name, [:multi]]
+          else
+            temple << [:html, :attr, name, [:static, value]]
+          end
         end
       end
 

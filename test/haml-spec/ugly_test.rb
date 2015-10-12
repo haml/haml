@@ -585,7 +585,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def _test_HTML_style_tag_with_an_atomic_attribute
+    def test_HTML_style_tag_with_an_atomic_attribute
       haml    = %q{%a(flag)}
       html    = %q{<a flag></a>}
       locals  = {}
