@@ -1,3 +1,4 @@
+require 'hamlit/compiler/comment_compiler'
 require 'hamlit/compiler/doctype_compiler'
 require 'hamlit/compiler/tag_compiler'
 require 'hamlit/filters'
@@ -6,6 +7,7 @@ require 'hamlit/whitespace_handler'
 module Hamlit
   class Compiler
     def initialize(options = {})
+      @comment_compiler   = CommentCompiler.new
       @doctype_compiler   = DoctypeCompiler.new(options)
       @tag_compiler       = TagCompiler.new(options)
       @filter_compiler    = Filters.new(options)
@@ -50,10 +52,7 @@ module Hamlit
     end
 
     def compile_comment(node)
-      if node.children.empty?
-        return [:html, :comment, [:static, " #{node.value[:text]} "]]
-      end
-      [:html, :comment, compile_children(node)]
+      @comment_compiler.compile(node) { |n| compile_children(n) }
     end
 
     def compile_tag(node)
