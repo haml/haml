@@ -20,7 +20,12 @@ module Hamlit
 
       attributes.each do |key, value|
         if value == true
-          result += " #{key}"
+          case @format
+          when :xhtml
+            result += " #{key}='#{key}'"
+          else
+            result += " #{key}"
+          end
           next
         end
 

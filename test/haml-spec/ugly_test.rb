@@ -1001,7 +1001,7 @@ class UglyTest < MiniTest::Test
   end
 
   class Booleanattributes < MiniTest::Test
-    def _test_boolean_attribute_with_XHTML
+    def test_boolean_attribute_with_XHTML
       haml    = %q{%input(checked=true)}
       html    = %q{<input checked='checked' />}
       locals  = {}
