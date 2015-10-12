@@ -1,12 +1,10 @@
 require 'hamlit/filter_compiler/escaped'
 require 'hamlit/filter_compiler/plain'
+require 'hamlit/filter_compiler/preserve'
 
 module Hamlit
   class FilterCompiler
     @registered = {}
-
-    class NotFound < RuntimeError
-    end
 
     class << self
       attr_reader :registered
@@ -18,8 +16,9 @@ module Hamlit
       end
     end
 
-    register :escaped, Escaped
-    register :plain,   Plain
+    register :escaped,  Escaped
+    register :plain,    Plain
+    register :preserve, Preserve
 
     def compile(node)
       find_compiler(node.value[:name]).compile(node)
@@ -32,6 +31,9 @@ module Hamlit
       raise NotFound.new("FilterCompiler for '#{name}' was not found") unless compiler
 
       compiler
+    end
+
+    class NotFound < RuntimeError
     end
   end
 end

@@ -830,7 +830,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def _test_content_in_a_preserve_filter
+    def test_content_in_a_preserve_filter
       haml    = %q{:preserve
   hello
 
