@@ -1023,7 +1023,7 @@ class UglyTest < MiniTest::Test
   end
 
   class Whitespacepreservation < MiniTest::Test
-    def _test_following_the_operator
+    def test_following_the_operator
       haml    = %q{~ "Foo\n<pre>Bar\nBaz</pre>"}
       html    = %q{Foo
 <pre>Bar&#x000A;Baz</pre>}
