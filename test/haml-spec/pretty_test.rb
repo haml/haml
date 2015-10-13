@@ -150,8 +150,7 @@ class PrettyTest < MiniTest::Test
 
   class Basichamltagsandcss < MiniTest::Test
     def test_a_simple_Haml_tag
-      skip
-      haml    = %q{%p}
+      haml    = %q{%p a}
       html    = %q{<p></p>}
       locals  = {}
       options = {}
@@ -211,7 +210,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_a_tag_with_a_CSS_class
-      skip
       haml    = %q{%p.class1}
       html    = %q{<p class='class1'></p>}
       locals  = {}
@@ -222,7 +220,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_a_tag_with_multiple_CSS_classes
-      skip
       haml    = %q{%p.class1.class2}
       html    = %q{<p class='class1 class2'></p>}
       locals  = {}
@@ -233,7 +230,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_a_tag_with_a_CSS_id
-      skip
       haml    = %q{%p#id1}
       html    = %q{<p id='id1'></p>}
       locals  = {}
@@ -244,7 +240,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_a_tag_with_multiple_CSS_id_s
-      skip
       haml    = %q{%p#id1#id2}
       html    = %q{<p id='id2'></p>}
       locals  = {}
@@ -255,7 +250,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_a_tag_with_a_class_followed_by_an_id
-      skip
       haml    = %q{%p.class1#id1}
       html    = %q{<p class='class1' id='id1'></p>}
       locals  = {}
@@ -266,7 +260,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_a_tag_with_an_id_followed_by_a_class
-      skip
       haml    = %q{%p#id1.class1}
       html    = %q{<p class='class1' id='id1'></p>}
       locals  = {}
@@ -277,7 +270,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_an_implicit_div_with_a_CSS_id
-      skip
       haml    = %q{#id1}
       html    = %q{<div id='id1'></div>}
       locals  = {}
@@ -288,7 +280,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_an_implicit_div_with_a_CSS_class
-      skip
       haml    = %q{.class1}
       html    = %q{<div class='class1'></div>}
       locals  = {}
@@ -370,7 +361,6 @@ class PrettyTest < MiniTest::Test
 
   class Tagswithunusualcssidentifiers < MiniTest::Test
     def test_an_all_numeric_class
-      skip
       haml    = %q{.123}
       html    = %q{<div class='123'></div>}
       locals  = {}
@@ -381,7 +371,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_a_class_with_underscores
-      skip
       haml    = %q{.__}
       html    = %q{<div class='__'></div>}
       locals  = {}
@@ -392,7 +381,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_a_class_with_dashes
-      skip
       haml    = %q{.--}
       html    = %q{<div class='--'></div>}
       locals  = {}
@@ -405,7 +393,6 @@ class PrettyTest < MiniTest::Test
 
   class Tagswithinlinecontent < MiniTest::Test
     def test_Inline_content_simple_tag
-      skip
       haml    = %q{%p hello}
       html    = %q{<p>hello</p>}
       locals  = {}
@@ -416,7 +403,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Inline_content_tag_with_CSS
-      skip
       haml    = %q{%p.class1 hello}
       html    = %q{<p class='class1'>hello</p>}
       locals  = {}
@@ -496,7 +482,6 @@ class PrettyTest < MiniTest::Test
 
   class Tagswithhtmlstyleattributes < MiniTest::Test
     def test_HTML_style_one_attribute
-      skip
       haml    = %q{%p(a='b')}
       html    = %q{<p a='b'></p>}
       locals  = {}
@@ -507,7 +492,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_HTML_style_multiple_attributes
-      skip
       haml    = %q{%p(a='b' c='d')}
       html    = %q{<p a='b' c='d'></p>}
       locals  = {}
@@ -518,7 +502,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_HTML_style_attributes_separated_with_newlines
-      skip
       haml    = %q{%p(a='b'
   c='d')}
       html    = %q{<p a='b' c='d'></p>}
@@ -530,7 +513,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_HTML_style_interpolated_attribute
-      skip
       haml    = %q{%p(a="#{var}")}
       html    = %q{<p a='value'></p>}
       locals  = {:var=>"value"}
@@ -541,7 +523,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_HTML_style_class_as_an_attribute
-      skip
       haml    = %q{%p(class='class1')}
       html    = %q{<p class='class1'></p>}
       locals  = {}
@@ -552,7 +533,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_HTML_style_tag_with_a_CSS_class_and_class_as_an_attribute
-      skip
       haml    = %q{%p.class2(class='class1')}
       html    = %q{<p class='class1 class2'></p>}
       locals  = {}
@@ -563,7 +543,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_HTML_style_tag_with_id_as_an_attribute
-      skip
       haml    = %q{%p(id='1')}
       html    = %q{<p id='1'></p>}
       locals  = {}
@@ -574,7 +553,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_HTML_style_tag_with_a_CSS_id_and_id_as_an_attribute
-      skip
       haml    = %q{%p#id(id='1')}
       html    = %q{<p id='id_1'></p>}
       locals  = {}
@@ -585,7 +563,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_HTML_style_tag_with_a_variable_attribute
-      skip
       haml    = %q{%p(class=var)}
       html    = %q{<p class='hello'></p>}
       locals  = {:var=>"hello"}
@@ -596,7 +573,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_HTML_style_tag_with_a_CSS_class_and_class_as_a_variable_attribute
-      skip
       haml    = %q{.hello(class=var)}
       html    = %q{<div class='hello world'></div>}
       locals  = {:var=>"world"}
@@ -630,7 +606,6 @@ class PrettyTest < MiniTest::Test
 
   class Tagswithrubystyleattributes < MiniTest::Test
     def test_Ruby_style_one_attribute
-      skip
       haml    = %q{%p{:a => 'b'}}
       html    = %q{<p a='b'></p>}
       locals  = {}
@@ -641,7 +616,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_attributes_hash_with_whitespace
-      skip
       haml    = %q{%p{  :a  =>  'b'  }}
       html    = %q{<p a='b'></p>}
       locals  = {}
@@ -652,7 +626,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_interpolated_attribute
-      skip
       haml    = %q{%p{:a =>"#{var}"}}
       html    = %q{<p a='value'></p>}
       locals  = {:var=>"value"}
@@ -663,7 +636,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_multiple_attributes
-      skip
       haml    = %q{%p{ :a => 'b', 'c' => 'd' }}
       html    = %q{<p a='b' c='d'></p>}
       locals  = {}
@@ -674,7 +646,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_attributes_separated_with_newlines
-      skip
       haml    = %q{%p{ :a => 'b',
   'c' => 'd' }}
       html    = %q{<p a='b' c='d'></p>}
@@ -686,7 +657,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_class_as_an_attribute
-      skip
       haml    = %q{%p{:class => 'class1'}}
       html    = %q{<p class='class1'></p>}
       locals  = {}
@@ -697,7 +667,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_tag_with_a_CSS_class_and_class_as_an_attribute
-      skip
       haml    = %q{%p.class2{:class => 'class1'}}
       html    = %q{<p class='class1 class2'></p>}
       locals  = {}
@@ -708,7 +677,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_tag_with_id_as_an_attribute
-      skip
       haml    = %q{%p{:id => '1'}}
       html    = %q{<p id='1'></p>}
       locals  = {}
@@ -719,7 +687,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_tag_with_a_CSS_id_and_id_as_an_attribute
-      skip
       haml    = %q{%p#id{:id => '1'}}
       html    = %q{<p id='id_1'></p>}
       locals  = {}
@@ -730,7 +697,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_tag_with_a_CSS_id_and_a_numeric_id_as_an_attribute
-      skip
       haml    = %q{%p#id{:id => 1}}
       html    = %q{<p id='id_1'></p>}
       locals  = {}
@@ -741,7 +707,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_tag_with_a_variable_attribute
-      skip
       haml    = %q{%p{:class => var}}
       html    = %q{<p class='hello'></p>}
       locals  = {:var=>"hello"}
@@ -752,7 +717,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_tag_with_a_CSS_class_and_class_as_a_variable_attribute
-      skip
       haml    = %q{.hello{:class => var}}
       html    = %q{<div class='hello world'></div>}
       locals  = {:var=>"world"}
@@ -763,7 +727,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Ruby_style_tag_multiple_CSS_classes_sorted_correctly_
-      skip
       haml    = %q{.z{:class => var}}
       html    = %q{<div class='a z'></div>}
       locals  = {:var=>"a"}
@@ -878,7 +841,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_content_in_a_preserve_filter
-      skip
       haml    = %q{:preserve
   hello
 
@@ -893,7 +855,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_content_in_a_plain_filter
-      skip
       haml    = %q{:plain
   hello
 
@@ -980,7 +941,6 @@ class PrettyTest < MiniTest::Test
 
   class Rubystyleinterpolation < MiniTest::Test
     def test_interpolation_inside_inline_content
-      skip
       haml    = %q{%p #{var}}
       html    = %q{<p>value</p>}
       locals  = {:var=>"value"}
@@ -991,7 +951,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_no_interpolation_when_escaped
-      skip
       haml    = %q{%p \#{var}}
       html    = %q{<p>#{var}</p>}
       locals  = {:var=>"value"}
@@ -1002,7 +961,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_interpolation_when_the_escape_character_is_escaped
-      skip
       haml    = %q{%p \\#{var}}
       html    = %q{<p>\value</p>}
       locals  = {:var=>"value"}
@@ -1120,7 +1078,6 @@ hello</pre>}
 
   class Whitespaceremoval < MiniTest::Test
     def test_a_tag_with_appended_and_inline_content
-      skip
       haml    = %q{%li hello
 %li> world
 %li again}
