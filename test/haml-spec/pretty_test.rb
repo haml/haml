@@ -1,3 +1,5 @@
+$:.unshift File.expand_path('../../test', __dir__)
+
 require 'test_helper'
 require 'minitest/autorun'
 

@@ -19,3 +19,10 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 task default: :test
+
+Rake::TestTask.new(:spec) do |t|
+  t.libs << 'lib' << 'test'
+  t.ruby_opts = %w[-rtest_helper]
+  t.test_files = %w[test/haml-spec/ugly_test.rb test/haml-spec/pretty_test.rb]
+  t.verbose = true
+end
