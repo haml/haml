@@ -1,5 +1,5 @@
-require "minitest/autorun"
-require "hamlit"
+require 'test_helper'
+require 'minitest/autorun'
 
 # This is a spec converted by haml-spec.
 # See: https://github.com/haml/haml-spec

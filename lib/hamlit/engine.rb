@@ -14,6 +14,7 @@ module Hamlit
       autoclose:   %w(area base basefont br col command embed frame
                       hr img input isindex keygen link menuitem meta
                       param source track wbr),
+      filename:    "",
     )
 
     use Parser
@@ -41,6 +42,7 @@ module Hamlit
       set_locals(locals, scope)
       eval(precompiled, scope)
     end
+    alias_method :to_html, :render
 
     private
 
