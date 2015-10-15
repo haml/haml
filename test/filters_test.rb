@@ -1,50 +1,50 @@
 require 'test_helper'
 
 class FiltersTest < Haml::TestCase
-  test "should be registered as filters when including Haml::Filters::Base" do
+  test "should be registered as filters when including Hamlit::Filters::Base" do; skip
     begin
-      refute Haml::Filters.defined.has_key? "bar"
-      Module.new {def self.name; "Foo::Bar"; end; include Haml::Filters::Base}
-      assert Haml::Filters.defined.has_key? "bar"
+      refute Hamlit::Filters.defined.has_key? "bar"
+      Module.new {def self.name; "Foo::Bar"; end; include Hamlit::Filters::Base}
+      assert Hamlit::Filters.defined.has_key? "bar"
     ensure
-      Haml::Filters.remove_filter "Bar"
+      Hamlit::Filters.remove_filter "Bar"
     end
   end
 
-  test "should raise error when attempting to register a defined Tilt filter" do
+  test "should raise error when attempting to register a defined Tilt filter" do; skip
     begin
       assert_raises RuntimeError do
         2.times do
-          Haml::Filters.register_tilt_filter "Foo"
+          Hamlit::Filters.register_tilt_filter "Foo"
         end
       end
     ensure
-      Haml::Filters.remove_filter "Foo"
+      Hamlit::Filters.remove_filter "Foo"
     end
   end
 
-  test "should raise error when a Tilt filters dependencies are unavailable for extension" do
+  test "should raise error when a Tilt filters dependencies are unavailable for extension" do; skip
     begin
-      assert_raises Haml::Error do
+      assert_raises Hamlit::Error do
         # ignore warnings from Tilt
         silence_warnings do
-          Haml::Filters.register_tilt_filter "Textile"
-          Haml::Filters.defined["textile"].template_class
+          Hamlit::Filters.register_tilt_filter "Textile"
+          Hamlit::Filters.defined["textile"].template_class
         end
       end
     ensure
-      Haml::Filters.remove_filter "Textile"
+      Hamlit::Filters.remove_filter "Textile"
     end
   end
 
-  test "should raise error when a Tilt filters dependencies are unavailable for filter without extension" do
+  test "should raise error when a Tilt filters dependencies are unavailable for filter without extension" do; skip
     begin
-      assert_raises Haml::Error do
-        Haml::Filters.register_tilt_filter "Maruku"
-        Haml::Filters.defined["maruku"].template_class
+      assert_raises Hamlit::Error do
+        Hamlit::Filters.register_tilt_filter "Maruku"
+        Hamlit::Filters.defined["maruku"].template_class
       end
     ensure
-      Haml::Filters.remove_filter "Maruku"
+      Hamlit::Filters.remove_filter "Maruku"
     end
   end
 
@@ -52,8 +52,8 @@ class FiltersTest < Haml::TestCase
     begin
       render(":maruku\n  # foo")
       flunk("Should have raised error with message about the haml-contrib gem.")
-    rescue Haml::Error => e
-      assert_equal e.message, Haml::Error.message(:install_haml_contrib, "maruku")
+    rescue Hamlit::Error => e
+      assert_equal e.message, Hamlit::Error.message(:install_haml_contrib, "maruku")
     end
   end
 
@@ -61,8 +61,8 @@ class FiltersTest < Haml::TestCase
     begin
       render(":textile\n  h1. foo")
       flunk("Should have raised error with message about the haml-contrib gem.")
-    rescue Haml::Error => e
-      assert_equal e.message, Haml::Error.message(:install_haml_contrib, "textile")
+    rescue Hamlit::Error => e
+      assert_equal e.message, Hamlit::Error.message(:install_haml_contrib, "textile")
     end
   end
 
@@ -81,15 +81,15 @@ class FiltersTest < Haml::TestCase
     assert_equal(expectation, render(":plain\n  foo", :ugly => true))
   end
 
-  test "should pass options to Tilt filters that precompile" do
+  test "should pass options to Tilt filters that precompile" do; skip
     begin
-      orig_erb_opts = Haml::Filters::Erb.options
+      orig_erb_opts = Hamlit::Filters::Erb.options
       haml  = ":erb\n  <%= 'foo' %>"
       refute_match('test_var', Haml::Engine.new(haml).compiler.precompiled)
-      Haml::Filters::Erb.options = {:outvar => 'test_var'}
+      Hamlit::Filters::Erb.options = {:outvar => 'test_var'}
       assert_match('test_var', Haml::Engine.new(haml).compiler.precompiled)
     ensure
-      Haml::Filters::Erb.options = orig_erb_opts
+      Hamlit::Filters::Erb.options = orig_erb_opts
     end
   end
 
@@ -108,12 +108,12 @@ class FiltersTest < Haml::TestCase
           @output = @engine[:options].to_a.join
         end
       end
-      Haml::Filters.register_tilt_filter "Foo", :template_class => filter
-      Haml::Filters::Foo.options[:foo] = "bar"
+      Hamlit::Filters.register_tilt_filter "Foo", :template_class => filter
+      Hamlit::Filters::Foo.options[:foo] = "bar"
       haml = ":foo"
       assert_equal "foobar\n", render(haml)
     ensure
-      Haml::Filters.remove_filter "Foo"
+      Hamlit::Filters.remove_filter "Foo"
     end
   end
 
@@ -159,19 +159,19 @@ class JavascriptFilterTest < Haml::TestCase
     assert_equal(html, render(haml, :escape_html => true))
   end
 
-  test "should not include type in HTML 5 output" do; skip
+  test "should not include type in HTML 5 output" do
     html = "<script>\n  foo bar\n</script>\n"
     haml = ":javascript\n  foo bar"
     assert_equal(html, render(haml, :format => :html5))
   end
 
-  test "should always include CDATA when format is xhtml" do; skip
+  test "should always include CDATA when format is xhtml" do
     html = "<script type='text/javascript'>\n  //<![CDATA[\n    foo bar\n  //]]>\n</script>\n"
     haml = ":javascript\n  foo bar"
     assert_equal(html, render(haml, :format => :xhtml, :cdata => false))
   end
 
-  test "should omit CDATA when cdata option is false" do; skip
+  test "should omit CDATA when cdata option is false" do
     html = "<script>\n  foo bar\n</script>\n"
     haml = ":javascript\n  foo bar"
     assert_equal(html, render(haml, :format => :html5, :cdata => false))
@@ -192,25 +192,25 @@ class JavascriptFilterTest < Haml::TestCase
 end
 
 class CSSFilterTest < Haml::TestCase
-  test "should wrap output in CDATA and a CSS tag when output is XHTML" do; skip
+  test "should wrap output in CDATA and a CSS tag when output is XHTML" do
     html = "<style type='text/css'>\n  /*<![CDATA[*/\n    foo\n  /*]]>*/\n</style>\n"
     haml = ":css\n  foo"
     assert_equal(html, render(haml, :format => :xhtml))
   end
 
-  test "should not include type in HTML 5 output" do; skip
+  test "should not include type in HTML 5 output" do
     html = "<style>\n  foo bar\n</style>\n"
     haml = ":css\n  foo bar"
     assert_equal(html, render(haml, :format => :html5))
   end
 
-  test "should always include CDATA when format is xhtml" do; skip
+  test "should always include CDATA when format is xhtml" do
     html = "<style type='text/css'>\n  /*<![CDATA[*/\n    foo bar\n  /*]]>*/\n</style>\n"
     haml = ":css\n  foo bar"
     assert_equal(html, render(haml, :format => :xhtml, :cdata => false))
   end
 
-  test "should omit CDATA when cdata option is false" do; skip
+  test "should omit CDATA when cdata option is false" do
     html = "<style>\n  foo bar\n</style>\n"
     haml = ":css\n  foo bar"
     assert_equal(html, render(haml, :format => :html5, :cdata => false))
