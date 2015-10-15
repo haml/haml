@@ -15,12 +15,11 @@ module Hamlit
                       hr img input isindex keygen link menuitem meta
                       param source track wbr),
       filename:    "",
-      indent_tags: [],
     )
 
     use Parser
     use Compiler
-    html :Pretty
+    html :Fast
     filter :Escapable
     filter :ControlFlow
     filter :MultiFlattener
