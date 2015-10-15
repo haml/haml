@@ -47,40 +47,28 @@ class Benchmark
 end
 
 namespace :benchmark do
-  desc 'Benchmark compilation'
-  task :compile do
+  desc 'Benchmark standard compilation'
+  task :standard do
     haml_benchmark   = Benchmark.new('haml  ')
     faml_benchmark   = Benchmark.new('faml  ')
     hamlit_benchmark = Benchmark.new('hamlit')
-    yaml_path = File.expand_path('../test/haml-spec/tests.yml', __dir__)
-    contexts  = YAML.load(File.read(yaml_path))
 
     faml_engine   = Faml::Engine.new(filename: '')
     hamlit_engine = Hamlit::Engine.new
 
-    contexts.each do |context|
-      context[1].each do |name, test|
-        haml             = test['haml']
-        locals           = Hash[(test['locals'] || {}).map {|x, y| [x.to_sym, y]}]
-        options          = Hash[(test['config'] || {}).map {|x, y| [x.to_sym, y]}]
-        options[:format] = options[:format].to_sym if options.key?(:format)
-        options          = { ugly: true }.merge(options)
+    haml             = File.read(File.expand_path('../test/templates/standard.haml', __dir__))
+    locals           = {}
+    options          = { ugly: true, escape_html: true }
 
-        begin
-          haml_time   = Benchmark.bench { Haml::Engine.new(haml, options).precompiled }
-          faml_time   = Benchmark.bench { faml_engine.call(haml) }
-          hamlit_time = Benchmark.bench { hamlit_engine.call(haml) }
+    haml_time   = Benchmark.bench { Haml::Engine.new(haml, options).precompiled }
+    faml_time   = Benchmark.bench { faml_engine.call(haml) }
+    hamlit_time = Benchmark.bench { hamlit_engine.call(haml) }
 
-          haml_benchmark.capture(haml_time)
-          faml_benchmark.capture(faml_time)
-          hamlit_benchmark.capture(hamlit_time)
-        rescue Temple::FilterError, TypeError, Hamlit::Filters::NotFound
-        end
-      end
-    end
-    puts '# tests.yml compilation'
+    haml_benchmark.capture(haml_time)
+    faml_benchmark.capture(faml_time)
+    hamlit_benchmark.capture(hamlit_time)
+    puts '# standard.haml compilation'
     Benchmark.ranking(haml_benchmark, faml_benchmark, hamlit_benchmark)
-    puts
   end
 end
-task bench: %w[benchmark:compile benchmark:standard]
+task standard: 'benchmark:standard'
