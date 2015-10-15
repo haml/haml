@@ -26,3 +26,33 @@ Rake::TestTask.new(:spec) do |t|
   t.test_files = %w[test/haml-spec/ugly_test.rb test/haml-spec/pretty_test.rb]
   t.verbose = true
 end
+
+namespace :test do
+  Rake::TestTask.new(:engine) do |t|
+    t.libs << 'lib' << 'test'
+    t.ruby_opts = %w[-rtest_helper]
+    t.test_files = %w[test/engine_test.rb]
+    t.verbose = true
+  end
+
+  Rake::TestTask.new(:filters) do |t|
+    t.libs << 'lib' << 'test'
+    t.ruby_opts = %w[-rtest_helper]
+    t.test_files = %w[test/filters_test.rb]
+    t.verbose = true
+  end
+
+  Rake::TestTask.new(:helper) do |t|
+    t.libs << 'lib' << 'test'
+    t.ruby_opts = %w[-rtest_helper]
+    t.test_files = %w[test/helper_test.rb]
+    t.verbose = true
+  end
+
+  Rake::TestTask.new(:template) do |t|
+    t.libs << 'lib' << 'test'
+    t.ruby_opts = %w[-rtest_helper]
+    t.test_files = %w[test/template_test.rb]
+    t.verbose = true
+  end
+end
