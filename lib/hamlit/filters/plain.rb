@@ -12,11 +12,9 @@ module Hamlit
         text = node.value[:text].rstrip
         if Haml::Util.contains_interpolation?(text)
           # FIXME: Confirm whether this is correct or not
-          if @pretty
-            [:dynamic, Haml::Util.unescape_interpolation(text)]
-          else
-            [:dynamic, Haml::Util.unescape_interpolation(text + "\n")]
-          end
+          text << "\n".freeze unless @pretty
+          text = Haml::Util.unescape_interpolation(text)
+          [:escape, true, [:dynamic, text]]
         else
           [:static, text]
         end
