@@ -11,7 +11,13 @@ module Hamlit
         node.children.each do |n|
           rstrip_whitespace!(temple) if nuke_outer_whitespace?(n)
           temple << yield(n)
-          temple << :whitespace if insert_whitespace?(n)
+          if insert_whitespace?(n)
+            if nuke_inner_whitespace?(node)
+              temple << :weak_whitespace
+            else
+              temple << :whitespace
+            end
+          end
         end
         rstrip_whitespace!(temple) if nuke_inner_whitespace?(node)
         weaken_last_whitespace!(temple)
@@ -19,6 +25,12 @@ module Hamlit
       end
 
       private
+
+      def rstrip_whitespace!(temple)
+        if %i[whitespace weak_whitespace].include?(temple[-1])
+          temple.delete_at(-1)
+        end
+      end
 
       def weaken_last_whitespace!(temple)
         if temple[-1] == :whitespace

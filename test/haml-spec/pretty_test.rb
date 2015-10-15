@@ -1038,7 +1038,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_inside_a_textarea_tag
-      skip
       haml    = %q{%textarea
   hello
   hello}
@@ -1052,7 +1051,6 @@ hello</textarea>}
     end
 
     def test_inside_a_pre_tag
-      skip
       haml    = %q{%pre
   hello
   hello}
@@ -1095,7 +1093,6 @@ hello</pre>}
     end
 
     def test_a_tag_with_appended
-      skip
       haml    = %q{%p<
   hello
   world}
