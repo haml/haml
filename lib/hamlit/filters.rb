@@ -26,7 +26,7 @@ module Hamlit
     register :preserve,   Preserve
 
     def initialize(options = {})
-      @format = options[:format]
+      @options = options
     end
 
     def compile(node)
@@ -40,7 +40,7 @@ module Hamlit
       compiler = Filters.registered[name]
       raise NotFound.new("FilterCompiler for '#{name}' was not found") unless compiler
 
-      compilers[name] ||= compiler.new(@format)
+      compilers[name] ||= compiler.new(@options)
     end
 
     def compilers

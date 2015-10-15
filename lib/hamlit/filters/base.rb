@@ -3,8 +3,8 @@ require 'haml/util'
 module Hamlit
   class Filters
     class Base
-      def initialize(format)
-        @format = format
+      def initialize(options = {})
+        @format = options[:format]
       end
 
       private

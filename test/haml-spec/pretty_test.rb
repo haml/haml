@@ -959,7 +959,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_interpolation_inside_filtered_content
-      skip
       haml    = %q{:plain
   #{var} interpolated: #{var}}
       html    = %q{value interpolated: value}
