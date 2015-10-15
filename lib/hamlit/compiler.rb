@@ -34,6 +34,8 @@ module Hamlit
         compile_plain(node)
       when :script
         compile_script(node)
+      when :silent_script
+        [:multi]
       when :tag
         compile_tag(node)
       when :haml_comment
