@@ -1,8 +1,8 @@
-require 'hamlit/whitespace/base'
+require 'hamlit/whitespace/compiler'
 
 module Hamlit
   module Whitespace
-    class IndentedCompiler < Base
+    class IndentedCompiler < Compiler
       def compile_children(node, indent_level, &block)
         temple = [:multi]
         return temple if node.children.empty?
