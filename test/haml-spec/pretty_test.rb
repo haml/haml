@@ -790,7 +790,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_a_nested_markup_comment
-      skip
       haml    = %q{/
   comment
   comment2}
@@ -808,7 +807,6 @@ class PrettyTest < MiniTest::Test
 
   class Conditionalcomments < MiniTest::Test
     def test_a_conditional_comment
-      skip
       haml    = %q{/[if IE]
   %p a}
       html    = %q{<!--[if IE]>
