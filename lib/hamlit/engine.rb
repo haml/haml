@@ -1,5 +1,6 @@
 require 'temple'
 require 'hamlit/compiler'
+require 'hamlit/pretty_compiler'
 require 'hamlit/parser'
 
 module Hamlit
@@ -18,7 +19,7 @@ module Hamlit
     )
 
     use Parser
-    use Compiler
+    use :Compiler, -> { options[:pretty] ? PrettyCompiler : Compiler }
     html :Fast
     filter :Escapable
     filter :ControlFlow

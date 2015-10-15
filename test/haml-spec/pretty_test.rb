@@ -290,7 +290,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_multiple_simple_Haml_tags
-      skip
       haml    = %q{%div
   %div
     %p}
@@ -413,7 +412,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Inline_content_multiple_simple_tags
-      skip
       haml    = %q{%div
   %div
     %p text}
@@ -432,7 +430,6 @@ class PrettyTest < MiniTest::Test
 
   class Tagswithnestedcontent < MiniTest::Test
     def test_Nested_content_simple_tag
-      skip
       haml    = %q{%p
   hello}
       html    = %q{<p>
@@ -446,7 +443,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Nested_content_tag_with_CSS
-      skip
       haml    = %q{%p.class1
   hello}
       html    = %q{<p class='class1'>
@@ -460,7 +456,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_Nested_content_multiple_simple_tags
-      skip
       haml    = %q{%div
   %div
     %p
@@ -583,7 +578,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_HTML_style_tag_multiple_CSS_classes_sorted_correctly_
-      skip
       haml    = %q{.z(class=var)}
       html    = %q{<div class='a z'></div>}
       locals  = {:var=>"a"}
@@ -869,7 +863,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_content_in_a_css_filter_XHTML_
-      skip
       haml    = %q{:css
   hello
 
@@ -888,7 +881,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_content_in_a_javascript_filter_XHTML_
-      skip
       haml    = %q{:javascript
   a();
 %p}
@@ -906,7 +898,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_content_in_a_css_filter_HTML_
-      skip
       haml    = %q{:css
   hello
 
@@ -923,7 +914,6 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_content_in_a_javascript_filter_HTML_
-      skip
       haml    = %q{:javascript
   a();
 %p}
@@ -1050,6 +1040,7 @@ class PrettyTest < MiniTest::Test
     end
 
     def test_inside_a_textarea_tag
+      skip
       haml    = %q{%textarea
   hello
   hello}
@@ -1063,6 +1054,7 @@ hello</textarea>}
     end
 
     def test_inside_a_pre_tag
+      skip
       haml    = %q{%pre
   hello
   hello}
@@ -1090,7 +1082,6 @@ hello</pre>}
     end
 
     def test_a_tag_with_appended_and_nested_content
-      skip
       haml    = %q{%li hello
 %li>
   world

@@ -2,16 +2,16 @@ require 'hamlit/compiler/comment_compiler'
 require 'hamlit/compiler/doctype_compiler'
 require 'hamlit/compiler/tag_compiler'
 require 'hamlit/filters'
-require 'hamlit/whitespace_handler'
+require 'hamlit/whitespace/compiler'
 
 module Hamlit
   class Compiler
     def initialize(options = {})
-      @comment_compiler   = CommentCompiler.new
-      @doctype_compiler   = DoctypeCompiler.new(options)
-      @tag_compiler       = TagCompiler.new(options)
-      @filter_compiler    = Filters.new(options)
-      @whitespace_handler = WhitespaceHandler.new
+      @comment_compiler    = CommentCompiler.new
+      @doctype_compiler    = DoctypeCompiler.new(options)
+      @tag_compiler        = TagCompiler.new(options)
+      @filter_compiler     = Filters.new(options)
+      @whitespace_compiler = Whitespace::Compiler.new
     end
 
     def call(ast)
@@ -44,7 +44,7 @@ module Hamlit
     end
 
     def compile_children(node)
-      @whitespace_handler.compile_children(node) { |n| compile(n) }
+      @whitespace_compiler.compile_children(node) { |n| compile(n) }
     end
 
     def compile_comment(node)
