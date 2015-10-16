@@ -1,3 +1,5 @@
+$:.unshift __dir__
+
 require 'test_helper'
 
 class EngineTest < Haml::TestCase
