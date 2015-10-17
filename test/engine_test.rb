@@ -371,7 +371,7 @@ HTML
 HAML
   end
 
-  def test_end_of_file_multiline; skip # silent script
+  def test_end_of_file_multiline; skip # script bug
     assert_equal("<p>0</p>\n<p>1</p>\n<p>2</p>\n", render("- for i in (0...3)\n  %p= |\n   i |"))
   end
 
@@ -423,7 +423,7 @@ HAML
                  render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :xhtml))
   end
 
-  def test_nuke_inner_whitespace_in_loops; skip # silent script
+  def test_nuke_inner_whitespace_in_loops; skip # whitespace
     assert_equal(<<HTML, render(<<HAML))
 <ul>foobarbaz</ul>
 HTML
@@ -492,7 +492,7 @@ HTML
 HAML
   end
 
-  def test_whitespace_nuke_with_tags_and_else; skip # silent script
+  def test_whitespace_nuke_with_tags_and_else; skip # whitespace
     assert_equal(<<HTML, render(<<HAML))
 <a>
   <b>foo</b>
@@ -534,7 +534,7 @@ HTML
 HAML
   end
 
-  def test_both_case_indentation_work_with_deeply_nested_code; skip # silent script
+  def test_both_case_indentation_work_with_deeply_nested_code
     result = <<RESULT
 <h2>
   other
@@ -574,7 +574,7 @@ bar
 HAML
   end
 
-  def test_inline_if; skip # silent script
+  def test_inline_if; skip # script bug
     assert_equal(<<HTML, render(<<HAML))
 <p>One</p>
 <p></p>
@@ -793,7 +793,7 @@ HAML
     end
   end
 
-  def test_if_without_content_and_else; skip # silent script
+  def test_if_without_content_and_else
     assert_equal(<<HTML, render(<<HAML))
 foo
 HTML
@@ -821,7 +821,7 @@ HAML
     assert_equal("<a href='#\"'></a>\n", render('%a(href="#\\"")'))
   end
 
-  def test_case_assigned_to_var; skip # silent script
+  def test_case_assigned_to_var
     assert_equal(<<HTML, render(<<HAML))
 bar
 HTML
@@ -854,7 +854,7 @@ HTML
 HAML
   end
 
-  def test_nested_case_assigned_to_var; skip # silent script
+  def test_nested_case_assigned_to_var
     assert_equal(<<HTML, render(<<HAML))
 bar
 HTML
@@ -866,7 +866,7 @@ HTML
 HAML
   end
 
-  def test_case_assigned_to_multiple_vars; skip # silent script
+  def test_case_assigned_to_multiple_vars
     assert_equal(<<HTML, render(<<HAML))
 bar
 bip
@@ -879,7 +879,7 @@ HTML
 HAML
   end
 
-  def test_if_assigned_to_var; skip # silent script
+  def test_if_assigned_to_var
     assert_equal(<<HTML, render(<<HAML))
 foo
 HTML
@@ -912,7 +912,7 @@ HTML
 HAML
   end
 
-  def test_case_with_newline_after_case; skip # silent script
+  def test_case_with_newline_after_case
     assert_equal(<<HTML, render(<<HAML))
 foo
 HTML
@@ -1848,7 +1848,7 @@ HTML
 HAML
   end
 
-  def test_loud_ruby_multiline_with_block; skip # silent script
+  def test_loud_ruby_multiline_with_block; skip # block script
     assert_equal(<<HTML, render(<<HAML))
 #{%w[far faz fang]}
 <p>foo</p>
@@ -1864,7 +1864,7 @@ HTML
 HAML
   end
 
-  def test_silent_ruby_multiline_with_block; skip # silent script
+  def test_silent_ruby_multiline_with_block; skip # block script
     assert_equal(<<HTML, render(<<HAML))
 far
 faz
@@ -2061,7 +2061,7 @@ HTML
 HAML
   end
 
-  def test_block_spacing; skip # silent script
+  def test_block_spacing
     begin
       assert render(<<-HAML)
 - foo = ["bar", "baz", "kni"]
