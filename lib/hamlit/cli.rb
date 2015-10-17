@@ -9,6 +9,11 @@ module Hamlit
       puts eval(code)
     end
 
+    desc 'compile HAML', 'Show compile result'
+    def compile(file)
+      print_code generate_code(file)
+    end
+
     desc 'parse HAML', 'Show parse result'
     def parse(file)
       pp generate_ast(file)
@@ -30,6 +35,13 @@ module Hamlit
     def method_missing(*args)
       return super(*args) if args.length > 1
       render(args.first.to_s)
+    end
+
+    def print_code(code)
+      require 'pry'
+      puts Pry.Code(code).highlighted
+    rescue LoadError
+      puts code
     end
 
     # Enable colored pretty printing only for development environment.
