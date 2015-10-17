@@ -77,6 +77,8 @@ module Hamlit
       flattened = {}
 
       attributes.each do |key, value|
+        next if value == attributes
+
         case value
         when Hash
           flatten_attributes(value).each do |k, v|

@@ -1570,7 +1570,7 @@ HAML
   end
 
 
-  def test_html5_data_attributes_with_nested_hash; skip # silent script
+  def test_html5_data_attributes_with_nested_hash
     assert_equal("<div data-a-b='c'></div>\n", render(<<-HAML))
 - hash = {:a => {:b => 'c'}}
 - hash[:d] = hash
@@ -1578,7 +1578,7 @@ HAML
 HAML
   end
 
-  def test_html5_data_attributes_with_nested_hash_and_without_hyphenation; skip # silent script
+  def test_html5_data_attributes_with_nested_hash_and_without_hyphenation; skip # hyphenate
     assert_equal("<div data-a_b='c'></div>\n", render(<<-HAML, :hyphenate_data_attrs => false))
 - hash = {:a => {:b => 'c'}}
 - hash[:d] = hash
