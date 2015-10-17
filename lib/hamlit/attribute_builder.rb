@@ -18,7 +18,7 @@ module Hamlit
         merge_attributes(attrs, arg)
       end
 
-      attributes.each do |key, value|
+      attributes.sort_by(&:first).each do |key, value|
         if value == true
           case @format
           when :xhtml
