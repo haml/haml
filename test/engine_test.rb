@@ -1561,7 +1561,7 @@ HAML
       render("%div{:foo => {:baz => 'bang'}}"))
 	end
 
-  def test_arbitrary_attribute_hash_merging; skip # silent script
+  def test_arbitrary_attribute_hash_merging
     assert_equal(%Q{<a aria-baz='qux' aria-foo='bar'></a>\n}, render(<<-HAML))
 - h1 = {:aria => {:foo => :bar}}
 - h2 = {:baz => :qux}
@@ -1755,7 +1755,7 @@ HAML
 
   # Ruby Multiline
 
-  def test_silent_ruby_multiline; skip # silent script
+  def test_silent_ruby_multiline
     assert_equal(<<HTML, render(<<HAML))
 bar, baz, bang
 <p>foo</p>

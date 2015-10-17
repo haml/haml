@@ -35,7 +35,7 @@ module Hamlit
       when :script
         compile_script(node)
       when :silent_script
-        [:multi]
+        compile_silent_script(node)
       when :tag
         compile_tag(node)
       when :haml_comment
@@ -63,6 +63,10 @@ module Hamlit
 
     def compile_plain(node)
       [:static, node.value[:text]]
+    end
+
+    def compile_silent_script(node)
+      [:code, node.value[:text]]
     end
 
     def compile_script(node)
