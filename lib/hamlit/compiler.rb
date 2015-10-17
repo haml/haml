@@ -1,5 +1,6 @@
 require 'hamlit/compiler/comment_compiler'
 require 'hamlit/compiler/doctype_compiler'
+require 'hamlit/compiler/script_compiler'
 require 'hamlit/compiler/silent_script_compiler'
 require 'hamlit/compiler/tag_compiler'
 require 'hamlit/filters'
@@ -10,8 +11,10 @@ module Hamlit
     def initialize(options = {})
       @comment_compiler       = CommentCompiler.new
       @doctype_compiler       = DoctypeCompiler.new(options)
+      @script_compiler        = ScriptCompiler.new
       @silent_script_compiler = SilentScriptCompiler.new
       @tag_compiler           = TagCompiler.new(options)
+
       @filter_compiler        = Filters.new(options)
       @whitespace_compiler    = Whitespace::Compiler.new
     end
@@ -67,18 +70,12 @@ module Hamlit
       [:static, node.value[:text]]
     end
 
-    def compile_silent_script(node)
-      @silent_script_compiler.compile(node) { |n| compile_children(n) }
+    def compile_script(node)
+      @script_compiler.compile(node)
     end
 
-    def compile_script(node)
-      if node.value[:preserve]
-        [:dynamic, %Q[Haml::Helpers.find_and_preserve(#{node.value[:text]}, %w(textarea pre code))]]
-      elsif node.value[:escape_html]
-        [:escape, true, [:dynamic, node.value[:text]]]
-      else
-        [:dynamic, node.value[:text]]
-      end
+    def compile_silent_script(node)
+      @silent_script_compiler.compile(node) { |n| compile_children(n) }
     end
 
     def compile_tag(node)
