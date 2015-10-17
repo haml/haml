@@ -1,5 +1,6 @@
 require 'hamlit/compiler/comment_compiler'
 require 'hamlit/compiler/doctype_compiler'
+require 'hamlit/compiler/silent_script_compiler'
 require 'hamlit/compiler/tag_compiler'
 require 'hamlit/filters'
 require 'hamlit/whitespace/compiler'
@@ -7,11 +8,12 @@ require 'hamlit/whitespace/compiler'
 module Hamlit
   class Compiler
     def initialize(options = {})
-      @comment_compiler    = CommentCompiler.new
-      @doctype_compiler    = DoctypeCompiler.new(options)
-      @tag_compiler        = TagCompiler.new(options)
-      @filter_compiler     = Filters.new(options)
-      @whitespace_compiler = Whitespace::Compiler.new
+      @comment_compiler       = CommentCompiler.new
+      @doctype_compiler       = DoctypeCompiler.new(options)
+      @silent_script_compiler = SilentScriptCompiler.new
+      @tag_compiler           = TagCompiler.new(options)
+      @filter_compiler        = Filters.new(options)
+      @whitespace_compiler    = Whitespace::Compiler.new
     end
 
     def call(ast)
@@ -66,7 +68,7 @@ module Hamlit
     end
 
     def compile_silent_script(node)
-      [:code, node.value[:text]]
+      @silent_script_compiler.compile(node)
     end
 
     def compile_script(node)
