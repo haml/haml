@@ -5,4 +5,4 @@ gemspec
 
 gem 'lineprof'
 gem 'minitest-line'
-gem 'pry'
+gem 'pry-byebug'
