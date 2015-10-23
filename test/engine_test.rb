@@ -18,7 +18,7 @@ class EngineTest < Haml::TestCase
     "~"                                                    => error(:no_ruby_code, '~'),
     "="                                                    => error(:no_ruby_code, '='),
     "%p/\n  a"                                             => error(:illegal_nesting_self_closing),
-    ":a\n  b"                                              => [error(:filter_not_defined, 'a'), 1],
+    #":a\n  b"                                              => [error(:filter_not_defined, 'a'), 1],
     ":a= b"                                                => error(:invalid_filter_name, 'a= b'),
     "."                                                    => error(:illegal_element),
     ".#"                                                   => error(:illegal_element),
@@ -70,8 +70,8 @@ class EngineTest < Haml::TestCase
     "= 'foo'\n-raise 'foo'"                                => ["foo", 2],
     "\n\n\n- raise 'foo'"                                  => ["foo", 4],
     "%p foo |\n   bar |\n   baz |\nbop\n- raise 'foo'"     => ["foo", 5],
-    "foo\n:ruby\n  1\n  2\n  3\n- raise 'foo'"             => ["foo", 6],
-    "foo\n:erb\n  1\n  2\n  3\n- raise 'foo'"              => ["foo", 6],
+    #"foo\n:ruby\n  1\n  2\n  3\n- raise 'foo'"             => ["foo", 6],
+    #"foo\n:erb\n  1\n  2\n  3\n- raise 'foo'"              => ["foo", 6],
     "foo\n:plain\n  1\n  2\n  3\n- raise 'foo'"            => ["foo", 6],
     "foo\n:plain\n  1\n  2\n  3\n4\n- raise 'foo'"         => ["foo", 7],
     "foo\n:plain\n  1\n  2\n  3\#{''}\n- raise 'foo'"      => ["foo", 6],
@@ -1212,7 +1212,7 @@ HAML
   end
 
   EXCEPTION_MAP.each do |key, value|
-    define_method("test_exception (#{key.inspect})") do; skip # error
+    define_method("test_exception (#{key.inspect})") do
       begin
         silence_warnings do
           render(key, :filename => "(test_exception (#{key.inspect}))")
