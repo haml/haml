@@ -346,7 +346,7 @@ HAML
     assert_equal(hash, {:color => 'red'})
   end
 
-  def test_ugly_semi_prerendered_tags; skip # script bug
+  def test_ugly_semi_prerendered_tags
     assert_equal(<<HTML, render(<<HAML, :ugly => true))
 <p a='2'></p>
 <p a='2'>foo</p>
@@ -371,7 +371,7 @@ HTML
 HAML
   end
 
-  def test_end_of_file_multiline; skip # script bug
+  def test_end_of_file_multiline
     assert_equal("<p>0</p>\n<p>1</p>\n<p>2</p>\n", render("- for i in (0...3)\n  %p= |\n   i |"))
   end
 
@@ -574,7 +574,7 @@ bar
 HAML
   end
 
-  def test_inline_if; skip # script bug
+  def test_inline_if
     assert_equal(<<HTML, render(<<HAML))
 <p>One</p>
 <p></p>
@@ -962,7 +962,7 @@ HAML
     assert_equal("<p>\n  foo & bar\n</p>\n", render("%p\n  != 'foo & bar'", :escape_html => true))
   end
 
-  def test_bang_equals_inline_should_not_escape; skip # script bug
+  def test_bang_equals_inline_should_not_escape
     assert_equal("<p>foo & bar</p>\n", render("%p!= 'foo & bar'", :escape_html => true))
   end
 
@@ -1062,7 +1062,7 @@ HAML
     assert_equal("foo&amp;bar\n", render("= 'foo&bar' #comment", :escape_html => true))
   end
 
-  def test_script_with_if_shouldnt_output; skip # script bug
+  def test_script_with_if_shouldnt_output
     assert_equal(<<HTML, render(<<HAML))
 <p>foo</p>
 <p></p>
@@ -1198,7 +1198,7 @@ HAML
     assert_equal("<p class='bar foo'>nil</p>\n", render("%p.foo{{:class => nil}, :class => 'bar'} nil"))
   end
 
-  def test_locals; skip # script bug
+  def test_locals
     assert_equal("<p>Paragraph!</p>\n", render("%p= text", :locals => { :text => "Paragraph!" }))
   end
 
@@ -1336,7 +1336,7 @@ HAML
                         :locals => {:a1 => {:a1 => 'foo'}, :a2 => {:a2 => 'bar'}}))
   end
 
-  def test_render_should_accept_a_binding_as_scope; skip # script bug
+  def test_render_should_accept_a_binding_as_scope
     string = "This is a string!"
     string.instance_variable_set(:@var, "Instance variable")
     b = string.instance_eval do
@@ -1420,7 +1420,7 @@ HAML
     end
   end
 
-  def test_ugly_true; skip # script bug
+  def test_ugly_true
     assert_equal("<div id='outer'>\n<div id='inner'>\n<p>hello world</p>\n</div>\n</div>\n",
                  render("#outer\n  #inner\n    %p hello world", :ugly => true))
 
@@ -1882,7 +1882,7 @@ HTML
 HAML
   end
 
-  def test_ruby_multiline_in_tag; skip # script bug
+  def test_ruby_multiline_in_tag
     assert_equal(<<HTML, render(<<HAML))
 <p>foo, bar, baz</p>
 <p>foo</p>
@@ -1910,7 +1910,7 @@ HTML
 HAML
   end
 
-  def test_unescaped_ruby_multiline_in_tag; skip # script bug
+  def test_unescaped_ruby_multiline_in_tag
     assert_equal(<<HTML, render(<<HAML, :escape_html => true))
 <p>foo<, bar, baz</p>
 <p>foo</p>
