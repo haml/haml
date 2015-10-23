@@ -309,11 +309,11 @@ HAML
     assert_equal("<p>Foo &amp; Bar & Baz</p>\n", render('%p& Foo #{"&"} Bar & Baz'))
   end
 
-  def test_nil_tag_value_should_render_as_empty; skip # nil script
+  def test_nil_tag_value_should_render_as_empty
     assert_equal("<p></p>\n", render("%p= nil"))
   end
 
-  def test_tag_with_failed_if_should_render_as_empty; skip # nil script
+  def test_tag_with_failed_if_should_render_as_empty
     assert_equal("<p></p>\n", render("%p= 'Hello' if false"))
   end
 
