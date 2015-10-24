@@ -15,25 +15,6 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'renders . or # which is not continued by tag name' do
-      skip
-      assert_render(<<-HAML, <<-HTML, error_with: [:haml, :faml])
-        .
-        .*
-        ..
-        #
-        #+
-        ##
-      HAML
-        .
-        .*
-        ..
-        #
-        #+
-        ##
-      HTML
-    end
-
     it 'escapes all operators by backslash' do
       assert_render(<<-'HAML', <<-HTML)
         = 'a'

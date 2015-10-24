@@ -20,7 +20,6 @@ describe Hamlit::Engine do
     end
 
     it 'renders multi-line tag' do
-      skip
       assert_render(<<-HAML, <<-HTML)
         %span
           hello
