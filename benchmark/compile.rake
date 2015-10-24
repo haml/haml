@@ -52,7 +52,7 @@ namespace :benchmark do
     haml_benchmark   = Benchmark.new('haml  ')
     faml_benchmark   = Benchmark.new('faml  ')
     hamlit_benchmark = Benchmark.new('hamlit')
-    yaml_path = File.expand_path('../test/haml-spec/tests.yml', __dir__)
+    yaml_path = File.expand_path('../test/haml/haml-spec/tests.yml', __dir__)
     contexts  = YAML.load(File.read(yaml_path))
 
     faml_engine   = Faml::Engine.new(filename: '')

@@ -56,7 +56,7 @@ namespace :benchmark do
     faml_engine   = Faml::Engine.new(filename: '')
     hamlit_engine = Hamlit::Engine.new
 
-    haml             = File.read(File.expand_path('../test/templates/standard.haml', __dir__))
+    haml             = File.read(File.expand_path('../test/haml/templates/standard.haml', __dir__))
     locals           = {}
     options          = { ugly: true, escape_html: true }
 

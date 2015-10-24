@@ -5,7 +5,7 @@ require 'yaml'
 
 desc 'Profile compilation'
 task :profile do
-  yaml_path = File.expand_path('../test/haml-spec/tests.yml', __dir__)
+  yaml_path = File.expand_path('../test/haml/haml-spec/tests.yml', __dir__)
   contexts  = YAML.load(File.read(yaml_path))
 
   hamlit_engine = Hamlit::Engine.new
