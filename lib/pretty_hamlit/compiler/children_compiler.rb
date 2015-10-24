@@ -10,6 +10,7 @@ module PrettyHamlit
         temple << :whitespace if prepend_whitespace?(node)
         node.children.each do |n|
           rstrip_whitespace!(temple) if nuke_outer_whitespace?(n)
+          insert_newlines!(temple, n)
           temple << yield(n)
           if insert_whitespace?(n)
             if nuke_inner_whitespace?(node)

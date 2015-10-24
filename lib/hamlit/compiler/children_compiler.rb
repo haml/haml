@@ -1,6 +1,10 @@
 module Hamlit
   class Compiler
     class ChildrenCompiler
+      def initialize
+        @lineno = 1
+      end
+
       def compile(node, &block)
         temple = [:multi]
         return temple if node.children.empty?
@@ -8,6 +12,7 @@ module Hamlit
         temple << :whitespace if prepend_whitespace?(node)
         node.children.each do |n|
           rstrip_whitespace!(temple) if nuke_outer_whitespace?(n)
+          insert_newlines!(temple, n)
           temple << yield(n)
           temple << :whitespace if insert_whitespace?(n)
         end
@@ -16,6 +21,13 @@ module Hamlit
       end
 
       private
+
+      def insert_newlines!(temple, node)
+        (node.line - @lineno).times do
+          temple << [:newline]
+        end
+        @lineno = node.line
+      end
 
       def confirm_whitespace(temple)
         temple.map do |exp|

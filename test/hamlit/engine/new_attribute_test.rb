@@ -19,13 +19,12 @@ describe Hamlit::Engine do
     end
 
     it 'renders multi-line attributes properly' do
-      skip
-      assert_render(<<-HAML, <<-HTML, compatible_only: :faml)
+      assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
         %span(a=__LINE__
          b=__LINE__)
         = __LINE__
       HAML
-        <span a='1' b='2'></span>
+        <span a='1' b='1'></span>
         3
       HTML
     end
