@@ -1,3 +1,4 @@
+require 'unindent'
 require 'bundler/setup'
 require 'minitest/autorun'
 require 'action_pack'
@@ -19,12 +20,20 @@ BASE_TEST_CLASS = if defined?(Minitest::Test)
 
 module Declarative
   def test(name, &block)
-    define_method("test_ #{name}", &block)
+    define_method("test_hamlit #{name}", &block)
+  end
+end
+
+module HamlitTest
+  def assert_render(haml, html)
+    haml, html = haml.unindent, html.unindent
+    assert_equal render(haml), html
   end
 end
 
 class Haml::TestCase < BASE_TEST_CLASS
   extend Declarative
+  include HamlitTest
 
   def render(text, options = {}, base = nil, &block)
     scope  = options.delete(:scope)  || Object.new
