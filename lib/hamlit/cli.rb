@@ -25,7 +25,7 @@ module Hamlit
 
     def generate_code(file)
       template = File.read(file)
-      Hamlit::Engine.new(engine_options).call(template)
+      Hamlit::HamlEngine.new(template, haml_options).precompiled
     end
 
     def generate_ast(file)
@@ -33,8 +33,8 @@ module Hamlit
       Hamlit::Parser.new.call(template)
     end
 
-    def engine_options
-      { pretty: options['style'] == 'pretty' }
+    def haml_options
+      { ugly: options['style'] != 'pretty' }
     end
 
     # Flexible default_task, compatible with haml's CLI
