@@ -222,7 +222,7 @@ HAML
     assert_equal("<p>Hello</p>", render('%p Hello').chomp)
   end
 
-  def test_one_liner_with_newline_shouldnt_be_one_line; skip # dynamic indentation # script bug
+  def test_one_liner_with_newline_shouldnt_be_one_line
     assert_equal("<p>\n  foo\n  bar\n</p>", render('%p= "foo\nbar"').chomp)
   end
 

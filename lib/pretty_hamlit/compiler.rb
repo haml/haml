@@ -1,4 +1,5 @@
 require 'hamlit/compiler'
+require 'pretty_hamlit/compiler/tag_compiler'
 require 'pretty_hamlit/filters'
 require 'pretty_hamlit/whitespace_compiler'
 
@@ -7,6 +8,7 @@ module PrettyHamlit
     def initialize(options = {})
       super
       @indent_level = 0
+      @tag_compiler = TagCompiler.new(options)
 
       @filter_compiler     = Filters.new(options)
       @whitespace_compiler = WhitespaceCompiler.new
@@ -31,7 +33,7 @@ module PrettyHamlit
 
     def compile_tag(node)
       @indent_level += 1
-      super
+      @tag_compiler.compile(node, @indent_level) { |n| compile_children(n) }
     ensure
       @indent_level -= 1
     end
