@@ -1,23 +1,23 @@
-require 'hamlit/compiler'
+require 'pretty_hamlit/compiler/children_compiler'
 require 'pretty_hamlit/compiler/tag_compiler'
 require 'pretty_hamlit/filters'
-require 'pretty_hamlit/whitespace_compiler'
 
 module PrettyHamlit
   class Compiler < Hamlit::Compiler
     def initialize(options = {})
       super
       @indent_level = 0
-      @tag_compiler = TagCompiler.new(options)
 
-      @filter_compiler     = Filters.new(options)
-      @whitespace_compiler = WhitespaceCompiler.new
+      @children_compiler = ChildrenCompiler.new
+      @tag_compiler      = TagCompiler.new(options)
+
+      @filter_compiler = Filters.new(options)
     end
 
     private
 
     def compile_children(node)
-      @whitespace_compiler.compile_children(node, @indent_level) { |n| compile(n) }
+      @children_compiler.compile(node, @indent_level) { |n| compile(n) }
     end
 
     def compile_comment(node)
