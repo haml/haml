@@ -3,7 +3,7 @@ require 'thor'
 
 module Hamlit
   class CLI < Thor
-    class_option :style, type: :string, aliases: ['-t'], default: 'pretty'
+    class_option :style, type: :string, aliases: ['-t'], default: 'ugly'
 
     desc 'render HAML', 'Render haml template'
     def render(file)
@@ -34,7 +34,7 @@ module Hamlit
     end
 
     def haml_options
-      { ugly: options['style'] != 'pretty' }
+      { ugly: options['style'] == 'ugly' }
     end
 
     # Flexible default_task, compatible with haml's CLI
