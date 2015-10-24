@@ -31,6 +31,16 @@ namespace :hamlit do
 end
 task default: 'hamlit:test'
 
+Rake::TestTask.new do |t|
+  t.libs << 'lib' << 'test'
+  files = Dir['test/hamlit/**/*_test.rb']
+  files += Dir['test/haml/*_test.rb']
+  files << 'test/haml/haml-spec/*_test.rb'
+  t.ruby_opts = %w[-rtest_helper]
+  t.test_files = files
+  t.verbose = true
+end
+
 Rake::TestTask.new(:spec) do |t|
   t.libs << 'lib' << 'test'
   t.ruby_opts = %w[-rtest_helper]
