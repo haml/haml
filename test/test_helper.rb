@@ -29,17 +29,15 @@ module RenderAssertion
     options = options.dup
     options.delete(:compatible_only)
     options.delete(:error_with)
-    options = { escape_html: true, ugly: true}.merge(options)
+    options = { escape_html: true, ugly: true }.merge(options)
     haml, html = haml.unindent, html.unindent
     assert_equal html, render(haml, options)
   end
 
-  def render(text, options = {}, base = nil, &block)
+  def render(text, options = {}, &block)
     scope  = options.delete(:scope)  || Object.new
     locals = options.delete(:locals) || {}
-    engine = Hamlit::HamlEngine.new(text, options)
-    return engine.to_html(base) if base
-    engine.to_html(scope, locals, &block)
+    eval Hamlit::HamlEngine.new(text, options).precompiled
   end
 end
 
