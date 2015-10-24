@@ -40,11 +40,24 @@ end
 
 class TemplateTest < Haml::TestCase
   TEMPLATE_PATH = File.join(File.dirname(__FILE__), "templates")
-  TEMPLATES = %w{          very_basic        standard    helpers
-    whitespace_handling    original_engine   list        helpful
-    silent_script          tag_parsing       just_stuff  partials
-    nuke_outer_whitespace  nuke_inner_whitespace
-    render_layout partial_layout partial_layout_erb}
+  TEMPLATES = [
+    #'very_basic',
+    #'standard',
+    #'helpers',
+    #'whitespace_handling',
+    #'original_engine',
+    'list',
+    #'helpful',
+    #'silent_script',
+    'tag_parsing',
+    #'just_stuff',
+    #'partials',
+    #'nuke_outer_whitespace',
+    #'nuke_inner_whitespace',
+    #'render_layout',
+    #'partial_layout',
+    #'partial_layout_erb',
+  ]
 
   def setup
     @base = create_base
@@ -106,9 +119,14 @@ class TemplateTest < Haml::TestCase
   end
 
   TEMPLATES.each do |template|
-    define_method "test_template_should_render_correctly [template: #{template}]" do; skip
+    define_method "test_template_should_render_correctly [template: #{template}]" do
       assert_renders_correctly template
     end
+  end
+
+  def test_templates
+    skip
+    TEMPLATES
   end
 
   def test_render_method_returning_null_with_ugly; skip

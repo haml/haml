@@ -1235,6 +1235,11 @@ HAML
     end
   end
 
+  def test_exception_map
+    skip
+    EXCEPTION_MAP
+  end
+
   def test_exception_line; skip # error
     render("a\nb\n!!!\n  c\nd")
   rescue Haml::SyntaxError => e
