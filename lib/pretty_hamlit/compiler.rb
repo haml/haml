@@ -25,6 +25,10 @@ module PrettyHamlit
       @indent_level -= 1
     end
 
+    def compile_filter(node)
+      @filter_compiler.compile(node, @indent_level)
+    end
+
     def compile_tag(node)
       @indent_level += 1
       super

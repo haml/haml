@@ -11,6 +11,7 @@ module Hamlit
       html_type:   nil,
       attr_quote:  "'",
       escape_html: true,
+      buffer:      '_buf',
       autoclose:   %w(area base basefont br col command embed frame
                       hr img input isindex keygen link menuitem meta
                       param source track wbr),

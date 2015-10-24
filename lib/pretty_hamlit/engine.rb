@@ -1,6 +1,7 @@
 require 'temple'
 require 'hamlit/parser'
 require 'pretty_hamlit/compiler'
+require 'pretty_hamlit/dynamic_indentation'
 
 module PrettyHamlit
   class Engine < Temple::Engine
@@ -11,6 +12,7 @@ module PrettyHamlit
       attr_quote:  "'",
       escape_html: true,
       pretty:      true,
+      buffer:      '_buf',
       autoclose:   %w(area base basefont br col command embed frame
                       hr img input isindex keygen link menuitem meta
                       param source track wbr),
