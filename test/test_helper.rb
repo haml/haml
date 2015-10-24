@@ -25,9 +25,9 @@ module Declarative
 end
 
 module HamlitTest
-  def assert_render(haml, html)
+  def assert_render(haml, html, options = {})
+    options = { escape_html: true, ugly: true}.merge(options)
     haml, html = haml.unindent, html.unindent
-    options = { escape_html: true, ugly: true }
     assert_equal render(haml, options), html
   end
 end
