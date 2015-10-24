@@ -31,7 +31,7 @@ module RenderAssertion
     options.delete(:error_with)
     options = { escape_html: true, ugly: true}.merge(options)
     haml, html = haml.unindent, html.unindent
-    assert_equal render(haml, options), html
+    assert_equal html, render(haml, options)
   end
 
   def render(text, options = {}, base = nil, &block)
