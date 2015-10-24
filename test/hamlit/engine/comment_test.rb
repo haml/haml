@@ -1,54 +1,58 @@
-class Hamlit::CommentTest < Haml::TestCase
-  test 'renders html comment' do
-    assert_render(<<-HAML, <<-HTML)
-      / comments
-    HAML
-      <!-- comments -->
-    HTML
-  end
+describe Hamlit::Engine do
+  include RenderAssertion
 
-  test 'strips html comment ignoring around spcaes' do
-    assert_render('/   comments    ', <<-HTML)
-      <!-- comments -->
-    HTML
-  end
+  describe 'comment' do
+    it 'renders html comment' do
+      assert_render(<<-HAML, <<-HTML)
+        / comments
+      HAML
+        <!-- comments -->
+      HTML
+    end
 
-  test 'accepts backslash-only line in a comment' do
-    assert_render(<<-'HAML', <<-HTML)
-      /
-        \
-    HAML
-      <!--
+    it 'strips html comment ignoring around spcaes' do
+      assert_render('/   comments    ', <<-HTML)
+        <!-- comments -->
+      HTML
+    end
 
-      -->
-    HTML
-  end
+    it 'accepts backslash-only line in a comment' do
+      assert_render(<<-'HAML', <<-HTML)
+        /
+          \
+      HAML
+        <!--
 
-  test 'renders a deeply indented comment starting with backslash' do
-    assert_render(<<-'HAML', <<-HTML)
-      /
-        \       a
-      /
+        -->
+      HTML
+    end
+
+    it 'renders a deeply indented comment starting with backslash' do
+      assert_render(<<-'HAML', <<-HTML)
+        /
+          \       a
+        /
+          a
+      HAML
+        <!--
+               a
+        -->
+        <!--
         a
-    HAML
-      <!--
-             a
-      -->
-      <!--
-      a
-      -->
-    HTML
-  end
+        -->
+      HTML
+    end
 
-  test 'ignores multiline comment' do
-    assert_render(<<-'HAML', <<-HTML)
-      -# if true
-        - raise 'ng'
-          = invalid script
-              too deep indent
-      ok
-    HAML
-      ok
-    HTML
+    it 'ignores multiline comment' do
+      assert_render(<<-'HAML', <<-HTML)
+        -# if true
+          - raise 'ng'
+            = invalid script
+                too deep indent
+        ok
+      HAML
+        ok
+      HTML
+    end
   end
 end
