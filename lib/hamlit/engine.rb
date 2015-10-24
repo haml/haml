@@ -1,7 +1,7 @@
 require 'temple'
-require 'hamlit/compiler'
-require 'hamlit/pretty_compiler'
 require 'hamlit/parser'
+require 'hamlit/compiler'
+require 'pretty_hamlit/engine'
 
 module Hamlit
   class Engine < Temple::Engine
@@ -11,7 +11,6 @@ module Hamlit
       html_type:   nil,
       attr_quote:  "'",
       escape_html: true,
-      pretty:      false,
       autoclose:   %w(area base basefont br col command embed frame
                       hr img input isindex keygen link menuitem meta
                       param source track wbr),
@@ -19,7 +18,7 @@ module Hamlit
     )
 
     use Parser
-    use :Compiler, -> { options[:pretty] ? PrettyCompiler : Compiler }
+    use Compiler
     html :Fast
     filter :Escapable
     filter :ControlFlow
@@ -35,7 +34,11 @@ module Hamlit
     end
 
     def precompiled
-      Engine.new(temple_options).call(@template)
+      if @options[:ugly]
+        Engine.new(temple_options).call(@template)
+      else
+        PrettyHamlit::Engine.new(temple_options).call(@template)
+      end
     end
 
     def render(scope = Object.new, locals = {}, &block)
@@ -49,7 +52,7 @@ module Hamlit
 
     def temple_options
       @options.dup.tap do |options|
-        options[:pretty] = !options.delete(:ugly)
+        options.delete(:ugly)
         case options[:format]
         when :html5
           options[:format] = :html

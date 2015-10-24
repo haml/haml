@@ -1,12 +1,15 @@
 require 'hamlit/compiler'
-require 'hamlit/whitespace/indented_compiler'
+require 'pretty_hamlit/filters'
+require 'pretty_hamlit/whitespace_compiler'
 
-module Hamlit
-  class PrettyCompiler < Compiler
-    def initialize(*)
+module PrettyHamlit
+  class Compiler < Hamlit::Compiler
+    def initialize(options = {})
       super
       @indent_level = 0
-      @whitespace_compiler = Whitespace::IndentedCompiler.new
+
+      @filter_compiler     = Filters.new(options)
+      @whitespace_compiler = WhitespaceCompiler.new
     end
 
     private

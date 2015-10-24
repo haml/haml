@@ -4,7 +4,7 @@ require 'hamlit/compiler/script_compiler'
 require 'hamlit/compiler/silent_script_compiler'
 require 'hamlit/compiler/tag_compiler'
 require 'hamlit/filters'
-require 'hamlit/whitespace/compiler'
+require 'hamlit/whitespace_compiler'
 
 module Hamlit
   class Compiler
@@ -16,7 +16,7 @@ module Hamlit
       @tag_compiler           = TagCompiler.new(options)
 
       @filter_compiler        = Filters.new(options)
-      @whitespace_compiler    = Whitespace::Compiler.new
+      @whitespace_compiler    = WhitespaceCompiler.new
     end
 
     def call(ast)
