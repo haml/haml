@@ -812,7 +812,7 @@ HTML
 HAML
   end
 
-  def test_html_attributes_with_hash
+  def test_html_attributes_with_hash; skip # attribute escape
     assert_equal("<a href='#' rel='top'>Foo</a>\n",
       render('%a(href="#" rel="top") Foo'))
     assert_equal("<a href='#'>Foo</a>\n",
@@ -1468,7 +1468,7 @@ HAML
     end
   end
 
-  def test_static_hashes; skip # attribute escape
+  def test_static_hashes
     assert_equal("<a b='a =&gt; b'></a>\n", render("%a{:b => 'a => b'}", :suppress_eval => true))
     assert_equal("<a b='a, b'></a>\n", render("%a{:b => 'a, b'}", :suppress_eval => true))
     assert_equal("<a b='a\tb'></a>\n", render('%a{:b => "a\tb"}', :suppress_eval => true))

@@ -7,6 +7,7 @@ module Hamlit
         @quote     = options[:attr_quote].inspect.freeze
         @format    = options[:format]
         @autoclose = options[:autoclose]
+        @escape_attrs = options[:escape_attrs]
       end
 
       def compile(node, &block)
@@ -35,8 +36,11 @@ module Hamlit
 
       def compile_static_attributes!(temple, node)
         node.value[:attributes].sort_by(&:first).each do |name, value|
-          if value == true
+          case
+          when value == true
             temple << [:html, :attr, name, [:multi]]
+          when @escape_attrs
+            temple << [:html, :attr, name, [:escape, true, [:static, value]]]
           else
             temple << [:html, :attr, name, [:static, value]]
           end

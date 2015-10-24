@@ -47,7 +47,6 @@ describe Hamlit::Engine do
 
     describe 'html escape' do
       it 'escapes attribute values on static attributes' do
-        skip
         assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
           %a(title="'")
           %a(title = "'\"")
