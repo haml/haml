@@ -1,12 +1,12 @@
-require 'haml'
-require 'hamlit'
-
 require 'bundler/setup'
 require 'minitest/autorun'
 require 'action_pack'
 require 'action_controller'
 require 'action_view'
 require 'rails'
+
+require 'hamlit'
+require 'hamlit/template'
 
 require 'minitest/reporters'
 Minitest::Reporters.use!

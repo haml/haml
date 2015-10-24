@@ -136,20 +136,20 @@ class TemplateTest < Haml::TestCase
 
   def test_templates_should_render_correctly_with_render_proc; skip
     assert_renders_correctly("standard") do |name|
-      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
+      engine = Hamlit::HamlEngine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
       engine.render_proc(@base).call
     end
   end
 
   def test_templates_should_render_correctly_with_def_method; skip
     assert_renders_correctly("standard") do |name|
-      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
+      engine = Haml::HamlEngine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
       engine.def_method(@base, "render_standard")
       @base.render_standard
     end
   end
 
-  def test_instance_variables_should_work_inside_templates; skip
+  def test_instance_variables_should_work_inside_templates
     @base.instance_variable_set(:@content_for_layout, 'something')
     assert_equal("<p>something</p>", render("%p= @content_for_layout").chomp)
 
@@ -163,7 +163,7 @@ class TemplateTest < Haml::TestCase
     assert_equal("Catlin", render("= @author").chomp)
   end
 
-  def test_instance_variables_should_work_inside_attributes; skip
+  def test_instance_variables_should_work_inside_attributes
     @base.instance_eval("@author = 'hcatlin'")
     assert_equal("<p class='hcatlin'>foo</p>", render("%p{:class => @author} foo").chomp)
   end
@@ -258,7 +258,7 @@ HAML
     assert_equal("Foo & Bar\n", render('= Haml::Util.html_safe("Foo & Bar")', :action_view))
   end
 
-  def test_xss_protection_with_bang; skip
+  def test_xss_protection_with_bang
     assert_equal("Foo & Bar\n", render('!= "Foo & Bar"', :action_view))
   end
 
@@ -274,7 +274,7 @@ HAML
     assert_equal("<div data-html='<foo>bar</foo>'></div>\n", render('%div{ "data-html" => "<foo>bar</foo>".html_safe }', :action_view))
   end
 
-  def test_xss_protection_with_bang_in_interpolation; skip
+  def test_xss_protection_with_bang_in_interpolation
     assert_equal("Foo & Bar\n", render('! Foo #{"&"} Bar', :action_view))
   end
 
