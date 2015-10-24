@@ -26,6 +26,9 @@ end
 
 module RenderAssertion
   def assert_render(haml, html, options = {})
+    options = options.dup
+    options.delete(:compatible_only)
+    options.delete(:error_with)
     options = { escape_html: true, ugly: true}.merge(options)
     haml, html = haml.unindent, html.unindent
     assert_equal render(haml, options), html
