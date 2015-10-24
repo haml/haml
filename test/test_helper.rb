@@ -27,7 +27,8 @@ end
 module HamlitTest
   def assert_render(haml, html)
     haml, html = haml.unindent, html.unindent
-    assert_equal render(haml), html
+    options = { escape_html: true, ugly: true }
+    assert_equal render(haml, options), html
   end
 end
 
