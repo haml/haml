@@ -209,6 +209,7 @@ HAML
   end
 
   def test_nil_should_render_empty_tag
+    skip '[INCOMPATIBILITY] Hamlit does not delete falsy boolean attributes for optimization'
     assert_equal("<div class='no_attributes'></div>",
                  render(".no_attributes{:nil => nil}").chomp)
   end
@@ -322,6 +323,7 @@ HAML
   end
 
   def test_dynamic_attributes_with_empty_attr
+    skip '[INCOMPATIBILITY] Hamlit does not delete falsy boolean attributes for optimization'
     assert_equal("<img alt='' src='/foo.png'>\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
   end
 
@@ -412,6 +414,7 @@ HAML
   end
 
   def test_boolean_attributes
+    skip '[INCOMPATIBILITY] Hamlit does not delete falsy boolean attributes for optimization'
     assert_equal("<p bar baz='true' foo='bar'></p>\n",
                  render("%p{:foo => 'bar', :bar => true, :baz => 'true'}", :format => :html4))
     assert_equal("<p bar='bar' baz='true' foo='bar'></p>\n",
@@ -1181,6 +1184,7 @@ HAML
   end
 
   def test_nil_attrs
+    skip '[INCOMPATIBILITY] Hamlit does not delete falsy boolean attributes for optimization'
     assert_equal("<p>nil</p>\n", render("%p{ :attr => nil } nil"))
     assert_equal("<p>nil</p>\n", render("%p{ :attr => x } nil", :locals => {:x => nil}))
   end
