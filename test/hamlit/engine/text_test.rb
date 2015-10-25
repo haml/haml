@@ -162,7 +162,6 @@ describe Hamlit::Engine do
       end
 
       it 'renders &= operator' do
-        skip
         assert_render(<<-'HAML', <<-'HTML', escape_html: false)
           %span&= '<nyaa>'
         HAML

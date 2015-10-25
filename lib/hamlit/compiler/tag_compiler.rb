@@ -54,7 +54,7 @@ module Hamlit
         when node.value[:value].nil? && self_closing?(node)
           nil
         when node.value[:parse]
-          [:dynamic, node.value[:value]]
+          [:escape, node.value[:escape_html], [:dynamic, node.value[:value]]]
         when Haml::Util.contains_interpolation?(node.value[:value])
           [:dynamic, node.value[:value]]
         else
