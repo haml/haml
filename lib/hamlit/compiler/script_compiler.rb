@@ -9,12 +9,15 @@ module Hamlit
         code = node.value[:text]
         code = find_and_preserve(code) if node.value[:preserve]
 
+        var = unique_identifier
         if node.children.empty?
-          temple = [:dynamic, code]
-          temple = escape_html(temple) if node.value[:escape_html]
-          temple
+          [:multi,
+           [:code, "#{var} = (#{code}"],
+           [:newline],
+           [:code, ')'.freeze],
+           [:escape, node.value[:escape_html], [:dynamic, var]],
+          ]
         else
-          var = unique_identifier
           [:multi,
            [:code, "#{var} = #{code}"],
            [:newline],

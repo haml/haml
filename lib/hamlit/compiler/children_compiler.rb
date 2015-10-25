@@ -23,21 +23,15 @@ module Hamlit
       private
 
       def insert_newlines!(temple, node)
-        offset = node.line - @lineno
-        offset -= 1 if newline_inserted_by_compiler?(node)
-        offset.times do
+        (node.line - @lineno).times do
           temple << [:newline]
         end
         @lineno = node.line
+        @lineno += 1 if newline_inserted_by_compiler?(node)
       end
 
       def newline_inserted_by_compiler?(node)
-        case node.type
-        when :script
-          !node.children.empty?
-        else
-          false
-        end
+        node.type == :script
       end
 
       def confirm_whitespace(temple)
