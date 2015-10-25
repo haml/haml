@@ -203,24 +203,39 @@ describe Hamlit::Engine do
       end
 
       it 'does not delete non-boolean attributes, for optimization' do
-        skip
         assert_render(<<-'HAML', <<-HTML, compatible_only: [])
-          / wontfix: Non-boolean attributes are not escaped for optimization.
+          %a{ href: false }
+          %a{ href: nil }
           - val = false
           %a{ href: val }
           - val = nil
           %a{ href: val }
+          - hash = { href: false }
+          %a{ hash }
+          - hash = { href: nil }
+          %a{ hash }
 
-          / Boolean attributes are escaped correctly.
+          %a{ disabled: false }
+          %a{ disabled: nil }
           - val = false
           %a{ disabled: val }
           - val = nil
           %a{ disabled: val }
+          - hash = { disabled: false }
+          %a{ hash }
+          - hash = { disabled: nil }
+          %a{ hash }
         HAML
-          <!-- wontfix: Non-boolean attributes are not escaped for optimization. -->
           <a href='false'></a>
           <a href=''></a>
-          <!-- Boolean attributes are escaped correctly. -->
+          <a href='false'></a>
+          <a href=''></a>
+          <a href='false'></a>
+          <a href=''></a>
+          <a></a>
+          <a></a>
+          <a></a>
+          <a></a>
           <a></a>
           <a></a>
         HTML

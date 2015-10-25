@@ -2,6 +2,13 @@ require 'temple/utils'
 
 module Hamlit
   class AttributeBuilder
+    BOOLEAN_ATTRIBUTES = %i[disabled readonly multiple checked autobuffer
+                         autoplay controls loop selected hidden scoped async
+                         defer reversed ismap seamless muted required
+                         autofocus novalidate formnovalidate open pubdate
+                         itemscope allowfullscreen default inert sortable
+                         truespeed typemustmatch data].freeze
+
     def self.build(quote, format, *args)
       builder = self.new(quote, format)
       builder.build(*args)
@@ -86,7 +93,9 @@ module Hamlit
             flattened["#{key}-#{k}"] = v if v
           end
         else
-          flattened[key.to_s] = value if value
+          if value || !BOOLEAN_ATTRIBUTES.include?(key)
+            flattened[key.to_s] = value
+          end
         end
       end
       flattened
