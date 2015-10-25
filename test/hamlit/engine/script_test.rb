@@ -13,7 +13,6 @@ describe Hamlit::Engine do
     end
 
     it 'renders one-line script with comment' do
-      skip
       assert_render(<<-HAML, <<-HTML)
         = # comment_only
         = '#' + "#" # = 3 #
@@ -97,7 +96,6 @@ describe Hamlit::Engine do
     end
 
     it 'renders &=' do
-      skip
       assert_render(<<-HAML, <<-HTML.rstrip, escape_html: false)
         &= '<"&>'
         &= '<"&>'.tap do |str|
@@ -109,7 +107,6 @@ describe Hamlit::Engine do
     end
 
     it 'regards ~ operator as =' do
-      skip
       assert_render(<<-'HAML', <<-HTML)
         ~ "<code>hello\nworld</code>"
       HAML

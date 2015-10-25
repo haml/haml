@@ -45,6 +45,7 @@ class Haml::TestCase < BASE_TEST_CLASS
   extend Declarative
 
   def render(text, options = {}, base = nil, &block)
+    options = { escape_html: false }.merge(options) # incompatible default
     scope  = options.delete(:scope)  || Object.new
     locals = options.delete(:locals) || {}
     engine = Hamlit::HamlEngine.new(text, options)

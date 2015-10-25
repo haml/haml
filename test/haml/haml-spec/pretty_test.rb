@@ -6,7 +6,7 @@ require 'minitest/autorun'
 # This is a spec converted by haml-spec.
 # See: https://github.com/haml/haml-spec
 class PrettyTest < MiniTest::Test
-  DEFAULT_OPTIONS = { ugly: false }.freeze
+  DEFAULT_OPTIONS = { ugly: false, escape_html: true }.freeze
 
   def self.haml_result(haml, options, locals)
     Haml::Engine.new(haml, DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)

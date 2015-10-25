@@ -2,14 +2,15 @@ require 'haml'
 
 module Hamlit
   class Parser
-    OPTION_MAPS = {
-      autoclose: :autoclose,
-    }.freeze
+    AVAILABLE_OPTIONS = %i[
+      autoclose
+      escape_html
+    ].freeze
 
     def initialize(options = {})
       @options = Haml::Options.defaults.dup
-      OPTION_MAPS.each do |temple, haml|
-        @options[haml] = options[temple]
+      AVAILABLE_OPTIONS.each do |key|
+        @options[key] = options[key]
       end
     end
 
