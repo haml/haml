@@ -426,7 +426,7 @@ HAML
                  render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :xhtml))
   end
 
-  def test_nuke_inner_whitespace_in_loops; skip # whitespace
+  def test_nuke_inner_whitespace_in_loops
     assert_equal(<<HTML, render(<<HAML))
 <ul>foobarbaz</ul>
 HTML
@@ -495,7 +495,7 @@ HTML
 HAML
   end
 
-  def test_whitespace_nuke_with_tags_and_else; skip # whitespace
+  def test_whitespace_nuke_with_tags_and_else
     assert_equal(<<HTML, render(<<HAML))
 <a>
   <b>foo</b>
@@ -991,7 +991,7 @@ HAML
                  render("%img{:width => nil, :src => \"foo\\n.png\", :alt => String.new}"))
   end
 
-  def test_string_double_equals_should_be_esaped; skip # escape html
+  def test_string_double_equals_should_be_escaped
     assert_equal("<p>4&&lt;</p>\n", render("%p== \#{2+2}&\#{'<'}", :escape_html => true))
     assert_equal("<p>4&<</p>\n", render("%p== \#{2+2}&\#{'<'}", :escape_html => false))
   end
@@ -1016,7 +1016,7 @@ HAML
     assert_equal("<p>\n  4&<\n</p>\n", render("%p\n  !== \#{2+2}&\#{'<'}", :escape_html => false))
   end
 
-  def test_string_interpolation_should_be_esaped; skip # escape html
+  def test_string_interpolation_should_be_esaped
     assert_equal("<p>4&&lt;</p>\n", render("%p \#{2+2}&\#{'<'}", :escape_html => true))
     assert_equal("<p>4&<</p>\n", render("%p \#{2+2}&\#{'<'}", :escape_html => false))
   end
@@ -1051,7 +1051,7 @@ HAML
     assert_equal("<span><br></span>\n", render('%span!#{"<br>"}'))
   end
 
-  def test_scripts_should_respect_escape_html_option; skip # escape html
+  def test_scripts_should_respect_escape_html_option
     assert_equal("<p>\n  foo &amp; bar\n</p>\n", render("%p\n  = 'foo & bar'", :escape_html => true))
     assert_equal("<p>\n  foo & bar\n</p>\n", render("%p\n  = 'foo & bar'", :escape_html => false))
   end
@@ -1061,7 +1061,7 @@ HAML
     assert_equal("<p>foo & bar</p>\n", render("%p= 'foo & bar'", :escape_html => false))
   end
 
-  def test_script_ending_in_comment_should_render_when_html_is_escaped; skip # script bug
+  def test_script_ending_in_comment_should_render_when_html_is_escaped
     assert_equal("foo&amp;bar\n", render("= 'foo&bar' #comment", :escape_html => true))
   end
 
