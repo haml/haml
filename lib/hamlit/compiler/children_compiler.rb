@@ -56,8 +56,15 @@ module Hamlit
       end
 
       def nuke_inner_whitespace?(node)
-        return false if node.type != :tag
-        node.value[:nuke_inner_whitespace]
+        case
+        when node.type == :tag
+          node.value[:nuke_inner_whitespace] ||
+            (node.parent && nuke_inner_whitespace?(node.parent))
+        when node.parent.nil?
+          false
+        else
+          nuke_inner_whitespace?(node.parent)
+        end
       end
 
       def nuke_prev_whitespace?(node)
@@ -91,7 +98,7 @@ module Hamlit
         when :comment, :filter, :plain, :tag
           true
         when :script
-          node.children.empty?
+          node.children.empty? && !nuke_inner_whitespace?(node)
         else
           false
         end

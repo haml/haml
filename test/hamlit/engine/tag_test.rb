@@ -65,7 +65,7 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'skips empty lines' do
+    it 'ignores empty lines' do
       assert_render(<<-HAML, <<-HTML)
         %span
 
@@ -237,7 +237,6 @@ describe Hamlit::Engine do
       end
 
       it 'removes whitespaces inside block script' do
-        skip
         assert_render(<<-HAML, <<-HTML)
           %span<
             = 2.times do
@@ -249,7 +248,6 @@ describe Hamlit::Engine do
       end
 
       it 'removes whitespace inside script inside silent script' do
-        skip
         assert_render(<<-HAML, <<-HTML)
           .bar<
             - 3.times do
@@ -260,7 +258,6 @@ describe Hamlit::Engine do
       end
 
       it 'removes whitespace inside script recursively' do
-        skip
         assert_render(<<-HAML, <<-HTML)
           .foo<
             - 1.times do
@@ -274,26 +271,23 @@ describe Hamlit::Engine do
       end
 
       it 'does not remove whitespace after string interpolation' do
-        assert_render(<<-'HAML', <<-HTML, compatible_only: :faml)
+        assert_render(<<-'HAML', <<-HTML, compatible_only: :haml)
           %div<
             #{'hello'}
             world
         HAML
-          <div>hello
-          world</div>
+          <div>helloworld</div>
         HTML
       end
 
       it 'removes whitespace inside script inside silent script' do
-        skip
-        assert_render(<<-HAML, <<-HTML, compatible_only: :faml)
+        assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
           .bar<
             - 1.times do
               = '1'
               = '2'
         HAML
-          <div class='bar'>1
-          2</div>
+          <div class='bar'>12</div>
         HTML
       end
     end

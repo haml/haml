@@ -3,7 +3,6 @@ describe Hamlit::Engine do
 
   describe 'text' do
     it 'renders string interpolation' do
-      skip
       assert_render(<<-'HAML', <<-HTML)
         #{ "a#{3}a" }a" #{["1", 2]} b " !
         a#{{ a: 3 }}
@@ -29,7 +28,6 @@ describe Hamlit::Engine do
     end
 
     it 'renders == operator' do
-      skip
       assert_render(<<-'HAML', <<-HTML)
         ===
         == =
@@ -44,7 +42,6 @@ describe Hamlit::Engine do
     end
 
     it 'renders !== operator' do
-      skip
       assert_render(<<-'HAML', <<-HTML)
         == #{'<a>'}
         !== #{'<a>'}
@@ -206,25 +203,7 @@ describe Hamlit::Engine do
       specify { assert_render(%q{'"!@$%^&*|=#{1}1#{1}2}, %Q{'"!@$%^&*|=1112\n}) }
       specify { assert_render('あ#{1}', "あ1\n") }
       specify { assert_render('あ#{"い"}う', "あいう\n") }
-      specify { skip; assert_render('a#{"<b>"}c', "a&lt;b&gt;c\n") }
-    end
-
-    describe 'illegal inputs' do
-      it 'rejects an invalid tag' do
-        skip
-        expect { render_string(<<-HAML.unindent) }.
-          % a
-        HAML
-          to raise_error(Hamlit::SyntaxError, 'Invalid tag: "% a".')
-      end
-
-      it 'rejects an invalid tag' do
-        skip
-        expect { render_string(<<-HAML.unindent) }.
-          %.foo
-        HAML
-          to raise_error(Hamlit::SyntaxError, 'Invalid tag: "%.foo".')
-      end
+      specify { assert_render('a#{"<b>"}c', "a&lt;b&gt;c\n") }
     end
   end
 end
