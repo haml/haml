@@ -12,6 +12,14 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders array with escape_html: false' do
+      assert_render(<<-HAML, <<-HTML, escape_html: false)
+        = ['<', '>']
+      HAML
+        ["<", ">"]
+      HTML
+    end
+
     it 'renders one-line script with comment' do
       assert_render(<<-HAML, <<-HTML)
         = # comment_only

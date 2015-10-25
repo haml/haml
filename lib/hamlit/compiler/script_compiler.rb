@@ -31,7 +31,11 @@ module Hamlit
       end
 
       def compile_script_result(result, node)
-        result = find_and_preserve(result) if !node.value[:escape_html] && node.value[:preserve]
+        if !node.value[:escape_html] && node.value[:preserve]
+          result = find_and_preserve(result)
+        else
+          result = '(' << result << ').to_s'.freeze
+        end
         [:escape, node.value[:escape_html], [:dynamic, result]]
       end
 
