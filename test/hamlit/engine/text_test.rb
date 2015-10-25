@@ -56,8 +56,7 @@ describe Hamlit::Engine do
     end
 
     it 'leaves empty spaces after backslash' do
-      skip
-      expect(render_string('\       a')).to eq("       a\n")
+      assert_render('\       a', "       a\n", skip_unindent: true)
     end
 
     it 'renders spaced - properly' do

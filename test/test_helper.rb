@@ -30,7 +30,9 @@ module RenderAssertion
     options.delete(:compatible_only)
     options.delete(:error_with)
     options = { escape_html: true, ugly: true }.merge(options)
-    haml, html = haml.unindent, html.unindent
+    unless options.delete(:skip_unindent)
+      haml, html = haml.unindent, html.unindent
+    end
     assert_equal html, render(haml, options)
   end
 
