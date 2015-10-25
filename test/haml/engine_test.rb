@@ -1873,7 +1873,7 @@ HTML
 HAML
   end
 
-  def test_silent_ruby_multiline_with_block; skip # block script
+  def test_silent_ruby_multiline_with_block
     assert_equal(<<HTML, render(<<HAML))
 far
 faz

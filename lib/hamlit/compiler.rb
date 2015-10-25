@@ -71,7 +71,7 @@ module Hamlit
     end
 
     def compile_script(node)
-      @script_compiler.compile(node)
+      @script_compiler.compile(node) { |n| compile_children(n) }
     end
 
     def compile_silent_script(node)

@@ -42,7 +42,6 @@ describe Hamlit::Engine do
     end
 
     it 'renders block script' do
-      skip
       assert_render(<<-HAML, <<-HTML)
         = 3.times do |i|
           = i
@@ -56,7 +55,6 @@ describe Hamlit::Engine do
     end
 
     it 'renders tag internal block script' do
-      skip
       assert_render(<<-HAML, <<-HTML)
         %span
           = 1.times do |i|
@@ -88,7 +86,6 @@ describe Hamlit::Engine do
     end
 
     it 'renders !=' do
-      skip
       assert_render(<<-HAML, <<-HTML.rstrip, escape_html: true)
         != '<"&>'
         != '<"&>'.tap do |str|

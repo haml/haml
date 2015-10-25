@@ -23,10 +23,21 @@ module Hamlit
       private
 
       def insert_newlines!(temple, node)
-        (node.line - @lineno).times do
+        offset = node.line - @lineno
+        offset -= 1 if newline_inserted_by_compiler?(node)
+        offset.times do
           temple << [:newline]
         end
         @lineno = node.line
+      end
+
+      def newline_inserted_by_compiler?(node)
+        case node.type
+        when :script
+          !node.children.empty?
+        else
+          false
+        end
       end
 
       def confirm_whitespace(temple)
@@ -67,8 +78,10 @@ module Hamlit
         case node.type
         when :doctype
           node.value[:type] != 'xml'
-        when :comment, :filter, :plain, :script, :tag
+        when :comment, :filter, :plain, :tag
           true
+        when :script
+          node.children.empty?
         else
           false
         end
