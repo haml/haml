@@ -6,16 +6,22 @@ module Hamlit
       end
 
       def compile(node, &block)
+        var = unique_identifier
+        temple = compile_script_assign(var, node, &block)
+        temple << [:escape, node.value[:escape_html], [:dynamic, var]]
+      end
+
+      private
+
+      def compile_script_assign(var, node, &block)
         code = node.value[:text]
         code = find_and_preserve(code) if node.value[:preserve]
 
-        var = unique_identifier
         if node.children.empty?
           [:multi,
            [:code, "#{var} = (#{code}"],
            [:newline],
            [:code, ')'.freeze],
-           [:escape, node.value[:escape_html], [:dynamic, var]],
           ]
         else
           [:multi,
@@ -23,12 +29,9 @@ module Hamlit
            [:newline],
            yield(node),
            [:code, 'end'.freeze],
-           [:dynamic, var],
           ]
         end
       end
-
-      private
 
       def unique_identifier
         @unique_id += 1
