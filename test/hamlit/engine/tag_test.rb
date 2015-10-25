@@ -220,7 +220,6 @@ describe Hamlit::Engine do
       end
 
       it 'removes outer whitespace by > from inside of block' do
-        skip
         assert_render(<<-HAML, <<-HTML)
           %span a
           - if true

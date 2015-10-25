@@ -11,7 +11,7 @@ module Hamlit
 
         temple << :whitespace if prepend_whitespace?(node)
         node.children.each do |n|
-          rstrip_whitespace!(temple) if nuke_outer_whitespace?(n)
+          rstrip_whitespace!(temple) if nuke_prev_whitespace?(n)
           insert_newlines!(temple, n)
           temple << yield(n)
           temple << :whitespace if insert_whitespace?(n)
@@ -58,6 +58,17 @@ module Hamlit
       def nuke_inner_whitespace?(node)
         return false if node.type != :tag
         node.value[:nuke_inner_whitespace]
+      end
+
+      def nuke_prev_whitespace?(node)
+        case node.type
+        when :tag
+          node.value[:nuke_outer_whitespace]
+        when :silent_script
+          !node.children.empty? && nuke_prev_whitespace?(node.children.first)
+        else
+          false
+        end
       end
 
       def nuke_outer_whitespace?(node)
