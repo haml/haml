@@ -18,17 +18,6 @@ describe Hamlit::Engine do
       HTML
     end
 
-    it 'renders multi-line attributes properly' do
-      assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
-        %span(a=__LINE__
-         b=__LINE__)
-        = __LINE__
-      HAML
-        <span a='1' b='1'></span>
-        3
-      HTML
-    end
-
     it 'renders hyphenated attributes properly' do
       assert_render(<<-HAML, <<-HTML)
         %p(data-foo='bar') bar

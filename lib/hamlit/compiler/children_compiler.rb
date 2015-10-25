@@ -27,11 +27,16 @@ module Hamlit
           temple << [:newline]
         end
         @lineno = node.line
-        @lineno += 1 if newline_inserted_by_compiler?(node)
-      end
 
-      def newline_inserted_by_compiler?(node)
-        node.type == :script
+        case node.type
+        when :script
+          @lineno += 1
+        when :tag
+          node.value[:attributes_hashes].each do |attribute_hash|
+            @lineno += attribute_hash.count("\n")
+          end
+        else
+        end
       end
 
       def confirm_whitespace(temple)
