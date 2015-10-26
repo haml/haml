@@ -95,10 +95,12 @@ module Hamlit
         case node.type
         when :doctype
           node.value[:type] != 'xml'
-        when :comment, :filter, :plain, :tag
+        when :comment, :plain, :tag
           true
         when :script
           node.children.empty? && !nuke_inner_whitespace?(node)
+        when :filter
+          !%w[ruby].include?(node.value[:name])
         else
           false
         end

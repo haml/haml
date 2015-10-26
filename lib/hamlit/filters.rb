@@ -4,6 +4,7 @@ require 'hamlit/filters/escaped'
 require 'hamlit/filters/javascript'
 require 'hamlit/filters/plain'
 require 'hamlit/filters/preserve'
+require 'hamlit/filters/ruby'
 
 module Hamlit
   class Filters
@@ -24,6 +25,7 @@ module Hamlit
     register :javascript, Javascript
     register :plain,      Plain
     register :preserve,   Preserve
+    register :ruby,       Ruby
 
     def initialize(options = {})
       @options = options

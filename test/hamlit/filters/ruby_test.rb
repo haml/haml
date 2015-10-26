@@ -2,7 +2,6 @@ describe Hamlit::Filters do
   include RenderAssertion
 
   it 'renders ruby filter' do
-    skip
     assert_render(<<-HAML, <<-HTML)
       :ruby
       hello
@@ -12,7 +11,6 @@ describe Hamlit::Filters do
   end
 
   it 'renders ruby filter' do
-    skip
     assert_render(<<-'HAML', <<-HTML)
       :ruby
         hash = {
