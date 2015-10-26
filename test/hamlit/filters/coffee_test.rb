@@ -41,7 +41,6 @@ describe Hamlit::Filters do
     end
 
     it 'renders coffeescript filter' do
-      skip
       assert_render(<<-'HAML', <<-HTML)
         :coffee
           foo = ->
