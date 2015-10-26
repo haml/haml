@@ -3,15 +3,14 @@ describe Hamlit::Filters do
 
   describe '#compile' do
     it 'just renders script tag for empty filter' do
-      skip
-      assert_render(<<-HAML, <<-HTML, compatible_only: [])
+      assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
         before
         :javascript
         after
       HAML
         before
         <script>
-
+          
         </script>
         after
       HTML
@@ -33,8 +32,7 @@ describe Hamlit::Filters do
     end
 
     it 'accepts illegal indentation' do
-      skip
-      assert_render(<<-HAML, <<-HTML, compatible_only: :faml)
+      assert_render(<<-HAML, <<-HTML, compatible_only: :haml)
         :javascript
          if {
           alert('hello');
@@ -50,15 +48,14 @@ describe Hamlit::Filters do
             }
         </script>
         <script>
-          if {
-           alert('hello');
-            }
+            if {
+             alert('hello');
+              }
         </script>
       HTML
     end
 
     it 'accepts illegal indentation' do
-      skip
       assert_render(<<-HAML, <<-HTML)
         :javascript
            if {
@@ -74,7 +71,6 @@ describe Hamlit::Filters do
     end
 
     it 'parses string interpolation' do
-      skip
       assert_render(<<-'HAML', <<-HTML)
         :javascript
           var a = "#{'<&>'}";
