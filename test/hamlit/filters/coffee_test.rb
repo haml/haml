@@ -3,7 +3,6 @@ describe Hamlit::Filters do
 
   describe '#compile' do
     it 'renders coffee filter' do
-      skip
       assert_render(<<-HAML, <<-HTML)
         :coffee
           foo = ->
@@ -23,9 +22,8 @@ describe Hamlit::Filters do
     end
 
     it 'renders coffeescript filter' do
-      skip
       assert_render(<<-HAML, <<-HTML)
-        :coffee
+        :coffeescript
           foo = ->
             alert('hello')
       HAML

@@ -1,4 +1,6 @@
 require 'hamlit/filters/base'
+require 'hamlit/filters/tilt_base'
+require 'hamlit/filters/coffee'
 require 'hamlit/filters/css'
 require 'hamlit/filters/escaped'
 require 'hamlit/filters/javascript'
@@ -20,12 +22,14 @@ module Hamlit
       end
     end
 
-    register :css,        Css
-    register :escaped,    Escaped
-    register :javascript, Javascript
-    register :plain,      Plain
-    register :preserve,   Preserve
-    register :ruby,       Ruby
+    register :coffee,       Coffee
+    register :coffeescript, Coffee
+    register :css,          Css
+    register :escaped,      Escaped
+    register :javascript,   Javascript
+    register :plain,        Plain
+    register :preserve,     Preserve
+    register :ruby,         Ruby
 
     def initialize(options = {})
       @options = options
