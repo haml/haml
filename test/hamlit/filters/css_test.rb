@@ -3,7 +3,6 @@ describe Hamlit::Filters do
 
   describe '#compile' do
     it 'renders css' do
-      skip
       assert_render(<<-HAML, <<-HTML)
         :css
           .foo {
@@ -19,7 +18,6 @@ describe Hamlit::Filters do
     end
 
     it 'parses string interpolation' do
-      skip
       assert_render(<<-'HAML', <<-HTML)
         :css
           .foo {
