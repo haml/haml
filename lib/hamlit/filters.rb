@@ -10,6 +10,7 @@ require 'hamlit/filters/markdown'
 require 'hamlit/filters/plain'
 require 'hamlit/filters/preserve'
 require 'hamlit/filters/ruby'
+require 'hamlit/filters/sass'
 require 'hamlit/filters/scss'
 
 module Hamlit
@@ -37,6 +38,7 @@ module Hamlit
     register :plain,        Plain
     register :preserve,     Preserve
     register :ruby,         Ruby
+    register :sass,         Sass
     register :scss,         Scss
 
     def initialize(options = {})
