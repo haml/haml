@@ -125,7 +125,7 @@ class FiltersTest < Haml::TestCase
 end
 
 class ErbFilterTest < Haml::TestCase
-  test "multiline expressions should work" do; skip
+  test "multiline expressions should work" do
     html = "foobarbaz\n"
     haml = %Q{:erb\n  <%= "foo" +\n      "bar" +\n      "baz" %>}
     assert_equal(html, render(haml))
