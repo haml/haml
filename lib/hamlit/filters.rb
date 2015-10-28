@@ -3,6 +3,7 @@ require 'hamlit/filters/tilt_base'
 require 'hamlit/filters/coffee'
 require 'hamlit/filters/css'
 require 'hamlit/filters/escaped'
+require 'hamlit/filters/less'
 require 'hamlit/filters/javascript'
 require 'hamlit/filters/plain'
 require 'hamlit/filters/preserve'
@@ -26,6 +27,7 @@ module Hamlit
     register :coffeescript, Coffee
     register :css,          Css
     register :escaped,      Escaped
+    register :less,         Less
     register :javascript,   Javascript
     register :plain,        Plain
     register :preserve,     Preserve
