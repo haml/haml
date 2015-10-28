@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest-reporters', '~> 1.1'
   spec.add_development_dependency 'rails', '>= 4.0.0'
   spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'redcarpet'
   spec.add_development_dependency 'therubyracer'
   spec.add_development_dependency 'thor', '~> 0.19'
   spec.add_development_dependency 'unindent'

@@ -4,8 +4,9 @@ require 'hamlit/filters/coffee'
 require 'hamlit/filters/css'
 require 'hamlit/filters/erb'
 require 'hamlit/filters/escaped'
-require 'hamlit/filters/less'
 require 'hamlit/filters/javascript'
+require 'hamlit/filters/less'
+require 'hamlit/filters/markdown'
 require 'hamlit/filters/plain'
 require 'hamlit/filters/preserve'
 require 'hamlit/filters/ruby'
@@ -29,8 +30,9 @@ module Hamlit
     register :css,          Css
     register :erb,          Erb
     register :escaped,      Escaped
-    register :less,         Less
     register :javascript,   Javascript
+    register :less,         Less
+    register :markdown,     Markdown
     register :plain,        Plain
     register :preserve,     Preserve
     register :ruby,         Ruby
