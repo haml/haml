@@ -3,7 +3,6 @@ describe Hamlit::Filters do
 
   describe '#compile' do
     it 'renders scss filter' do
-      skip
       assert_render(<<-HAML, <<-HTML)
         :scss
           .users_controller {
@@ -22,7 +21,6 @@ describe Hamlit::Filters do
     end
 
     it 'parses string interpolation' do
-      skip
       assert_render(<<-'HAML', <<-HTML)
         :scss
           .users_controller {

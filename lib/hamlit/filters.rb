@@ -10,6 +10,7 @@ require 'hamlit/filters/markdown'
 require 'hamlit/filters/plain'
 require 'hamlit/filters/preserve'
 require 'hamlit/filters/ruby'
+require 'hamlit/filters/scss'
 
 module Hamlit
   class Filters
@@ -36,9 +37,11 @@ module Hamlit
     register :plain,        Plain
     register :preserve,     Preserve
     register :ruby,         Ruby
+    register :scss,         Scss
 
     def initialize(options = {})
       @options = options
+      @compilers = {}
     end
 
     def compile(node)
@@ -52,11 +55,7 @@ module Hamlit
       compiler = Filters.registered[name]
       raise NotFound.new("FilterCompiler for '#{name}' was not found") unless compiler
 
-      compilers[name] ||= compiler.new(@options)
-    end
-
-    def compilers
-      @compilers ||= {}
+      @compilers[name] ||= compiler.new(@options)
     end
 
     class NotFound < RuntimeError
