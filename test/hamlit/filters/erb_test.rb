@@ -3,8 +3,7 @@ describe Hamlit::Filters do
 
   describe '#compile' do
     it 'renders erb filter' do
-      skip
-      assert_render(<<-HAML, <<-HTML, compatible_only: [], error_with: :faml)
+      assert_render(<<-HAML, <<-HTML, compatible_only: :haml, error_with: :faml)
         :erb
           <% if true %>
           ok
@@ -13,6 +12,7 @@ describe Hamlit::Filters do
           <% end %>
       HAML
         ok
+
       HTML
     end
   end

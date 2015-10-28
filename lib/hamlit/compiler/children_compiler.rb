@@ -100,7 +100,7 @@ module Hamlit
         when :script
           node.children.empty? && !nuke_inner_whitespace?(node)
         when :filter
-          !%w[ruby].include?(node.value[:name])
+          !%w[ruby].freeze.include?(node.value[:name])
         else
           false
         end

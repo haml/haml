@@ -4,7 +4,7 @@ module Hamlit
       def compile(node)
         temple = [:multi]
         temple << [:static, "<script>\n".freeze]
-        temple << compile_with_tilt(node, 'coffee')
+        temple << compile_with_tilt(node, 'coffee', indent_width: 2)
         temple << [:static, "</script>".freeze]
         temple
       end
