@@ -1,0 +1,95 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'hamlit'
+require 'faml'
+require 'thor'
+require 'benchmark/ips'
+
+# Monkey patch to show milliseconds
+module Benchmark
+  module IPS
+    class Report
+      module EntryExtension
+        def body
+          return super if Benchmark::IPS.options[:format] != :human
+
+          left = "%s i/s (%1.3fms)" % [Helpers.scale(ips), (1000.0 / ips)]
+          iters = Helpers.scale(@iterations)
+
+          if @show_total_time
+            left.ljust(20) + (" - %s in %10.6fs" % [iters, runtime])
+          else
+            left.ljust(20) + (" - %s" % iters)
+          end
+        end
+      end
+      Entry.send(:prepend, EntryExtension)
+    end
+  end
+
+  module CompareExtension
+    def compare(*reports)
+      return if reports.size < 2
+
+      sorted = reports.sort_by(&:ips).reverse
+      best = sorted.shift
+      $stdout.puts "\nComparison:"
+      $stdout.printf "%20s: %10.1f i/s (%1.3fms)\n", best.label, best.ips, (1000.0 / best.ips)
+
+      sorted.each do |report|
+        name = report.label.to_s
+
+        x = (best.ips.to_f / report.ips.to_f)
+        $stdout.printf "%20s: %10.1f i/s (%1.3fms) - %.2fx slower\n", name, report.ips, (1000.0 / report.ips), x
+      end
+
+      $stdout.puts
+    end
+  end
+  extend CompareExtension
+end
+
+class Bench < Thor
+  desc 'bench HAML', 'Benchmark haml template'
+  def bench(file)
+    haml = File.read(file)
+    puts "#{?= * 49}\n Compilation: #{file}\n#{?= * 49}"
+    bench_compile(haml)
+    puts "#{?= * 49}\n Rendering: #{file}\n#{?= * 49}"
+    bench_render(haml)
+  end
+
+  private
+
+  def bench_compile(haml)
+    Benchmark.ips do |x|
+      x.report("haml v#{Haml::VERSION}") { Haml::Engine.new(haml).precompiled }
+      x.report("faml v#{Faml::VERSION}") { Faml::Engine.new.call(haml) }
+      x.report("hamlit v#{Hamlit::VERSION}") { Hamlit::Engine.new.call(haml) }
+      x.compare!
+    end
+  end
+
+  def bench_render(haml)
+    object = Object.new
+
+    Haml::Engine.new(haml).def_method(object, :haml)
+    object.instance_eval "def faml; #{Faml::Engine.new.call(haml)}; end"
+    object.instance_eval "def hamlit; #{Hamlit::Engine.new.call(haml)}; end"
+
+    Benchmark.ips do |x|
+      x.report("haml v#{Haml::VERSION}") { object.haml }
+      x.report("faml v#{Faml::VERSION}") { object.faml }
+      x.report("hamlit v#{Hamlit::VERSION}") { object.hamlit }
+      x.compare!
+    end
+  end
+
+  def method_missing(*args)
+    return super if args.length > 1
+    bench(args.first.to_s)
+  end
+end
+
+Bench.start
