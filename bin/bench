@@ -52,11 +52,13 @@ end
 
 class Bench < Thor
   desc 'bench HAML', 'Benchmark haml template'
+  option :show_code, type: :boolean, aliases: ['-c']
   def bench(file)
     puts "#{?= * 49}\n Compilation: #{file}\n#{?= * 49}"
     bench_compile(file)
     puts "#{?= * 49}\n Rendering: #{file}\n#{?= * 49}"
     bench_render(file)
+    code(file) if options[:show_code]
   end
 
   desc 'code HAML', 'Show compiled code'
