@@ -1,0 +1,13 @@
+box: ruby
+build:
+  steps:
+    - bundle-install
+    - script:
+      name: attribute_builder.haml
+      code: bin/bench benchmark/attribute_builder.haml && bin/bench code benchmark/attribute_builder.haml
+    - script:
+      name: basic.haml
+      code: bin/bench benchmark/basic.haml && bin/bench code benchmark/basic.haml
+    - script:
+      name: minitest
+      code: bundle exec rake test
