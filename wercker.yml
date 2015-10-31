@@ -3,6 +3,9 @@ build:
   steps:
     - bundle-install
     - script:
+      name: old_attributes.haml
+      code: bin/bench benchmark/old_attributes.haml && bin/bench code benchmark/old_attributes.haml
+    - script:
       name: attribute_builder.haml
       code: bin/bench benchmark/attribute_builder.haml && bin/bench code benchmark/attribute_builder.haml
     - script:
