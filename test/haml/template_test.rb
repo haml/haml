@@ -1,5 +1,5 @@
 require 'test_helper'
-require 'mocks/article'
+require 'haml/mocks/article'
 
 require 'action_pack/version'
 
