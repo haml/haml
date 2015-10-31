@@ -59,6 +59,17 @@ class Bench < Thor
     bench_render(file)
   end
 
+  desc 'code HAML', 'Show compiled code'
+  def code(file)
+    haml = File.read(file)
+    puts "#{?= * 49}\n Haml Source: #{file}\n#{?= * 49}"
+    puts Haml::Engine.new(haml).precompiled
+    puts "\n#{?= * 49}\n Faml Source: #{file}\n#{?= * 49}"
+    puts Faml::Engine.new.call(haml)
+    puts "\n#{?= * 49}\n Hamlit Source: #{file}\n#{?= * 49}"
+    puts Hamlit::Engine.new.call(haml)
+  end
+
   private
 
   def bench_compile(file)
