@@ -5,5 +5,6 @@ gemspec
 
 gem 'benchmark-ips', '2.3.0'
 gem 'lineprof'
+gem 'stackprof'
 gem 'minitest-line'
 gem 'pry-byebug'
