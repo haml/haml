@@ -3,14 +3,13 @@ build:
   steps:
     - bundle-install
     - script:
-      name: old_attributes.haml
       code: bin/bench bench -c benchmark/old_attributes.haml
     - script:
-      name: attribute_builder.haml
       code: bin/bench bench -c benchmark/attribute_builder.haml
     - script:
-      name: basic.haml
       code: bin/bench bench -c benchmark/basic.haml
+    - script:
+      code: bin/bench bench -c benchmark/tags.haml
     - script:
       name: minitest
       code: bundle exec rake test
