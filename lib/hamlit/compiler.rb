@@ -81,8 +81,5 @@ module Hamlit
     def compile_tag(node)
       @tag_compiler.compile(node) { |n| compile_children(n) }
     end
-
-    class InternalError < RuntimeError
-    end
   end
 end

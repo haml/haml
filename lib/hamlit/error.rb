@@ -4,4 +4,7 @@ module Hamlit
 
   class SyntaxError < Exception
   end
+
+  class InternalError < RuntimeError
+  end
 end
