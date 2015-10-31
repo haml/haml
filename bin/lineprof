@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'hamlit'
+require 'lineprof'
+require 'tempfile'
+require 'thor'
+
+class CLI < Thor
+  desc 'compile HAML', 'Benchmark compile'
+  def compile(file)
+    haml = File.read(file)
+    Lineprof.profile(/./) do
+      100.times { Hamlit::Engine.new.call(haml) }
+    end
+  end
+
+  private
+
+  def method_missing(*args)
+    return super if args.length > 1
+    compile(args.first.to_s)
+  end
+end
+
+CLI.start
