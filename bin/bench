@@ -53,16 +53,17 @@ end
 class Bench < Thor
   desc 'bench HAML', 'Benchmark haml template'
   def bench(file)
-    haml = File.read(file)
     puts "#{?= * 49}\n Compilation: #{file}\n#{?= * 49}"
-    bench_compile(haml)
+    bench_compile(file)
     puts "#{?= * 49}\n Rendering: #{file}\n#{?= * 49}"
-    bench_render(haml)
+    bench_render(file)
   end
 
   private
 
-  def bench_compile(haml)
+  def bench_compile(file)
+    haml = File.read(file)
+
     Benchmark.ips do |x|
       x.report("haml v#{Haml::VERSION}") { Haml::Engine.new(haml).precompiled }
       x.report("faml v#{Faml::VERSION}") { Faml::Engine.new.call(haml) }
@@ -71,8 +72,13 @@ class Bench < Thor
     end
   end
 
-  def bench_render(haml)
+  def bench_render(file)
+    haml = File.read(file)
     object = Object.new
+    ruby_file = file.gsub(/\.haml\z/, '.rb')
+    if File.exist?(ruby_file)
+      object.instance_eval(File.read(ruby_file))
+    end
 
     Haml::Engine.new(haml).def_method(object, :haml)
     object.instance_eval "def faml; #{Faml::Engine.new.call(haml)}; end"
