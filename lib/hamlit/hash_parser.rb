@@ -7,8 +7,11 @@ module Hamlit
     end
 
     def parse(text)
+      exp = '{' << text.strip << '}'.freeze
+      return if syntax_error?(exp)
+
       hash = {}
-      tokens = lex_as_hash(text)
+      tokens = Ripper.lex(exp)[1..-2] || []
       each_attr(tokens) do |attr_tokens|
         key = parse_key!(attr_tokens)
         hash[key] = attr_tokens.map(&:last).join.strip
@@ -17,11 +20,6 @@ module Hamlit
     end
 
     private
-
-    def lex_as_hash(text)
-      tokens = Ripper.lex('{' << text.strip << '}'.freeze)
-      tokens[1..-2] || []
-    end
 
     def parse_key!(tokens)
       _, type, str = tokens.shift
@@ -48,6 +46,24 @@ module Hamlit
         end
       end
       yield(attr_tokens) unless attr_tokens.empty?
+    end
+
+    def syntax_error?(code)
+      ParseErrorChecker.new(code).parse
+      false
+    rescue ParseErrorChecker::ParseError
+      true
+    end
+  end
+
+  class ParseErrorChecker < Ripper
+    class ParseError < StandardError
+    end
+
+    private
+
+    def on_parse_error(*)
+      raise ParseError
     end
   end
 end
