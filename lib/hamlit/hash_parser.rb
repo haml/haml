@@ -28,6 +28,13 @@ module Hamlit
         parse_key!(tokens)
       when :on_label
         str.tr(':', '')
+      when :on_symbeg
+        _, _, key = tokens.shift
+        until tokens.empty?
+          _, type, str = tokens.shift
+          break if type == :on_op && str == '=>'
+        end
+        key
       else
         raise InternalError.new("Unexpected type: #{type}")
       end

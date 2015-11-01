@@ -8,20 +8,44 @@ describe Hamlit::HashParser do
       assert_parse(' hash ', nil)
     end
 
+    it 'returns nil for partially valid expression' do
+      assert_parse('hash, foo: bar', nil)
+    end
+
     it 'parses static hash content' do
       assert_parse('', {})
     end
 
-    it 'parses static hash content' do
-      assert_parse('_:b,', { '_' => 'b' })
+    describe 'foo: bar' do
+      it 'parses static hash content' do
+        assert_parse('_:1,', { '_' => '1' })
+      end
+
+      it 'parses static hash content' do
+        assert_parse(' foo:  bar ', { 'foo' => 'bar' })
+      end
+
+      it 'parses static hash content' do
+        assert_parse('a: b, c: :d', { 'a' => 'b', 'c' => ':d' })
+      end
+
+      it 'parses static hash content' do
+        assert_parse('a: [], c: "d"', { 'a' => '[]', 'c' => '"d"' })
+      end
     end
 
-    it 'parses static hash content' do
-      assert_parse(' foo:  bar ', { 'foo' => 'bar' })
-    end
+    describe ':foo => bar' do
+      it 'parses static hash content' do
+        assert_parse('  :foo   =>  :bar  ', { 'foo' => ':bar' })
+      end
 
-    it 'parses static hash content' do
-      assert_parse('a: b, c: d', { 'a' => 'b', 'c' => 'd' })
+      it 'parses static hash content' do
+        assert_parse(':_=>"foo"', { '_' => '"foo"' })
+      end
+
+      it 'parses static hash content' do
+        assert_parse(':a => [], c: "", :b => "#{3}"', { 'a' => '[]', 'c' => '""', 'b' => '"#{3}"' })
+      end
     end
   end
 end
