@@ -54,9 +54,16 @@ describe Hamlit::HashParser do
       end
     end
 
-    describe 'array value' do
+    describe 'nested array' do
       it { assert_parse('foo: [1,2,],', { 'foo' => '[1,2,]' }) }
       it { assert_parse('foo: [1,2,[3,4],5],', { 'foo' => '[1,2,[3,4],5]' }) }
+      it { assert_parse('foo: [1,2,[3,4],5],bar: [[1,2],],', { 'foo' => '[1,2,[3,4],5]', 'bar' => '[[1,2],]'}) }
+    end
+
+    describe 'nested hash' do
+      it { assert_parse('foo: { }, bar: {}', { 'foo' => '{ }', 'bar' => '{}' }) }
+      it { assert_parse('foo: { bar: baz, hoge: fuga, }, ', { 'foo' => '{ bar: baz, hoge: fuga, }' }) }
+      it { assert_parse('data: { confirm: true, disable: false }, :hello => { world: foo, },', { 'data' => '{ confirm: true, disable: false }', 'hello' => '{ world: foo, }' }) }
     end
   end
 end
