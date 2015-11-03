@@ -47,7 +47,7 @@ module Hamlit
         end
         key
       else
-        raise InternalError.new("Unexpected type: #{type}")
+        raise ParseSkip
       end
     end
 
@@ -64,15 +64,24 @@ module Hamlit
 
     def each_attr(tokens)
       attr_tokens = []
+      array_open  = 0
+
       tokens.each do |token|
         (row, col), type, str = token
         case type
         when :on_comma
-          yield(attr_tokens)
-          attr_tokens = []
-        else
-          attr_tokens << token
+          if array_open == 0
+            yield(attr_tokens)
+            attr_tokens = []
+            next
+          end
+        when :on_lbracket
+          array_open += 1
+        when :on_rbracket
+          array_open -= 1
         end
+
+        attr_tokens << token
       end
       yield(attr_tokens) unless attr_tokens.empty?
     end

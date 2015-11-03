@@ -4,9 +4,18 @@ describe Hamlit::HashParser do
       assert_equal result, Hamlit::HashParser.parse(text)
     end
 
-    it { assert_parse(' hash ', nil) }
-    it { assert_parse('hash, foo: bar', nil) }
     it { assert_parse('', {}) }
+
+    describe 'invalid hash' do
+      it { assert_parse(' hash ', nil) }
+      it { assert_parse('hash, foo: bar', nil) }
+    end
+
+    describe 'dynamic key' do
+      it { assert_parse('foo => bar', nil) }
+      it { assert_parse('[] => bar', nil) }
+      it { assert_parse('[1,2,3] => bar', nil) }
+    end
 
     describe 'foo: bar' do
       it { assert_parse('_:1,', { '_' => '1' }) }
@@ -43,6 +52,11 @@ describe Hamlit::HashParser do
         it { assert_parse('"#{f}oo": bar', nil) }
         it { assert_parse('"#{foo}": bar', nil) }
       end
+    end
+
+    describe 'array value' do
+      it { assert_parse('foo: [1,2,],', { 'foo' => '[1,2,]' }) }
+      it { assert_parse('foo: [1,2,[3,4],5],', { 'foo' => '[1,2,[3,4],5]' }) }
     end
   end
 end
