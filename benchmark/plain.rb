@@ -1,0 +1,3 @@
+def hello
+  'world'
+end
