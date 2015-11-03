@@ -8,3 +8,7 @@ gem 'lineprof'
 gem 'stackprof'
 gem 'minitest-line'
 gem 'pry-byebug'
+
+if File.exist?('hamlit1')
+  gem 'hamlit1', path: 'hamlit1'
+end

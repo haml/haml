@@ -3,6 +3,9 @@ build:
   steps:
     - bundle-install
     - script:
+      name: clone hamlit1
+      code: bin/clone
+    - script:
       name: attribute_builder.haml
       code: bin/bench bench -c benchmark/attribute_builder.haml
     - script:

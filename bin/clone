@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -e hamlit1 ]; then
+  echo 'skipped'
+  exit 0
+fi
+
+git clone --depth=1 -b v1.7.2 https://github.com/k0kubun/hamlit hamlit1
+cd hamlit1
+git grep --name-only Hamlit | xargs sed -i "" -e "s/Hamlit/Hamlit1/g"
+git grep --name-only hamlit | xargs sed -i "" -e "s/hamlit/hamlit1/g"
+git mv hamlit.gemspec hamlit1.gemspec
+git mv lib/hamlit.rb lib/hamlit1.rb
+git mv lib/hamlit lib/hamlit1

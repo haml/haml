@@ -5,6 +5,75 @@ require 'hamlit'
 require 'faml'
 require 'thor'
 require 'benchmark/ips'
+require 'hamlit1' if File.exist?('hamlit1')
+
+class Bench < Thor
+  desc 'bench HAML', 'Benchmark haml template'
+  option :show_code, type: :boolean, aliases: ['-c']
+  def bench(file)
+    puts "#{?= * 49}\n Compilation: #{file}\n#{?= * 49}"
+    bench_compile(file)
+    puts "#{?= * 49}\n Rendering: #{file}\n#{?= * 49}"
+    bench_render(file)
+    code(file) if options[:show_code]
+  end
+
+  desc 'code HAML', 'Show compiled code'
+  def code(file)
+    haml = File.read(file)
+    puts "#{?= * 49}\n Haml Source: #{file}\n#{?= * 49}"
+    puts Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).precompiled
+    puts "\n#{?= * 49}\n Faml Source: #{file}\n#{?= * 49}"
+    puts Faml::Engine.new.call(haml)
+    puts "\n#{?= * 49}\n Hamlit Source: #{file}\n#{?= * 49}"
+    puts Hamlit::Engine.new.call(haml)
+    if File.exist?('hamlit1')
+      puts "\n#{?= * 49}\n Hamlit1 Source: #{file}\n#{?= * 49}"
+      puts Hamlit1::Engine.new.call(haml)
+    end
+  end
+
+  private
+
+  def bench_compile(file)
+    haml = File.read(file)
+
+    Benchmark.ips do |x|
+      x.report("haml v#{Haml::VERSION}") { Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).precompiled }
+      x.report("faml v#{Faml::VERSION}") { Faml::Engine.new.call(haml) }
+      x.report("hamlit2 v#{Hamlit::VERSION}") { Hamlit::Engine.new.call(haml) }
+      x.report("hamlit1 v#{Hamlit1::VERSION}") { Hamlit1::Engine.new.call(haml) } if File.exist?('hamlit1')
+      x.compare!
+    end
+  end
+
+  def bench_render(file)
+    haml = File.read(file)
+    object = Object.new
+    ruby_file = file.gsub(/\.haml\z/, '.rb')
+    if File.exist?(ruby_file)
+      object.instance_eval(File.read(ruby_file))
+    end
+
+    Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).def_method(object, :haml)
+    object.instance_eval "def faml; #{Faml::Engine.new.call(haml)}; end"
+    object.instance_eval "def hamlit; #{Hamlit::Engine.new.call(haml)}; end"
+    object.instance_eval "def hamlit1; #{Hamlit1::Engine.new.call(haml)}; end" if File.exist?('hamlit1')
+
+    Benchmark.ips do |x|
+      x.report("haml v#{Haml::VERSION}") { object.haml }
+      x.report("faml v#{Faml::VERSION}") { object.faml }
+      x.report("hamlit2 v#{Hamlit::VERSION}") { object.hamlit }
+      x.report("hamlit1 v#{Hamlit1::VERSION}") { object.hamlit1 } if File.exist?('hamlit1')
+      x.compare!
+    end
+  end
+
+  def method_missing(*args)
+    return super if args.length > 1
+    bench(args.first.to_s)
+  end
+end
 
 # Monkey patch to show milliseconds
 module Benchmark
@@ -48,67 +117,6 @@ module Benchmark
     end
   end
   extend CompareExtension
-end
-
-class Bench < Thor
-  desc 'bench HAML', 'Benchmark haml template'
-  option :show_code, type: :boolean, aliases: ['-c']
-  def bench(file)
-    puts "#{?= * 49}\n Compilation: #{file}\n#{?= * 49}"
-    bench_compile(file)
-    puts "#{?= * 49}\n Rendering: #{file}\n#{?= * 49}"
-    bench_render(file)
-    code(file) if options[:show_code]
-  end
-
-  desc 'code HAML', 'Show compiled code'
-  def code(file)
-    haml = File.read(file)
-    puts "#{?= * 49}\n Haml Source: #{file}\n#{?= * 49}"
-    puts Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).precompiled
-    puts "\n#{?= * 49}\n Faml Source: #{file}\n#{?= * 49}"
-    puts Faml::Engine.new.call(haml)
-    puts "\n#{?= * 49}\n Hamlit Source: #{file}\n#{?= * 49}"
-    puts Hamlit::Engine.new.call(haml)
-  end
-
-  private
-
-  def bench_compile(file)
-    haml = File.read(file)
-
-    Benchmark.ips do |x|
-      x.report("haml v#{Haml::VERSION}") { Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).precompiled }
-      x.report("faml v#{Faml::VERSION}") { Faml::Engine.new.call(haml) }
-      x.report("hamlit v#{Hamlit::VERSION}") { Hamlit::Engine.new.call(haml) }
-      x.compare!
-    end
-  end
-
-  def bench_render(file)
-    haml = File.read(file)
-    object = Object.new
-    ruby_file = file.gsub(/\.haml\z/, '.rb')
-    if File.exist?(ruby_file)
-      object.instance_eval(File.read(ruby_file))
-    end
-
-    Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).def_method(object, :haml)
-    object.instance_eval "def faml; #{Faml::Engine.new.call(haml)}; end"
-    object.instance_eval "def hamlit; #{Hamlit::Engine.new.call(haml)}; end"
-
-    Benchmark.ips do |x|
-      x.report("haml v#{Haml::VERSION}") { object.haml }
-      x.report("faml v#{Faml::VERSION}") { object.faml }
-      x.report("hamlit v#{Hamlit::VERSION}") { object.hamlit }
-      x.compare!
-    end
-  end
-
-  def method_missing(*args)
-    return super if args.length > 1
-    bench(args.first.to_s)
-  end
 end
 
 Bench.start
