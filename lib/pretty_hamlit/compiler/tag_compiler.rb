@@ -9,7 +9,7 @@ module PrettyHamlit
       end
 
       def compile(node, indent_level, &block)
-        attrs    = compile_attributes(node)
+        attrs    = @attribute_compiler.compile(node)
         contents = compile_contents(node, indent_level, &block)
         [:html, :tag, node.value[:name], attrs, contents]
       end
