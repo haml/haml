@@ -66,12 +66,13 @@ module Hamlit
       attr_tokens = []
       array_open  = 0
       brace_open  = 0
+      paren_open  = 0
 
       tokens.each do |token|
         (row, col), type, str = token
         case type
         when :on_comma
-          if array_open == 0 && brace_open == 0
+          if array_open == 0 && brace_open == 0 && paren_open == 0
             yield(attr_tokens)
             attr_tokens = []
             next
@@ -84,6 +85,10 @@ module Hamlit
           brace_open += 1
         when :on_rbrace
           brace_open -= 1
+        when :on_lparen
+          paren_open += 1
+        when :on_rparen
+          paren_open -= 1
         end
 
         attr_tokens << token

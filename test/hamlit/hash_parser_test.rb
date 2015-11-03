@@ -65,5 +65,9 @@ describe Hamlit::HashParser do
       it { assert_parse('foo: { bar: baz, hoge: fuga, }, ', { 'foo' => '{ bar: baz, hoge: fuga, }' }) }
       it { assert_parse('data: { confirm: true, disable: false }, :hello => { world: foo, },', { 'data' => '{ confirm: true, disable: false }', 'hello' => '{ world: foo, }' }) }
     end
+
+    describe 'nested method' do
+      it { assert_parse('foo: bar(a, b), hoge: piyo(a, b,),', { 'foo' => 'bar(a, b)', 'hoge' => 'piyo(a, b,)' }) }
+    end
   end
 end
