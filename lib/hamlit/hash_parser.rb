@@ -2,6 +2,9 @@ require 'ripper'
 
 module Hamlit
   class HashParser
+    class ParseSkip < StandardError
+    end
+
     def self.parse(text)
       self.new.parse(text)
     end
@@ -17,6 +20,8 @@ module Hamlit
         hash[key] = attr_tokens.map(&:last).join.strip
       end
       hash
+    rescue ParseSkip
+      nil
     end
 
     private
@@ -27,16 +32,33 @@ module Hamlit
       when :on_sp
         parse_key!(tokens)
       when :on_label
-        str.tr(':', '')
+        str.tr(':'.freeze, ''.freeze)
       when :on_symbeg
         _, _, key = tokens.shift
-        until tokens.empty?
-          _, type, str = tokens.shift
-          break if type == :on_op && str == '=>'
+        assert_type!(tokens.shift, :on_tstring_end) if str != ':'.freeze
+        skip_until_hash_rocket!(tokens)
+        key
+      when :on_tstring_beg
+        _, _, key = tokens.shift
+        next_token = tokens.shift
+        unless next_token[1] == :on_label_end
+          assert_type!(next_token, :on_tstring_end)
+          skip_until_hash_rocket!(tokens)
         end
         key
       else
         raise InternalError.new("Unexpected type: #{type}")
+      end
+    end
+
+    def assert_type!(token, type)
+      raise ParseSkip if token[1] != type
+    end
+
+    def skip_until_hash_rocket!(tokens)
+      until tokens.empty?
+        _, type, str = tokens.shift
+        break if type == :on_op && str == '=>'.freeze
       end
     end
 
