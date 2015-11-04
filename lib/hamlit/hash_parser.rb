@@ -10,7 +10,7 @@ module Hamlit
     end
 
     def parse(text)
-      exp = '{' << text.strip << '}'.freeze
+      exp = wrap_bracket(text)
       return if syntax_error?(exp)
 
       hash = {}
@@ -25,6 +25,12 @@ module Hamlit
     end
 
     private
+
+    def wrap_bracket(text)
+      text = text.strip
+      return text if text[0] == '{'.freeze
+      '{' << text << '}'.freeze
+    end
 
     def parse_key!(tokens)
       _, type, str = tokens.shift
@@ -89,6 +95,8 @@ module Hamlit
           paren_open += 1
         when :on_rparen
           paren_open -= 1
+        when :on_sp
+          next if attr_tokens.empty?
         end
 
         attr_tokens << token
