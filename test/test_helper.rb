@@ -36,6 +36,10 @@ module RenderAssertion
     assert_equal html, render(haml, options)
   end
 
+  def assert_inline(haml, html)
+    assert_equal html + "\n", render(haml + "\n")
+  end
+
   def render(text, options = {}, &block)
     scope  = options.delete(:scope)  || Object.new
     locals = options.delete(:locals) || {}
