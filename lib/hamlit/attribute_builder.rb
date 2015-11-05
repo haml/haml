@@ -14,6 +14,20 @@ module Hamlit
       builder.build(*args)
     end
 
+    def self.build_class(*args)
+      classes = []
+      args.each do |arg|
+        if arg.is_a?(String)
+          classes += arg.split(' ')
+        elsif arg.is_a?(Array)
+          classes += arg.select { |a| a }
+        else
+          classes << arg.to_s
+        end
+      end
+      classes.sort.uniq.join(' ')
+    end
+
     def initialize(quote, format)
       @quote  = quote
       @format = format
