@@ -38,55 +38,61 @@ module Hamlit
         temple = [:html, :attrs]
         keys = [*static_hash.keys, *dynamic_hashes.map(&:keys).flatten].uniq.sort
         keys.each do |key|
+          static_value   = static_hash[key]
+          dynamic_values = dynamic_hashes.map { |h| h[key] }.compact
+
           case key
           when 'id'.freeze
-            compile_id!(temple, key, static_hash, dynamic_hashes)
+            compile_id!(temple, key, static_value, dynamic_values)
           when 'class'.freeze
-            compile_class!(temple, key, static_hash, dynamic_hashes)
+            compile_class!(temple, key, static_value, dynamic_values)
           when 'data'.freeze
-            compile_data!(temple, key, static_hash, dynamic_hashes)
+            compile_data!(temple, key, static_value, dynamic_values)
           when *AttributeBuilder::BOOLEAN_ATTRIBUTES
-            compile_boolean!(temple, key, static_hash, dynamic_hashes)
+            compile_boolean!(temple, key, static_value, dynamic_values)
           else
-            compile_common!(temple, key, static_hash, dynamic_hashes)
+            compile_common!(temple, key, static_value, dynamic_values)
           end
         end
         temple
       end
 
-      def compile_id!(temple, key, static_hash, dynamic_hashes)
-        temple << build_attr(:static, key, static_hash[key]) if static_hash[key]
-        dynamic_hashes.each do |dynamic_hash|
-          temple << build_attr(:dynamic, key, dynamic_hash[key]) if dynamic_hash[key]
-        end
-      end
-
-      def compile_class!(temple, key, static_hash, dynamic_hashes)
-        temple << build_attr(:static, key, static_hash[key]) if static_hash[key]
-        dynamic_hashes.each do |dynamic_hash|
-          temple << build_attr(:dynamic, key, dynamic_hash[key]) if dynamic_hash[key]
-        end
-      end
-
-      def compile_data!(temple, key, static_hash, dynamic_hashes)
-        temple << build_attr(:static, key, static_hash[key]) if static_hash[key]
-        dynamic_hashes.each do |dynamic_hash|
-          temple << build_attr(:dynamic, key, dynamic_hash[key]) if dynamic_hash[key]
-        end
-      end
-
-      def compile_boolean!(temple, key, static_hash, dynamic_hashes)
-        value = build_attr(:static, key, static_hash[key]) if static_hash[key]
-        dynamic_hashes.each do |dynamic_hash|
-          value = build_attr(:dynamic, key, dynamic_hash[key]) if dynamic_hash[key]
+      def compile_id!(temple, key, static_value, dynamic_values)
+        value = build_attr(:static, key, static_value) if static_value
+        dynamic_values.each do |dynamic_value|
+          value = build_attr(:dynamic, key, dynamic_value)
         end
         temple << value
       end
 
-      def compile_common!(temple, key, static_hash, dynamic_hashes)
-        value = build_attr(:static, key, static_hash[key]) if static_hash[key]
-        dynamic_hashes.each do |dynamic_hash|
-          value = build_attr(:dynamic, key, dynamic_hash[key]) if dynamic_hash[key]
+      def compile_class!(temple, key, static_value, dynamic_values)
+        value = build_attr(:static, key, static_value) if static_value
+        dynamic_values.each do |dynamic_value|
+          value = build_attr(:dynamic, key, dynamic_value)
+        end
+        temple << value
+      end
+
+      def compile_data!(temple, key, static_value, dynamic_values)
+        value = build_attr(:static, key, static_value) if static_value
+        dynamic_values.each do |dynamic_value|
+          value = build_attr(:dynamic, key, dynamic_value)
+        end
+        temple << value
+      end
+
+      def compile_boolean!(temple, key, static_value, dynamic_values)
+        value = build_attr(:static, key, static_value) if static_value
+        dynamic_values.each do |dynamic_value|
+          value = build_attr(:dynamic, key, dynamic_value)
+        end
+        temple << value
+      end
+
+      def compile_common!(temple, key, static_value, dynamic_values)
+        value = build_attr(:static, key, static_value) if static_value
+        dynamic_values.each do |dynamic_value|
+          value = build_attr(:dynamic, key, dynamic_value)
         end
         temple << value
       end
