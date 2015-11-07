@@ -7,7 +7,7 @@ describe Hamlit::Engine do
   it { assert_inline(%Q|%div(class='bar foo')|) }
   it { assert_inline(%Q|%div(class='foo bar')|) }
   it { assert_inline(%Q|%div{ class: 'bar foo' }|) }
-  # it { assert_inline(%q|%a{ href: "'\"" }|) }
+  it { assert_render(%q|%a{ href: "'\"" }|, %Q|<a href='&#39;&quot;'></a>\n|) }
   it { assert_inline(%Q|%a{ href: '/search?foo=bar&hoge=<fuga>' }|) }
 
   specify 'class attributes' do
@@ -25,9 +25,14 @@ describe Hamlit::Engine do
       .b.a{ class: klass }
       .b{ class: 'c a' }
       .b{ class: 'a c' }
+      .a{ class: [] }
+      .a{ class: %w[c b] }
+      %div{ class: 'b a' }(class=klass)
+      %div(class=klass){ class: 'b a' }
+      .a.d(class=klass){ class: 'c d' }
+      .a.d(class=klass)
+      .a.c(class='b')
     HAML
-
-    assert_haml('.a{ class: [] }')
   end
 
   specify 'common attributes' do
