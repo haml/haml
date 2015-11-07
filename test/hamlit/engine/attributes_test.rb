@@ -32,6 +32,11 @@ describe Hamlit::Engine do
       .a.d(class=klass){ class: 'c d' }
       .a.d(class=klass)
       .a.c(class='b')
+      - klass = nil
+      .a{:class => nil}
+      .a{:class => false}
+      .a{:class => klass}
+      .a{:class => nil}(class=klass)
     HAML
   end
 

@@ -21,7 +21,7 @@ module Hamlit
           classes += arg.split(' ')
         elsif arg.is_a?(Array)
           classes += arg.select { |a| a }
-        else
+        elsif arg
           classes << arg.to_s
         end
       end
