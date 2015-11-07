@@ -36,11 +36,23 @@ module RenderAssertion
     assert_equal html, render(haml, options)
   end
 
-  def assert_inline(haml, html)
-    assert_equal html + "\n", render(haml + "\n")
+  def assert_inline(haml)
+    options = {
+      escape_html: true,
+      escape_attrs: true,
+      ugly: true,
+    }
+    html = Haml::Engine.new(haml, options).to_html
+    assert_equal html, render(haml, options)
+  end
+
+  def assert_haml(haml)
+    haml = haml.unindent
+    assert_inline(haml)
   end
 
   def render(text, options = {}, &block)
+    options = options.dup
     scope  = options.delete(:scope)  || Object.new
     locals = options.delete(:locals) || {}
     eval Hamlit::HamlEngine.new(text, options).precompiled

@@ -15,7 +15,7 @@ module Hamlit
     end
 
     def call(template)
-      Haml::Parser.new(template, @options).parse
+      Haml::Parser.new(template, Haml::Options.new(@options)).parse
     end
   end
 end
