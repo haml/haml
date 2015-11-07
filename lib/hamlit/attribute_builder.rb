@@ -2,7 +2,7 @@ require 'temple/utils'
 
 module Hamlit
   class AttributeBuilder
-    BOOLEAN_ATTRIBUTES = %i[disabled readonly multiple checked autobuffer
+    BOOLEAN_ATTRIBUTES = %w[disabled readonly multiple checked autobuffer
                          autoplay controls loop selected hidden scoped async
                          defer reversed ismap seamless muted required
                          autofocus novalidate formnovalidate open pubdate

@@ -40,6 +40,41 @@ describe Hamlit::Engine do
     HAML
   end
 
+  specify { assert_haml %|%input(disabled='false')| }
+
+  specify 'boolean attributes' do
+    assert_haml(<<-HAML)
+      %input{ disabled: nil }
+      %input{ disabled: false }
+      %input{ disabled: true }
+      %input{ disabled: 'false' }
+      %input{ disabled: val = nil }
+      %input{ disabled: val = false }
+      %input{ disabled: val = true }
+      %input{ disabled: val = 'false' }
+      %input{ disabled: nil }(disabled=true)
+      %input{ disabled: false }(disabled=true)
+      %input{ disabled: true }(disabled=false)
+      %input(disabled=true){ disabled: nil }
+      %input(disabled=true){ disabled: false }
+      %input(disabled=false){ disabled: true }
+      - val = true
+      %input(disabled=val){ disabled: false }
+      - val = false
+      %input(disabled=val)
+      %input(disabled=nil)
+      %input(disabled=false)
+      %input(disabled=true)
+      %input(disabled='false')
+      - val = 'false'
+      %input(disabled=val)
+      %input(disabled='false'){ disabled: true }
+      %input(disabled='false'){ disabled: false }
+      %input(disabled='false'){ disabled: nil }
+      %input(disabled=''){ disabled: nil }
+    HAML
+  end
+
   specify 'common attributes' do
     assert_haml(<<-HAML)
       - new = 'new'

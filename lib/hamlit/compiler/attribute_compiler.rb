@@ -92,11 +92,20 @@ module Hamlit
       end
 
       def compile_boolean!(temple, key, static_value, dynamic_values)
-        value = build_attr(:static, key, static_value) if static_value
-        dynamic_values.each do |dynamic_value|
-          value = build_attr(:dynamic, key, dynamic_value)
-        end
-        temple << value
+        value = static_value.inspect if static_value
+        value = dynamic_values.last unless dynamic_values.empty?
+        code = [
+          %Q|case #{value}|,
+          %Q|when true|,
+          %Q|_buf << ' #{key}'.freeze|,
+          %Q|when false, nil|,
+          %Q|else|,
+          %Q|_buf << " #{key}='".freeze|,
+          %Q|_buf << ::Temple::Utils.escape_html((#{value}))|,
+          %Q|_buf << "'".freeze|,
+          %Q|end|,
+        ]
+        temple << [:code, code.join('; ')]
       end
 
       def compile_common!(temple, key, static_value, dynamic_values)
