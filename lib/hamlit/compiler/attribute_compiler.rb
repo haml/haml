@@ -58,11 +58,21 @@ module Hamlit
       end
 
       def compile_id!(temple, key, static_value, dynamic_values)
-        value = build_attr(:static, key, static_value) if static_value
-        dynamic_values.each do |dynamic_value|
-          value = build_attr(:dynamic, key, dynamic_value)
+        case
+        when static_value && dynamic_values.empty?
+          temple << build_attr(:static, key, static_value)
+        when static_value.nil? && dynamic_values.size == 1
+          temple << build_attr(:dynamic, key, dynamic_values.first)
+        else
+          values = dynamic_values.dup
+          values.unshift(static_value.inspect) if static_value
+          temple << [
+            :html,
+            :attr,
+            key,
+            [:dynamic, "::Hamlit::AttributeBuilder.build_id(#{values.join(', ')})"],
+          ]
         end
-        temple << value
       end
 
       def compile_class!(temple, key, static_value, dynamic_values)

@@ -14,6 +14,10 @@ module Hamlit
       builder.build(*hashes)
     end
 
+    def self.build_id(*values)
+      values.select { |v| v }.join('_')
+    end
+
     def self.build_class(*values)
       classes = []
       values.each do |value|
@@ -42,6 +46,8 @@ module Hamlit
       keys.each do |key|
         values = hashes.map { |h| h[key] }.select { |v| v }
         case key
+        when 'id'.freeze
+          build_id!(buf, values)
         when 'class'.freeze
           build_class!(buf, values)
         when *BOOLEAN_ATTRIBUTES
@@ -61,6 +67,13 @@ module Hamlit
         result[key.to_s] = value
       end
       result
+    end
+
+    def build_id!(buf, values)
+      buf << ' id='.freeze
+      buf << @quote
+      buf << AttributeBuilder.build_id(*values)
+      buf << @quote
     end
 
     def build_class!(buf, values)
