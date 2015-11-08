@@ -9,20 +9,21 @@ module Hamlit
                          itemscope allowfullscreen default inert sortable
                          truespeed typemustmatch data].freeze
 
-    def self.build(quote, format, *args)
+    def self.build(quote, format, *hashes)
       builder = self.new(quote, format)
-      builder.build(*args)
+      builder.build(*hashes)
     end
 
-    def self.build_class(*args)
+    def self.build_class(*values)
       classes = []
-      args.each do |arg|
-        if arg.is_a?(String)
-          classes += arg.split(' ')
-        elsif arg.is_a?(Array)
-          classes += arg.select { |a| a }
-        elsif arg
-          classes << arg.to_s
+      values.each do |value|
+        case
+        when value.is_a?(String)
+          classes += value.split(' ')
+        when value.is_a?(Array)
+          classes += value.select { |a| a }
+        when value
+          classes << value.to_s
         end
       end
       classes.sort.uniq.join(' ')
@@ -33,86 +34,48 @@ module Hamlit
       @format = format
     end
 
-    def build(*args)
-      result = ''
-      attributes = args.inject({}) do |attrs, arg|
-        merge_attributes(attrs, arg)
-      end
+    def build(*hashes)
+      buf = []
 
-      attributes.sort_by(&:first).each do |key, value|
-        if value == true
-          case @format
-          when :xhtml
-            result += " #{key}='#{key}'"
-          else
-            result += " #{key}"
-          end
-          next
+      keys = hashes.map(&:keys).flatten.map(&:to_s).sort.uniq
+      keys.each do |key|
+        values = hashes.map { |h| h[key] }.select { |v| v }
+        case key
+        when 'class'.freeze
+          build_class!(buf, values)
+        when *BOOLEAN_ATTRIBUTES
+          build_boolean!(buf, key, values)
+        else
+          build_common!(buf, key, values)
         end
-
-        value = refine_joinable_value(key, value) if value.is_a?(Array)
-        escaped = Temple::Utils.escape_html(value)
-        result += " #{key}=#{@quote}#{escaped}#{@quote}"
       end
-      result
+      buf.join
     end
 
     private
 
-    def refine_joinable_value(key, value)
-      case key
-      when 'id'
-        value = value.join('_')
-      when 'class'
-        value = value.join(' ')
-      else
-        value
+    def build_class!(buf, values)
+      buf << ' class='.freeze
+      buf << @quote
+      buf << AttributeBuilder.build_class(*values)
+      buf << @quote
+    end
+
+    def build_boolean!(buf, key, values)
+      value = values.last
+      if value
+        buf << ' '.freeze
+        buf << key
       end
     end
 
-    def merge_attributes(base, target)
-      result = {}
-      base   = flatten_attributes(base)
-      target = flatten_attributes(target)
-
-      (base.keys | target.keys).each do |key|
-        result[key] = merge_attribute_value(base, target, key)
-      end
-      result
-    end
-
-    def merge_attribute_value(base, target, key)
-      return target[key] unless base[key]
-      return base[key]   unless target[key]
-
-      values = [base[key], target[key]].flatten.compact
-      case key
-      when 'id'
-        values.join('_')
-      when 'class'
-        values.map(&:to_s).sort.uniq.join(' ')
-      end
-    end
-
-    def flatten_attributes(attributes)
-      flattened = {}
-
-      attributes.each do |key, value|
-        next if value == attributes
-
-        case value
-        when Hash
-          flatten_attributes(value).each do |k, v|
-            k = k.to_s.gsub(/_/, '-')
-            flattened["#{key}-#{k}"] = v if v
-          end
-        else
-          if value || !BOOLEAN_ATTRIBUTES.include?(key)
-            flattened[key.to_s] = value
-          end
-        end
-      end
-      flattened
+    def build_common!(buf, key, values)
+      buf << ' '.freeze
+      buf << key
+      buf << '='.freeze
+      buf << @quote
+      buf << values.first.to_s
+      buf << @quote
     end
   end
 end

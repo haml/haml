@@ -40,8 +40,6 @@ describe Hamlit::Engine do
     HAML
   end
 
-  specify { assert_haml %|%input(disabled='false')| }
-
   specify 'boolean attributes' do
     assert_haml(<<-HAML)
       %input{ disabled: nil }
@@ -55,6 +53,10 @@ describe Hamlit::Engine do
       %input{ disabled: nil }(disabled=true)
       %input{ disabled: false }(disabled=true)
       %input{ disabled: true }(disabled=false)
+      - hash = { disabled: false }
+      %a{ hash }
+      - hash = { disabled: nil }
+      %a{ hash }
       %input(disabled=true){ disabled: nil }
       %input(disabled=true){ disabled: false }
       %input(disabled=false){ disabled: true }
