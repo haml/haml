@@ -35,9 +35,10 @@ module Hamlit
     end
 
     def build(*hashes)
-      buf = []
+      buf    = []
+      hashes = hashes.map { |h| stringify_keys(h) }
 
-      keys = hashes.map(&:keys).flatten.map(&:to_s).sort.uniq
+      keys = hashes.map(&:keys).flatten.sort.uniq
       keys.each do |key|
         values = hashes.map { |h| h[key] }.select { |v| v }
         case key
@@ -53,6 +54,14 @@ module Hamlit
     end
 
     private
+
+    def stringify_keys(hash)
+      result = {}
+      hash.each do |key, value|
+        result[key.to_s] = value
+      end
+      result
+    end
 
     def build_class!(buf, values)
       buf << ' class='.freeze

@@ -10,6 +10,13 @@ describe Hamlit::Engine do
   it { assert_render(%q|%a{ href: "'\"" }|, %Q|<a href='&#39;&quot;'></a>\n|) }
   it { assert_inline(%Q|%a{ href: '/search?foo=bar&hoge=<fuga>' }|) }
 
+  specify do
+    assert_haml(<<-HAML)
+      - hash = { class: nil }
+      .b{ hash, class: 'a' }
+    HAML
+  end
+
   specify 'class attributes' do
     assert_haml(<<-HAML)
       - klass = 'b a'
@@ -37,6 +44,13 @@ describe Hamlit::Engine do
       .a{:class => false}
       .a{:class => klass}
       .a{:class => nil}(class=klass)
+      - hash = { class: nil }
+      .b{ hash, class: 'a' }
+      .b{ hash, 'class' => 'a' }
+      - hash = { class: 'd' }
+      .a{ hash }
+      .b{ hash, class: 'a' }(class='c')
+      .b{ hash, class: 'a' }(class=klass)
     HAML
   end
 
