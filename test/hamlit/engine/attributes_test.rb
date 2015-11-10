@@ -80,6 +80,13 @@ describe Hamlit::Engine do
     HAML
   end
 
+  specify 'data attributes' do
+    assert_haml(<<-HAML)
+      - val = false
+      #foo.bar{ data: { disabled: val } }
+    HAML
+  end
+
   specify 'boolean attributes' do
     assert_haml(<<-HAML)
       %input{ disabled: nil }

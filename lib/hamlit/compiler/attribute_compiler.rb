@@ -94,11 +94,14 @@ module Hamlit
       end
 
       def compile_data!(temple, key, static_value, dynamic_values)
-        value = build_attr(:static, key, static_value) if static_value
-        dynamic_values.each do |dynamic_value|
-          value = build_attr(:dynamic, key, dynamic_value)
+        case
+        when static_value && dynamic_values.empty?
+          temple << build_attr(:static, key, static_value)
+        else
+          values = dynamic_values.dup
+          values << static_value.inspect if static_value
+          temple << [:dynamic, "::Hamlit::AttributeBuilder.build_data(#{values.join(', ')})"]
         end
-        temple << value
       end
 
       def compile_boolean!(temple, key, static_value, dynamic_values)

@@ -36,17 +36,17 @@ describe Hamlit::Engine do
 
     it 'renders attributes' do
       assert_render(<<-'HAML', <<-HTML)
-        %span{ :'data-disable' => true } bar
+        %span{ :'data-disabled' => true } bar
       HAML
-        <span data-disable>bar</span>
+        <span data-disabled>bar</span>
       HTML
     end
 
     it 'accepts method call including comma' do
       assert_render(<<-'HAML', <<-HTML)
-        %body{ class: "#{"ab".gsub(/a/, 'b')}", data: { confirm: 'really?', disable: true }, id: 'c'.gsub(/c/, 'a') }
+        %body{ class: "#{"ab".gsub(/a/, 'b')}", data: { confirm: 'really?', disabled: true }, id: 'c'.gsub(/c/, 'a') }
       HAML
-        <body class='bb' data-confirm='really?' data-disable id='a'></body>
+        <body class='bb' data-confirm='really?' data-disabled id='a'></body>
       HTML
     end
 
@@ -292,18 +292,18 @@ describe Hamlit::Engine do
 
       it 'renders true attributes' do
         assert_render(<<-'HAML', <<-HTML, compatible_only: :haml)
-          %span{ data: { disable: true } } bar
+          %span{ data: { disabled: true } } bar
         HAML
-          <span data-disable>bar</span>
+          <span data-disabled>bar</span>
         HTML
       end
 
       it 'renders nested hash whose value is variable' do
         assert_render(<<-'HAML', <<-HTML)
-          - hash = { disable: true }
+          - hash = { disabled: true }
           %span{ data: hash } bar
         HAML
-          <span data-disable>bar</span>
+          <span data-disabled>bar</span>
         HTML
       end
 

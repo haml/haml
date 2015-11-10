@@ -9,28 +9,52 @@ module Hamlit
                          itemscope allowfullscreen default inert sortable
                          truespeed typemustmatch data].freeze
 
-    def self.build(quote, format, *hashes)
-      builder = self.new(quote, format)
-      builder.build(*hashes)
-    end
-
-    def self.build_id(*values)
-      values.select { |v| v }.join('_')
-    end
-
-    def self.build_class(*values)
-      classes = []
-      values.each do |value|
-        case
-        when value.is_a?(String)
-          classes += value.split(' ')
-        when value.is_a?(Array)
-          classes += value.select { |a| a }
-        when value
-          classes << value.to_s
-        end
+    class << self
+      def build(quote, format, *hashes)
+        builder = self.new(quote, format)
+        builder.build(*hashes)
       end
-      classes.sort.uniq.join(' ')
+
+      def build_id(*values)
+        values.select { |v| v }.join('_')
+      end
+
+      def build_class(*values)
+        classes = []
+        values.each do |value|
+          case
+          when value.is_a?(String)
+            classes += value.split(' ')
+          when value.is_a?(Array)
+            classes += value.select { |a| a }
+          when value
+            classes << value.to_s
+          end
+        end
+        classes.sort.uniq.join(' ')
+      end
+
+      def build_data(*hashes)
+        attrs = []
+        hashes.each do |hash|
+          hash.each do |key, value|
+            case key.to_s
+            when *BOOLEAN_ATTRIBUTES
+              if value
+                attrs << ' data-'.freeze
+                attrs << key
+              end
+            else
+              attrs << ' data-'.freeze
+              attrs << key
+              attrs << "='".freeze
+              attrs << value
+              attrs << "'".freeze
+            end
+          end
+        end
+        attrs.join
+      end
     end
 
     def initialize(quote, format)
@@ -50,6 +74,8 @@ module Hamlit
           build_id!(buf, values)
         when 'class'.freeze
           build_class!(buf, values)
+        when 'data'.freeze
+          build_data!(buf, values)
         when *BOOLEAN_ATTRIBUTES
           build_boolean!(buf, key, values)
         else
@@ -81,6 +107,10 @@ module Hamlit
       buf << @quote
       buf << AttributeBuilder.build_class(*values)
       buf << @quote
+    end
+
+    def build_data!(buf, values)
+      buf << AttributeBuilder.build_data(*values)
     end
 
     def build_boolean!(buf, key, values)
