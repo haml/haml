@@ -153,7 +153,9 @@ module Hamlit
       buf << key
       buf << '='.freeze
       buf << @quote
-      buf << values.first.to_s
+      value = values.first.to_s
+      value = Temple::Utils.escape_html(value) if @escape_attrs
+      buf << value
       buf << @quote
     end
   end
