@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'escape_utils'
-  spec.add_dependency 'haml', '>= 4.0', '<= 5.0'
+  spec.add_dependency 'haml', '>= 4.0.7', '< 5.0'
   spec.add_dependency 'temple', '~> 0.7.6'
   spec.add_dependency 'tilt', '~> 2.0'
 
