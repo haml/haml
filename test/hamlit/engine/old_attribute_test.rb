@@ -205,36 +205,38 @@ describe Hamlit::Engine do
       it 'does not delete non-boolean attributes, for optimization' do
         assert_render(<<-'HAML', <<-HTML, compatible_only: [])
           %a{ href: false }
-          %a{ href: nil }
           - val = false
-          %a{ href: val }
-          - val = nil
           %a{ href: val }
           - hash = { href: false }
           %a{ hash }
-          - hash = { href: nil }
-          %a{ hash }
 
           %a{ disabled: false }
-          %a{ disabled: nil }
           - val = false
-          %a{ disabled: val }
-          - val = nil
           %a{ disabled: val }
           - hash = { disabled: false }
           %a{ hash }
+
+          %a{ href: nil }
+          - val = nil
+          %a{ href: val }
+          - hash = { href: nil }
+          %a{ hash }
+
+          %a{ disabled: nil }
+          - val = nil
+          %a{ disabled: val }
           - hash = { disabled: nil }
           %a{ hash }
         HAML
           <a href='false'></a>
-          <a href=''></a>
           <a href='false'></a>
-          <a href=''></a>
           <a href='false'></a>
+          <a></a>
+          <a></a>
+          <a></a>
           <a href=''></a>
-          <a></a>
-          <a></a>
-          <a></a>
+          <a href=''></a>
+          <a href=''></a>
           <a></a>
           <a></a>
           <a></a>

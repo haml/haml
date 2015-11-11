@@ -95,7 +95,7 @@ module Hamlit
 
       keys = hashes.map(&:keys).flatten.sort.uniq
       keys.each do |key|
-        values = hashes.map { |h| h[key] }.select { |v| v }
+        values = hashes.map { |h| h[key] }.compact
         case key
         when 'id'.freeze
           build_id!(buf, values)
