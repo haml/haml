@@ -28,8 +28,11 @@ module Hamlit
         [:html,
          :attrs,
          [:dynamic,
-          '::Hamlit::AttributeBuilder.build' \
-          "(#{@quote.inspect}, #{@format.inspect}, #{attrs.join(', ')})",
+          '::Hamlit::AttributeBuilder.build({ ' \
+          "quote: #{@quote.inspect}, " \
+          "format: #{@format.inspect}, " \
+          "escape_attrs: #{@escape_attrs.inspect} " \
+          "},#{attrs.join(', ')})",
          ],
         ]
       end

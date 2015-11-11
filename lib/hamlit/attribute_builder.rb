@@ -11,8 +11,8 @@ module Hamlit
     DATA_BOOLEAN_ATTRIBUTES = BOOLEAN_ATTRIBUTES.map { |a| "data-#{a}" }.freeze
 
     class << self
-      def build(quote, format, *hashes)
-        builder = self.new(quote, format)
+      def build(options, *hashes)
+        builder = self.new(options)
         builder.build(*hashes)
       end
 
@@ -83,9 +83,10 @@ module Hamlit
       end
     end
 
-    def initialize(quote, format)
-      @quote  = quote
-      @format = format
+    def initialize(options)
+      @quote  = options[:quote]
+      @format = options[:format]
+      @escape_attrs = options[:escape_attrs]
     end
 
     def build(*hashes)
