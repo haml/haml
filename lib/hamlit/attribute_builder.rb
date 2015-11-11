@@ -41,6 +41,10 @@ module Hamlit
 
         hash.sort_by(&:first).each do |key, value|
           case key
+          when nil
+            attrs << " data='".freeze
+            attrs << Temple::Utils.escape_html(value.to_s)
+            attrs << "'".freeze
           when *BOOLEAN_ATTRIBUTES
             if value
               attrs << ' data-'.freeze
@@ -66,11 +70,17 @@ module Hamlit
       def flat_hyphenate(*hashes)
         result = {}
         hashes.each do |hash|
+          unless hash.is_a?(Hash)
+            result[nil] = hash
+            next
+          end
+
           hash.each do |key, value|
-            key = key.to_s.tr('_'.freeze, '-'.freeze)
+            key = key.to_s.tr('_'.freeze, '-'.freeze) unless key.nil?
             case value
             when hash
             when Hash
+              key = '' if key.nil?
               flat_hyphenate(value).each do |k, v|
                 result[key << '-'.freeze << k] = v
               end

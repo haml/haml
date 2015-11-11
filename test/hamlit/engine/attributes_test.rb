@@ -94,6 +94,8 @@ describe Hamlit::Engine do
       %a{ data: { value: [count: 1] } }
       %a{ 'data-disabled' => true }
       %a{ :'data-disabled' => true }
+      %a{ data: { nil => 3 } }
+      %a{ data: 3 }
     HAML
   end
 
