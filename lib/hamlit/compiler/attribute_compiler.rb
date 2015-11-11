@@ -48,7 +48,7 @@ module Hamlit
             compile_class!(temple, key, static_value, dynamic_values)
           when 'data'.freeze
             compile_data!(temple, key, static_value, dynamic_values)
-          when *AttributeBuilder::BOOLEAN_ATTRIBUTES
+          when *AttributeBuilder::BOOLEAN_ATTRIBUTES, *AttributeBuilder::DATA_BOOLEAN_ATTRIBUTES
             compile_boolean!(temple, key, static_value, dynamic_values)
           else
             compile_common!(temple, key, static_value, dynamic_values)

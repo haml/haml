@@ -8,6 +8,7 @@ module Hamlit
                          autofocus novalidate formnovalidate open pubdate
                          itemscope allowfullscreen default inert sortable
                          truespeed typemustmatch data].freeze
+    DATA_BOOLEAN_ATTRIBUTES = BOOLEAN_ATTRIBUTES.map { |a| "data-#{a}" }.freeze
 
     class << self
       def build(quote, format, *hashes)
@@ -101,7 +102,7 @@ module Hamlit
           build_class!(buf, values)
         when 'data'.freeze
           build_data!(buf, values)
-        when *BOOLEAN_ATTRIBUTES
+        when *BOOLEAN_ATTRIBUTES, *DATA_BOOLEAN_ATTRIBUTES
           build_boolean!(buf, key, values)
         else
           build_common!(buf, key, values)

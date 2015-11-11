@@ -92,6 +92,8 @@ describe Hamlit::Engine do
       %div{:data => {:foo_bar => 'blip', :baz => 'bang'}}
       %div{ data: { raw_src: 'foo' } }
       %a{ data: { value: [count: 1] } }
+      %a{ 'data-disabled' => true }
+      %a{ :'data-disabled' => true }
     HAML
   end
 
