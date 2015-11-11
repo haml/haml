@@ -10,13 +10,6 @@ describe Hamlit::Engine do
   it { assert_render(%q|%a{ href: "'\"" }|, %Q|<a href='&#39;&quot;'></a>\n|) }
   it { assert_inline(%Q|%a{ href: '/search?foo=bar&hoge=<fuga>' }|) }
 
-  specify do
-    assert_haml(<<-HAML)
-      - hash = { class: nil }
-      .b{ hash, class: 'a' }
-    HAML
-  end
-
   specify 'id attributes' do
     assert_haml(<<-HAML)
       #a
@@ -47,8 +40,6 @@ describe Hamlit::Engine do
     assert_haml(<<-HAML)
       - klass = 'b a'
       .b.a
-      %div{ class: 'b a' }
-      %div{ class: klass }
       .b{ class: 'a' }
       .a{ class: 'b a' }
       .b.a{ class: 'b a' }
@@ -147,5 +138,16 @@ describe Hamlit::Engine do
       %span(foo=new){ foo: old }
       %span{ foo: old }(foo=new)
     HAML
+  end
+
+  specify 'incompatibility' do
+    assert_render(<<-HAML, <<-HTML)
+      - klass = 'b a'
+      %div{ class: 'b a' }
+      %div{ class: klass }
+    HAML
+      <div class='a b'></div>
+      <div class='a b'></div>
+    HTML
   end
 end

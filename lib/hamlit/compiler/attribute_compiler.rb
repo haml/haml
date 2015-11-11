@@ -64,8 +64,6 @@ module Hamlit
         case
         when static_value && dynamic_values.empty?
           temple << build_attr(:static, key, static_value)
-        when static_value.nil? && dynamic_values.size == 1
-          temple << build_attr(:dynamic, key, dynamic_values.first)
         else
           values = dynamic_values.dup
           values.unshift(static_value.inspect) if static_value
@@ -82,8 +80,6 @@ module Hamlit
         case
         when static_value && dynamic_values.empty?
           temple << build_attr(:static, key, static_value)
-        when static_value.nil? && dynamic_values.size == 1
-          temple << build_attr(:dynamic, key, dynamic_values.first)
         else
           values = dynamic_values.dup
           values << static_value.inspect if static_value
