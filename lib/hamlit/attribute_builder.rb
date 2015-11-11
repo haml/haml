@@ -36,24 +36,49 @@ module Hamlit
 
       def build_data(*hashes)
         attrs = []
-        hashes.each do |hash|
-          hash.each do |key, value|
-            case key.to_s
-            when *BOOLEAN_ATTRIBUTES
-              if value
-                attrs << ' data-'.freeze
-                attrs << key
-              end
-            else
+        hash = flat_hyphenate(*hashes)
+
+        hash.sort_by(&:first).each do |key, value|
+          case key
+          when *BOOLEAN_ATTRIBUTES
+            if value
               attrs << ' data-'.freeze
               attrs << key
-              attrs << "='".freeze
-              attrs << value
-              attrs << "'".freeze
             end
+          else
+            attrs << ' data-'.freeze
+            attrs << key
+            attrs << "='".freeze
+            attrs << Temple::Utils.escape_html(value.to_s)
+            attrs << "'".freeze
           end
         end
         attrs.join
+      end
+
+      private
+
+      def escape_html(value)
+        Temple::Utils.escape_html(value)
+      end
+
+      def flat_hyphenate(*hashes)
+        result = {}
+        hashes.each do |hash|
+          hash.each do |key, value|
+            key = key.to_s.tr('_'.freeze, '-'.freeze)
+            case value
+            when hash
+            when Hash
+              flat_hyphenate(value).each do |k, v|
+                result[key << '-'.freeze << k] = v
+              end
+            else
+              result[key] = value
+            end
+          end
+        end
+        result
       end
     end
 

@@ -84,6 +84,14 @@ describe Hamlit::Engine do
     assert_haml(<<-HAML)
       - val = false
       #foo.bar{ data: { disabled: val } }
+      - hash = {:a => {:b => 'c'}}
+      - hash[:d] = hash
+      %div{:data => hash}
+      - hash = { data: hash }
+      %div{ hash }
+      %div{:data => {:foo_bar => 'blip', :baz => 'bang'}}
+      %div{ data: { raw_src: 'foo' } }
+      %a{ data: { value: [count: 1] } }
     HAML
   end
 
