@@ -1031,7 +1031,7 @@ most code but you may have errors with code like the following:
 
 This code will generate a syntax error, complaining about unbalanced brackets.
 In cases like this, the recommended workaround is output the code as a Ruby
-string to foce Haml to parse the code with Ruby.
+string to force Haml to parse the code with Ruby.
 
     %span= "#{'{'}"
 
