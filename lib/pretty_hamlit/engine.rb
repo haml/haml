@@ -1,5 +1,6 @@
 require 'temple'
 require 'hamlit/parser'
+require 'hamlit/html'
 require 'pretty_hamlit/compiler'
 require 'pretty_hamlit/dynamic_indentation'
 
@@ -21,7 +22,7 @@ module PrettyHamlit
 
     use Hamlit::Parser
     use Compiler
-    html :Fast
+    use Hamlit::HTML
     filter :Escapable
     filter :ControlFlow
     filter :MultiFlattener
