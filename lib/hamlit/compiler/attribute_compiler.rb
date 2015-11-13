@@ -128,11 +128,16 @@ module Hamlit
       end
 
       def compile_common!(temple, key, static_value, dynamic_values)
-        value = build_attr(:static, key, static_value) if static_value
+        type, value = :static, static_value if static_value
         dynamic_values.each do |dynamic_value|
-          value = build_attr(:dynamic, key, dynamic_value)
+          type, value = :dynamic, dynamic_value
         end
-        temple << value
+
+        if type == :dynamic && StaticAnalyzer.static?(value)
+          type, value = :static, eval("(#{value}).to_s")
+        end
+
+        temple << build_attr(type, key, value)
       end
 
       def build_attr(type, key, value)
