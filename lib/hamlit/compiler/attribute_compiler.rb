@@ -107,6 +107,7 @@ module Hamlit
       def compile_boolean!(temple, key, static_value, dynamic_values)
         value = static_value.inspect if static_value
         value = dynamic_values.last unless dynamic_values.empty?
+
         code = [
           %Q|case #{value}|,
           %Q|when true|,
@@ -118,7 +119,12 @@ module Hamlit
           %Q|_buf << "'".freeze|,
           %Q|end|,
         ]
-        temple << [:code, code.join('; ')]
+
+        if StaticAnalyzer.static?(value)
+          temple << [:static, eval(['_buf = []', *code, '_buf.join'].join('; '))]
+        else
+          temple << [:code, code.join('; ')]
+        end
       end
 
       def compile_common!(temple, key, static_value, dynamic_values)
