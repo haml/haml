@@ -1,0 +1,11 @@
+%div{ id: 'content active' }
+- i = %w[content active]
+%div{ id: i }
+- hash = { id: %w[content active] }
+%div{ hash }
+
+#book{ id: 'content active' }
+- c = %w[content active]
+#book{ id: c }
+- hash = { id: %w[content active] }
+#book{ hash }

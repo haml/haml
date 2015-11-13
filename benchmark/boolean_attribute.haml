@@ -1,0 +1,10 @@
+%input{ disabled: false }
+%input{ disabled: true }
+- disabled = false
+%input{ disabled: disabled }
+- disabled = true
+%input{ disabled: disabled }
+- hash = { disabled: false }
+%input{ hash }
+- hash = { disabled: true }
+%input{ hash }

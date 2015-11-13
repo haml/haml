@@ -1,0 +1,6 @@
+%div{ data: { disabled: true } }
+- hash = { data: { disabled: true } }
+%div{ hash }
+- hash = { 'user' => { id: 1234, name: 'eagletmt' }, book_id: 5432 }
+%div{ data: hash }
+  Book

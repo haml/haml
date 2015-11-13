@@ -1,0 +1,11 @@
+%div{ class: 'content active' }
+- c = %w[content active]
+%div{ class: c }
+- hash = { class: %w[content active] }
+%div{ hash }
+
+.book{ class: 'content active' }
+- c = %w[content active]
+.book{ class: c }
+- hash = { class: %w[content active] }
+.book{ hash }
