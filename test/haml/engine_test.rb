@@ -152,7 +152,8 @@ class EngineTest < Haml::TestCase
     assert_equal("<p class='3'>foo</p>", render("%p{:class => 1+2} foo").chomp)
   end
 
-  def test_class_attr_with_array; skip # array attribute
+  def test_class_attr_with_array
+    skip '[INCOMPATIBILITY] Hamlit deletes only boolean attributes'
     assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => %w[a b]} foo")) # basic
     assert_equal("<p class='a b css'>foo</p>\n", render("%p.css{:class => %w[a b]} foo")) # merge with css
     assert_equal("<p class='b css'>foo</p>\n", render("%p.css{:class => %w[css b]} foo")) # merge uniquely
@@ -209,7 +210,7 @@ HAML
   end
 
   def test_nil_should_render_empty_tag
-    skip '[INCOMPATIBILITY] Hamlit does not delete falsy non-boolean attributes for optimization'
+    skip '[INCOMPATIBILITY] Hamlit deletes only boolean attributes'
     assert_equal("<div class='no_attributes'></div>",
                  render(".no_attributes{:nil => nil}").chomp)
   end
@@ -323,7 +324,7 @@ HAML
   end
 
   def test_dynamic_attributes_with_empty_attr
-    skip '[INCOMPATIBILITY] Hamlit does not delete falsy non-boolean attributes for optimization'
+    skip '[INCOMPATIBILITY] Hamlit deletes only boolean attributes'
     assert_equal("<img alt='' src='/foo.png'>\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
   end
 
@@ -414,7 +415,7 @@ HAML
   end
 
   def test_boolean_attributes
-    skip '[INCOMPATIBILITY] Hamlit does not delete falsy non-boolean attributes for optimization'
+    skip '[INCOMPATIBILITY] Hamlit deletes only boolean attributes'
     assert_equal("<p bar baz='true' foo='bar'></p>\n",
                  render("%p{:foo => 'bar', :bar => true, :baz => 'true'}", :format => :html4))
     assert_equal("<p bar='bar' baz='true' foo='bar'></p>\n",
@@ -1184,7 +1185,7 @@ HAML
   end
 
   def test_nil_attrs
-    skip '[INCOMPATIBILITY] Hamlit does not delete falsy non-boolean attributes for optimization'
+    skip '[INCOMPATIBILITY] Hamlit deletes only boolean attributes'
     assert_equal("<p>nil</p>\n", render("%p{ :attr => nil } nil"))
     assert_equal("<p>nil</p>\n", render("%p{ :attr => x } nil", :locals => {:x => nil}))
   end
