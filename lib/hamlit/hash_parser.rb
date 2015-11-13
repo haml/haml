@@ -11,7 +11,7 @@ module Hamlit
 
     def parse(text)
       exp = wrap_bracket(text)
-      return if syntax_error?(exp)
+      return if SyntaxChecker.syntax_error?(exp)
 
       hash = {}
       tokens = Ripper.lex(exp)[1..-2] || []
@@ -103,17 +103,17 @@ module Hamlit
       end
       yield(attr_tokens) unless attr_tokens.empty?
     end
-
-    def syntax_error?(code)
-      ParseErrorChecker.new(code).parse
-      false
-    rescue ParseErrorChecker::ParseError
-      true
-    end
   end
 
-  class ParseErrorChecker < Ripper
+  class SyntaxChecker < Ripper
     class ParseError < StandardError
+    end
+
+    def self.syntax_error?(code)
+      self.new(code).parse
+      false
+    rescue ParseError
+      true
     end
 
     private
