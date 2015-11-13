@@ -17,7 +17,7 @@ module Hamlit
       end
 
       def build_id(*values)
-        values.select { |v| v }.join('_')
+        values.flatten.select { |v| v }.join('_')
       end
 
       def build_class(*values)

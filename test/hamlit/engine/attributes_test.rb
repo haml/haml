@@ -10,30 +10,41 @@ describe Hamlit::Engine do
   it { assert_render(%q|%a{ href: "'\"" }|, %Q|<a href='&#39;&quot;'></a>\n|) }
   it { assert_inline(%Q|%a{ href: '/search?foo=bar&hoge=<fuga>' }|) }
 
-  specify 'id attributes' do
-    assert_haml(<<-HAML)
-      #a
-      #a{ id: [] }
-      #a{ id: nil }
-      #a{ id: nil }(id=nil)
-      #a{ id: false }
-      #a{ id: 'b' }
-      #b{ id: 'a' }
-      - id = 'c'
-      #a{ id: 'b' }(id=id)
-      - id = 'b'
-      #c{ id: a = 'a' }(id=id)
-      - id = 'a'
-      #d#c{ id: a = 'b' }(id=id)
-      #d#c{ id: [] }(id=id)
-      #d#c{ id: %w[b e] }(id=id)
-      - hash = { id: 'a' }
-      %div{ hash }
-      #b{ hash }
-      #b{ hash }(id='c')
-      - id = 'c'
-      #b{ hash }(id=id)
-    HAML
+  describe 'id attributes' do
+    specify 'compatilibity' do
+      assert_haml(<<-HAML)
+        #a
+        #a{ id: nil }
+        #a{ id: nil }(id=nil)
+        #a{ id: false }
+        #a{ id: 'b' }
+        #b{ id: 'a' }
+        - id = 'c'
+        #a{ id: 'b' }(id=id)
+        - id = 'b'
+        #c{ id: a = 'a' }(id=id)
+        - id = 'a'
+        #d#c{ id: a = 'b' }(id=id)
+        #d#c{ id: %w[b e] }(id=id)
+        - hash = { id: 'a' }
+        %div{ hash }
+        #b{ hash }
+        #b{ hash }(id='c')
+        - id = 'c'
+        #b{ hash }(id=id)
+      HAML
+    end
+
+    specify 'incompatibility' do
+      assert_render(%q|#a{ id: [] }|, %Q|<div id='a'></div>\n|)
+      assert_render(%q|%a{ id: [nil, false] }|, %Q|<a id=''></a>\n|)
+      assert_render(<<-HAML, <<-HTML)
+        - id = 'a'
+        #d#c{ id: [] }(id=id)
+      HAML
+        <div id='c_a'></div>
+      HTML
+    end
   end
 
   specify 'class attributes' do
