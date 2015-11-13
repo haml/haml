@@ -7,6 +7,28 @@ require 'tempfile'
 require 'thor'
 
 class CLI < Thor
+  desc 'render HAML', 'Benchmark render'
+  def render(file)
+    haml = File.read(file)
+    compiled = Hamlit::Engine.new.call(haml)
+    code = [
+      'require "lineprof"',
+      'require "hamlit"',
+
+      'Lineprof.profile(/./) do',
+        '100.times do',
+          compiled,
+        'end',
+      'end',
+    ].join("\n")
+
+    file = Tempfile.create('compiled')
+    file.write(code)
+    file.close
+
+    system("bundle exec ruby #{file.path}")
+  end
+
   desc 'compile HAML', 'Benchmark compile'
   def compile(file)
     haml = File.read(file)
@@ -19,7 +41,7 @@ class CLI < Thor
 
   def method_missing(*args)
     return super if args.length > 1
-    compile(args.first.to_s)
+    render(args.first.to_s)
   end
 end
 
