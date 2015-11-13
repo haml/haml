@@ -158,11 +158,11 @@ class EngineTest < Haml::TestCase
     assert_equal("<p class='b css'>foo</p>\n", render("%p.css{:class => %w[css b]} foo")) # merge uniquely
     assert_equal("<p class='a b c d'>foo</p>\n", render("%p{:class => [%w[a b], %w[c d]]} foo")) # flatten
     assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => [:a, :b] } foo")) # stringify
-    # [INCOMPATIBILITY] Hamlit deletes only boolean attributes
+    # [INCOMPATIBILITY] Hamlit limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:class => [nil, false] } foo")) # strip falsey
     assert_equal("<p class=''>foo</p>\n", render("%p{:class => [nil, false] } foo")) # strip falsey
     assert_equal("<p class='a'>foo</p>\n", render("%p{:class => :a} foo")) # single stringify
-    # [INCOMPATIBILITY] Hamlit deletes only boolean attributes
+    # [INCOMPATIBILITY] Hamlit limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:class => false} foo")) # single falsey
     assert_equal("<p class=''>foo</p>\n", render("%p{:class => false} foo")) # single falsey
     assert_equal("<p class='a b html'>foo</p>\n", render("%p(class='html'){:class => %w[a b]} foo")) # html attrs
@@ -173,11 +173,11 @@ class EngineTest < Haml::TestCase
     assert_equal("<p id='css_a_b'>foo</p>\n", render("%p#css{:id => %w[a b]} foo")) # merge with css
     assert_equal("<p id='a_b_c_d'>foo</p>\n", render("%p{:id => [%w[a b], %w[c d]]} foo")) # flatten
     assert_equal("<p id='a_b'>foo</p>\n", render("%p{:id => [:a, :b] } foo")) # stringify
-    # [INCOMPATIBILITY] Hamlit deletes only boolean attributes
+    # [INCOMPATIBILITY] Hamlit limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:id => [nil, false] } foo")) # strip falsey
     assert_equal("<p id=''>foo</p>\n", render("%p{:id => [nil, false] } foo")) # strip falsey
     assert_equal("<p id='a'>foo</p>\n", render("%p{:id => :a} foo")) # single stringify
-    # [INCOMPATIBILITY] Hamlit deletes only boolean attributes
+    # [INCOMPATIBILITY] Hamlit limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:id => false} foo")) # single falsey
     assert_equal("<p id=''>foo</p>\n", render("%p{:id => false} foo")) # single falsey
     assert_equal("<p id='html_a_b'>foo</p>\n", render("%p(id='html'){:id => %w[a b]} foo")) # html attrs
@@ -217,8 +217,10 @@ HAML
   end
 
   def test_nil_should_render_empty_tag
-    skip '[INCOMPATIBILITY] Hamlit deletes only boolean attributes'
-    assert_equal("<div class='no_attributes'></div>",
+    # [INCOMPATIBILITY] Hamlit limits boolean attributes
+    # assert_equal("<div class='no_attributes'></div>",
+    #              render(".no_attributes{:nil => nil}").chomp)
+    assert_equal("<div class='no_attributes' nil=''></div>",
                  render(".no_attributes{:nil => nil}").chomp)
   end
 
@@ -331,8 +333,9 @@ HAML
   end
 
   def test_dynamic_attributes_with_empty_attr
-    skip '[INCOMPATIBILITY] Hamlit deletes only boolean attributes'
-    assert_equal("<img alt='' src='/foo.png'>\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
+    # [INCOMPATIBILITY] Hamlit limits boolean attributes
+    # assert_equal("<img alt='' src='/foo.png'>\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
+    assert_equal("<img alt='' src='/foo.png' width=''>\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
   end
 
   def test_attribute_hash_with_newlines
@@ -422,15 +425,25 @@ HAML
   end
 
   def test_boolean_attributes
-    skip '[INCOMPATIBILITY] Hamlit deletes only boolean attributes'
-    assert_equal("<p bar baz='true' foo='bar'></p>\n",
+    # [INCOMPATIBILITY] Hamlit limits boolean attributes
+    # assert_equal("<p bar baz='true' foo='bar'></p>\n",
+    #              render("%p{:foo => 'bar', :bar => true, :baz => 'true'}", :format => :html4))
+    # assert_equal("<p bar='bar' baz='true' foo='bar'></p>\n",
+    #              render("%p{:foo => 'bar', :bar => true, :baz => 'true'}", :format => :xhtml))
+    #
+    # assert_equal("<p baz='false' foo='bar'></p>\n",
+    #              render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :html4))
+    # assert_equal("<p baz='false' foo='bar'></p>\n",
+    #              render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :xhtml))
+
+    assert_equal("<p bar='true' baz='true' foo='bar'></p>\n",
                  render("%p{:foo => 'bar', :bar => true, :baz => 'true'}", :format => :html4))
-    assert_equal("<p bar='bar' baz='true' foo='bar'></p>\n",
+    assert_equal("<p bar='true' baz='true' foo='bar'></p>\n",
                  render("%p{:foo => 'bar', :bar => true, :baz => 'true'}", :format => :xhtml))
 
-    assert_equal("<p baz='false' foo='bar'></p>\n",
+    assert_equal("<p bar='false' baz='false' foo='bar'></p>\n",
                  render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :html4))
-    assert_equal("<p baz='false' foo='bar'></p>\n",
+    assert_equal("<p bar='false' baz='false' foo='bar'></p>\n",
                  render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :xhtml))
   end
 
@@ -444,7 +457,7 @@ HTML
 HAML
   end
 
-  def test_both_whitespace_nukes_work_together; skip # script bug
+  def test_both_whitespace_nukes_work_together; skip # dynamic indentation
     assert_equal(<<RESULT, render(<<SOURCE))
 <p><q>Foo
   Bar</q></p>
@@ -1054,7 +1067,7 @@ HAML
     assert_equal("<p>\n  4&<\n</p>\n", render("%p\n  ! \#{2+2}&\#{'<'}", :escape_html => false))
   end
 
-  def test_unescaped_string_interpolation_with_no_space; skip # without space
+  def test_unescaped_string_interpolation_with_no_space
     assert_equal("<br>\n", render('!#{"<br>"}'))
     assert_equal("<span><br></span>\n", render('%span!#{"<br>"}'))
   end
@@ -1192,7 +1205,7 @@ HAML
   end
 
   def test_nil_attrs
-    skip '[INCOMPATIBILITY] Hamlit deletes only boolean attributes'
+    skip '[INCOMPATIBILITY] Hamlit limits boolean attributes'
     assert_equal("<p>nil</p>\n", render("%p{ :attr => nil } nil"))
     assert_equal("<p>nil</p>\n", render("%p{ :attr => x } nil", :locals => {:x => nil}))
   end

@@ -588,7 +588,7 @@ class UglyTest < MiniTest::Test
     end
 
     def test_HTML_style_tag_with_an_atomic_attribute
-      skip '[INCOMPATIBILITY] Hamlit deletes only boolean attributes'
+      skip '[INCOMPATIBILITY] Hamlit limits boolean attributes'
       haml    = %q{%a(flag)}
       html    = %q{<a flag></a>}
       locals  = {}
