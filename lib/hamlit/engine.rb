@@ -55,13 +55,6 @@ module Hamlit
     def temple_options
       @options.dup.tap do |options|
         options.delete(:ugly)
-        case options[:format]
-        when :html5
-          options[:format] = :html
-        when :html4
-          options[:format] = :html
-          options[:html_type] = 'transitional'
-        end
       end
     end
 

@@ -22,10 +22,14 @@ module Hamlit
       def html_doctype(node)
         return [:html, :doctype, @html_type] if @html_type
 
-        version = node.value[:version] || 'transitional'
+        version = node.value[:version] || :transitional
         case @format
         when :xhtml
           [:html, :doctype, version]
+        when :html4
+          [:html, :doctype, :transitional]
+        when :html5
+          [:html, :doctype, :html]
         else
           [:html, :doctype, @format]
         end
