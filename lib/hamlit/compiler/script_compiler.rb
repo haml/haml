@@ -1,3 +1,5 @@
+require 'hamlit/static_analyzer'
+
 module Hamlit
   class Compiler
     class ScriptCompiler
@@ -6,12 +8,30 @@ module Hamlit
       end
 
       def compile(node, &block)
+        if node.children.empty? && StaticAnalyzer.static?(node.value[:text])
+          static_compile(node)
+        else
+          dynamic_compile(node, &block)
+        end
+      end
+
+      private
+
+      def static_compile(node)
+        str = eval("(#{node.value[:text]}).to_s")
+        if node.value[:escape_html]
+          str = Temple::Utils.escape_html(str)
+        elsif node.value[:preserve]
+          str = Haml::Helpers.find_and_preserve(str, %w(textarea pre code))
+        end
+        [:static, str]
+      end
+
+      def dynamic_compile(node, &block)
         var = unique_identifier
         temple = compile_script_assign(var, node, &block)
         temple << compile_script_result(var, node)
       end
-
-      private
 
       def compile_script_assign(var, node, &block)
         if node.children.empty?

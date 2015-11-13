@@ -12,6 +12,15 @@ describe Hamlit::Engine do
       HTML
     end
 
+    it 'renders dynamic interpolated string' do
+      assert_render(<<-'HAML', <<-HTML)
+        - nya = 'nya'
+        = "hello #{nya} world"
+      HAML
+        hello nya world
+      HTML
+    end
+
     it 'renders array with escape_html: false' do
       assert_render(<<-HAML, <<-HTML, escape_html: false)
         = ['<', '>']
