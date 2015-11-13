@@ -47,6 +47,7 @@ module Hamlit
     end
 
     def compile(node)
+      node.value[:text] ||= ''
       find_compiler(node.value[:name]).compile(node)
     end
 

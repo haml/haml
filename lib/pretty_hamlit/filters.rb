@@ -22,6 +22,7 @@ module PrettyHamlit
     end
 
     def compile(node, indent_level)
+      node.value[:text] ||= ''
       content = find_compiler(node.value[:name]).compile(node)
       [:multi,
        [:code, "#{@options[:buffer]} << ::PrettyHamlit::DynamicIndentation.indent_with(#{indent_level}) do |#{@options[:buffer]}|"],
