@@ -2,10 +2,10 @@ module Hamlit
   class Compiler
     class CommentCompiler
       def compile(node, &block)
-        if node.value[:conditional].nil?
-          compile_html_comment(node, &block)
-        else
+        if node.value[:conditional]
           compile_conditional_comment(node, &block)
+        else
+          compile_html_comment(node, &block)
         end
       end
 
@@ -21,7 +21,7 @@ module Hamlit
 
       def compile_conditional_comment(node, &block)
         condition = node.value[:conditional]
-        if node.value[:conditional] =~ /\A\[(.+)\]>/
+        if node.value[:conditional] =~ /\A\[(.+?)\]/
           condition = $1
         end
 
