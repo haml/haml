@@ -9,8 +9,8 @@ require 'rails'
 require 'hamlit'
 require 'hamlit/template'
 
-require 'minitest/reporters'
-Minitest::Reporters.use!
+# require 'minitest/reporters'
+# Minitest::Reporters.use!
 
 BASE_TEST_CLASS = if defined?(Minitest::Test)
                     Minitest::Test
