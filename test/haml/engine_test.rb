@@ -1564,6 +1564,7 @@ HAML
   end
 
 	def test_html5_arbitrary_hash_valued_attributes_with
+    skip '[INCOMPATIBILITY] Hamlit supports hyphenation only for data attributes'
     assert_equal("<div aria-foo='blip'></div>\n",
       render("%div{:aria => {:foo => 'blip'}}"))
     assert_equal("<div foo-baz='bang'></div>\n",
@@ -1571,6 +1572,7 @@ HAML
 	end
 
   def test_arbitrary_attribute_hash_merging
+    skip '[INCOMPATIBILITY] Hamlit supports hyphenation only for data attributes'
     assert_equal(%Q{<a aria-baz='qux' aria-foo='bar'></a>\n}, render(<<-HAML))
 - h1 = {:aria => {:foo => :bar}}
 - h2 = {:baz => :qux}
