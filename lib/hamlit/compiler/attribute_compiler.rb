@@ -1,5 +1,6 @@
 require 'hamlit/attribute_builder'
 require 'hamlit/hash_parser'
+require 'hamlit/static_analyzer'
 
 module Hamlit
   class Compiler

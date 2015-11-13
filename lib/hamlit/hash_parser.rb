@@ -1,4 +1,4 @@
-require 'ripper'
+require 'hamlit/syntax_checker'
 
 module Hamlit
   class HashParser
@@ -102,24 +102,6 @@ module Hamlit
         attr_tokens << token
       end
       yield(attr_tokens) unless attr_tokens.empty?
-    end
-  end
-
-  class SyntaxChecker < Ripper
-    class ParseError < StandardError
-    end
-
-    def self.syntax_error?(code)
-      self.new(code).parse
-      false
-    rescue ParseError
-      true
-    end
-
-    private
-
-    def on_parse_error(*)
-      raise ParseError
     end
   end
 end
