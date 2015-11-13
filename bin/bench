@@ -11,31 +11,14 @@ class Bench < Thor
   desc 'bench HAML', 'Benchmark haml template'
   option :show_code, type: :boolean, aliases: ['-c']
   def bench(file)
-    puts "#{?= * 49}\n Compilation: #{file}\n#{?= * 49}"
-    bench_compile(file)
-    puts "#{?= * 49}\n Rendering: #{file}\n#{?= * 49}"
-    bench_render(file)
+    compile(file)
+    render(file)
     code(file) if options[:show_code]
   end
 
-  desc 'code HAML', 'Show compiled code'
-  def code(file)
-    haml = File.read(file)
-    puts "#{?= * 49}\n Haml Source: #{file}\n#{?= * 49}"
-    puts Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).precompiled
-    puts "\n#{?= * 49}\n Faml Source: #{file}\n#{?= * 49}"
-    puts Faml::Engine.new.call(haml)
-    puts "\n#{?= * 49}\n Hamlit Source: #{file}\n#{?= * 49}"
-    puts Hamlit::Engine.new.call(haml)
-    if File.exist?('hamlit1')
-      puts "\n#{?= * 49}\n Hamlit1 Source: #{file}\n#{?= * 49}"
-      puts Hamlit1::Engine.new.call(haml)
-    end
-  end
-
-  private
-
-  def bench_compile(file)
+  desc 'compile HAML', 'Benchmark compilation'
+  def compile(file)
+    puts "#{?= * 49}\n Compilation: #{file}\n#{?= * 49}"
     haml = File.read(file)
 
     Benchmark.ips do |x|
@@ -47,7 +30,9 @@ class Bench < Thor
     end
   end
 
-  def bench_render(file)
+  desc 'render HAML', 'Benchmark rendering'
+  def render(file)
+    puts "#{?= * 49}\n Rendering: #{file}\n#{?= * 49}"
     haml = File.read(file)
     object = Object.new
     ruby_file = file.gsub(/\.haml\z/, '.rb')
@@ -69,9 +54,26 @@ class Bench < Thor
     end
   end
 
+  desc 'code HAML', 'Show compiled code'
+  def code(file)
+    haml = File.read(file)
+    puts "#{?= * 49}\n Haml Source: #{file}\n#{?= * 49}"
+    puts Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).precompiled
+    puts "\n#{?= * 49}\n Faml Source: #{file}\n#{?= * 49}"
+    puts Faml::Engine.new.call(haml)
+    puts "\n#{?= * 49}\n Hamlit Source: #{file}\n#{?= * 49}"
+    puts Hamlit::Engine.new.call(haml)
+    if File.exist?('hamlit1')
+      puts "\n#{?= * 49}\n Hamlit1 Source: #{file}\n#{?= * 49}"
+      puts Hamlit1::Engine.new.call(haml)
+    end
+  end
+
+  private
+
   def method_missing(*args)
     return super if args.length > 1
-    bench(args.first.to_s)
+    render(args.first.to_s)
   end
 end
 
