@@ -36,12 +36,8 @@ module RenderAssertion
     assert_equal html, render(haml, options)
   end
 
-  def assert_inline(haml)
-    options = {
-      escape_html: true,
-      escape_attrs: true,
-      ugly: true,
-    }
+  def assert_inline(haml, options = {})
+    options = { escape_html: true, escape_attrs: true, ugly: true }.merge(options)
     html = Haml::Engine.new(haml, options).to_html
     assert_equal html, render(haml, options)
   end

@@ -109,7 +109,7 @@ module Hamlit
         code = [
           %Q|case #{value}|,
           %Q|when true|,
-          %Q|_buf << ' #{key}'.freeze|,
+          %Q|_buf << #{ (@format == :xhtml ? " #{key}=#{@quote}#{key}#{@quote}" : " #{key}").inspect }.freeze|,
           %Q|when false, nil|,
           %Q|else|,
           %Q|_buf << " #{key}='".freeze|,

@@ -125,6 +125,9 @@ describe Hamlit::Engine do
       %input(disabled='false'){ disabled: nil }
       %input(disabled=''){ disabled: nil }
     HAML
+
+    assert_inline(%q|%input(checked=true)|)
+    assert_inline(%q|%input(checked=true)|, format: :xhtml)
   end
 
   specify 'common attributes' do
