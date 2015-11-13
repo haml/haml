@@ -588,6 +588,7 @@ class UglyTest < MiniTest::Test
     end
 
     def test_HTML_style_tag_with_an_atomic_attribute
+      skip '[INCOMPATIBILITY] Hamlit does not delete falsy non-boolean attributes for optimization'
       haml    = %q{%a(flag)}
       html    = %q{<a flag></a>}
       locals  = {}
