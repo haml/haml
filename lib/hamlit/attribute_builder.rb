@@ -17,7 +17,7 @@ module Hamlit
       end
 
       def build_id(*values)
-        values.flatten.select { |v| v }.join('_')
+        Temple::Utils.escape_html(values.flatten.select { |v| v }.join('_'))
       end
 
       def build_class(*values)

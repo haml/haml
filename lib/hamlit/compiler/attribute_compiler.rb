@@ -45,9 +45,15 @@ module Hamlit
           static_value   = static_hash[key]
           dynamic_values = dynamic_hashes.map { |h| h[key] }.compact
 
+          values = []
+          values << [:static, static_hash[key]] if static_hash[key]
+          dynamic_hashes.map do |hash|
+            values << [:dynamic, hash[key]] if hash[key]
+          end
+
           case key
           when 'id'.freeze
-            compile_id!(temple, key, static_value, dynamic_values)
+            compile_id!(temple, key, values)
           when 'class'.freeze
             compile_class!(temple, key, static_value, dynamic_values)
           when 'data'.freeze
@@ -61,26 +67,19 @@ module Hamlit
         temple
       end
 
-      def compile_id!(temple, key, static_value, dynamic_values)
-        case
-        when static_value && dynamic_values.empty?
-          temple << build_attr(:static, key, static_value)
+      def compile_id!(temple, key, values)
+        build_code = attribute_builder(:id, values)
+        if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
+          temple << [:html, :attr, key, [:static, eval(build_code)]]
         else
-          values = dynamic_values.dup
-          values.unshift(static_value.inspect) if static_value
-          temple << [
-            :html,
-            :attr,
-            key,
-            [:dynamic, "::Hamlit::AttributeBuilder.build_id(#{values.join(', ')})"],
-          ]
+          temple << [:html, :attr, key, [:dynamic, build_code]]
         end
       end
 
       def compile_class!(temple, key, static_value, dynamic_values)
         case
         when static_value && dynamic_values.empty?
-          temple << build_attr(:static, key, static_value)
+          temple << build_attr2(:static, key, static_value)
         else
           values = dynamic_values.dup
           values << static_value.inspect if static_value
@@ -96,7 +95,7 @@ module Hamlit
       def compile_data!(temple, key, static_value, dynamic_values)
         case
         when static_value && dynamic_values.empty?
-          temple << build_attr(:static, key, static_value)
+          temple << build_attr2(:static, key, static_value)
         else
           values = dynamic_values.dup
           values << static_value.inspect if static_value
@@ -137,11 +136,23 @@ module Hamlit
           type, value = :static, eval("(#{value}).to_s")
         end
 
-        temple << build_attr(type, key, value)
+        temple << build_attr2(type, key, value)
       end
 
-      def build_attr(type, key, value)
+      def build_attr2(type, key, value)
         [:html, :attr, key, [:escape, @escape_attrs, [type, value]]]
+      end
+
+      def build_attr(key, type, exp)
+        [:html, :attr, key, [:escape, @escape_attrs, [type, exp]]]
+      end
+
+      def attribute_builder(type, values)
+        args = values.map { |type, exp|
+          type == :static ? exp.inspect : exp
+        }.join(', ')
+
+        "::Hamlit::AttributeBuilder.build_#{type}(#{args})"
       end
     end
   end
