@@ -10,10 +10,9 @@ require 'hamlit1' if File.exist?('hamlit1')
 class Bench < Thor
   desc 'bench HAML', 'Benchmark haml template'
   option :show_code, type: :boolean, aliases: ['-c']
-  def bench(file)
-    compile(file)
-    render(file)
-    code(file) if options[:show_code]
+  def bench(*files)
+    files.each { |file| render(file) }
+    files.each { |file| code(file) if options[:show_code] }
   end
 
   desc 'compile HAML', 'Benchmark compilation'
