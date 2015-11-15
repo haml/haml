@@ -110,14 +110,14 @@ module Hamlit
 
         code = [
           %Q|case #{value}|,
-          %Q|when true|,
-          %Q|_buf << #{ (@format == :xhtml ? " #{key}=#{@quote}#{key}#{@quote}" : " #{key}").inspect }.freeze|,
-          %Q|when false, nil|,
-          %Q|else|,
-          %Q|_buf << " #{key}='".freeze|,
-          %Q|_buf << ::Temple::Utils.escape_html((#{value}))|,
-          %Q|_buf << "'".freeze|,
-          %Q|end|,
+          %q|when true|,
+            %Q|_buf << #{ (@format == :xhtml ? " #{key}=#{@quote}#{key}#{@quote}" : " #{key}").inspect }.freeze|,
+          %q|when false, nil|,
+          %q|else|,
+            %Q|_buf << " #{key}='".freeze|,
+            %Q|_buf << ::Temple::Utils.escape_html((#{value}))|,
+            %q|_buf << "'".freeze|,
+          %q|end|,
         ]
 
         if StaticAnalyzer.static?(value)
