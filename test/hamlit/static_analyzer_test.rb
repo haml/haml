@@ -19,6 +19,9 @@ describe Hamlit::StaticAnalyzer do
       assert_static('""', true)
       assert_static('"hello world"', true)
       assert_static('"a#{}b"', true)
+      assert_static('{}', true)
+      assert_static('{ "key" => "value" }', true)
+      assert_static('{ key: "value" }', true)
     end
 
     specify 'dynamic expression' do

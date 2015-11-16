@@ -7,16 +7,21 @@ module Hamlit
       on_embexpr_beg on_embexpr_end
       on_lbracket on_rbracket
       on_lparen on_rparen
+      on_lbrace on_rbrace on_label
       on_int on_float on_imaginary
       on_comma on_sp
     ].freeze
 
     DYNAMIC_TOKENS = %i[
-      on_ident on_op on_period
+      on_ident on_period
     ].freeze
 
     STATIC_KEYWORDS = %w[
       true false nil
+    ].freeze
+
+    STATIC_OPERATORS = %w[
+      =>
     ].freeze
 
     def self.static?(exp)
@@ -28,12 +33,9 @@ module Hamlit
         when *STATIC_TOKENS
           # noop
         when :on_kw
-          case str
-          when *STATIC_KEYWORDS
-            # noop
-          else
-            return false
-          end
+          return false unless STATIC_KEYWORDS.include?(str)
+        when :on_op
+          return false unless STATIC_OPERATORS.include?(str)
         when *DYNAMIC_TOKENS
           return false
         else
