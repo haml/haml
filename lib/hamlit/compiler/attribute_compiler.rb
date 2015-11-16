@@ -59,7 +59,7 @@ module Hamlit
           when 'data'.freeze
             compile_data!(temple, key, values)
           when *AttributeBuilder::BOOLEAN_ATTRIBUTES, *AttributeBuilder::DATA_BOOLEAN_ATTRIBUTES
-            compile_boolean!(temple, key, static_value, dynamic_values)
+            compile_boolean!(temple, key, values)
           else
             compile_common!(temple, key, static_value, dynamic_values)
           end
@@ -100,26 +100,14 @@ module Hamlit
         end
       end
 
-      def compile_boolean!(temple, key, static_value, dynamic_values)
-        value = static_value.inspect if static_value
-        value = dynamic_values.last unless dynamic_values.empty?
+      def compile_boolean!(temple, key, values)
+        exp = literal_for(values.last)
+        build_code = boolean_builder(key, exp)
 
-        code = [
-          %Q|case #{value}|,
-          %q|when true|,
-            %Q|_buf << #{ (@format == :xhtml ? " #{key}=#{@quote}#{key}#{@quote}" : " #{key}").inspect }.freeze|,
-          %q|when false, nil|,
-          %q|else|,
-            %Q|_buf << " #{key}='".freeze|,
-            %Q|_buf << ::Temple::Utils.escape_html((#{value}))|,
-            %q|_buf << "'".freeze|,
-          %q|end|,
-        ]
-
-        if StaticAnalyzer.static?(value)
-          temple << [:static, eval(['_buf = []', *code, '_buf.join'].join('; '))]
+        if StaticAnalyzer.static?(exp)
+          temple << [:static, eval(['_buf = []', build_code, '_buf.join'].join('; '))]
         else
-          temple << [:code, code.join('; ')]
+          temple << [:code, build_code]
         end
       end
 
@@ -145,11 +133,27 @@ module Hamlit
       end
 
       def attribute_builder(type, values)
-        args = values.map { |type, exp|
-          type == :static ? exp.inspect : exp
-        }.join(', ')
-
+        args = values.map { |v| literal_for(v) }.join(', ')
         "::Hamlit::AttributeBuilder.build_#{type}(#{args})"
+      end
+
+      def boolean_builder(key, exp)
+        [
+          %Q|case #{exp}|,
+          %q|when true|,
+            %Q|_buf << #{ (@format == :xhtml ? " #{key}=#{@quote}#{key}#{@quote}" : " #{key}").inspect }.freeze|,
+          %q|when false, nil|,
+          %q|else|,
+            %Q|_buf << " #{key}='".freeze|,
+            %Q|_buf << ::Temple::Utils.escape_html((#{exp}))|,
+            %q|_buf << "'".freeze|,
+          %q|end|,
+        ].join('; ')
+      end
+
+      def literal_for(value)
+        type, exp = value
+        type == :static ? exp.inspect : exp
       end
     end
   end
