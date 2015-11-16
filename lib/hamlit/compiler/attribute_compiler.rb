@@ -55,7 +55,7 @@ module Hamlit
           when 'id'.freeze
             compile_id!(temple, key, values)
           when 'class'.freeze
-            compile_class!(temple, key, static_value, dynamic_values)
+            compile_class!(temple, key, values)
           when 'data'.freeze
             compile_data!(temple, key, static_value, dynamic_values)
           when *AttributeBuilder::BOOLEAN_ATTRIBUTES, *AttributeBuilder::DATA_BOOLEAN_ATTRIBUTES
@@ -76,19 +76,18 @@ module Hamlit
         end
       end
 
-      def compile_class!(temple, key, static_value, dynamic_values)
-        case
-        when static_value && dynamic_values.empty?
-          temple << build_attr2(:static, key, static_value)
+      def compile_class!(temple, key, values)
+        # NOTE: Haml does not sort classes if static
+        if values.all? { |type, _| type == :static }
+          values.each { |v| temple << build_attr(key, *v) }
+          return
+        end
+
+        build_code = attribute_builder(:class, values)
+        if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
+          temple << [:html, :attr, key, [:static, eval(build_code)]]
         else
-          values = dynamic_values.dup
-          values << static_value.inspect if static_value
-          temple << [
-            :html,
-            :attr,
-            key,
-            [:dynamic, "::Hamlit::AttributeBuilder.build_class(#{values.join(', ')})"],
-          ]
+          temple << [:html, :attr, key, [:dynamic, build_code]]
         end
       end
 

@@ -32,7 +32,7 @@ module Hamlit
             classes << value.to_s
           end
         end
-        classes.sort.uniq.join(' ')
+        Temple::Utils.escape_html(classes.sort.uniq.join(' '))
       end
 
       def build_data(*hashes)
