@@ -57,7 +57,7 @@ module Hamlit
           when 'class'.freeze
             compile_class!(temple, key, values)
           when 'data'.freeze
-            compile_data!(temple, key, static_value, dynamic_values)
+            compile_data!(temple, key, values)
           when *AttributeBuilder::BOOLEAN_ATTRIBUTES, *AttributeBuilder::DATA_BOOLEAN_ATTRIBUTES
             compile_boolean!(temple, key, static_value, dynamic_values)
           else
@@ -91,14 +91,12 @@ module Hamlit
         end
       end
 
-      def compile_data!(temple, key, static_value, dynamic_values)
-        case
-        when static_value && dynamic_values.empty?
-          temple << build_attr2(:static, key, static_value)
+      def compile_data!(temple, key, values)
+        build_code = attribute_builder(:data, values)
+        if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
+          temple << [:static, eval(build_code)]
         else
-          values = dynamic_values.dup
-          values << static_value.inspect if static_value
-          temple << [:dynamic, "::Hamlit::AttributeBuilder.build_data(#{values.join(', ')})"]
+          temple << [:dynamic, build_code]
         end
       end
 
