@@ -42,14 +42,8 @@ module Hamlit
         temple = [:html, :attrs]
         keys = [*static_hash.keys, *dynamic_hashes.map(&:keys).flatten].uniq.sort
         keys.each do |key|
-          static_value   = static_hash[key]
-          dynamic_values = dynamic_hashes.map { |h| h[key] }.compact
-
-          values = []
-          values << [:static, static_hash[key]] if static_hash[key]
-          dynamic_hashes.map do |hash|
-            values << [:dynamic, hash[key]] if hash[key]
-          end
+          values = [[:static, static_hash[key]], *dynamic_hashes.map { |h| [:dynamic, h[key]] }]
+          values.select! { |_, exp| exp != nil }
 
           case key
           when 'id'.freeze
@@ -61,7 +55,7 @@ module Hamlit
           when *AttributeBuilder::BOOLEAN_ATTRIBUTES, *AttributeBuilder::DATA_BOOLEAN_ATTRIBUTES
             compile_boolean!(temple, key, values)
           else
-            compile_common!(temple, key, static_value, dynamic_values)
+            compile_common!(temple, key, values)
           end
         end
         temple
@@ -111,21 +105,13 @@ module Hamlit
         end
       end
 
-      def compile_common!(temple, key, static_value, dynamic_values)
-        type, value = :static, static_value if static_value
-        dynamic_values.each do |dynamic_value|
-          type, value = :dynamic, dynamic_value
+      def compile_common!(temple, key, values)
+        type, exp = values.last
+
+        if type == :dynamic && StaticAnalyzer.static?(exp)
+          type, exp = :static, eval("(#{exp}).to_s")
         end
-
-        if type == :dynamic && StaticAnalyzer.static?(value)
-          type, value = :static, eval("(#{value}).to_s")
-        end
-
-        temple << build_attr2(type, key, value)
-      end
-
-      def build_attr2(type, key, value)
-        [:html, :attr, key, [:escape, @escape_attrs, [type, value]]]
+        temple << build_attr(key, type, exp)
       end
 
       def build_attr(key, type, exp)
