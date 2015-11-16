@@ -26,16 +26,9 @@ module Hamlit
       def runtime_compile(node)
         attrs = node.value[:attributes_hashes]
         attrs.unshift(node.value[:attributes].inspect) if node.value[:attributes] != {}
-        [:html,
-         :attrs,
-         [:dynamic,
-          '::Hamlit::AttributeBuilder.build({ ' \
-          "quote: #{@quote.inspect}, " \
-          "format: #{@format.inspect}, " \
-          "escape_attrs: #{@escape_attrs.inspect} " \
-          "},#{attrs.join(', ')})",
-         ],
-        ]
+
+        args = [@escape_attrs, @quote, @format].map(&:inspect) + attrs
+        [:html, :attrs, [:dynamic, "::Hamlit::AttributeBuilder.build(#{args.join(', ')})"]]
       end
 
       def static_compile(static_hash, dynamic_hashes)
