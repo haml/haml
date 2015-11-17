@@ -27,7 +27,7 @@ module Hamlit::AttributeBuilder
         when 'class'.freeze
           build_class!(escape_attrs, quote, buf, values)
         when 'data'.freeze
-          buf << build_data(*values)
+          buf << build_data(escape_attrs, quote, *values)
         when *BOOLEAN_ATTRIBUTES, *DATA_BOOLEAN_ATTRIBUTES
           build_boolean!(escape_attrs, quote, format, buf, key, values)
         else
@@ -56,18 +56,18 @@ module Hamlit::AttributeBuilder
       escape_html(classes.sort.uniq.join(' '))
     end
 
-    def build_data(*hashes)
+    def build_data(escape_attrs, quote, *hashes)
       attrs = []
       hash = flat_hyphenate(*hashes)
 
       hash.sort_by(&:first).each do |key, value|
         case key
         when nil
-          attrs << " data='#{escape_html(value.to_s)}'"
+          attrs << " data=#{quote}#{escape_html(value.to_s)}#{quote}"
         when *BOOLEAN_ATTRIBUTES
           attrs << " data-#{key}" if value
         else
-          attrs << " data-#{key}='#{escape_html(value.to_s)}'"
+          attrs << " data-#{key}=#{quote}#{escape_html(value.to_s)}#{quote}"
         end
       end
       attrs.join
@@ -133,9 +133,13 @@ module Hamlit::AttributeBuilder
 
     def build_boolean!(escape_attrs, quote, format, buf, key, values)
       value = values.last
-      if value
-        buf << ' '.freeze
-        buf << key
+      case value
+      when true
+        buf << " #{key}"
+      when false, nil
+        # omitted
+      else
+        buf << " #{key}=#{quote}#{value}#{quote}"
       end
     end
 

@@ -79,7 +79,9 @@ module Hamlit
       end
 
       def compile_data!(temple, key, values)
-        build_code = attribute_builder(:data, values)
+        args = [@escape_attrs.inspect, @quote.inspect, values.map { |v| literal_for(v) }]
+        build_code = "::Hamlit::AttributeBuilder.build_data(#{args.join(', ')})"
+
         if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
           temple << [:static, eval(build_code)]
         else
@@ -122,10 +124,11 @@ module Hamlit
           %q|when true|,
             %Q|_buf << #{ (@format == :xhtml ? " #{key}=#{@quote}#{key}#{@quote}" : " #{key}").inspect }.freeze|,
           %q|when false, nil|,
+            # omitted
           %q|else|,
-            %Q|_buf << " #{key}='".freeze|,
+            %Q|_buf << #{ " #{key}=#{@quote}".inspect }.freeze|,
             %Q|_buf << ::Temple::Utils.escape_html((#{exp}))|,
-            %q|_buf << "'".freeze|,
+            %Q|_buf << #{@quote.inspect}.freeze|,
           %q|end|,
         ].join('; ')
       end

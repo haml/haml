@@ -168,4 +168,34 @@ describe Hamlit::Engine do
       assert_render(%q|%a{ href: "'\"" }|, %Q|<a href='&#39;&quot;'></a>\n|)
     end
   end
+
+  describe 'engine options' do
+    specify 'attr_quote' do
+      assert_render(%q|%a{ href: '/' }|, %Q|<a href='/'></a>\n|)
+      assert_render(%q|%a{ href: '/' }|, %Q|<a href='/'></a>\n|, attr_quote: ?')
+      assert_render(%q|%a{ href: '/' }|, %Q|<a href=*/*></a>\n|, attr_quote: ?*)
+
+      assert_render(%q|%a{ id: '/' }|, %Q|<a id="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- val = '/'\n%a{ id: val }|, %Q|<a id="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- hash = { id: '/' }\n%a{ hash }|, %Q|<a id="/"></a>\n|, attr_quote: ?")
+
+      assert_render(%q|%a{ class: '/' }|, %Q|<a class="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- val = '/'\n%a{ class: val }|, %Q|<a class="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- hash = { class: '/' }\n%a{ hash }|, %Q|<a class="/"></a>\n|, attr_quote: ?")
+
+      assert_render(%q|%a{ data: '/' }|, %Q|<a data="/"></a>\n|, attr_quote: ?")
+      assert_render(%q|%a{ data: { url: '/' } }|, %Q|<a data-url="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- val = '/'\n%a{ data: val }|, %Q|<a data="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- val = { url: '/' }\n%a{ data: val }|, %Q|<a data-url="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- hash = { data: { url: '/' } }\n%a{ hash }|, %Q|<a data-url="/"></a>\n|, attr_quote: ?")
+
+      assert_render(%q|%a{ disabled: '/' }|, %Q|<a disabled="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- val = '/'\n%a{ disabled: val }|, %Q|<a disabled="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- hash = { disabled: '/' }\n%a{ hash }|, %Q|<a disabled="/"></a>\n|, attr_quote: ?")
+
+      assert_render(%q|%a{ href: '/' }|, %Q|<a href="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- val = '/'\n%a{ href: val }|, %Q|<a href="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- hash = { href: '/' }\n%a{ hash }|, %Q|<a href="/"></a>\n|, attr_quote: ?")
+    end
+  end
 end
