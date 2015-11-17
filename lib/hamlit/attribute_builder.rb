@@ -21,15 +21,15 @@ module Hamlit::AttributeBuilder
         values = hashes.map { |h| h[key] }.compact
         case key
         when 'id'.freeze
-          build_id!(escape_attrs, quote, buf, values)
+          buf << " id=#{quote}#{build_id(escape_attrs, *values)}#{quote}"
         when 'class'.freeze
-          build_class!(escape_attrs, quote, buf, values)
+          buf << " class=#{quote}#{build_class(escape_attrs, *values)}#{quote}"
         when 'data'.freeze
           buf << build_data(escape_attrs, quote, *values)
         when *BOOLEAN_ATTRIBUTES, *DATA_BOOLEAN_ATTRIBUTES
           build_boolean!(escape_attrs, quote, format, buf, key, values)
         else
-          build_common!(escape_attrs, quote, buf, key, values)
+          buf << " #{key}=#{quote}#{escape_html(escape_attrs, values.first.to_s)}#{quote}"
         end
       end
       buf.join
@@ -107,20 +107,6 @@ module Hamlit::AttributeBuilder
       result
     end
 
-    def build_id!(escape_attrs, quote, buf, values)
-      buf << ' id='.freeze
-      buf << quote
-      buf << build_id(escape_attrs, *values)
-      buf << quote
-    end
-
-    def build_class!(escape_attrs, quote, buf, values)
-      buf << ' class='.freeze
-      buf << quote
-      buf << build_class(escape_attrs, *values)
-      buf << quote
-    end
-
     def build_boolean!(escape_attrs, quote, format, buf, key, values)
       value = values.last
       case value
@@ -131,15 +117,6 @@ module Hamlit::AttributeBuilder
       else
         buf << " #{key}=#{quote}#{escape_html(escape_attrs, value)}#{quote}"
       end
-    end
-
-    def build_common!(escape_attrs, quote, buf, key, values)
-      buf << ' '.freeze
-      buf << key
-      buf << '='.freeze
-      buf << quote
-      buf << escape_html(escape_attrs, values.first.to_s)
-      buf << quote
     end
 
     def escape_html(escape_attrs, str)
