@@ -63,20 +63,11 @@ module Hamlit::AttributeBuilder
       hash.sort_by(&:first).each do |key, value|
         case key
         when nil
-          attrs << " data='".freeze
-          attrs << escape_html(value.to_s)
-          attrs << "'".freeze
+          attrs << " data='#{escape_html(value.to_s)}'"
         when *BOOLEAN_ATTRIBUTES
-          if value
-            attrs << ' data-'.freeze
-            attrs << key
-          end
+          attrs << " data-#{key}" if value
         else
-          attrs << ' data-'.freeze
-          attrs << key
-          attrs << "='".freeze
-          attrs << escape_html(value.to_s)
-          attrs << "'".freeze
+          attrs << " data-#{key}='#{escape_html(value.to_s)}'"
         end
       end
       attrs.join
@@ -96,10 +87,11 @@ module Hamlit::AttributeBuilder
           key = key.to_s.tr('_'.freeze, '-'.freeze) unless key.nil?
           case value
           when hash
+            # ignore cyclic reference
           when Hash
             key = '' if key.nil?
             flat_hyphenate(value).each do |k, v|
-              result[key << '-'.freeze << k] = v
+              result["#{key}-#{k}"] = v
             end
           else
             result[key] = value
