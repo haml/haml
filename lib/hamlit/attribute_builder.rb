@@ -1,3 +1,4 @@
+require 'hamlit/object_ref'
 require 'temple/utils'
 
 module Hamlit::AttributeBuilder
@@ -12,9 +13,10 @@ module Hamlit::AttributeBuilder
   # NOTE: Since this module is used on runtime, its methods are designed to be
   # class methods which takes all options as arguments for performance.
   class << self
-    def build(escape_attrs, quote, format, *hashes)
+    def build(escape_attrs, quote, format, object_ref, *hashes)
       buf    = []
       hashes = hashes.map { |h| stringify_keys(h) }
+      hashes << Hamlit::ObjectRef.parse(object_ref) if object_ref
 
       keys = hashes.map(&:keys).flatten.sort.uniq
       keys.each do |key|

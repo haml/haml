@@ -13,6 +13,7 @@ module Hamlit
 
       def compile(node)
         hashes = []
+        return runtime_compile(node) if node.value[:object_ref] != :nil
         node.value[:attributes_hashes].each do |attribute_str|
           hash = HashParser.parse(attribute_str)
           return runtime_compile(node) unless hash
@@ -27,7 +28,7 @@ module Hamlit
         attrs = node.value[:attributes_hashes]
         attrs.unshift(node.value[:attributes].inspect) if node.value[:attributes] != {}
 
-        args = [@escape_attrs, @quote, @format].map(&:inspect) + attrs
+        args = [@escape_attrs, @quote, @format].map(&:inspect).push(node.value[:object_ref]) + attrs
         [:html, :attrs, [:dynamic, "::Hamlit::AttributeBuilder.build(#{args.join(', ')})"]]
       end
 

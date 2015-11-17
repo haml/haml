@@ -169,6 +169,32 @@ describe Hamlit::Engine do
     end
   end
 
+  specify 'object reference' do
+    ::TestObject = Struct.new(:id) unless defined?(::TestObject)
+    assert_render(<<-HAML, %Q|<a class='test_object' id='test_object_10'></a>\n|)
+      - foo = TestObject.new(10)
+      %a[foo]
+    HAML
+    assert_render(<<-HAML, %Q|<a class='test_object' id='test_object_10'></a>\n|)
+      - foo = TestObject.new(10)
+      %a[foo, nil]
+    HAML
+    assert_render(<<-HAML, %Q|<a class='test_object' id='test_object_new'></a>\n|)
+      - foo = TestObject.new(nil)
+      %a[foo]
+    HAML
+    assert_render(<<-HAML, %Q|<a class='pre_test_object' id='pre_test_object_10'></a>\n|)
+      - foo = TestObject.new(10)
+      %a[foo, 'pre']
+    HAML
+    assert_render(%q|.static#static[TestObject.new(10)]|, %Q|<div class='static test_object' id='static_test_object_10'></div>\n|)
+    assert_render(<<-HAML, %Q|<a class='dynamic pre_test_object static' id='static_dynamic_pre_test_object_10'></a>\n|)
+      - foo = TestObject.new(10)
+      - dynamic = 'dynamic'
+      %a.static#static[foo, 'pre']{ id: dynamic, class: dynamic }
+    HAML
+  end
+
   describe 'engine options' do
     specify 'attr_quote' do
       assert_render(%q|%a{ href: '/' }|, %Q|<a href='/'></a>\n|)
