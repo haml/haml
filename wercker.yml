@@ -1,28 +1,32 @@
-box: ruby
+box: wercker/rvm
 build:
   steps:
+    - rvm-use:
+        version: 2.2.3
+    - script:
+        name: update bundler
+        code: gem update bundler
+
     - bundle-install
+
     - script:
-      name: clone hamlit1
-      code: bin/clone
+        name: clone hamlit1
+        code: bin/clone
     - script:
-      name: "[benchmark] static attributes"
-      code: bin/bench bench benchmark/boolean_attribute.haml benchmark/class_attribute.haml benchmark/id_attribute.haml benchmark/data_attribute.haml benchmark/common_attribute.haml
+        name: "[benchmark] static attributes"
+        code: bin/bench bench benchmark/boolean_attribute.haml benchmark/class_attribute.haml benchmark/id_attribute.haml benchmark/data_attribute.haml benchmark/common_attribute.haml
     - script:
-      name: "[benchmark] dynamic attributes"
-      code: bin/bench bench benchmark/dynamic_attributes/boolean_attribute.haml benchmark/dynamic_attributes/class_attribute.haml benchmark/dynamic_attributes/id_attribute.haml benchmark/dynamic_attributes/data_attribute.haml benchmark/dynamic_attributes/common_attribute.haml
+        name: "[benchmark] dynamic attributes"
+        code: bin/bench bench benchmark/dynamic_attributes/boolean_attribute.haml benchmark/dynamic_attributes/class_attribute.haml benchmark/dynamic_attributes/id_attribute.haml benchmark/dynamic_attributes/data_attribute.haml benchmark/dynamic_attributes/common_attribute.haml
     - script:
-      name: "[benchmark] plain text"
-      code: bin/bench bench benchmark/plain.haml
+        name: "[benchmark] plain text"
+        code: bin/bench bench benchmark/plain.haml
     - script:
-      name: "[benchmark] script"
-      code: bin/bench bench benchmark/script.haml
+        name: "[benchmark] script"
+        code: bin/bench bench benchmark/script.haml
     - script:
-      name: "[benchmark] attribute_builder bench by faml"
-      code: bin/bench bench benchmark/etc/attribute_builder.haml
+        name: "[benchmark] attribute_builder bench by faml"
+        code: bin/bench bench benchmark/etc/attribute_builder.haml
     - script:
-      name: "[benchmark] basic bench by slim"
-      code: bin/bench bench benchmark/etc/slim_bench.haml
-    - script:
-      name: minitest
-      code: bundle exec rake test
+        name: "[benchmark] basic bench by slim"
+        code: bin/bench bench benchmark/etc/slim_bench.haml
