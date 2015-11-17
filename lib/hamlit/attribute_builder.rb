@@ -1,8 +1,6 @@
 require 'temple/utils'
 
 module Hamlit::AttributeBuilder
-  extend Temple::Utils
-
   BOOLEAN_ATTRIBUTES = %w[disabled readonly multiple checked autobuffer
                        autoplay controls loop selected hidden scoped async
                        defer reversed ismap seamless muted required
@@ -37,11 +35,11 @@ module Hamlit::AttributeBuilder
       buf.join
     end
 
-    def build_id(*values)
-      escape_html(values.flatten.select { |v| v }.join('_'))
+    def build_id(escape_attrs, *values)
+      escape_html(escape_attrs, values.flatten.select { |v| v }.join('_'))
     end
 
-    def build_class(*values)
+    def build_class(escape_attrs, *values)
       classes = []
       values.each do |value|
         case
@@ -53,7 +51,7 @@ module Hamlit::AttributeBuilder
           classes << value.to_s
         end
       end
-      escape_html(classes.sort.uniq.join(' '))
+      escape_html(escape_attrs, classes.sort.uniq.join(' '))
     end
 
     def build_data(escape_attrs, quote, *hashes)
@@ -63,11 +61,11 @@ module Hamlit::AttributeBuilder
       hash.sort_by(&:first).each do |key, value|
         case key
         when nil
-          attrs << " data=#{quote}#{escape_html(value.to_s)}#{quote}"
+          attrs << " data=#{quote}#{escape_html(escape_attrs, value.to_s)}#{quote}"
         when *BOOLEAN_ATTRIBUTES
           attrs << " data-#{key}" if value
         else
-          attrs << " data-#{key}=#{quote}#{escape_html(value.to_s)}#{quote}"
+          attrs << " data-#{key}=#{quote}#{escape_html(escape_attrs, value.to_s)}#{quote}"
         end
       end
       attrs.join
@@ -112,22 +110,14 @@ module Hamlit::AttributeBuilder
     def build_id!(escape_attrs, quote, buf, values)
       buf << ' id='.freeze
       buf << quote
-      if escape_attrs
-        buf << escape_html(build_id(*values))
-      else
-        buf << build_id(*values)
-      end
+      buf << build_id(escape_attrs, *values)
       buf << quote
     end
 
     def build_class!(escape_attrs, quote, buf, values)
       buf << ' class='.freeze
       buf << quote
-      if escape_attrs
-        buf << escape_html(build_class(*values))
-      else
-        buf << build_class(*values)
-      end
+      buf << build_class(escape_attrs, *values)
       buf << quote
     end
 
@@ -139,7 +129,7 @@ module Hamlit::AttributeBuilder
       when false, nil
         # omitted
       else
-        buf << " #{key}=#{quote}#{value}#{quote}"
+        buf << " #{key}=#{quote}#{escape_html(escape_attrs, value)}#{quote}"
       end
     end
 
@@ -148,12 +138,16 @@ module Hamlit::AttributeBuilder
       buf << key
       buf << '='.freeze
       buf << quote
-      if escape_attrs
-        buf << escape_html(values.first)
-      else
-        buf << values.first
-      end
+      buf << escape_html(escape_attrs, values.first.to_s)
       buf << quote
+    end
+
+    def escape_html(escape_attrs, str)
+      if escape_attrs
+        Temple::Utils.escape_html(str)
+      else
+        str
+      end
     end
   end
 end

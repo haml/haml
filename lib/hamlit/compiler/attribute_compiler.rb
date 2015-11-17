@@ -114,8 +114,8 @@ module Hamlit
       end
 
       def attribute_builder(type, values)
-        args = values.map { |v| literal_for(v) }.join(', ')
-        "::Hamlit::AttributeBuilder.build_#{type}(#{args})"
+        args = [@escape_attrs.inspect, *values.map { |v| literal_for(v) }]
+        "::Hamlit::AttributeBuilder.build_#{type}(#{args.join(', ')})"
       end
 
       def boolean_builder(key, exp)
@@ -127,7 +127,7 @@ module Hamlit
             # omitted
           %q|else|,
             %Q|_buf << #{ " #{key}=#{@quote}".inspect }.freeze|,
-            %Q|_buf << ::Temple::Utils.escape_html((#{exp}))|,
+            %Q|_buf << #{ @escape_attrs ? "::Temple::Utils.escape_html((#{exp}))" : exp }|,
             %Q|_buf << #{@quote.inspect}.freeze|,
           %q|end|,
         ].join('; ')

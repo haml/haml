@@ -197,5 +197,42 @@ describe Hamlit::Engine do
       assert_render(%Q|- val = '/'\n%a{ href: val }|, %Q|<a href="/"></a>\n|, attr_quote: ?")
       assert_render(%Q|- hash = { href: '/' }\n%a{ hash }|, %Q|<a href="/"></a>\n|, attr_quote: ?")
     end
+
+    specify 'escape_attrs' do
+      assert_render(%q|%a{ id: '&<>"/' }|, %Q|<a id='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%q|%a{ id: '&<>"/' }|, %Q|<a id='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+      assert_render(%Q|- val = '&<>"/'\n%a{ id: val }|, %Q|<a id='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%Q|- val = '&<>"/'\n%a{ id: val }|, %Q|<a id='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+      assert_render(%Q|- hash = { id: '&<>"/' }\n%a{ hash }|, %Q|<a id='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%Q|- hash = { id: '&<>"/' }\n%a{ hash }|, %Q|<a id='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+
+      assert_render(%q|%a{ id: '&<>"/' }|, %Q|<a id='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%q|%a{ id: '&<>"/' }|, %Q|<a id='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+      assert_render(%Q|- val = '&<>"/'\n%a{ id: val }|, %Q|<a id='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%Q|- val = '&<>"/'\n%a{ id: val }|, %Q|<a id='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+      assert_render(%Q|- hash = { id: '&<>"/' }\n%a{ hash }|, %Q|<a id='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%Q|- hash = { id: '&<>"/' }\n%a{ hash }|, %Q|<a id='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+
+      assert_render(%q|%a{ data: '&<>"/' }|, %Q|<a data='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%q|%a{ data: '&<>"/' }|, %Q|<a data='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+      assert_render(%Q|- val = '&<>"/'\n%a{ data: val }|, %Q|<a data='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%Q|- val = '&<>"/'\n%a{ data: val }|, %Q|<a data='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+      assert_render(%Q|- hash = { data: '&<>"/' }\n%a{ hash }|, %Q|<a data='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%Q|- hash = { data: '&<>"/' }\n%a{ hash }|, %Q|<a data='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+
+      assert_render(%q|%a{ disabled: '&<>"/' }|, %Q|<a disabled='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%q|%a{ disabled: '&<>"/' }|, %Q|<a disabled='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+      assert_render(%Q|- val = '&<>"/'\n%a{ disabled: val }|, %Q|<a disabled='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%Q|- val = '&<>"/'\n%a{ disabled: val }|, %Q|<a disabled='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+      assert_render(%Q|- hash = { disabled: '&<>"/' }\n%a{ hash }|, %Q|<a disabled='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%Q|- hash = { disabled: '&<>"/' }\n%a{ hash }|, %Q|<a disabled='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+
+      assert_render(%q|%a{ href: '&<>"/' }|, %Q|<a href='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%q|%a{ href: '&<>"/' }|, %Q|<a href='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+      assert_render(%Q|- val = '&<>"/'\n%a{ href: val }|, %Q|<a href='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%Q|- val = '&<>"/'\n%a{ href: val }|, %Q|<a href='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+      assert_render(%Q|- hash = { href: '&<>"/' }\n%a{ hash }|, %Q|<a href='&<>"/'></a>\n|, escape_attrs: false)
+      assert_render(%Q|- hash = { href: '&<>"/' }\n%a{ hash }|, %Q|<a href='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+    end
   end
 end
