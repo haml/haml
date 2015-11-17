@@ -111,7 +111,12 @@ module Hamlit::AttributeBuilder
       value = values.last
       case value
       when true
-        buf << " #{key}"
+        case format
+        when :xhtml
+          buf << " #{key}=#{quote}#{key}#{quote}"
+        else
+          buf << " #{key}"
+        end
       when false, nil
         # omitted
       else

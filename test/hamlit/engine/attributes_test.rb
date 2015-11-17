@@ -192,6 +192,7 @@ describe Hamlit::Engine do
       assert_render(%q|%a{ disabled: '/' }|, %Q|<a disabled="/"></a>\n|, attr_quote: ?")
       assert_render(%Q|- val = '/'\n%a{ disabled: val }|, %Q|<a disabled="/"></a>\n|, attr_quote: ?")
       assert_render(%Q|- hash = { disabled: '/' }\n%a{ hash }|, %Q|<a disabled="/"></a>\n|, attr_quote: ?")
+      assert_render(%Q|- hash = { disabled: true }\n%a{ hash }|, %Q|<a disabled="disabled"></a>\n|, attr_quote: ?", format: :xhtml)
 
       assert_render(%q|%a{ href: '/' }|, %Q|<a href="/"></a>\n|, attr_quote: ?")
       assert_render(%Q|- val = '/'\n%a{ href: val }|, %Q|<a href="/"></a>\n|, attr_quote: ?")
@@ -233,6 +234,15 @@ describe Hamlit::Engine do
       assert_render(%Q|- val = '&<>"/'\n%a{ href: val }|, %Q|<a href='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
       assert_render(%Q|- hash = { href: '&<>"/' }\n%a{ hash }|, %Q|<a href='&<>"/'></a>\n|, escape_attrs: false)
       assert_render(%Q|- hash = { href: '&<>"/' }\n%a{ hash }|, %Q|<a href='&amp;&lt;&gt;&quot;/'></a>\n|, escape_attrs: true)
+    end
+
+    specify 'format' do
+      assert_render(%q|%a{ disabled: true }|, %Q|<a disabled></a>\n|, format: :html)
+      assert_render(%q|%a{ disabled: true }|, %Q|<a disabled='disabled'></a>\n|, format: :xhtml)
+      assert_render(%Q|- val = true\n%a{ disabled: val }|, %Q|<a disabled></a>\n|, format: :html)
+      assert_render(%Q|- val = true\n%a{ disabled: val }|, %Q|<a disabled='disabled'></a>\n|, format: :xhtml)
+      assert_render(%Q|- hash = { disabled: true }\n%a{ hash }|, %Q|<a disabled></a>\n|, format: :html)
+      assert_render(%Q|- hash = { disabled: true }\n%a{ hash }|, %Q|<a disabled='disabled'></a>\n|, format: :xhtml)
     end
   end
 end
