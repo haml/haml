@@ -5,6 +5,7 @@ module Hamlit
     AVAILABLE_OPTIONS = %i[
       autoclose
       escape_html
+      escape_attrs
     ].freeze
 
     def initialize(options = {})

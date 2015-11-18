@@ -3,8 +3,6 @@ require 'thor'
 
 module Hamlit
   class CLI < Thor
-    class_option :style, type: :string, aliases: ['-t'], default: 'ugly'
-
     desc 'render HAML', 'Render haml template'
     def render(file)
       code = generate_code(file)
@@ -25,16 +23,12 @@ module Hamlit
 
     def generate_code(file)
       template = File.read(file)
-      Hamlit::HamlEngine.new(template, haml_options).precompiled
+      Hamlit::Engine.new.call(template)
     end
 
     def generate_ast(file)
       template = File.read(file)
       Hamlit::Parser.new.call(template)
-    end
-
-    def haml_options
-      { ugly: options['style'] == 'ugly' }
     end
 
     # Flexible default_task, compatible with haml's CLI
