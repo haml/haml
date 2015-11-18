@@ -3,6 +3,8 @@ module Hamlit
     class << self
       def parse(args)
         object, prefix = args
+        return {} unless object
+
         suffix = underscore(object.class)
         {
           'class' => [prefix, suffix].compact.join('_'),

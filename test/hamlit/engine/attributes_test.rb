@@ -193,6 +193,7 @@ describe Hamlit::Engine do
       - dynamic = 'dynamic'
       %a.static#static[foo, 'pre']{ id: dynamic, class: dynamic }
     HAML
+    assert_render(%q|.static#static[nil]|, %Q|<div class='static' id='static'></div>\n|)
   end
 
   describe 'engine options' do

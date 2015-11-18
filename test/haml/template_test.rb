@@ -48,7 +48,7 @@ class TemplateTest < Haml::TestCase
     #'whitespace_handling',
     'original_engine',
     'list',
-    #'helpful',
+    'helpful',
     'silent_script',
     'tag_parsing',
     #'just_stuff',
