@@ -1,7 +1,6 @@
 require 'hamlit/compiler/children_compiler'
 require 'hamlit/compiler/comment_compiler'
 require 'hamlit/compiler/doctype_compiler'
-require 'hamlit/compiler/root_compiler'
 require 'hamlit/compiler/script_compiler'
 require 'hamlit/compiler/silent_script_compiler'
 require 'hamlit/compiler/tag_compiler'
@@ -13,7 +12,6 @@ module Hamlit
       @children_compiler      = ChildrenCompiler.new
       @comment_compiler       = CommentCompiler.new
       @doctype_compiler       = DoctypeCompiler.new(options)
-      @root_compiler          = RootCompiler.new(options)
       @script_compiler        = ScriptCompiler.new
       @silent_script_compiler = SilentScriptCompiler.new
       @tag_compiler           = TagCompiler.new(options)
@@ -30,7 +28,7 @@ module Hamlit
     def compile(node)
       case node.type
       when :root
-        compile_root(node)
+        compile_children(node)
       when :comment
         compile_comment(node)
       when :doctype
@@ -54,10 +52,6 @@ module Hamlit
 
     def compile_children(node)
       @children_compiler.compile(node) { |n| compile(n) }
-    end
-
-    def compile_root(node)
-      @root_compiler.compile(node) { |n| compile_children(n) }
     end
 
     def compile_comment(node)
