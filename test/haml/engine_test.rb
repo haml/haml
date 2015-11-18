@@ -110,7 +110,7 @@ class EngineTest < Haml::TestCase
 
   def engine(text, options = {})
     options = use_test_tracing(options)
-    Hamlit::HamlEngine.new(text, options)
+    Hamlit::Template.new(hamlit_base.merge(options)) { text }
   end
 
   def setup
@@ -127,12 +127,9 @@ class EngineTest < Haml::TestCase
   end
 
   def test_flexible_tabulation
-    assert_equal("<p>\n  foo\n</p>\n<q>\n  bar\n  <a>\n    baz\n  </a>\n</q>\n",
-                 render("%p\n foo\n%q\n bar\n %a\n  baz"))
-    assert_equal("<p>\n  foo\n</p>\n<q>\n  bar\n  <a>\n    baz\n  </a>\n</q>\n",
-                 render("%p\n\tfoo\n%q\n\tbar\n\t%a\n\t\tbaz"))
-    assert_equal("<p>\n      \t \t bar\n   baz\n</p>\n",
-                 render("%p\n  :plain\n        \t \t bar\n     baz"))
+    assert_render("%p\n foo\n%q\n bar\n %a\n  baz")
+    assert_render("%p\n\tfoo\n%q\n\tbar\n\t%a\n\t\tbaz")
+    assert_render("%p\n  :plain\n        \t \t bar\n     baz")
   end
 
   def test_empty_render_should_remain_empty
@@ -192,11 +189,7 @@ class EngineTest < Haml::TestCase
   end
 
   def test_dynamic_attributes_with_no_content
-    assert_equal(<<HTML, render(<<HAML))
-<p>
-  <a href='http://haml.info'></a>
-</p>
-HTML
+    assert_render(<<HAML)
 %p
   %a{:href => "http://" + "haml.info"}
 HAML
@@ -234,21 +227,21 @@ HAML
   end
 
   def test_one_liner_with_newline_shouldnt_be_one_line
-    assert_equal("<p>\n  foo\n  bar\n</p>", render('%p= "foo\nbar"').chomp)
+    assert_render('%p= "foo\nbar"')
   end
 
-  def test_multi_render
+  def test_multi_render; skip
     engine = engine("%strong Hi there!")
-    assert_equal("<strong>Hi there!</strong>\n", engine.to_html)
-    assert_equal("<strong>Hi there!</strong>\n", engine.to_html)
-    assert_equal("<strong>Hi there!</strong>\n", engine.to_html)
+    assert_equal("<strong>Hi there!</strong>\n", engine.render)
+    assert_equal("<strong>Hi there!</strong>\n", engine.render)
+    assert_equal("<strong>Hi there!</strong>\n", engine.render)
   end
 
   def test_interpolation
-    assert_equal("<p>Hello World</p>\n", render('%p Hello #{who}', locals: {who: 'World'}, escape_html: false))
-    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#{who}", locals: {who: 'World'}, escape_html: false))
-    assert_equal("<p>Hello World</p>\n", render('%p Hello #{who}', locals: {who: 'World'}, escape_html: true))
-    assert_equal("<p>\n  Hello World\n</p>\n", render("%p\n  Hello \#{who}", locals: {who: 'World'}, escape_html: true))
+    assert_render('%p Hello #{who}', locals: {who: 'World'}, escape_html: false)
+    assert_render("%p\n  Hello \#{who}", locals: {who: 'World'}, escape_html: false)
+    assert_render('%p Hello #{who}', locals: {who: 'World'}, escape_html: true)
+    assert_render("%p\n  Hello \#{who}", locals: {who: 'World'}, escape_html: true)
   end
 
   def test_interpolation_with_instance_var; skip # special interpolation
@@ -295,8 +288,8 @@ HAML
   end
 
   def test_interpolation_at_the_beginning_of_a_line
-    assert_equal("<p>2</p>\n", render('%p #{1 + 1}'))
-    assert_equal("<p>\n  2\n</p>\n", render("%p\n  \#{1 + 1}"))
+    assert_render('%p #{1 + 1}')
+    assert_render("%p\n  \#{1 + 1}")
   end
 
   def test_interpolation_with_instance_var_at_the_beginning_of_a_line; skip # special interpolation
@@ -339,15 +332,15 @@ HAML
   end
 
   def test_attribute_hash_with_newlines
-    assert_equal("<p a='b' c='d'>foop</p>\n", render("%p{:a => 'b',\n   :c => 'd'} foop"))
-    assert_equal("<p a='b' c='d'>\n  foop\n</p>\n", render("%p{:a => 'b',\n   :c => 'd'}\n  foop"))
-    assert_equal("<p a='b' c='d'>\n", render("%p{:a => 'b',\n   :c => 'd'}/"))
-    assert_equal("<p a='b' c='d' e='f'></p>\n", render("%p{:a => 'b',\n   :c => 'd',\n   :e => 'f'}"))
+    assert_render("%p{:a => 'b',\n   :c => 'd'} foop")
+    assert_render("%p{:a => 'b',\n   :c => 'd'}\n  foop")
+    assert_render("%p{:a => 'b',\n   :c => 'd'}/")
+    assert_render("%p{:a => 'b',\n   :c => 'd',\n   :e => 'f'}")
   end
 
   def test_attr_hashes_not_modified
     hash = {:color => 'red'}
-    assert_equal(<<HTML, render(<<HAML, :locals => {:hash => hash}))
+    assert_render(<<HAML, :locals => {:hash => hash})
 <div color='red'></div>
 <div class='special' color='red'></div>
 <div color='red'></div>
@@ -488,15 +481,7 @@ HAML
   # Regression tests
 
   def test_indentation_after_dynamic_attr_hash; skip # dynamic indentation
-    assert_equal(<<HTML, render(<<HAML))
-<html>
-  <body>
-    <img src='test'>
-    foo
-    bar
-  </body>
-</html>
-HTML
+    assert_render(<<HAML)
 %html
   %body
     %img{:src => 'te'+'st'}
@@ -517,11 +502,7 @@ HAML
   end
 
   def test_whitespace_nuke_with_tags_and_else
-    assert_equal(<<HTML, render(<<HAML))
-<a>
-  <b>foo</b>
-</a>
-HTML
+    assert_render(<<HAML)
 %a
   %b<
     - if false
@@ -530,13 +511,7 @@ HTML
       foo
 HAML
 
-    assert_equal(<<HTML, render(<<HAML))
-<a>
-  <b>
-    foo
-  </b>
-</a>
-HTML
+    assert_render(<<HAML)
 %a
   %b
     - if false
@@ -559,12 +534,7 @@ HAML
   end
 
   def test_both_case_indentation_work_with_deeply_nested_code
-    result = <<RESULT
-<h2>
-  other
-</h2>
-RESULT
-    assert_equal(result, render(<<HAML))
+    assert_render(<<HAML)
 - case 'other'
 - when 'test'
   %h2
@@ -573,7 +543,7 @@ RESULT
   %h2
     other
 HAML
-    assert_equal(result, render(<<HAML))
+    assert_render(<<HAML)
 - case 'other'
   - when 'test'
     %h2
@@ -709,11 +679,7 @@ HAML
   end
 
   def test_escape_attrs_false
-    assert_equal(<<HTML, render(<<HAML, :escape_attrs => false))
-<div class='<?php echo "&quot;" ?>' id='foo'>
-  bar
-</div>
-HTML
+    assert_render(<<HAML, :escape_attrs => false)
 #foo{:class => '<?php echo "&quot;" ?>'}
   bar
 HAML
@@ -971,7 +937,7 @@ HAML
   # HTML escaping tests
 
   def test_ampersand_equals_should_escape
-    assert_equal("<p>\n  foo &amp; bar\n</p>\n", render("%p\n  &= 'foo & bar'", :escape_html => false))
+    assert_render("%p\n  &= 'foo & bar'", :escape_html => false)
   end
 
   def test_ampersand_equals_inline_should_escape; skip # script bug
@@ -983,7 +949,7 @@ HAML
   end
 
   def test_bang_equals_should_not_escape
-    assert_equal("<p>\n  foo & bar\n</p>\n", render("%p\n  != 'foo & bar'", :escape_html => true))
+    assert_render("%p\n  != 'foo & bar'", :escape_html => true)
   end
 
   def test_bang_equals_inline_should_not_escape
@@ -1028,13 +994,13 @@ HAML
   end
 
   def test_escaped_string_double_equals
-    assert_equal("<p>\n  4&&lt;\n</p>\n", render("%p\n  &== \#{2+2}&\#{'<'}", :escape_html => true))
-    assert_equal("<p>\n  4&&lt;\n</p>\n", render("%p\n  &== \#{2+2}&\#{'<'}", :escape_html => false))
+    assert_render("%p\n  &== \#{2+2}&\#{'<'}", :escape_html => true)
+    assert_render("%p\n  &== \#{2+2}&\#{'<'}", :escape_html => false)
   end
 
   def test_unescaped_string_double_equals
-    assert_equal("<p>\n  4&<\n</p>\n", render("%p\n  !== \#{2+2}&\#{'<'}", :escape_html => true))
-    assert_equal("<p>\n  4&<\n</p>\n", render("%p\n  !== \#{2+2}&\#{'<'}", :escape_html => false))
+    assert_render("%p\n  !== \#{2+2}&\#{'<'}", :escape_html => true)
+    assert_render("%p\n  !== \#{2+2}&\#{'<'}", :escape_html => false)
   end
 
   def test_string_interpolation_should_be_esaped
@@ -1053,8 +1019,8 @@ HAML
   end
 
   def test_escaped_string_interpolation
-    assert_equal("<p>\n  4&&lt;\n</p>\n", render("%p\n  & \#{2+2}&\#{'<'}", :escape_html => true))
-    assert_equal("<p>\n  4&&lt;\n</p>\n", render("%p\n  & \#{2+2}&\#{'<'}", :escape_html => false))
+    assert_render("%p\n  & \#{2+2}&\#{'<'}", :escape_html => true)
+    assert_render("%p\n  & \#{2+2}&\#{'<'}", :escape_html => false)
   end
 
   def test_escaped_string_interpolation_with_no_space
@@ -1063,8 +1029,8 @@ HAML
   end
 
   def test_unescaped_string_interpolation
-    assert_equal("<p>\n  4&<\n</p>\n", render("%p\n  ! \#{2+2}&\#{'<'}", :escape_html => true))
-    assert_equal("<p>\n  4&<\n</p>\n", render("%p\n  ! \#{2+2}&\#{'<'}", :escape_html => false))
+    assert_render("%p\n  ! \#{2+2}&\#{'<'}", :escape_html => true)
+    assert_render("%p\n  ! \#{2+2}&\#{'<'}", :escape_html => false)
   end
 
   def test_unescaped_string_interpolation_with_no_space
@@ -1073,8 +1039,8 @@ HAML
   end
 
   def test_scripts_should_respect_escape_html_option
-    assert_equal("<p>\n  foo &amp; bar\n</p>\n", render("%p\n  = 'foo & bar'", :escape_html => true))
-    assert_equal("<p>\n  foo & bar\n</p>\n", render("%p\n  = 'foo & bar'", :escape_html => false))
+    assert_render("%p\n  = 'foo & bar'", :escape_html => true)
+    assert_render("%p\n  = 'foo & bar'", :escape_html => false)
   end
 
   def test_inline_scripts_should_respect_escape_html_option; skip # escape html
@@ -1200,8 +1166,8 @@ HAML
   end
 
   def test_empty_attrs
-    assert_equal("<p attr=''>empty</p>\n", render("%p{ :attr => '' } empty"))
-    assert_equal("<p attr=''>empty</p>\n", render("%p{ :attr => x } empty", :locals => {:x => ''}))
+    assert_render("%p{ :attr => '' } empty")
+    assert_render("%p{ :attr => x } empty", :locals => {:x => ''})
   end
 
   def test_nil_attrs
@@ -1224,7 +1190,7 @@ HAML
   end
 
   def test_locals
-    assert_equal("<p>Paragraph!</p>\n", render("%p= text", :locals => { :text => "Paragraph!" }))
+    assert_render("%p= text", :locals => { :text => "Paragraph!" })
   end
 
   def test_dynamic_attrs_shouldnt_register_as_literal_values
@@ -1332,7 +1298,7 @@ HAML
   end
 
   def test_local_assigns_dont_modify_class
-    assert_equal("bar\n", render("= foo", :locals => {:foo => 'bar'}))
+    assert_render("= foo", :locals => {:foo => 'bar'})
     assert_equal(nil, defined?(foo))
   end
 
@@ -1361,12 +1327,11 @@ HAML
   end
 
   def test_non_literal_attributes
-    assert_equal("<p a1='foo' a2='bar' a3='baz'></p>\n",
-                 render("%p{a2, a1, :a3 => 'baz'}",
-                        :locals => {:a1 => {:a1 => 'foo'}, :a2 => {:a2 => 'bar'}}))
+    assert_render("%p{a2, a1, :a3 => 'baz'}",
+                  :locals => {:a1 => {:a1 => 'foo'}, :a2 => {:a2 => 'bar'}})
   end
 
-  def test_render_should_accept_a_binding_as_scope
+  def test_render_should_accept_a_binding_as_scope; skip
     string = "This is a string!"
     string.instance_variable_set(:@var, "Instance variable")
     b = string.instance_eval do
@@ -1377,8 +1342,7 @@ HAML
       binding
     end
 
-    assert_equal("<p>THIS IS A STRING!</p>\n<p>Instance variable</p>\n<p>Local variable</p>\n",
-                 render("%p= upcase\n%p= @var\n%p= var", :scope => b))
+    assert_render("%p= upcase\n%p= @var\n%p= var", :scope => b)
   end
 
   def test_yield_should_work_with_binding; skip # options
@@ -1483,8 +1447,8 @@ HAML
   end
 
   def test_xhtml_output_option
-    assert_equal "<p>\n  <br />\n</p>\n", render("%p\n  %br", :format => :xhtml)
-    assert_equal "<a />\n", render("%a/", :format => :xhtml)
+    assert_render("%p\n  %br", :format => :xhtml)
+    assert_render("%a/", :format => :xhtml)
   end
 
   def test_arbitrary_output_option; skip # error
@@ -1508,7 +1472,7 @@ HAML
   def test_interpolates_instance_vars_in_attribute_values
     scope = Object.new
     scope.instance_variable_set :@foo, 'bar'
-    assert_equal("<a b='a bar b'></a>\n", render('%a{:b => "a #@foo b"}', :scope => scope))
+    assert_render('%a{:b => "a #@foo b"}', :scope => scope)
   end
 
   def test_interpolates_global_vars_in_attribute_values
@@ -1528,8 +1492,8 @@ HAML
   # HTML 4.0
 
   def test_html_has_no_self_closing_tags
-    assert_equal "<p>\n  <br>\n</p>\n", render("%p\n  %br", :format => :html4)
-    assert_equal "<br>\n", render("%br/", :format => :html4)
+    assert_render("%p\n  %br", :format => :html4)
+    assert_render("%br/", :format => :html4)
   end
 
   def test_html_renders_empty_node_with_closing_tag
@@ -1718,14 +1682,14 @@ HAML
   end
 
   def test_dynamic_new_attributes
-    assert_equal("<a href='12'>bar</a>\n", render("%a(href=foo) bar", :locals => {:foo => 12}))
-    assert_equal("<a b='12' c='13' d='14'>bar</a>\n", render("%a(b=b c='13' d=d) bar", :locals => {:b => 12, :d => 14}))
+    assert_render("%a(href=foo) bar", :locals => {:foo => 12})
+    assert_render("%a(b=b c='13' d=d) bar", :locals => {:b => 12, :d => 14})
   end
 
   def test_new_attribute_interpolation
-    assert_equal("<a href='12'>bar</a>\n", render('%a(href="1#{1 + 1}") bar'))
-    assert_equal("<a href='2: 2, 3: 3'>bar</a>\n", render(%q{%a(href='2: #{1 + 1}, 3: #{foo}') bar}, :locals => {:foo => 3}))
-    assert_equal(%Q{<a href='1\#{1 + 1}'>bar</a>\n}, render('%a(href="1\#{1 + 1}") bar'))
+    assert_render('%a(href="1#{1 + 1}") bar')
+    assert_render(%q{%a(href='2: #{1 + 1}, 3: #{foo}') bar}, :locals => {:foo => 3})
+    assert_render('%a(href="1\#{1 + 1}") bar')
   end
 
   def test_truthy_new_attributes; skip # xhtml
@@ -1761,28 +1725,26 @@ HAML
   end
 
   def test_multiline_new_attribute
-    assert_equal("<a a='b' c='d'>bar</a>\n", render("%a(a='b'\n  c='d') bar"))
-    assert_equal("<a a='b' b='c' c='d' d='e' e='f' f='j'>bar</a>\n",
-      render("%a(a='b' b='c'\n  c='d' d=e\n  e='f' f='j') bar", :locals => {:e => 'e'}))
+    assert_render("%a(a='b'\n  c='d') bar")
+    assert_render("%a(a='b' b='c'\n  c='d' d=e\n  e='f' f='j') bar", :locals => {:e => 'e'})
   end
 
   def test_new_and_old_attributes
-    assert_equal("<a a='b' c='d'>bar</a>\n", render("%a(a='b'){:c => 'd'} bar"))
-    assert_equal("<a a='b' c='d'>bar</a>\n", render("%a{:c => 'd'}(a='b') bar"))
-    assert_equal("<a a='b' c='d'>bar</a>\n", render("%a(c='d'){:a => 'b'} bar"))
-    assert_equal("<a a='b' c='d'>bar</a>\n", render("%a{:a => 'b'}(c='d') bar"))
+    assert_render("%a(a='b'){:c => 'd'} bar")
+    assert_render("%a{:c => 'd'}(a='b') bar")
+    assert_render("%a(c='d'){:a => 'b'} bar")
+    assert_render("%a{:a => 'b'}(c='d') bar")
 
     # Old-style always takes precedence over new-style,
     # because theoretically old-style could have arbitrary end-of-method-call syntax.
-    assert_equal("<a a='b'>bar</a>\n", render("%a{:a => 'b'}(a='d') bar"))
-    assert_equal("<a a='b'>bar</a>\n", render("%a(a='d'){:a => 'b'} bar"))
+    assert_render("%a{:a => 'b'}(a='d') bar")
+    assert_render("%a(a='d'){:a => 'b'} bar")
 
-    assert_equal("<a a='b' b='c' c='d' d='e'>bar</a>\n",
-      render("%a{:a => 'b',\n:b => 'c'}(c='d'\nd='e') bar"))
+    assert_render("%a{:a => 'b',\n:b => 'c'}(c='d'\nd='e') bar")
 
     locals = {:b => 'b', :d => 'd'}
-    assert_equal("<p a='b' c='d'></p>\n", render("%p{:a => b}(c=d)", :locals => locals))
-    assert_equal("<p a='b' c='d'></p>\n", render("%p(a=b){:c => d}", :locals => locals))
+    assert_render("%p{:a => b}(c=d)", :locals => locals)
+    assert_render("%p(a=b){:c => d}", :locals => locals)
   end
 
   # Ruby Multiline

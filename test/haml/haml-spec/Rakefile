@@ -16,14 +16,15 @@ def generate_spec(mode)
     # This is a spec converted by haml-spec.
     # See: https://github.com/haml/haml-spec
     class #{mode.capitalize}Test < MiniTest::Test
-      DEFAULT_OPTIONS = { ugly: #{mode == :ugly}, escape_html: true }.freeze
+      HAML_DEFAULT_OPTIONS = { ugly: #{mode == :ugly}, escape_html: true }.freeze
+      HAMLIT_DEFAULT_OPTIONS = { escape_html: true }.freeze
 
       def self.haml_result(haml, options, locals)
-        Haml::Engine.new(haml, DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
+        Haml::Engine.new(haml, HAML_DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
       end
 
       def self.hamlit_result(haml, options, locals)
-        Hamlit::HamlEngine.new(haml, DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
+        eval Hamlit::Engine.new(haml, HAMLIT_DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
       end
 
   SPEC

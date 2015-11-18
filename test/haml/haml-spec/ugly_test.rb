@@ -6,14 +6,15 @@ require 'minitest/autorun'
 # This is a spec converted by haml-spec.
 # See: https://github.com/haml/haml-spec
 class UglyTest < MiniTest::Test
-  DEFAULT_OPTIONS = { ugly: true, escape_html: true }.freeze
+  HAML_DEFAULT_OPTIONS = { ugly: true, escape_html: true, escape_attrs: true }.freeze
+  HAMLIT_DEFAULT_OPTIONS = { escape_html: true }.freeze
 
   def self.haml_result(haml, options, locals)
-    Haml::Engine.new(haml, DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
+    Haml::Engine.new(haml, HAML_DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
   end
 
   def self.hamlit_result(haml, options, locals)
-    Hamlit::HamlEngine.new(haml, DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
+    Hamlit::Template.new(HAMLIT_DEFAULT_OPTIONS.merge(options)) { haml }.render(Object.new, locals)
   end
 
   class Headers < MiniTest::Test

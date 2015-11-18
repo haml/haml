@@ -7,7 +7,6 @@ require 'action_view'
 require 'rails'
 
 require 'hamlit'
-require 'hamlit/template'
 
 # require 'minitest/reporters'
 # Minitest::Reporters.use!
@@ -51,7 +50,8 @@ module RenderAssertion
     options = options.dup
     scope  = options.delete(:scope)  || Object.new
     locals = options.delete(:locals) || {}
-    eval Hamlit::HamlEngine.new(text, options).precompiled
+    options.delete(:ugly)
+    eval Hamlit::Engine.new(options).call(text)
   end
 end
 
@@ -62,9 +62,18 @@ class Haml::TestCase < BASE_TEST_CLASS
     options = { escape_html: false }.merge(options) # incompatible default
     scope  = options.delete(:scope)  || Object.new
     locals = options.delete(:locals) || {}
-    engine = Hamlit::HamlEngine.new(text, options)
-    return engine.to_html(base) if base
-    engine.to_html(scope, locals, &block)
+    options.delete(:ugly)
+    eval Hamlit::Engine.new(options).call(text)
+  end
+
+  def assert_render(text, options = {}, base = nil)
+    haml_base = { ugly: true, escape_html: true, escape_attrs: true }
+    hamlit_base = { escape_html: true }
+    scope  = options.delete(:scope)  || Object.new
+    locals = options.delete(:locals) || {}
+    haml_result   = Haml::Engine.new(text, haml_base.merge(options)).render(scope, locals)
+    hamlit_result = Hamlit::Template.new(hamlit_base.merge(options)) { text }.render(scope, locals)
+    assert_equal haml_result, hamlit_result
   end
 
   def assert_warning(message)
