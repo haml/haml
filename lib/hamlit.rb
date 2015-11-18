@@ -5,5 +5,6 @@ require 'hamlit/template'
 
 begin
   require 'rails'
+  require 'hamlit/railtie'
 rescue LoadError
 end

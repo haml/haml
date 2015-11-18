@@ -2,6 +2,7 @@ require 'test_helper'
 require 'haml/mocks/article'
 
 require 'action_pack/version'
+require 'hamlit/rails_template'
 
 module Haml::Filters::Test
   include Haml::Filters::Base
@@ -11,9 +12,9 @@ module Haml::Filters::Test
   end
 end
 
-module Haml::Helpers
+module Hamlit::RailsHelpers
   def test_partial(name, locals = {})
-    Haml::Engine.new(File.read(File.join(TemplateTest::TEMPLATE_PATH, "_#{name}.haml"))).render(self, locals)
+    Hamlit::Template.new { File.read(File.join(TemplateTest::TEMPLATE_PATH, "_#{name}.haml")) }.render(self, locals)
   end
 end
 
@@ -41,14 +42,14 @@ end
 class TemplateTest < Haml::TestCase
   TEMPLATE_PATH = File.join(File.dirname(__FILE__), "templates")
   TEMPLATES = [
-    #'very_basic',
+    'very_basic',
     #'standard',
     #'helpers',
     #'whitespace_handling',
-    #'original_engine',
+    'original_engine',
     'list',
     #'helpful',
-    #'silent_script',
+    'silent_script',
     'tag_parsing',
     #'just_stuff',
     #'partials',
@@ -56,7 +57,7 @@ class TemplateTest < Haml::TestCase
     #'nuke_inner_whitespace',
     #'render_layout',
     #'partial_layout',
-    #'partial_layout_erb',
+    'partial_layout_erb',
   ]
 
   def setup
@@ -120,7 +121,6 @@ class TemplateTest < Haml::TestCase
 
   TEMPLATES.each do |template|
     define_method "test_template_should_render_correctly [template: #{template}]" do
-      skip
       assert_renders_correctly template
     end
   end
