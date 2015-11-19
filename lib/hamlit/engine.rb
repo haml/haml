@@ -12,7 +12,6 @@ module Hamlit
       attr_quote:   "'",
       escape_html:  true,
       escape_attrs: true,
-      buffer:       '_buf',
       autoclose:    %w(area base basefont br col command embed frame
                        hr img input isindex keygen link menuitem meta
                        param source track wbr),
