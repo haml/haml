@@ -1,0 +1,14 @@
+%p#notice= @notice
+
+%h1 Listing Users
+
+%table
+  %thead
+    %tr
+      %th{ colspan: "2" }
+
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td= user.id
+        %td= user.name
