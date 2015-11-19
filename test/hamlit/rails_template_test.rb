@@ -1,5 +1,4 @@
-require 'haml'
-require 'haml/template/plugin'
+# Explicitly requiring rails_template because rails initializers is not executed here.
 require 'hamlit/rails_template'
 
 describe Hamlit::RailsTemplate do
