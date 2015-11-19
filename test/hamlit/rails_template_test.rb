@@ -8,6 +8,7 @@ describe Hamlit::RailsTemplate do
     when :hamlit
       ActionView::Template.register_template_handler :haml, Hamlit::RailsTemplate.new
     else
+      Haml::Template.options[:ugly] = true
       ActionView::Template.register_template_handler :haml, Haml::Plugin
     end
 
@@ -15,11 +16,24 @@ describe Hamlit::RailsTemplate do
     base.render(inline: haml, type: :haml)
   end
 
-  def assert_render(haml)
-    assert_equal render(haml, with: :haml), render(haml, with: :hamlit)
-  end
-
   specify 'rails rendering' do
-    assert_render(%q|= link_to 'foo', '#', class: 'bar'|)
+    assert_equal %Q|<a class="bar" href="#">foo</a>\n|, render(%q|= link_to 'foo', '#', class: 'bar'|)
+    assert_equal <<-HTML.unindent.strip, render(<<-HAML.unindent)
+      <div>text
+      </div>
+    HTML
+      = content_tag :div do
+        text
+    HAML
+    assert_equal <<-HTML.unindent.strip, render(<<-HAML.unindent)
+      <div>text
+      </div><div>text
+      </div><div>text
+      </div>
+    HTML
+      - 3.times do
+        = content_tag :div do
+          text
+    HAML
   end
 end
