@@ -107,4 +107,12 @@ describe Hamlit::RailsTemplate do
         %i surround
     HAML
   end
+
+  specify 'object which returns SafeBuffer for to_s (like kaminari)' do
+    class ::TosUnsafeObject; def to_s; "<hr>"; end; end
+    class ::TosSafeObject; def to_s; "<hr>".html_safe; end; end
+
+    assert_equal %Q|<hr>\n|, render(%q|= ::TosSafeObject.new|)
+    assert_equal %Q|&lt;hr&gt;\n|, render(%q|= ::TosUnsafeObject.new|)
+  end
 end
