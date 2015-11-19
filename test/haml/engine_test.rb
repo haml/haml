@@ -696,7 +696,7 @@ HTML
 HAML
   end
 
-  def test_escape_html; skip # escape html
+  def test_escape_html
     html = <<HTML
 &amp;
 &
