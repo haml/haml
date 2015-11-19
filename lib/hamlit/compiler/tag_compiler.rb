@@ -4,9 +4,9 @@ require 'hamlit/compiler/attribute_compiler'
 module Hamlit
   class Compiler
     class TagCompiler
-      def initialize(options = {})
+      def initialize(unique_identifier, options)
         @autoclose = options[:autoclose]
-        @attribute_compiler = AttributeCompiler.new(options)
+        @attribute_compiler = AttributeCompiler.new(unique_identifier, options)
       end
 
       def compile(node, &block)

@@ -3,8 +3,8 @@ require 'hamlit/static_analyzer'
 module Hamlit
   class Compiler
     class ScriptCompiler
-      def initialize
-        @unique_id = 0
+      def initialize(unique_identifier)
+        @unique_identifier = unique_identifier
       end
 
       def compile(node, &block)
@@ -28,7 +28,7 @@ module Hamlit
       end
 
       def dynamic_compile(node, &block)
-        var = unique_identifier
+        var = @unique_identifier.generate
         temple = compile_script_assign(var, node, &block)
         temple << compile_script_result(var, node)
       end
@@ -57,11 +57,6 @@ module Hamlit
           result = '(' << result << ').to_s'.freeze
         end
         [:escape, node.value[:escape_html], [:dynamic, result]]
-      end
-
-      def unique_identifier
-        @unique_id += 1
-        ['_hamlit_compiler'.freeze, @unique_id].join
       end
 
       def find_and_preserve(code)

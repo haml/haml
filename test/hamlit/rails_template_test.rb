@@ -17,6 +17,10 @@ describe Hamlit::RailsTemplate do
   end
 
   specify 'rails rendering' do
+    assert_equal %Q|<span checked='no' disabled></span>\n|, render(<<-HAML.unindent)
+      - val = 'no'
+      %span{ disabled: true, checked: val, autoplay: false }
+    HAML
     assert_equal %Q|<a class="bar" href="#">foo</a>\n|, render(%q|= link_to 'foo', '#', class: 'bar'|)
     assert_equal <<-HTML.unindent.strip, render(<<-HAML.unindent)
       <div>text

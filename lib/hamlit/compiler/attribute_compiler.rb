@@ -5,7 +5,8 @@ require 'hamlit/static_analyzer'
 module Hamlit
   class Compiler
     class AttributeCompiler
-      def initialize(options = {})
+      def initialize(unique_identifier, options)
+        @unique_identifier = unique_identifier
         @quote  = options[:attr_quote]
         @format = options[:format]
         @escape_attrs = options[:escape_attrs]
@@ -92,12 +93,22 @@ module Hamlit
 
       def compile_boolean!(temple, key, values)
         exp = literal_for(values.last)
-        build_code = boolean_builder(key, exp)
 
         if StaticAnalyzer.static?(exp)
-          temple << [:static, eval(['_buf = []', build_code, '_buf.join'].join('; '))]
+          value = eval(exp)
+          case value
+          when true then temple << [:html, :attr, key, @format == :xhtml ? [:static, key] : [:multi]]
+          when false, nil
+          else temple << [:html, :attr, key, [:escape, @escape_attrs, [:static, value]]]
+          end
         else
-          temple << [:code, build_code]
+          var = @unique_identifier.generate
+          temple << [
+            :case, "(#{var} = (#{exp}))",
+            ['true', [:html, :attr, key, @format == :xhtml ? [:static, key] : [:multi]]],
+            ['false, nil', [:multi]],
+            [:else, [:multi, [:static, " #{key}=#{@quote}"], [:escape, @escape_attrs, [:dynamic, var]], [:static, @quote]]],
+          ]
         end
       end
 
@@ -117,21 +128,6 @@ module Hamlit
       def attribute_builder(type, values)
         args = [@escape_attrs.inspect, *values.map { |v| literal_for(v) }]
         "::Hamlit::AttributeBuilder.build_#{type}(#{args.join(', ')})"
-      end
-
-      def boolean_builder(key, exp)
-        [
-          %Q|case #{exp}|,
-          %q|when true|,
-            %Q|_buf << #{ (@format == :xhtml ? " #{key}=#{@quote}#{key}#{@quote}" : " #{key}").inspect }.freeze|,
-          %q|when false, nil|,
-            # omitted
-          %q|else|,
-            %Q|_buf << #{ " #{key}=#{@quote}".inspect }.freeze|,
-            %Q|_buf << #{ @escape_attrs ? "::Temple::Utils.escape_html((#{exp}))" : exp }|,
-            %Q|_buf << #{@quote.inspect}.freeze|,
-          %q|end|,
-        ].join('; ')
       end
 
       def literal_for(value)
