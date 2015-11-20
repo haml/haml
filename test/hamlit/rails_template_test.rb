@@ -12,6 +12,15 @@ describe Hamlit::RailsTemplate do
     assert_equal %Q|&lt;script&gt;alert(&quot;a&quot;);&lt;/script&gt;\n|, render(<<-HAML.unindent)
       = '<script>alert("a");</script>'
     HAML
+    assert_equal %Q|<script>alert("a");</script>\n|, render(<<-HAML.unindent)
+      = '<script>alert("a");</script>'.html_safe
+    HAML
+    assert_equal %Q|&lt;script&gt;alert(&quot;a&quot;);&lt;/script&gt;\n|, render(<<-'HAML'.unindent)
+      #{'<script>alert("a");</script>'}
+    HAML
+    assert_equal %Q|<script>alert("a");</script>\n|, render(<<-'HAML'.unindent)
+      #{'<script>alert("a");</script>'.html_safe}
+    HAML
   end
 
   specify 'attribute escape' do
