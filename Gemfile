@@ -5,6 +5,7 @@ gemspec
 
 # maintain compatibility against master
 gem 'haml', github: 'haml/haml'
+gem 'faml', github: 'eagletmt/faml', branch: 'optional-extend', submodules: true
 
 gem 'benchmark-ips', '2.3.0'
 gem 'lineprof'

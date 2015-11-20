@@ -25,8 +25,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler', '~> 1.10'
   spec.add_development_dependency 'coffee-script'
-  spec.add_development_dependency 'faml', '>= 0.3.3'
-  spec.add_development_dependency 'haml'
   spec.add_development_dependency 'less'
   spec.add_development_dependency 'minitest-reporters', '~> 1.1'
   spec.add_development_dependency 'rails', '>= 4.0.0'
