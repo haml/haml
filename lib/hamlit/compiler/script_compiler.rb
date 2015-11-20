@@ -43,8 +43,8 @@ module Hamlit
         else
           [:multi,
            [:code, "#{var} = #{node.value[:text]}"],
-           [:newline],
            yield(node),
+           [:newline],
            [:code, 'end'.freeze],
           ]
         end

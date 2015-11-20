@@ -131,5 +131,12 @@ describe Hamlit::Engine do
         world&lt;/code&gt;
       HTML
     end
+
+    it 'renders comment-only nested script' do
+      assert_render(<<-HAML, '1')
+        = 1.times do # comment
+          - # comment only
+      HAML
+    end
   end
 end
