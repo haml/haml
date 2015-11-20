@@ -33,6 +33,11 @@ describe Hamlit::StaticAnalyzer do
       assert_static('"".gsub(/foo/, "bar")', false)
       assert_static('1.times {}', false)
       assert_static('[3, 1.2, [2i, "hello #{ nya } world"]]', false)
+      assert_static('self', false)
+      assert_static('__FILE__', false)
+      assert_static('__LINE__', false)
+      assert_static('__ENCODING__', false)
+      assert_static('__dir__', false)
     end
 
     specify 'invalid expression' do
