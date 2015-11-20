@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'hamlit'
 
 User = Struct.new(:id, :name)
 
