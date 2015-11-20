@@ -7,6 +7,7 @@ require 'action_view'
 require 'rails'
 
 require 'hamlit'
+require 'haml'
 
 # require 'minitest/reporters'
 # Minitest::Reporters.use!

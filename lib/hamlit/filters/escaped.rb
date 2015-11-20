@@ -1,5 +1,3 @@
-require 'haml/util'
-
 module Hamlit
   class Filters
     class Escaped < Base
@@ -12,8 +10,8 @@ module Hamlit
       private
 
       def compile_text(text)
-        if Haml::Util.contains_interpolation?(text)
-          [:dynamic, Haml::Util.unescape_interpolation(text)]
+        if ::Hamlit::HamlUtil.contains_interpolation?(text)
+          [:dynamic, ::Hamlit::HamlUtil.unescape_interpolation(text)]
         else
           [:static, text]
         end

@@ -9,9 +9,9 @@ require 'set'
 require 'stringio'
 require 'strscan'
 
-module Haml
+module Hamlit
   # A module containing various useful functions.
-  module Util
+  module HamlUtil
     extend self
 
     # Silence all output to STDERR within a block.
@@ -200,7 +200,7 @@ MSG
 
     def unescape_interpolation(str, escape_html = nil)
       res = ''
-      rest = Haml::Util.handle_interpolation str.dump do |scan|
+      rest = ::Hamlit::HamlUtil.handle_interpolation str.dump do |scan|
         escapes = (scan[2].size - 1) / 2
         char = scan[3] # '{', '@' or '$'
         res << scan.matched[0...-3 - escapes]
@@ -214,7 +214,7 @@ MSG
           end
           content = eval('"' + interpolated + '"')
           content.prepend(char) if char == '@' || char == '$'
-          content = "Haml::Helpers.html_escape((#{content}))" if escape_html
+          content = "::Hamlit::HamlHelpers.html_escape((#{content}))" if escape_html
 
           res << "\#{#{content}}"
         end

@@ -12,7 +12,7 @@ module Hamlit
       private
 
       def compile_with_tilt(node, name, indent_width: 0)
-        if Haml::Util.contains_interpolation?(node.value[:text])
+        if ::Hamlit::HamlUtil.contains_interpolation?(node.value[:text])
           dynamic_compile(node, name, indent_width: indent_width)
         else
           static_compile(node, name, indent_width: indent_width)
@@ -24,7 +24,7 @@ module Hamlit
       end
 
       def dynamic_compile(node, name, indent_width: 0)
-        source = Haml::Util.unescape_interpolation(node.value[:text])
+        source = ::Hamlit::HamlUtil.unescape_interpolation(node.value[:text])
         [:dynamic, "::Hamlit::Filters::TiltBase.render('#{name}', #{source}, indent_width: #{indent_width})"]
       end
     end

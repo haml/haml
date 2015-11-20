@@ -1,15 +1,19 @@
-module Haml
+require 'hamlit/parser/haml_helpers'
+require 'hamlit/parser/haml_util'
+require 'hamlit/parser/haml_compiler'
+
+module Hamlit
   # This class is used only internally. It holds the buffer of HTML that
   # is eventually output as the resulting document.
   # It's called from within the precompiled code,
   # and helps reduce the amount of processing done within `instance_eval`ed code.
-  class Buffer
+  class HamlBuffer
     ID_KEY    = 'id'.freeze
     CLASS_KEY = 'class'.freeze
     DATA_KEY  = 'data'.freeze
 
-    include Haml::Helpers
-    include Haml::Util
+    include ::Hamlit::HamlHelpers
+    include ::Hamlit::HamlUtil
 
     # The string that holds the compiled HTML. This is aliased as
     # `_erbout` for compatibility with ERB-specific code.
@@ -194,7 +198,7 @@ module Haml
         self.class.merge_attrs(attributes, Hash[old.map {|k, v| [k.to_s, v]}])
       end
       self.class.merge_attrs(attributes, parse_object_ref(obj_ref)) if obj_ref
-      Compiler.build_attributes(
+      ::Hamlit::HamlCompiler.build_attributes(
         html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:hyphenate_data_attrs], attributes)
     end
 
@@ -223,14 +227,14 @@ module Haml
     # @param from [{String => #to_s}] The attribute hash to merge from
     # @return [{String => String}] `to`, after being merged
     def self.merge_attrs(to, from)
-      from[ID_KEY] = Compiler.filter_and_join(from[ID_KEY], '_') if from[ID_KEY]
+      from[ID_KEY] = ::Hamlit::HamlCompiler.filter_and_join(from[ID_KEY], '_') if from[ID_KEY]
       if to[ID_KEY] && from[ID_KEY]
         to[ID_KEY] << "_#{from.delete(ID_KEY)}"
       elsif to[ID_KEY] || from[ID_KEY]
         from[ID_KEY] ||= to[ID_KEY]
       end
 
-      from[CLASS_KEY] = Compiler.filter_and_join(from[CLASS_KEY], ' ') if from[CLASS_KEY]
+      from[CLASS_KEY] = ::Hamlit::HamlCompiler.filter_and_join(from[CLASS_KEY], ' ') if from[CLASS_KEY]
       if to[CLASS_KEY] && from[CLASS_KEY]
         # Make sure we don't duplicate class names
         from[CLASS_KEY] = (from[CLASS_KEY].to_s.split(' ') | to[CLASS_KEY].split(' ')).sort.join(' ')
@@ -259,8 +263,8 @@ module Haml
     private
 
     def preserve(result, preserve_script, preserve_tag)
-      return Haml::Helpers.preserve(result) if preserve_tag
-      return Haml::Helpers.find_and_preserve(result, options[:preserve]) if preserve_script
+      return ::Hamlit::HamlHelpers.preserve(result) if preserve_tag
+      return ::Hamlit::HamlHelpers.find_and_preserve(result, options[:preserve]) if preserve_script
       result
     end
 

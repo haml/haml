@@ -1,4 +1,4 @@
-require 'haml/util'
+require 'hamlit/parser/haml_util'
 require 'hamlit/compiler/attribute_compiler'
 
 module Hamlit
@@ -25,7 +25,7 @@ module Hamlit
           nil
         when node.value[:parse]
           [:escape, node.value[:escape_html], [:dynamic, node.value[:value]]]
-        when Haml::Util.contains_interpolation?(node.value[:value])
+        when ::Hamlit::HamlUtil.contains_interpolation?(node.value[:value])
           [:dynamic, node.value[:value]]
         else
           [:static, node.value[:value]]

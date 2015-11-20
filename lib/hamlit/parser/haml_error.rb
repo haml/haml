@@ -1,6 +1,6 @@
-module Haml
+module Hamlit
   # An exception raised by Haml code.
-  class Error < StandardError
+  class HamlError < StandardError
 
     MESSAGES = {
       :bad_script_indent            => '"%s" is indented at wrong level: expected %d, but was at %d.',
@@ -57,5 +57,5 @@ END
   # ill-formatted document.
   # It's not particularly interesting,
   # except in that it's a subclass of {Haml::Error}.
-  class SyntaxError < Error; end
+  class HamlSyntaxError < HamlError; end
 end

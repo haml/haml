@@ -1,4 +1,4 @@
-require 'haml/util'
+require 'hamlit/parser/haml_util'
 
 module Hamlit
   class Filters

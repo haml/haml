@@ -12,6 +12,7 @@ def generate_spec(mode)
   spec = <<-SPEC.unindent
     require "minitest/autorun"
     require "hamlit"
+    require "haml"
 
     # This is a spec converted by haml-spec.
     # See: https://github.com/haml/haml-spec

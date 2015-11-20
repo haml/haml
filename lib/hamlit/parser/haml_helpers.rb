@@ -1,9 +1,15 @@
-module Haml
+require 'hamlit/parser/haml_error'
+require 'hamlit/parser/haml_buffer'
+require 'hamlit/parser/haml_options'
+require 'hamlit/parser/haml_compiler'
+require 'hamlit/parser/haml_parser'
+
+module Hamlit
   # This module contains various helpful methods to make it easier to do various tasks.
   # {Haml::Helpers} is automatically included in the context
   # that a Haml template is parsed in, so all these methods are at your
   # disposal from within the template.
-  module Helpers
+  module HamlHelpers
     # An object that raises an error when \{#to\_s} is called.
     # It's used to raise an error when the return value of a helper is used
     # when it shouldn't be.
@@ -20,8 +26,8 @@ MESSAGE
       #
       # @raise [Haml::Error] The error
       def to_s
-        raise Haml::Error.new(@message)
-      rescue Haml::Error => e
+        raise ::Hamlit::HamlError.new(@message)
+      rescue ::Hamlit::HamlError => e
         e.backtrace.shift
 
         # If the ErrorReturn is used directly in the template,
@@ -40,7 +46,7 @@ MESSAGE
 
       # @return [String] A human-readable string representation
       def inspect
-        "Haml::Helpers::ErrorReturn(#{@message.inspect})"
+        "::Hamlit::HamlHelpers::ErrorReturn(#{@message.inspect})"
       end
     end
 
@@ -70,7 +76,7 @@ MESSAGE
     #     context.haml_tag :p, "Stuff"
     #
     def init_haml_helpers
-      @haml_buffer = Haml::Buffer.new(haml_buffer, Options.new.for_buffer)
+      @haml_buffer = ::Hamlit::HamlBuffer.new(haml_buffer, ::Hamlit::HamlOptions.new.for_buffer)
       nil
     end
 
@@ -496,7 +502,7 @@ MESSAGE
       attrs.keys.each {|key| attrs[key.to_s] = attrs.delete(key)} unless attrs.empty?
       name, attrs = merge_name_and_attributes(name.to_s, attrs)
 
-      attributes = Haml::Compiler.build_attributes(haml_buffer.html?,
+      attributes = ::Hamlit::HamlCompiler.build_attributes(haml_buffer.html?,
         haml_buffer.options[:attr_wrapper],
         haml_buffer.options[:escape_attrs],
         haml_buffer.options[:hyphenate_data_attrs],
@@ -508,8 +514,8 @@ MESSAGE
       end
 
       if flags.include?(:/)
-        raise Error.new(Error.message(:self_closing_content)) if text
-        raise Error.new(Error.message(:illegal_nesting_self_closing)) if block
+        raise ::Hamlit::HamlError.new(::Hamlit::HamlError.message(:self_closing_content)) if text
+        raise ::Hamlit::HamlError.new(::Hamlit::HamlError.message(:illegal_nesting_self_closing)) if block
       end
 
       tag = "<#{name}#{attributes}>"
@@ -531,7 +537,7 @@ MESSAGE
       end
 
       if text
-        raise Error.new(Error.message(:illegal_nesting_line, name))
+        raise ::Hamlit::HamlError.new(::Hamlit::HamlError.message(:illegal_nesting_line, name))
       end
 
       if flags.include?(:<)
@@ -651,8 +657,8 @@ MESSAGE
       # skip merging if no ids or classes found in name
       return name, attributes_hash unless name =~ /^(.+?)?([\.#].*)$/
 
-      return $1 || "div", Buffer.merge_attrs(
-        Haml::Parser.parse_class_and_id($2), attributes_hash)
+      return $1 || "div", ::Hamlit::HamlBuffer.merge_attrs(
+        ::Hamlit::HamlParser.parse_class_and_id($2), attributes_hash)
     end
 
     # Runs a block of code with the given buffer as the currently active buffer.

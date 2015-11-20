@@ -22,7 +22,7 @@ module Hamlit
         if node.value[:escape_html]
           str = Temple::Utils.escape_html(str)
         elsif node.value[:preserve]
-          str = Haml::Helpers.find_and_preserve(str, %w(textarea pre code))
+          str = ::Hamlit::HamlHelpers.find_and_preserve(str, %w(textarea pre code))
         end
         [:static, str]
       end
@@ -60,7 +60,7 @@ module Hamlit
       end
 
       def find_and_preserve(code)
-        %Q[Haml::Helpers.find_and_preserve(#{code}, %w(textarea pre code))]
+        %Q[::Hamlit::HamlHelpers.find_and_preserve(#{code}, %w(textarea pre code))]
       end
 
       def escape_html(temple)

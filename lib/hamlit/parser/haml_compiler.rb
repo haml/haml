@@ -1,6 +1,9 @@
-module Haml
-  class Compiler
-    include Haml::Util
+require 'hamlit/parser/haml_util'
+require 'hamlit/parser/haml_parser'
+
+module Hamlit
+  class HamlCompiler
+    include ::Hamlit::HamlUtil
 
     attr_accessor :options
 
@@ -47,8 +50,8 @@ module Haml
     def precompiled_with_ambles(local_names)
       preamble = <<END.tr!("\n", ';')
 begin
-extend Haml::Helpers
-_hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{options.for_buffer.inspect})
+extend ::Hamlit::HamlHelpers
+_hamlout = @haml_buffer = ::Hamlit::HamlBuffer.new(haml_buffer, #{options.for_buffer.inspect})
 _erbout = _hamlout.buffer
 @output_buffer = output_buffer ||= ActionView::OutputBuffer.new rescue nil
 END
@@ -128,7 +131,7 @@ END
           @node.parent.value[:dont_push_end] = true
         end
         # Don't restore dont_* for end because it isn't a conditional branch.
-      elsif Parser::MID_BLOCK_KEYWORDS.include?(keyword)
+      elsif ::Hamlit::HamlParser::MID_BLOCK_KEYWORDS.include?(keyword)
         # Restore dont_* for this conditional branch
         @dont_indent_next_line = @node.parent.value[:dont_indent_next_line]
         @dont_tab_up_next_text = @node.parent.value[:dont_tab_up_next_text]
@@ -268,9 +271,9 @@ END
       unless filter = Filters.defined[@node.value[:name]]
         name = @node.value[:name]
         if ["maruku", "textile"].include?(name)
-          raise Error.new(Error.message(:install_haml_contrib, name), @node.line - 1)
+          raise ::Hamlit::HamlError.new(::Hamlit::HamlError.message(:install_haml_contrib, name), @node.line - 1)
         else
-          raise Error.new(Error.message(:filter_not_defined, name), @node.line - 1)
+          raise ::Hamlit::HamlError.new(::Hamlit::HamlError.message(:filter_not_defined, name), @node.line - 1)
         end
       end
       filter.internal_compile(self, @node.value[:text])
@@ -355,7 +358,7 @@ END
           mtabs = 0
           "\#{#{val}}"
         else
-          raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
+          raise ::Hamlit::HamlSyntaxError.new("[HAML BUG] Undefined entry in ::Hamlit::HamlCompiler@to_merge.")
         end
       end
       str = @to_merge.join
@@ -443,13 +446,13 @@ END
 
         escaped =
           if escape_attrs == :once
-            Haml::Helpers.escape_once(value.to_s)
+            ::Hamlit::HamlHelpers.escape_once(value.to_s)
           elsif escape_attrs
-            Haml::Helpers.html_escape(value.to_s)
+            ::Hamlit::HamlHelpers.html_escape(value.to_s)
           else
             value.to_s
           end
-        value = Haml::Helpers.preserve(escaped)
+        value = ::Hamlit::HamlHelpers.preserve(escaped)
         if escape_attrs
           # We want to decide whether or not to escape quotes
           value.gsub!(/&quot;|&#x0022;/, '"')
@@ -510,7 +513,7 @@ END
     end
 
     def prerender_tag(name, self_close, attributes)
-      attributes_string = Compiler.build_attributes(
+      attributes_string = ::Hamlit::HamlCompiler.build_attributes(
         @options.html?, @options.attr_wrapper, @options.escape_attrs, @options.hyphenate_data_attrs, attributes)
       "<#{name}#{attributes_string}#{self_close && @options.xhtml? ? ' /' : ''}>"
     end
@@ -543,7 +546,7 @@ END
         last[1].gsub!(/\(haml_temp, (.*?)\);$/, '(haml_temp.rstrip, \1);')
         rstrip_buffer! index - 1
       else
-        raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
+        raise ::Hamlit::HamlSyntaxError.new("[HAML BUG] Undefined entry in ::Hamlit::HamlCompiler@to_merge.")
       end
     end
   end

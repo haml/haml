@@ -1,4 +1,10 @@
-require 'haml'
+require 'hamlit/parser/haml_error'
+require 'hamlit/parser/haml_util'
+require 'hamlit/parser/haml_buffer'
+require 'hamlit/parser/haml_compiler'
+require 'hamlit/parser/haml_parser'
+require 'hamlit/parser/haml_helpers'
+require 'hamlit/parser/haml_options'
 
 module Hamlit
   class Parser
@@ -9,14 +15,14 @@ module Hamlit
     ].freeze
 
     def initialize(options = {})
-      @options = Haml::Options.defaults.dup
+      @options = HamlOptions.defaults.dup
       AVAILABLE_OPTIONS.each do |key|
         @options[key] = options[key]
       end
     end
 
     def call(template)
-      Haml::Parser.new(template, Haml::Options.new(@options)).parse
+      HamlParser.new(template, HamlOptions.new(@options)).parse
     end
   end
 end

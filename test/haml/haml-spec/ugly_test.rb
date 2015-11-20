@@ -1,6 +1,7 @@
 $:.unshift File.expand_path('../../test', __dir__)
 
 require 'test_helper'
+require 'haml'
 require 'minitest/autorun'
 
 # This is a spec converted by haml-spec.

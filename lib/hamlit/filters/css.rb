@@ -14,8 +14,8 @@ module Hamlit
 
       def compile_text!(temple, node, prefix)
         (node.value[:text].rstrip << "\n").each_line do |line|
-          if Haml::Util.contains_interpolation?(line)
-            temple << [:dynamic, Haml::Util.unescape_interpolation(prefix.dup << line)]
+          if ::Hamlit::HamlUtil.contains_interpolation?(line)
+            temple << [:dynamic, ::Hamlit::HamlUtil.unescape_interpolation(prefix.dup << line)]
           else
             temple << [:static, prefix.dup << line]
           end

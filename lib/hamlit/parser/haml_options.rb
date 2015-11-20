@@ -1,8 +1,12 @@
-module Haml
+require 'hamlit/parser/haml_parser'
+require 'hamlit/parser/haml_compiler'
+require 'hamlit/parser/haml_error'
+
+module Hamlit
   # This class encapsulates all of the configuration options that Haml
   # understands. Please see the {file:REFERENCE.md#options Haml Reference} to
   # learn how to set the options.
-  class Options
+  class HamlOptions
 
     @defaults = {
       :attr_wrapper         => "'",
@@ -22,8 +26,8 @@ module Haml
       :suppress_eval        => false,
       :ugly                 => false,
       :cdata                => false,
-      :parser_class         => ::Haml::Parser,
-      :compiler_class       => ::Haml::Compiler,
+      :parser_class         => ::Hamlit::HamlParser,
+      :compiler_class       => ::Hamlit::HamlCompiler,
       :trace                => false
     }
 
@@ -238,7 +242,7 @@ module Haml
 
     def format=(value)
       unless self.class.valid_formats.include?(value)
-        raise Haml::Error, "Invalid output format #{value.inspect}"
+        raise ::Hamlit::HamlError, "Invalid output format #{value.inspect}"
       end
       @format = value
     end
