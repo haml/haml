@@ -15,6 +15,7 @@ module Hamlit
         temple = [:multi]
         temple << [:code, node.value[:text]]
         temple << yield(node)
+        temple << [:newline]
         temple << [:code, 'end']
         temple
       end

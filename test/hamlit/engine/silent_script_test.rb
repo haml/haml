@@ -211,5 +211,12 @@ describe Hamlit::Engine do
         </span>
       HTML
     end
+
+    it 'renders comment-only nested silent script' do
+      assert_render(<<-HAML, '')
+        - if true
+          - # comment only
+      HAML
+    end
   end
 end
