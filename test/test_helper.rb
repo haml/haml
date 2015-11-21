@@ -26,17 +26,26 @@ end
 
 module RenderHelper
   def assert_render(expected, haml, options = {})
-    actual = render(haml, options)
+    actual = render_hamlit(haml, options)
     assert_equal expected, actual
   end
 
-  def render(haml, options = {})
-    eval Hamlit::Engine.new(options).call(haml)
+  def render_haml(haml, options = {})
+    options = options.dup
+    locals  = options.delete(:locals) || {}
+    haml_options = { escape_html: true, escape_attrs: true, ugly: true }
+    Haml::Engine.new(haml, haml_options.merge(options)).render(Object.new, locals)
+  end
+
+  def render_hamlit(haml, options = {})
+    options = options.dup
+    locals  = options.delete(:locals) || {}
+    Hamlit::Template.new(options) { haml }.render(Object.new, locals)
   end
 
   def assert_haml(haml, options = {})
-    expected = Haml::Engine.new(haml, { escape_html: true, escape_attrs: true, ugly: true }.merge(options)).to_html
-    actual = render(haml, options)
+    expected = render_haml(haml, options)
+    actual = render_hamlit(haml, options)
     assert_equal expected, actual
   end
 end
