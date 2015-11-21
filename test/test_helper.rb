@@ -76,7 +76,7 @@ class Haml::TestCase < BASE_TEST_CLASS
   end
 
   def silence_warnings(&block)
-    Haml::Util.silence_warnings(&block)
+    Hamlit::HamlUtil.silence_warnings(&block)
   end
 
   def assert_raises_message(klass, message)
@@ -89,6 +89,6 @@ class Haml::TestCase < BASE_TEST_CLASS
   end
 
   def self.error(*args)
-    Haml::Error.message(*args)
+    Hamlit::HamlError.message(*args)
   end
 end
