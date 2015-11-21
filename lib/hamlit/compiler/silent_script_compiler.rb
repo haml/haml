@@ -3,7 +3,7 @@ module Hamlit
     class SilentScriptCompiler
       def compile(node, &block)
         if node.children.empty?
-          [:code, node.value[:text]]
+          [:multi, [:code, node.value[:text]], [:newline]]
         else
           compile_with_children(node, &block)
         end
@@ -14,8 +14,8 @@ module Hamlit
       def compile_with_children(node, &block)
         temple = [:multi]
         temple << [:code, node.value[:text]]
-        temple << yield(node)
         temple << [:newline]
+        temple << yield(node)
         temple << [:code, 'end']
         temple
       end

@@ -11,6 +11,53 @@ describe Hamlit::Engine do
         = __LINE__
       HAML
     end
+
+    it 'renders dynamic script' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        1
+        2
+      HTML
+        = 'a'.gsub(/a/, '1')
+        = __LINE__
+      HAML
+    end
+
+    it 'renders dynamic script with children' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        1
+        3
+        3
+        24
+      HTML
+        = __LINE__
+        = __LINE__.times do
+          = __LINE__
+        = __LINE__
+      HAML
+    end
+  end
+
+  describe 'silent script' do
+    it 'renders silent script' do
+      assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+        2:3
+        4
+      HTML
+        - __LINE__.times do
+          - a = __LINE__
+          = "#{a}:#{__LINE__}"
+        = __LINE__
+      HAML
+    end
+
+    it 'renders silent script with children' do
+      assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+        1:2
+      HTML
+        - a = __LINE__
+        = "#{a}:#{__LINE__}"
+      HAML
+    end
   end
 
   describe 'old attributes' do

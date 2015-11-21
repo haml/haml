@@ -29,7 +29,7 @@ module Hamlit
         @lineno = node.line
 
         case node.type
-        when :script
+        when :script, :silent_script
           @lineno += 1
         when :tag
           node.value[:attributes_hashes].each do |attribute_hash|
