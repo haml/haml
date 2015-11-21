@@ -148,7 +148,7 @@ class TemplateTest < Haml::TestCase
 
   def test_simple_rendering_with_ugly
     skip
-    assert_render("%p test\n= capture { 'foo' }")
+    assert_haml_ugly("%p test\n= capture { 'foo' }")
   end
 
   def test_templates_should_render_correctly_with_render_proc; skip
@@ -168,22 +168,22 @@ class TemplateTest < Haml::TestCase
 
   def test_instance_variables_should_work_inside_templates
     @base.instance_variable_set(:@content_for_layout, 'something')
-    assert_render("%p= @content_for_layout")
+    assert_haml_ugly("%p= @content_for_layout")
 
     @base.instance_eval("@author = 'Hampton Catlin'")
-    assert_render(".author= @author")
+    assert_haml_ugly(".author= @author")
 
     @base.instance_eval("@author = 'Hampton'")
-    assert_render("= @author")
+    assert_haml_ugly("= @author")
 
     @base.instance_eval("@author = 'Catlin'")
-    assert_render("= @author")
+    assert_haml_ugly("= @author")
   end
 
   def test_instance_variables_should_work_inside_attributes
     skip
     @base.instance_eval("@author = 'hcatlin'")
-    assert_render("%p{:class => @author} foo")
+    assert_haml_ugly("%p{:class => @author} foo")
   end
 
   def test_template_renders_should_eval
@@ -277,7 +277,7 @@ HAML
   end
 
   def test_xss_protection_with_bang; skip
-    assert_render('!= "Foo & Bar"', :action_view)
+    assert_haml_ugly('!= "Foo & Bar"', :action_view)
   end
 
   def test_xss_protection_in_interpolation; skip
@@ -293,7 +293,7 @@ HAML
   end
 
   def test_xss_protection_with_bang_in_interpolation; skip
-    assert_render('! Foo #{"&"} Bar', :action_view)
+    assert_haml_ugly('! Foo #{"&"} Bar', :action_view)
   end
 
   def test_xss_protection_with_safe_strings_in_interpolation; skip
@@ -313,7 +313,7 @@ HAML
   end
 
   def test_xss_html_escaping_with_non_strings
-    assert_render("= html_escape(4)")
+    assert_haml_ugly("= html_escape(4)")
   end
 
   def test_xss_protection_with_concat; skip

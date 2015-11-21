@@ -52,7 +52,7 @@ class Haml::TestCase < BASE_TEST_CLASS
     eval Hamlit::Engine.new(options).call(text)
   end
 
-  def assert_render(text, options = {}, base = nil)
+  def assert_haml_ugly(text, options = {}, base = nil)
     haml_base = { ugly: true, escape_html: true, escape_attrs: true }
     hamlit_base = { escape_html: true }
     scope  = options.delete(:scope)  || Object.new
