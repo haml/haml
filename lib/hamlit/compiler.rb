@@ -22,6 +22,7 @@ module Hamlit
     end
 
     def call(ast)
+      return runtime_error(ast) if ast.is_a?(HamlError)
       compile(ast)
     end
 
@@ -82,6 +83,13 @@ module Hamlit
 
     def compile_tag(node)
       @tag_compiler.compile(node) { |n| compile_children(n) }
+    end
+
+    def runtime_error(error)
+      [:multi].tap do |temple|
+        error.line.times { temple << [:newline] } if error.line
+        temple << [:code, %Q[raise #{error.class}.new(%q[#{error.message}], #{error.line.inspect})]]
+      end
     end
   end
 end

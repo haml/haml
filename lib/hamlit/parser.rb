@@ -26,6 +26,8 @@ module Hamlit
 
     def call(template)
       HamlParser.new(template, HamlOptions.new(@options)).parse
+    rescue ::Hamlit::HamlError => e
+      e
     end
   end
 end
