@@ -30,3 +30,6 @@ build:
     - script:
         name: "[benchmark] basic bench by slim"
         code: bin/bench bench benchmark/etc/slim_bench.haml
+    - script:
+        name: "[benchmark] static analyzer"
+        code: bin/bench bench -w benchmark/etc/static_analyzer.haml
