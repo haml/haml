@@ -1,4 +1,5 @@
 require 'hamlit/filters/base'
+require 'hamlit/filters/text_base'
 require 'hamlit/filters/tilt_base'
 require 'hamlit/filters/coffee'
 require 'hamlit/filters/css'

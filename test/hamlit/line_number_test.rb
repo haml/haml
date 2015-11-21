@@ -103,7 +103,7 @@ describe Hamlit::Engine do
   end
 
   describe 'filters' do
-    describe 'coffee' do
+    describe 'coffee filter' do
       it 'renders static filter' do
         assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
           <script>
@@ -126,7 +126,7 @@ describe Hamlit::Engine do
       end
 
       it 'renders dynamic filter' do
-        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
           <script>
             (function() {
               jQuery(function($) {
@@ -142,6 +142,101 @@ describe Hamlit::Engine do
             jQuery ($) ->
               console.log('3')
               console.log('4')
+          = __LINE__
+        HAML
+      end
+    end
+
+    describe 'css filter' do
+      it 'renders static filter' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <style>
+            body {
+              width: 3px;
+              height: 4px;
+            }
+          </style>
+          6
+        HTML
+          :css
+            body {
+              width: 3px;
+              height: 4px;
+            }
+          = __LINE__
+        HAML
+      end
+
+      it 'renders dynamic filter' do
+        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+          <style>
+            body {
+              width: 3px;
+              height: 4px;
+            }
+          </style>
+          6
+        HTML
+          :css
+            body {
+              width: #{__LINE__}px;
+              height: #{__LINE__}px;
+            }
+          = __LINE__
+        HAML
+      end
+
+      it 'renders dynamic filter with trailing newlines' do
+        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+          <style>
+            body {
+              width: 3px;
+              height: 4px;
+            }
+          </style>
+          8
+        HTML
+          :css
+            body {
+              width: #{__LINE__}px;
+              height: #{__LINE__}px;
+            }
+
+
+          = __LINE__
+        HAML
+      end
+    end
+
+    describe 'javascript filter' do
+      it 'renders static filter' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <script>
+            console.log("2");
+            console.log("3");
+          </script>
+          5
+        HTML
+          :javascript
+            console.log("2");
+            console.log("3");
+
+          = __LINE__
+        HAML
+      end
+
+      it 'renders dynamic filter' do
+        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+          <script>
+            console.log("2");
+            console.log("3");
+          </script>
+          5
+        HTML
+          :javascript
+            console.log("#{__LINE__}");
+            console.log("#{__LINE__}");
+
           = __LINE__
         HAML
       end
