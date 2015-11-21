@@ -31,6 +31,8 @@ module Hamlit
         case node.type
         when :script, :silent_script
           @lineno += 1
+        when :filter
+          @lineno += (node.value[:text] || '').split("\n").size
         when :tag
           node.value[:attributes_hashes].each do |attribute_hash|
             @lineno += attribute_hash.count("\n")

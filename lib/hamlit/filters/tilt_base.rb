@@ -20,12 +20,23 @@ module Hamlit
       end
 
       def static_compile(node, name, indent_width: 0)
-        [:static, TiltBase.render(name, node.value[:text], indent_width: indent_width)]
+        temple = [:multi, [:static, TiltBase.render(name, node.value[:text], indent_width: indent_width)]]
+        node.value[:text].split("\n").size.times do
+          temple << [:newline]
+        end
+        temple
       end
 
       def dynamic_compile(node, name, indent_width: 0)
-        source = ::Hamlit::HamlUtil.unescape_interpolation(node.value[:text])
-        [:dynamic, "::Hamlit::Filters::TiltBase.render('#{name}', #{source}, indent_width: #{indent_width})"]
+        # original: Haml::Filters#compile
+        text = ::Hamlit::HamlUtil.unescape_interpolation(node.value[:text]).gsub(/(\\+)n/) do |s|
+          escapes = $1.size
+          next s if escapes % 2 == 0
+          "#{'\\' * (escapes - 1)}\n"
+        end
+        text.prepend("\n").sub!(/\n"\z/, '"')
+
+        [:dynamic, "::Hamlit::Filters::TiltBase.render('#{name}', #{text}, indent_width: #{indent_width})"]
       end
     end
   end
