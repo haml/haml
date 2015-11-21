@@ -1,10 +1,14 @@
 module Hamlit
-  class Error < Exception
+  class Error < StandardError
+    attr_reader :line
+
+    def initialize(message = nil, line = nil)
+      super(message)
+      @line = line
+    end
   end
 
-  class SyntaxError < Exception
-  end
-
-  class InternalError < RuntimeError
-  end
+  class SyntaxError < Error; end
+  class InternalError < Error; end
+  class FilterNotFound < Error; end
 end

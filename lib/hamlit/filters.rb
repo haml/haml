@@ -49,20 +49,17 @@ module Hamlit
 
     def compile(node)
       node.value[:text] ||= ''
-      find_compiler(node.value[:name]).compile(node)
+      find_compiler(node).compile(node)
     end
 
     private
 
-    def find_compiler(name)
-      name = name.to_sym
+    def find_compiler(node)
+      name = node.value[:name].to_sym
       compiler = Filters.registered[name]
-      raise NotFound.new("FilterCompiler for '#{name}' was not found") unless compiler
+      raise FilterNotFound.new("FilterCompiler for '#{name}' was not found", node.line.to_i - 1) unless compiler
 
       @compilers[name] ||= compiler.new(@options)
-    end
-
-    class NotFound < RuntimeError
     end
   end
 end

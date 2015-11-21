@@ -24,6 +24,8 @@ module Hamlit
     def call(ast)
       return runtime_error(ast) if ast.is_a?(HamlError)
       compile(ast)
+    rescue Error => e
+      runtime_error(e)
     end
 
     private
