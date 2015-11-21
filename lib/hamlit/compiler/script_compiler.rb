@@ -24,7 +24,7 @@ module Hamlit
         elsif node.value[:preserve]
           str = ::Hamlit::HamlHelpers.find_and_preserve(str, %w(textarea pre code))
         end
-        [:static, str]
+        [:multi, [:static, str], [:newline]]
       end
 
       def dynamic_compile(node, &block)
