@@ -66,12 +66,6 @@ module Hamlit
       end
 
       def compile_class!(temple, key, values)
-        # NOTE: Haml does not sort classes if static
-        if values.size == 1 && (value = values.first)[0] == :static
-          temple << build_attr(key, *value)
-          return
-        end
-
         build_code = attribute_builder(:class, values)
         if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
           temple << [:html, :attr, key, [:static, eval(build_code)]]

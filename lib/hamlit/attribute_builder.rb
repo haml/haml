@@ -42,13 +42,28 @@ module Hamlit::AttributeBuilder
     end
 
     def build_class(escape_attrs, *values)
+      if values.size == 1
+        value = values.first
+        case
+        when value.is_a?(String)
+          # noop
+        when value.is_a?(Array)
+          value = value.select { |v| v }.sort.uniq.join(' ')
+        when value
+          value = value.to_s
+        else
+          return ''
+        end
+        return escape_html(escape_attrs, value)
+      end
+
       classes = []
       values.each do |value|
         case
         when value.is_a?(String)
           classes += value.split(' ')
         when value.is_a?(Array)
-          classes += value.select { |a| a }
+          classes += value.select { |v| v }
         when value
           classes << value.to_s
         end

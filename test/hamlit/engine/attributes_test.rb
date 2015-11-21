@@ -68,12 +68,19 @@ describe Hamlit::Engine do
       it { assert_haml(%q|.a{ hash }|,                          locals: { hash: { class: 'd' } }) }
       it { assert_haml(%q|.b{ hash, class: 'a' }(class='c')|,   locals: { hash: { class: 'd' } }) }
       it { assert_haml(%q|.b{ hash, class: 'a' }(class=klass)|, locals: { hash: { class: 'd' }, klass: nil }) }
+
+      it { assert_haml(%q|%div{ class: 'b a' }|) }
+      it { assert_haml(%q|%div{ class: klass }|, locals: { klass: 'b a' }) }
+      it { assert_haml(%q|%div(class='b a')|) }
+      it { assert_haml(%q|%div(class=klass)|, locals: { klass: 'b a' }) }
+
+      it { assert_haml(%q|%div{ class: [false, 'a', nil] }|) }
+      it { assert_haml(%q|%div{ class: %q[b a] }|) }
+      it { assert_haml(%q|%div{ class: %q[b a b] }|) }
     end
 
     describe 'incompatibility' do
       it { assert_render(%Q|<div class=''></div>\n|, %q|%div{ class: nil }|) }
-      it { assert_render(%Q|<div class='a b'></div>\n|, %q|%div{ class: 'b a' }|) }
-      it { assert_render(%Q|<div class='a b'></div>\n|, %q|%div{ class: klass }|, locals: { klass: 'b a' }) }
     end
   end
 
