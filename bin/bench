@@ -3,6 +3,7 @@
 require 'bundler/setup'
 require 'hamlit'
 require 'faml'
+require 'slim'
 require 'thor'
 require 'benchmark/ips'
 require 'hamlit1' if File.exist?('hamlit1')
@@ -39,20 +40,21 @@ class Bench < Thor
     haml = File.read(file)
     object = Object.new
     ruby_file = file.gsub(/\.haml\z/, '.rb')
-    if File.exist?(ruby_file)
-      object.instance_eval(File.read(ruby_file))
-    end
+    object.instance_eval(File.read(ruby_file)) if File.exist?(ruby_file)
+    slim_file = file.gsub(/\.haml\z/, '.slim')
 
     Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).def_method(object, :haml)
     object.instance_eval "def faml; #{Faml::Engine.new.call(haml)}; end"
     object.instance_eval "def hamlit; #{Hamlit::Engine.new.call(haml)}; end"
     object.instance_eval "def hamlit1; #{Hamlit1::Engine.new.call(haml)}; end" if File.exist?('hamlit1')
+    object.instance_eval "def slim; #{Slim::Engine.new.call(File.read(slim_file))}; end" if File.exist?(slim_file)
 
     Benchmark.ips do |x|
       x.report("haml v#{Haml::VERSION}") { object.haml }
       x.report("faml v#{Faml::VERSION}") { object.faml }
       x.report("hamlit#{options[:with_hamlit1] ? '2' : ''} v#{Hamlit::VERSION}") { object.hamlit }
       x.report("hamlit1 v#{Hamlit1::VERSION}") { object.hamlit1 } if File.exist?('hamlit1') && options[:with_hamlit1]
+      x.report("slim v#{Hamlit1::VERSION}") { object.slim } if File.exist?(slim_file)
       x.compare!
     end
   end
