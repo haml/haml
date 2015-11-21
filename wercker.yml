@@ -14,19 +14,19 @@ build:
         code: bin/clone
     - script:
         name: "[benchmark] static attributes"
-        code: bin/bench bench benchmark/boolean_attribute.haml benchmark/class_attribute.haml benchmark/id_attribute.haml benchmark/data_attribute.haml benchmark/common_attribute.haml
+        code: bin/bench bench -w benchmark/boolean_attribute.haml benchmark/class_attribute.haml benchmark/id_attribute.haml benchmark/data_attribute.haml benchmark/common_attribute.haml
     - script:
         name: "[benchmark] dynamic attributes"
-        code: bin/bench bench benchmark/dynamic_attributes/boolean_attribute.haml benchmark/dynamic_attributes/class_attribute.haml benchmark/dynamic_attributes/id_attribute.haml benchmark/dynamic_attributes/data_attribute.haml benchmark/dynamic_attributes/common_attribute.haml
+        code: bin/bench bench -w benchmark/dynamic_attributes/boolean_attribute.haml benchmark/dynamic_attributes/class_attribute.haml benchmark/dynamic_attributes/id_attribute.haml benchmark/dynamic_attributes/data_attribute.haml benchmark/dynamic_attributes/common_attribute.haml
     - script:
         name: "[benchmark] plain text"
-        code: bin/bench bench benchmark/plain.haml
+        code: bin/bench bench -w benchmark/plain.haml
     - script:
         name: "[benchmark] script"
-        code: bin/bench bench benchmark/script.haml
+        code: bin/bench bench -w benchmark/script.haml
     - script:
         name: "[benchmark] attribute_builder bench by faml"
-        code: bin/bench bench benchmark/etc/attribute_builder.haml
+        code: bin/bench bench -w benchmark/etc/attribute_builder.haml
     - script:
         name: "[benchmark] basic bench by slim"
         code: bin/bench bench benchmark/etc/slim_bench.haml

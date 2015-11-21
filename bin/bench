@@ -8,10 +8,14 @@ require 'benchmark/ips'
 require 'hamlit1' if File.exist?('hamlit1')
 
 class Bench < Thor
+  class_option :with_hamlit1, type: :boolean, aliases: ['-w']
+
   desc 'bench HAML', 'Benchmark haml template'
-  option :show_code, type: :boolean, aliases: ['-c']
+  option :compile, type: :boolean, aliases: ['-c']
+  option :show_code, type: :boolean, aliases: ['-s']
   def bench(*files)
     files.each { |file| render(file) }
+    files.each { |file| compile(file) if options[:compile] }
     files.each { |file| code(file) if options[:show_code] }
   end
 
@@ -23,8 +27,8 @@ class Bench < Thor
     Benchmark.ips do |x|
       x.report("haml v#{Haml::VERSION}") { Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).precompiled }
       x.report("faml v#{Faml::VERSION}") { Faml::Engine.new.call(haml) }
-      x.report("hamlit2 v#{Hamlit::VERSION}") { Hamlit::Engine.new.call(haml) }
-      x.report("hamlit1 v#{Hamlit1::VERSION}") { Hamlit1::Engine.new.call(haml) } if File.exist?('hamlit1')
+      x.report("hamlit#{options[:with_hamlit1] ? '2' : ''} v#{Hamlit::VERSION}") { Hamlit::Engine.new.call(haml) }
+      x.report("hamlit1 v#{Hamlit1::VERSION}") { Hamlit1::Engine.new.call(haml) } if File.exist?('hamlit1') && options[:with_hamlit1]
       x.compare!
     end
   end
@@ -47,8 +51,8 @@ class Bench < Thor
     Benchmark.ips do |x|
       x.report("haml v#{Haml::VERSION}") { object.haml }
       x.report("faml v#{Faml::VERSION}") { object.faml }
-      x.report("hamlit2 v#{Hamlit::VERSION}") { object.hamlit }
-      x.report("hamlit1 v#{Hamlit1::VERSION}") { object.hamlit1 } if File.exist?('hamlit1')
+      x.report("hamlit#{options[:with_hamlit1] ? '2' : ''} v#{Hamlit::VERSION}") { object.hamlit }
+      x.report("hamlit1 v#{Hamlit1::VERSION}") { object.hamlit1 } if File.exist?('hamlit1') && options[:with_hamlit1]
       x.compare!
     end
   end
