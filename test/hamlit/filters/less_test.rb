@@ -1,10 +1,16 @@
 describe Hamlit::Filters do
-  include RenderAssertion
+  include RenderHelper
 
   describe '#compile' do
     it 'renders less filter' do
-      skip 'Failing on CI'
-      assert_render(<<-HAML, <<-HTML, compatible_only: :haml, error_with: :faml)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <style>
+          .users_controller .show_action {
+            margin: 10px;
+            padding: 20px;
+          }
+        </style>
+      HTML
         :less
           .users_controller {
             .show_action {
@@ -13,29 +19,21 @@ describe Hamlit::Filters do
             }
           }
       HAML
-        <style>
-          .users_controller .show_action {
-            margin: 10px;
-            padding: 20px;
-          }
-        </style>
-      HTML
     end
 
     it 'parses string interpolation' do
-      skip 'Failing on CI'
-      assert_render(<<-'HAML', <<-HTML, compatible_only: :haml, error_with: :faml)
-        :less
-          .foo {
-            content: "#{'<&>'}";
-          }
-      HAML
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
         <style>
           .foo {
             content: "<&>";
           }
         </style>
       HTML
+        :less
+          .foo {
+            content: "#{'<&>'}";
+          }
+      HAML
     end
   end
 end

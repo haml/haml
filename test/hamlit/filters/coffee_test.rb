@@ -1,13 +1,9 @@
 describe Hamlit::Filters do
-  include RenderAssertion
+  include RenderHelper
 
   describe '#compile' do
     it 'renders coffee filter' do
-      assert_render(<<-HAML, <<-HTML)
-        :coffee
-          foo = ->
-            alert('hello')
-      HAML
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
         <script>
           (function() {
             var foo;
@@ -19,33 +15,33 @@ describe Hamlit::Filters do
           }).call(this);
         </script>
       HTML
+        :coffee
+          foo = ->
+            alert('hello')
+      HAML
     end
 
     it 'renders coffeescript filter' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <script>
+          (function() {
+            var foo;
+          
+            foo = function() {
+              return alert('hello');
+            };
+          
+          }).call(this);
+        </script>
+      HTML
         :coffeescript
           foo = ->
             alert('hello')
       HAML
-        <script>
-          (function() {
-            var foo;
-          
-            foo = function() {
-              return alert('hello');
-            };
-          
-          }).call(this);
-        </script>
-      HTML
     end
 
     it 'renders coffeescript filter' do
-      assert_render(<<-'HAML', <<-HTML)
-        :coffee
-          foo = ->
-            alert("#{'<&>'}")
-      HAML
+      assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         <script>
           (function() {
             var foo;
@@ -57,6 +53,10 @@ describe Hamlit::Filters do
           }).call(this);
         </script>
       HTML
+        :coffee
+          foo = ->
+            alert("#{'<&>'}")
+      HAML
     end
   end
 end

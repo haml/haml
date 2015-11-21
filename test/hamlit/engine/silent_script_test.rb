@@ -1,53 +1,56 @@
 describe Hamlit::Engine do
-  include RenderAssertion
+  include RenderHelper
 
   describe 'silent script' do
     it 'renders nothing' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+      HTML
         - nil
         - 3
         - 'foo'
       HAML
-      HTML
     end
 
     it 'renders silent script' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        5
+      HTML
         - foo = 3
         - bar = 2
         = foo + bar
       HAML
-        5
-      HTML
     end
 
     it 'renders nested block' do
-      assert_render(<<-HAML, <<-HTML)
-        - 2.times do |i|
-          = i
-        2
-        - 3.upto(4).each do |i|
-          = i
-      HAML
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
         0
         1
         2
         3
         4
       HTML
+        - 2.times do |i|
+          = i
+        2
+        - 3.upto(4).each do |i|
+          = i
+      HAML
     end
 
     it 'renders if' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        ok
+      HTML
         - if true
           ok
       HAML
-        ok
-      HTML
     end
 
     it 'renders if-else' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        ok
+        ok
+      HTML
         - if true
           ok
         - else
@@ -59,73 +62,73 @@ describe Hamlit::Engine do
         - else
           ok
       HAML
-        ok
-        ok
-      HTML
     end
 
     it 'renders nested if-else' do
-      assert_render(<<-'HAML', <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <span>
+        ok
+        </span>
+      HTML
         %span
           - if false
             ng
           - else
             ok
       HAML
-        <span>
-        ok
-        </span>
-      HTML
     end
 
     it 'renders empty elsif statement' do
-      assert_render(<<-'HAML', <<-HTML, compatible_only: :haml, error_with: :faml)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <span>
+        </span>
+      HTML
         %span
           - if false
           - elsif false
       HAML
-        <span>
-        </span>
-      HTML
     end
 
     it 'renders empty else statement' do
-      assert_render(<<-'HAML', <<-HTML, compatible_only: :haml, error_with: :faml)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <span>
+        </span>
+      HTML
         %span
           - if false
             ng
           - else
       HAML
-        <span>
-        </span>
-      HTML
     end
 
     it 'renders empty when statement' do
-      assert_render(<<-'HAML', <<-HTML, compatible_only: :haml, error_with: :faml)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <span>
+        </span>
+      HTML
         %span
           - case
           - when false
       HAML
-        <span>
-        </span>
-      HTML
     end
 
     it 'accept if inside if-else' do
-      assert_render(<<-'HAML', <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        ok
+      HTML
         - if false
           - if true
             ng
         - else
           ok
       HAML
-        ok
-      HTML
     end
 
     it 'renders if-elsif' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        ok
+        ok
+      HTML
         - if false
         - elsif true
           ok
@@ -135,13 +138,12 @@ describe Hamlit::Engine do
         - else
           ok
       HAML
-        ok
-        ok
-      HTML
     end
 
     it 'renders case-when' do
-      assert_render(<<-'HAML', <<-HTML)
+      assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+        ok
+      HTML
         - case 'foo'
         - when /\Ao/
           ng
@@ -150,22 +152,23 @@ describe Hamlit::Engine do
         - else
           ng
       HAML
-        ok
-      HTML
     end
 
     it 'renders case-when with multiple candidates' do
-      assert_render(<<-'HAML', <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        ok
+      HTML
         - case 'a'
         - when 'a', 'b'
           ok
       HAML
-        ok
-      HTML
     end
 
     it 'renders begin-rescue' do
-      assert_render(<<-'HAML', <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        hello
+        world
+      HTML
         - begin
           - raise 'error'
         - rescue
@@ -173,30 +176,33 @@ describe Hamlit::Engine do
         - ensure
           world
       HAML
-        hello
-        world
-      HTML
     end
 
     it 'renders rescue with error' do
-      assert_render(<<-'HAML', <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        hello
+      HTML
         - begin
           - raise 'error'
         - rescue RuntimeError => e
           hello
       HAML
-        hello
-      HTML
     end
 
     it 'joins a next line if a current line ends with ","' do
-      assert_render("- foo = [',  \n     ']\n= foo", <<-HTML, compatible_only: :haml)
+      assert_render(<<-HTML.unindent, "- foo = [',  \n     ']\n= foo")
         [&quot;, &quot;]
       HTML
     end
 
     it 'accepts illegal indent in continuing code' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <span>
+        <div>
+        3
+        </div>
+        </span>
+      HTML
         %span
           %div
             - def foo(a, b); a + b; end
@@ -204,16 +210,10 @@ describe Hamlit::Engine do
         2)
             = num
       HAML
-        <span>
-        <div>
-        3
-        </div>
-        </span>
-      HTML
     end
 
     it 'renders comment-only nested silent script' do
-      assert_render(<<-HAML, '')
+      assert_render('', <<-HAML.unindent)
         - if true
           - # comment only
       HAML

@@ -24,35 +24,20 @@ module Declarative
   end
 end
 
-module RenderAssertion
-  def assert_render(haml, html, options = {})
-    options = options.dup
-    options.delete(:compatible_only)
-    options.delete(:error_with)
-    options = { escape_html: true, ugly: true }.merge(options)
-    unless options.delete(:skip_unindent)
-      haml, html = haml.unindent, html.unindent
-    end
-    assert_equal html, render(haml, options)
+module RenderHelper
+  def assert_render(expected, haml, options = {})
+    actual = render(haml, options)
+    assert_equal expected, actual
   end
 
-  def assert_inline(haml, options = {})
-    options = { escape_html: true, escape_attrs: true, ugly: true }.merge(options)
-    html = Haml::Engine.new(haml, options).to_html
-    assert_equal html, render(haml, options)
+  def render(haml, options = {})
+    eval Hamlit::Engine.new(options).call(haml)
   end
 
-  def assert_haml(haml)
-    haml = haml.unindent
-    assert_inline(haml)
-  end
-
-  def render(text, options = {}, &block)
-    options = options.dup
-    scope  = options.delete(:scope)  || Object.new
-    locals = options.delete(:locals) || {}
-    options.delete(:ugly)
-    eval Hamlit::Engine.new(options).call(text)
+  def assert_haml(haml, options = {})
+    expected = Haml::Engine.new(haml, { escape_html: true, escape_attrs: true, ugly: true }.merge(options)).to_html
+    actual = render(haml, options)
+    assert_equal expected, actual
   end
 end
 

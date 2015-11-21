@@ -1,39 +1,28 @@
 describe Hamlit::Engine do
-  include RenderAssertion
+  include RenderHelper
 
   describe 'comment' do
     it 'renders html comment' do
-      assert_render(<<-HAML, <<-HTML)
-        / comments
-      HAML
-        <!-- comments -->
-      HTML
+      assert_render(%Q|<!-- comments -->\n|, '/ comments')
     end
 
     it 'strips html comment ignoring around spcaes' do
-      assert_render('/   comments    ', <<-HTML)
-        <!-- comments -->
-      HTML
+      assert_render(%Q|<!-- comments -->\n|, '/   comments    ')
     end
 
     it 'accepts backslash-only line in a comment' do
-      assert_render(<<-'HAML', <<-HTML)
-        /
-          \
-      HAML
+      assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         <!--
 
         -->
       HTML
+        /
+          \
+      HAML
     end
 
     it 'renders a deeply indented comment starting with backslash' do
-      assert_render(<<-'HAML', <<-HTML)
-        /
-          \       a
-        /
-          a
-      HAML
+      assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         <!--
                a
         -->
@@ -41,18 +30,23 @@ describe Hamlit::Engine do
         a
         -->
       HTML
+        /
+          \       a
+        /
+          a
+      HAML
     end
 
     it 'ignores multiline comment' do
-      assert_render(<<-'HAML', <<-HTML)
+      assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+        ok
+      HTML
         -# if true
           - raise 'ng'
             = invalid script
                 too deep indent
         ok
       HAML
-        ok
-      HTML
     end
   end
 end

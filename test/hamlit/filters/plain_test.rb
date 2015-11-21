@@ -1,17 +1,17 @@
 describe Hamlit::Filters do
-  include RenderAssertion
+  include RenderHelper
 
   describe '#compile' do
     it 'renders plain filter' do
-      assert_render(<<-'HAML', <<-HTML, compatible_only: :haml)
-        :plain
-          あ
-          #{'い'}
-      HAML
+      assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         あ
         い
 
       HTML
+        :plain
+          あ
+          #{'い'}
+      HAML
     end
   end
 end

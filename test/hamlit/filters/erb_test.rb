@@ -1,9 +1,12 @@
 describe Hamlit::Filters do
-  include RenderAssertion
+  include RenderHelper
 
   describe '#compile' do
     it 'renders erb filter' do
-      assert_render(<<-HAML, <<-HTML, compatible_only: :haml, error_with: :faml)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        ok
+
+      HTML
         :erb
           <% if true %>
           ok
@@ -11,9 +14,6 @@ describe Hamlit::Filters do
           ng
           <% end %>
       HAML
-        ok
-
-      HTML
     end
   end
 end

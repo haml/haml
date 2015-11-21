@@ -1,24 +1,24 @@
 describe Hamlit::Filters do
-  include RenderAssertion
+  include RenderHelper
 
   it 'renders ruby filter' do
-    assert_render(<<-HAML, <<-HTML)
+    assert_render(<<-HTML.unindent, <<-HAML.unindent)
+      hello
+    HTML
       :ruby
       hello
     HAML
-      hello
-    HTML
   end
 
   it 'renders ruby filter' do
-    assert_render(<<-'HAML', <<-HTML)
+    assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+      &lt;&amp;&gt;
+    HTML
       :ruby
         hash = {
           a: "#{'<&>'}",
         }
       = hash[:a]
     HAML
-      &lt;&amp;&gt;
-    HTML
   end
 end

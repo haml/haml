@@ -1,37 +1,30 @@
 describe Hamlit::Engine do
-  include RenderAssertion
+  include RenderHelper
 
   describe 'multiline' do
     it 'joins multi-lines ending with pipe' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        a b 
+      HTML
         a |
           b |
       HAML
-        a b 
-      HTML
     end
 
     it 'renders multi lines' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        abc
+        'd'
+      HTML
         = 'a' +  |
              'b' + |
              'c' |
         'd'
       HAML
-        abc
-        'd'
-      HTML
     end
 
     it 'accepts invalid indent' do
-      assert_render(<<-HAML, <<-HTML)
-        %span
-          %div
-            = '1' + |
-        '2' |
-          %div
-            3
-      HAML
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
         <span>
         <div>
         12
@@ -41,6 +34,13 @@ describe Hamlit::Engine do
         </div>
         </span>
       HTML
+        %span
+          %div
+            = '1' + |
+        '2' |
+          %div
+            3
+      HAML
     end
   end
 end

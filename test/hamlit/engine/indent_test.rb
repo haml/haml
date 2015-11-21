@@ -1,44 +1,44 @@
 describe Hamlit::Engine do
-  include RenderAssertion
+  include RenderHelper
 
   describe 'tab indent' do
     it 'accepts tab indentation' do
-      assert_render(<<-HAML, <<-HTML, compatible_only: :haml, error_with: :faml)
-        %p
-        \t%a
-      HAML
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
         <p>
         <a></a>
         </p>
       HTML
+        %p
+        \t%a
+      HAML
     end
 
     it 'accepts N-space indentation' do
-      assert_render(<<-HAML, <<-HTML)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <p>
+        <span>
+        foo
+        </span>
+        </p>
+      HTML
         %p
            %span
               foo
       HAML
+    end
+
+    it 'accepts N-tab indentation' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
         <p>
         <span>
         foo
         </span>
         </p>
       HTML
-    end
-
-    it 'accepts N-tab indentation' do
-      assert_render(<<-HAML, <<-HTML, compatible_only: :haml, error_with: :faml)
         %p
         \t%span
         \t\tfoo
       HAML
-        <p>
-        <span>
-        foo
-        </span>
-        </p>
-      HTML
     end
   end
 end
