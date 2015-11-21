@@ -5,48 +5,48 @@ describe Hamlit::StaticAnalyzer do
       assert_equal expected, actual
     end
 
-    specify 'static expression' do
-      assert_static(true, 'true')
-      assert_static(true, 'false')
-      assert_static(true, 'nil')
-      assert_static(true, '()')
-      assert_static(true, '(nil)')
-      assert_static(true, '[true, false, nil, (true)]')
-      assert_static(true, '3')
-      assert_static(true, '1.2')
-      assert_static(true, '2i')
-      assert_static(true, '[3, 1.2, [2i, "hello #{ 123 } world"]]')
-      assert_static(true, '(3)')
-      assert_static(true, '""')
-      assert_static(true, '"hello world"')
-      assert_static(true, '"a#{}b"')
-      assert_static(true, '{}')
-      assert_static(true, '{ "key" => "value" }')
-      assert_static(true, '{ key: "value" }')
+    describe 'static expression' do
+      it { assert_static(true, 'true') }
+      it { assert_static(true, 'false') }
+      it { assert_static(true, 'nil') }
+      it { assert_static(true, '()') }
+      it { assert_static(true, '(nil)') }
+      it { assert_static(true, '[true, false, nil, (true)]') }
+      it { assert_static(true, '3') }
+      it { assert_static(true, '1.2') }
+      it { assert_static(true, '2i') }
+      it { assert_static(true, '[3, 1.2, [2i, "hello #{ 123 } world"]]') }
+      it { assert_static(true, '(3)') }
+      it { assert_static(true, '""') }
+      it { assert_static(true, '"hello world"') }
+      it { assert_static(true, '"a#{}b"') }
+      it { assert_static(true, '{}') }
+      it { assert_static(true, '{ "key" => "value" }') }
+      it { assert_static(true, '{ key: "value" }') }
     end
 
-    specify 'dynamic expression' do
-      assert_static(false, 'if true')
-      assert_static(false, 'foo')
-      assert_static(false, '"hello #{ world }"')
-      assert_static(false, '"" + bar')
-      assert_static(false, '"" ** bar')
-      assert_static(false, '"".gsub(/foo/, "bar")')
-      assert_static(false, '1.times {}')
-      assert_static(false, '[3, 1.2, [2i, "hello #{ nya } world"]]')
-      assert_static(false, 'self')
-      assert_static(false, '__FILE__')
-      assert_static(false, '__LINE__')
-      assert_static(false, '__ENCODING__')
-      assert_static(false, '__dir__')
+    describe 'dynamic expression' do
+      it { assert_static(false, 'if true') }
+      it { assert_static(false, 'foo') }
+      it { assert_static(false, '"hello #{ world }"') }
+      it { assert_static(false, '"" + bar') }
+      it { assert_static(false, '"" ** bar') }
+      it { assert_static(false, '"".gsub(/foo/, "bar")') }
+      it { assert_static(false, '1.times {}') }
+      it { assert_static(false, '[3, 1.2, [2i, "hello #{ nya } world"]]') }
+      it { assert_static(false, 'self') }
+      it { assert_static(false, '__FILE__') }
+      it { assert_static(false, '__LINE__') }
+      it { assert_static(false, '__ENCODING__') }
+      it { assert_static(false, '__dir__') }
     end
 
-    specify 'invalid expression' do
-      assert_static(false, nil)
-      assert_static(false, ' ')
-      assert_static(false, '}')
-      assert_static(false, '(')
-      assert_static(false, '+')
+    describe 'invalid expression' do
+      it { assert_static(false, nil) }
+      it { assert_static(false, ' ') }
+      it { assert_static(false, '}') }
+      it { assert_static(false, '(') }
+      it { assert_static(false, '+') }
     end
   end
 end
