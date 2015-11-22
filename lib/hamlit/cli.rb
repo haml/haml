@@ -15,6 +15,11 @@ module Hamlit
       print_code generate_code(file)
     end
 
+    desc 'temple HAML', 'Show temple intermediate expression'
+    def temple(file)
+      pp generate_temple(file)
+    end
+
     desc 'parse HAML', 'Show parse result'
     def parse(file)
       pp generate_ast(file)
@@ -46,6 +51,11 @@ module Hamlit
     def generate_ast(file)
       template = File.read(file)
       Hamlit::Parser.new(escape_html: true, escape_attrs: true, ugly: true).call(template)
+    end
+
+    def generate_temple(file)
+      ast = generate_ast(file)
+      Hamlit::Compiler.new.call(ast)
     end
 
     # Flexible default_task, compatible with haml's CLI
