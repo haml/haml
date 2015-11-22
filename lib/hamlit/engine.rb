@@ -8,7 +8,6 @@ module Hamlit
     define_options(
       generator:    Temple::Generators::ArrayBuffer,
       format:       :html,
-      html_type:    nil,
       attr_quote:   "'",
       escape_html:  true,
       escape_attrs: true,
