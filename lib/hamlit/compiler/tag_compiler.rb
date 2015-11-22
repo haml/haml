@@ -6,6 +6,7 @@ module Hamlit
     class TagCompiler
       def initialize(unique_identifier, options)
         @autoclose = options[:autoclose]
+        @unique_identifier  = unique_identifier
         @attribute_compiler = AttributeCompiler.new(unique_identifier, options)
       end
 
@@ -24,7 +25,13 @@ module Hamlit
         when node.value[:value].nil? && self_closing?(node)
           nil
         when node.value[:parse]
-          [:escape, node.value[:escape_html], [:dynamic, node.value[:value]]]
+          var = @unique_identifier.generate
+          [:multi,
+           [:code, "#{var} = (#{node.value[:value]}"],
+           [:newline],
+           [:code, ')'.freeze],
+           [:escape, node.value[:escape_html], [:dynamic, var]]
+          ]
         when ::Hamlit::HamlUtil.contains_interpolation?(node.value[:value])
           [:dynamic, node.value[:value]]
         else

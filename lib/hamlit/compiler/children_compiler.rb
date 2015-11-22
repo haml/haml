@@ -37,7 +37,7 @@ module Hamlit
           node.value[:attributes_hashes].each do |attribute_hash|
             @lineno += attribute_hash.count("\n")
           end
-        else
+          @lineno += 1 if node.children.empty? && node.value[:parse]
         end
       end
 

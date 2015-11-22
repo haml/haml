@@ -138,5 +138,9 @@ describe Hamlit::Engine do
           - # comment only
       HAML
     end
+
+    it 'renders inline script with comment' do
+      assert_render(%Q|<span>3</span>\n|, %q|%span= 1 + 2 # comments|)
+    end
   end
 end
