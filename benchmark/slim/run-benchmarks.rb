@@ -24,6 +24,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 =end
 
+#
+# SlimBenchmarks with following modifications:
+#   1. Skipping slow engines, tilt and parsing benches.
+#
+
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'), File.dirname(__FILE__))
 
 require 'slim'
@@ -44,8 +49,8 @@ class SlimBenchmarks
     @slim_code = File.read(File.dirname(__FILE__) + '/view.slim')
 
     init_compiled_benches
-    init_tilt_benches
-    init_parsing_benches if slow
+    # init_tilt_benches
+    # init_parsing_benches if slow
   end
 
   def init_compiled_benches
@@ -69,9 +74,9 @@ class SlimBenchmarks
     bench('(1) erubis')      { context.run_erubis }
     bench('(1) fast erubis') { context.run_fast_erubis }
     bench('(1) temple erb')  { context.run_temple_erb }
-    bench('(1) slim pretty') { context.run_slim_pretty }
+    # bench('(1) slim pretty') { context.run_slim_pretty }
     bench('(1) slim ugly')   { context.run_slim_ugly }
-    bench('(1) haml pretty') { context.run_haml_pretty }
+    # bench('(1) haml pretty') { context.run_haml_pretty }
     bench('(1) haml ugly')   { context.run_haml_ugly }
   end
 
@@ -114,13 +119,16 @@ class SlimBenchmarks
       @benches.each do |name, block|
         x.report(name.to_s, &block)
       end
+      x.compare!
     end
     puts "
 (1) Compiled benchmark. Template is parsed before the benchmark and
     generated ruby code is compiled into a method.
     This is the fastest evaluation strategy because it benchmarks
     pure execution speed of the generated ruby code.
-
+"
+    return # Skipping (2) and (3)
+    puts "
 (2) Compiled Tilt benchmark. Template is compiled with Tilt, which gives a more
     accurate result of the performance in production mode in frameworks like
     Sinatra, Ramaze and Camping. (Rails still uses its own template
