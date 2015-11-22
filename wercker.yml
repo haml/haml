@@ -28,8 +28,8 @@ build:
         name: "[benchmark] attribute_builder bench by faml"
         code: bin/bench bench -w benchmark/etc/attribute_builder.haml
     - script:
-        name: "[benchmark] basic bench by slim"
-        code: bin/bench bench benchmark/etc/slim_bench.haml
+        name: "[benchmark] slim-template/slim/benchmarks"
+        code: bundle exec ruby benchmark/slim/run-benchmarks.rb
     - script:
         name: "[benchmark] static analyzer"
         code: bin/bench bench -w benchmark/etc/static_analyzer.haml

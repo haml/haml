@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler', '~> 1.10'
   spec.add_development_dependency 'coffee-script'
+  spec.add_development_dependency 'erubis'
   spec.add_development_dependency 'faml'
   spec.add_development_dependency 'less'
   spec.add_development_dependency 'minitest-reporters', '~> 1.1'
@@ -32,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'redcarpet'
   spec.add_development_dependency 'sass'
+  spec.add_development_dependency 'slim'
   spec.add_development_dependency 'therubyracer'
   spec.add_development_dependency 'thor', '~> 0.19'
   spec.add_development_dependency 'unindent'
