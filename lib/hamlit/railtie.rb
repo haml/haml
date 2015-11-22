@@ -1,5 +1,4 @@
 require 'rails'
-require 'temple'
 
 module Hamlit
   class Railtie < ::Rails::Railtie
