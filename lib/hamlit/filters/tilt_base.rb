@@ -9,6 +9,10 @@ module Hamlit
         text.gsub!(/^/, ' '.freeze * indent_width)
       end
 
+      def explicit_require?
+        Gem::Version.new(Tilt::VERSION) >= Gem::Version.new('2.0.0')
+      end
+
       private
 
       def compile_with_tilt(node, name, indent_width: 0)
