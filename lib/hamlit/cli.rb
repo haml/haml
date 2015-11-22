@@ -45,7 +45,7 @@ module Hamlit
 
     def generate_ast(file)
       template = File.read(file)
-      Hamlit::Parser.new.call(template)
+      Hamlit::Parser.new(escape_html: true, escape_attrs: true, ugly: true).call(template)
     end
 
     # Flexible default_task, compatible with haml's CLI
