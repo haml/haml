@@ -28,6 +28,7 @@ THE SOFTWARE.
 # SlimBenchmarks with following modifications:
 #   1. Skipping slow engines, tilt and parsing benches.
 #   2. All Ruby script and attributes are escaped for fairness.
+#   3. Faml and Hamlit are added.
 #
 
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'), File.dirname(__FILE__))
@@ -40,6 +41,8 @@ require 'tilt'
 require 'erubis'
 require 'erb'
 require 'haml'
+require 'faml'
+require 'hamlit'
 
 class SlimBenchmarks
   def initialize(slow)
@@ -68,16 +71,20 @@ class SlimBenchmarks
       def run_fast_erubis; #{Erubis::FastEruby.new(@erb_code).src}; end
       def run_slim_pretty; #{Slim::Engine.new(pretty: true).call @slim_code}; end
       def run_slim_ugly; #{Slim::Engine.new.call @slim_code}; end
+      def run_faml; #{Faml::Engine.new.call @haml_code}; end
+      def run_hamlit; #{Hamlit::Engine.new.call @haml_code}; end
     }
 
     # bench('(1) erb')         { context.run_erb }
-    bench('(1) erubis')      { context.run_erubis }
+    bench("erubis v#{Erubis::VERSION}") { context.run_erubis }
     # bench('(1) fast erubis') { context.run_fast_erubis }
     # bench('(1) temple erb')  { context.run_temple_erb }
     # bench('(1) slim pretty') { context.run_slim_pretty }
-    bench('(1) slim ugly')   { context.run_slim_ugly }
+    bench("slim v#{Slim::VERSION}")     { context.run_slim_ugly }
     # bench('(1) haml pretty') { context.run_haml_pretty }
-    bench('(1) haml ugly')   { context.run_haml_ugly }
+    bench("haml v#{Haml::VERSION}")     { context.run_haml_ugly }
+    bench("faml v#{Faml::VERSION}")     { context.run_faml }
+    bench("hamlit v#{Hamlit::VERSION}") { context.run_hamlit }
   end
 
   def init_tilt_benches
@@ -121,26 +128,6 @@ class SlimBenchmarks
       end
       x.compare!
     end
-    puts "
-(1) Compiled benchmark. Template is parsed before the benchmark and
-    generated ruby code is compiled into a method.
-    This is the fastest evaluation strategy because it benchmarks
-    pure execution speed of the generated ruby code.
-"
-    return # Skipping (2) and (3)
-    puts "
-(2) Compiled Tilt benchmark. Template is compiled with Tilt, which gives a more
-    accurate result of the performance in production mode in frameworks like
-    Sinatra, Ramaze and Camping. (Rails still uses its own template
-    compilation.)
-
-(3) Parsing benchmark. Template is parsed every time.
-    This is not the recommended way to use the template engine
-    and Slim is not optimized for it. Activate this benchmark with 'rake bench slow=1'.
-
-Temple ERB is the ERB implementation using the Temple framework. It shows the
-overhead added by the Temple framework compared to ERB.
-"
   end
 
   def bench(name, &block)
