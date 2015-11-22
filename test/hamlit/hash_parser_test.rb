@@ -60,7 +60,7 @@ describe Hamlit::HashParser do
     end
 
     if RUBY_VERSION >= '2.1.0'
-      describe '"foo" => bar' do
+      describe '"foo": bar' do
         it { assert_parse({ 'foo' => '()' }, '"foo":()') }
         it { assert_parse({ 'foo' => 'nya' }, " 'foo': nya ") }
         it { assert_parse({ 'foo' => '()' }, ' { "foo":() , }') }
