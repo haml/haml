@@ -9,6 +9,7 @@ require 'hamlit1' if File.exist?('hamlit1')
 
 class Bench < Thor
   class_option :with_hamlit1, type: :boolean, aliases: ['-w']
+  class_option :show_template, type: :boolean, aliases: ['-t']
 
   desc 'bench HAML', 'Benchmark haml template'
   option :compile, type: :boolean, aliases: ['-c']
@@ -37,6 +38,7 @@ class Bench < Thor
   def render(file)
     puts "#{?= * 49}\n Rendering: #{file}\n#{?= * 49}"
     haml = File.read(file)
+    puts haml + "\n" if options[:show_template]
     object = Object.new
     ruby_file = file.gsub(/\.haml\z/, '.rb')
     if File.exist?(ruby_file)
