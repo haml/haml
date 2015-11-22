@@ -83,7 +83,7 @@ Hamlit uses Array as buffer for performance. So you can't touch Haml::Buffer fro
 
 ### Haml helpers are still in development
 At the same time, because some methods in Haml::Buffer requires Haml::Buffer, they are not supported now.
-But some helpers are supported on Rails. Some of them are planned to be supported.
+But some helpers are supported on Rails. Some of not-implemented methods are planned to be supported.
 
 ### Limited attributes hyphenation
 In Haml, `%a{ foo: { bar: 'baz' } }` is rendered as `<a foo-bar='baz'></a>`, whatever foo is.
@@ -93,16 +93,15 @@ as `<a data-foo='bar'></a>` because it's data attribute.
 This design allows us to reduce work on runtime and is originally in [Faml](https://github.com/eagletmt/faml).
 
 ### Limited boolean attributes
-In Haml, `%a{ foo: false }` is rendered as `<a></a>`, whatever foo is.
+In Haml, `%a{ foo: false }` is rendered as `<a></a>`, whatever `foo` is.
 In Hamlit, this feature is supported for only boolean attributes, which is in
-http://www.w3.org/TR/xhtml1/guidelines.html https://html.spec.whatwg.org/.
+http://www.w3.org/TR/xhtml1/guidelines.html or https://html.spec.whatwg.org/.
 The list is the same as `ActionView::Helpers::TagHelper::BOOLEAN_ATTRIBUTES`.
 
-Since foo is not boolean attribute, `%a{ foo: false }` is rendered as `<a foo='false'></a>`.
-This is the same behavior as not Haml but Rails helpers.
+Since foo is not boolean attribute, `%a{ foo: false }` is rendered as `<a foo='false'></a>` (`foo` is not removed).
+This is the same behavior as Rails helpers.
 
-For nil, while Haml and Rails remove the attribute entirely if the value is nil,
-Hamlit does not remove non-boolean attributes and render `<a foo=''></a>`.
+Also for `%a{ foo: nil }`, Hamlit does not remove non-boolean attributes and render `<a foo=''></a>`.
 This design allows us to reduce String concatenation.
 
 This is the largest difference between Hamlit and Faml.
