@@ -12,6 +12,14 @@ design for performance, Hamlit is **7.16x times faster** than original haml gem 
 
 ![Hamlit Benchmark](http://i.gyazo.com/4fe00ff2ac2fa959dfcf86a5e27dc914.png)
 
+```
+    erubis:   114501.6 i/s
+    hamlit:   112888.1 i/s - 1.01x slower
+      slim:   103298.5 i/s - 1.11x slower
+      faml:    88675.4 i/s - 1.29x slower
+      haml:    15750.6 i/s - 7.27x slower
+```
+
 ### Why is Hamlit faster?
 
 #### Less string concatenation by design
