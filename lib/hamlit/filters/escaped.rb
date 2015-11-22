@@ -11,7 +11,7 @@ module Hamlit
 
       def compile_text(text)
         if ::Hamlit::HamlUtil.contains_interpolation?(text)
-          [:dynamic, ::Hamlit::HamlUtil.unescape_interpolation(text)]
+          [:dynamic, ::Hamlit::HamlUtil.slow_unescape_interpolation(text)]
         else
           [:static, text]
         end

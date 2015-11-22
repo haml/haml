@@ -6,7 +6,7 @@ module Hamlit
         if ::Hamlit::HamlUtil.contains_interpolation?(text)
           # FIXME: Confirm whether this is correct or not
           text << "\n".freeze
-          text = ::Hamlit::HamlUtil.unescape_interpolation(text)
+          text = ::Hamlit::HamlUtil.slow_unescape_interpolation(text)
           [:escape, true, [:dynamic, text]]
         else
           [:static, text]

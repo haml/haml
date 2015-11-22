@@ -198,7 +198,7 @@ MSG
       /#[\{$@]/ === str
     end
 
-    def unescape_interpolation(str, escape_html = nil)
+    def slow_unescape_interpolation(str, escape_html = nil)
       res = ''
       rest = ::Hamlit::HamlUtil.handle_interpolation str.dump do |scan|
         escapes = (scan[2].size - 1) / 2

@@ -284,7 +284,7 @@ module Hamlit
       end
 
       escape_html = @options.escape_html if escape_html.nil?
-      line.text = unescape_interpolation(line.text, escape_html)
+      line.text = slow_unescape_interpolation(line.text, escape_html)
       script(line, false)
     end
 
@@ -373,7 +373,7 @@ module Hamlit
       when '='
         parse = true
         if value[0] == ?=
-          value = unescape_interpolation(value[1..-1].strip, escape_html)
+          value = slow_unescape_interpolation(value[1..-1].strip, escape_html)
           escape_html = false
         end
       when '&', '!'
@@ -381,19 +381,19 @@ module Hamlit
           parse = true
           preserve_script = (value[0] == ?~)
           if value[1] == ?=
-            value = unescape_interpolation(value[2..-1].strip, escape_html)
+            value = slow_unescape_interpolation(value[2..-1].strip, escape_html)
             escape_html = false
           else
             value = value[1..-1].strip
           end
         elsif contains_interpolation?(value)
-          value = unescape_interpolation(value, escape_html)
+          value = slow_unescape_interpolation(value, escape_html)
           parse = true
           escape_html = false
         end
       else
         if contains_interpolation?(value)
-          value = unescape_interpolation(value, escape_html)
+          value = slow_unescape_interpolation(value, escape_html)
           parse = true
           escape_html = false
         end
@@ -458,7 +458,7 @@ module Hamlit
 
       if contains_interpolation?(text)
         parse = true
-        text = unescape_interpolation(text)
+        text = slow_unescape_interpolation(text)
       else
         parse = false
       end
