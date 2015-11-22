@@ -73,6 +73,7 @@ Commands:
   hamlit help [COMMAND]  # Describe available commands or one specific command
   hamlit parse HAML      # Show parse result
   hamlit render HAML     # Render haml template
+  hamlit temple HAML     # Show temple intermediate expression
 
 $ cat in.haml
 .foo#bar
@@ -90,7 +91,9 @@ $ hamlit render in.haml
 
 ### Development
 
-Contributions are welcomed.
+Contributions are welcomed. It'd be good to see
+[Temple's EXPRESSIONS.md](https://github.com/judofyr/temple/blob/v0.7.6/EXPRESSIONS.md)
+to learn Temple which is a template engine framework used in Hamlit.
 
 ```bash
 $ git clone https://github.com/k0kubun/hamlit
