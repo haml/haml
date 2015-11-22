@@ -5,14 +5,14 @@
     <title>Simple Benchmark</title>
   </head>
   <body>
-    <h1><%= header %></h1>
+    <h1><%== header %></h1>
     <% unless item.empty? %>
       <ul>
       <% for i in item %>
         <% if i[:current] %>
-          <li><strong><%= i[:name] %></strong></li>
+          <li><strong><%== i[:name] %></strong></li>
         <% else %>
-          <li><a href="<%= i[:url] %>"><%= i[:name] %></a></li>
+          <li><a href="<%== i[:url] %>"><%== i[:name] %></a></li>
         <% end %>
       <% end %>
       </ul>
