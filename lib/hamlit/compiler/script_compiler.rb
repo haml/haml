@@ -1,4 +1,5 @@
 require 'hamlit/static_analyzer'
+require 'hamlit/string_interpolation'
 
 module Hamlit
   class Compiler
