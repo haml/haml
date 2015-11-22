@@ -8,7 +8,7 @@ Hamlit is a high performance [Haml](https://github.com/haml/haml) implementation
 Hamlit is another implementation of [Haml](https://github.com/haml/haml) and designed to make Haml language faster than
 [Slim](https://github.com/slim-template/slim). With some [limitations](REFERENCE.md#limitations) by
 design for performance, Hamlit is **7.16x times faster** than original haml gem in
-this benchmark, which is an HTML-escaped version of slim-template/slim's one for fairness.
+[this benchmark](benchmark/slim/run-benchmarks.rb), which is an HTML-escaped version of [slim-template/slim's one](https://github.com/slim-template/slim/blob/v3.0.6/benchmarks/run-benchmarks.rb) for fairness.
 
 ![Hamlit Benchmark](http://i.gyazo.com/4fe00ff2ac2fa959dfcf86a5e27dc914.png)
 

@@ -25,6 +25,8 @@ THE SOFTWARE.
 =end
 
 #
+# Original: https://github.com/slim-template/slim/blob/v3.0.6/benchmarks/run-benchmarks.rb
+#
 # SlimBenchmarks with following modifications:
 #   1. Skipping slow engines, tilt and parsing benches.
 #   2. All Ruby script and attributes are escaped for fairness.
