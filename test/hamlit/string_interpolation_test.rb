@@ -17,6 +17,7 @@ describe Hamlit::StringInterpolation do
     it { assert_compile([[:static, 'a#{b}c#{d}e']], %q|%q[a#{b}c#{d}e]|) }
     it { assert_compile([[:static, '\#{}'], [:dynamic, '123']], %q|"\#{}#{123}"|) }
     it { assert_compile([[:dynamic, " '}' "]], %q|"#{ '}' }"|) }
+    it { assert_compile([[:static, 'a']], %q| "a" # hello |) }
 
     describe 'invalid argument' do
       it 'raises internal error' do

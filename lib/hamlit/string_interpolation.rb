@@ -6,6 +6,7 @@ module Hamlit::StringInterpolation
     def compile(code)
       [].tap do |exps|
         tokens = Ripper.lex(code.strip)
+        strip_comment!(tokens)
 
         raise Hamlit::InternalError if tokens.size < 2
         strip_quotes!(tokens)
@@ -15,6 +16,12 @@ module Hamlit::StringInterpolation
     end
 
     private
+
+    def strip_comment!(tokens)
+      while tokens.last && %i[on_comment on_sp].include?(tokens.last[1])
+        tokens.pop
+      end
+    end
 
     def strip_quotes!(tokens)
       _, type, _ = tokens.shift
