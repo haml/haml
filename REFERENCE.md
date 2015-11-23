@@ -97,6 +97,7 @@ In Haml, `%a{ foo: false }` is rendered as `<a></a>`, whatever `foo` is.
 In Hamlit, this feature is supported for only boolean attributes, which is in
 http://www.w3.org/TR/xhtml1/guidelines.html or https://html.spec.whatwg.org/.
 The list is the same as `ActionView::Helpers::TagHelper::BOOLEAN_ATTRIBUTES`.
+And `data-*` is also regarded as boolean.
 
 Since foo is not boolean attribute, `%a{ foo: false }` is rendered as `<a foo='false'></a>` (`foo` is not removed).
 This is the same behavior as Rails helpers.
@@ -141,7 +142,7 @@ Multiple class specification results in unique alphabetical sort.
 ```
 
 ### data attribute
-Hyphenation is supported but boolean support is for only `data-#{boolean attribute}`.
+Hyphenation is supported but boolean is not supported.
 
 ```rb
 # Input
@@ -158,10 +159,12 @@ No hyphenation but complete boolean support.
 
 ```rb
 # Input
+%div{ disabled: 'foo' }
 %div{ disabled: true }
 %div{ disabled: false }
 
 # Output
+<div disabled='foo'></div>
 <div disabled></div>
 <div></div>
 ```
@@ -173,6 +176,8 @@ disabled readonly multiple checked autobuffer autoplay controls loop selected hi
 defer reversed ismap seamless muted required autofocus novalidate formnovalidate open pubdate
 itemscope allowfullscreen default inert sortable truespeed typemustmatch
 ```
+
+`data-*` is also regarded as boolean.
 
 ### other attributes
 No hyphenation and boolean support.

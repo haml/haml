@@ -8,7 +8,6 @@ module Hamlit::AttributeBuilder
                        autofocus novalidate formnovalidate open pubdate
                        itemscope allowfullscreen default inert sortable
                        truespeed typemustmatch].freeze
-  DATA_BOOLEAN_ATTRIBUTES = BOOLEAN_ATTRIBUTES.map { |a| "data-#{a}" }.freeze
 
   # NOTE: Since this module is used on runtime, its methods are designed to be
   # class methods which takes all options as arguments for performance.
@@ -28,7 +27,7 @@ module Hamlit::AttributeBuilder
           buf << " class=#{quote}#{build_class(escape_attrs, *values)}#{quote}"
         when 'data'.freeze
           buf << build_data(escape_attrs, quote, *values)
-        when *BOOLEAN_ATTRIBUTES, *DATA_BOOLEAN_ATTRIBUTES
+        when *BOOLEAN_ATTRIBUTES, /\Adata-/
           build_boolean!(escape_attrs, quote, format, buf, key, values)
         else
           buf << " #{key}=#{quote}#{escape_html(escape_attrs, values.first.to_s)}#{quote}"

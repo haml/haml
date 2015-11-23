@@ -149,6 +149,19 @@ describe Hamlit::Engine do
 
     it { assert_haml(%q|%input(checked=true)|) }
     it { assert_haml(%q|%input(checked=true)|, format: :xhtml) }
+
+    it { assert_haml(%q|%input{ 'data-overlay-modal' => nil }|) }
+    it { assert_haml(%q|%input{ 'data-overlay-modal' => false }|) }
+    it { assert_haml(%q|%input{ 'data-overlay-modal' => true }|) }
+    it { assert_haml(%q|%input{ 'data-overlay-modal' => 'false' }|) }
+
+    it { assert_haml(%q|%input{ :'data-overlay-modal' => val = nil }|) }
+    it { assert_haml(%q|%input{ :'data-overlay-modal' => val = false }|) }
+    it { assert_haml(%q|%input{ :'data-overlay-modal' => val = true }|) }
+    it { assert_haml(%q|%input{ :'data-overlay-modal' => val = 'false' }|) }
+
+    it { assert_haml(%q|%a{ hash }|, locals: { hash: { 'data-overlay-modal' => false } }) }
+    it { assert_haml(%q|%a{ hash }|, locals: { hash: { 'data-overlay-modal' => true } }) }
   end
 
   describe 'common attributes' do
