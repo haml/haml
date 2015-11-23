@@ -22,6 +22,18 @@ module Hamlit
       type == :string_literal
     end
 
+    def self.strip_comment(code)
+      code = code.strip
+      return code if syntax_error?(code)
+
+      tokens = Ripper.lex(code)
+      while tokens.last && %i[on_comment on_sp].include?(tokens.last[1])
+        _, _, str = tokens.pop
+        code.sub!(/#{str}\z/, '')
+      end
+      code
+    end
+
     private
 
     def on_parse_error(*)
