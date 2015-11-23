@@ -94,5 +94,13 @@ describe Hamlit::Engine do
             = '2'
       HAML
     end
+
+    it 'does not nuke internal recursively' do
+      assert_render(%Q|<div><span>\nhello\n</span></div>|, <<-HAML.unindent)
+        %div><
+          %span>
+            hello
+      HAML
+    end
   end
 end
