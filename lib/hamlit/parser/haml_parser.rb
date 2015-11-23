@@ -373,7 +373,8 @@ module Hamlit
       when '='
         parse = true
         if value[0] == ?=
-          value = slow_unescape_interpolation(value[1..-1].strip, escape_html)
+          value = ::Hamlit::HamlUtil.unescape_interpolation(value[1..-1].strip)
+          escape_interpolation = true if escape_html
           escape_html = false
         end
       when '&', '!'
@@ -381,19 +382,22 @@ module Hamlit
           parse = true
           preserve_script = (value[0] == ?~)
           if value[1] == ?=
-            value = slow_unescape_interpolation(value[2..-1].strip, escape_html)
+            value = ::Hamlit::HamlUtil.unescape_interpolation(value[2..-1].strip)
+            escape_interpolation = true if escape_html
             escape_html = false
           else
             value = value[1..-1].strip
           end
         elsif contains_interpolation?(value)
-          value = slow_unescape_interpolation(value, escape_html)
+          value = ::Hamlit::HamlUtil.unescape_interpolation(value)
+          escape_interpolation = true if escape_html
           parse = true
           escape_html = false
         end
       else
         if contains_interpolation?(value)
-          value = slow_unescape_interpolation(value, escape_html)
+          value = ::Hamlit::HamlUtil.unescape_interpolation(value)
+          escape_interpolation = true if escape_html
           parse = true
           escape_html = false
         end
@@ -434,7 +438,8 @@ module Hamlit
         :nuke_inner_whitespace => nuke_inner_whitespace,
         :nuke_outer_whitespace => nuke_outer_whitespace, :object_ref => object_ref,
         :escape_html => escape_html, :preserve_tag => preserve_tag,
-        :preserve_script => preserve_script, :parse => parse, :value => line.text)
+        :preserve_script => preserve_script, :parse => parse, :value => line.text,
+        :escape_interpolation => escape_interpolation)
     end
 
     # Renders a line that creates an XHTML tag and has an implicit div because of
