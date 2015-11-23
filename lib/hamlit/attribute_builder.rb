@@ -7,7 +7,7 @@ module Hamlit::AttributeBuilder
                        defer reversed ismap seamless muted required
                        autofocus novalidate formnovalidate open pubdate
                        itemscope allowfullscreen default inert sortable
-                       truespeed typemustmatch data].freeze
+                       truespeed typemustmatch].freeze
   DATA_BOOLEAN_ATTRIBUTES = BOOLEAN_ATTRIBUTES.map { |a| "data-#{a}" }.freeze
 
   # NOTE: Since this module is used on runtime, its methods are designed to be
