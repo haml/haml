@@ -284,8 +284,8 @@ module Hamlit
       end
 
       escape_html = @options.escape_html if escape_html.nil?
-      line.text = slow_unescape_interpolation(line.text, escape_html)
-      script(line, false)
+      line.text = ::Hamlit::HamlUtil.unescape_interpolation(line.text)
+      script(line, false).tap { |n| n.value[:escape_interpolation] = true if escape_html }
     end
 
     def script(line, escape_html = nil, preserve = false)

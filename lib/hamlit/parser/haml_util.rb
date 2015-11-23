@@ -198,6 +198,7 @@ MSG
       /#[\{$@]/ === str
     end
 
+    # Original Haml::Util.unescape_interpolation
     def slow_unescape_interpolation(str, escape_html = nil)
       res = ''
       rest = ::Hamlit::HamlUtil.handle_interpolation str.dump do |scan|
@@ -215,6 +216,30 @@ MSG
           content = eval('"' + interpolated + '"')
           content.prepend(char) if char == '@' || char == '$'
           content = "::Hamlit::HamlHelpers.html_escape((#{content}))" if escape_html
+
+          res << "\#{#{content}}"
+        end
+      end
+      res + rest
+    end
+
+    # Customized Haml::Util.unescape_interpolation to handle escape by Hamlit
+    def unescape_interpolation(str)
+      res = ''
+      rest = ::Hamlit::HamlUtil.handle_interpolation str.dump do |scan|
+        escapes = (scan[2].size - 1) / 2
+        char = scan[3] # '{', '@' or '$'
+        res << scan.matched[0...-3 - escapes]
+        if escapes % 2 == 1
+          res << "\##{char}"
+        else
+          interpolated = if char == '{'
+            balance(scan, ?{, ?}, 1)[0][0...-1]
+          else
+            scan.scan(/\w+/)
+          end
+          content = eval('"' + interpolated + '"')
+          content.prepend(char) if char == '@' || char == '$'
 
           res << "\#{#{content}}"
         end

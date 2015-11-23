@@ -1,3 +1,4 @@
+require 'hamlit/ruby_expression'
 require 'hamlit/static_analyzer'
 require 'hamlit/string_interpolation'
 
@@ -9,7 +10,10 @@ module Hamlit
       end
 
       def compile(node, &block)
-        if node.children.empty? && StaticAnalyzer.static?(node.value[:text])
+        case
+        when node.children.empty? && RubyExpression.string_literal?(node.value[:text])
+          compile_string_literal(node)
+        when node.children.empty? && StaticAnalyzer.static?(node.value[:text])
           static_compile(node)
         else
           dynamic_compile(node, &block)
@@ -17,6 +21,21 @@ module Hamlit
       end
 
       private
+
+      def compile_string_literal(node)
+        [:multi].tap do |temple|
+          StringInterpolation.compile(node.value[:text]).each do |type, value|
+            case type
+            when :static
+              value = Temple::Utils.escape_html(value) if node.value[:escape_html]
+              value = ::Hamlit::HamlHelpers.find_and_preserve(value, %w(textarea pre code)) if node.value[:preserve]
+              temple << [:static, value]
+            when :dynamic
+              temple << [:escape, node.value[:escape_html] || node.value[:escape_interpolation], [:dynamic, value]]
+            end
+          end
+        end.push([:newline])
+      end
 
       def static_compile(node)
         str = eval("(#{node.value[:text]}).to_s")
