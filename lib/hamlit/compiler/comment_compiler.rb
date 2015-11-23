@@ -21,7 +21,7 @@ module Hamlit
 
       def compile_conditional_comment(node, &block)
         condition = node.value[:conditional]
-        if node.value[:conditional] =~ /\A\[(.+?)\]/
+        if node.value[:conditional] =~ /\A\[(\[*[^\[\]]+\]*)\]/
           condition = $1
         end
 
