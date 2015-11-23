@@ -41,14 +41,4 @@ describe Hamlit::RubyExpression do
       it { assert_literal(false, %Q|''\n''|) }
     end
   end
-
-  describe '.strip_comment' do
-    def assert_strip(expected, code)
-      actual = Hamlit::RubyExpression.strip_comment(code)
-      assert_equal expected, actual
-    end
-
-    it { assert_strip(%q|"hello"|, %q| "hello" # world|) }
-    it { assert_strip(%q|"hello"|, %q| "hello" |) }
-  end
 end

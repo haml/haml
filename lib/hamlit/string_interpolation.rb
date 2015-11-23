@@ -1,13 +1,12 @@
 require 'ripper'
-require 'hamlit/ruby_expression'
 
 module Hamlit::StringInterpolation
   class << self
     # `code` param must be valid string literal
     def compile(code)
       [].tap do |exps|
-        code   = Hamlit::RubyExpression.strip_comment(code)
-        tokens = Ripper.lex(code)
+        tokens = Ripper.lex(code.strip)
+        tokens.pop while tokens.last && %i[on_comment on_sp].include?(tokens.last[1])
 
         if tokens.size < 2
           raise Hamlit::InternalError.new("Expected token size >= 2 but got: #{tokens.size}")
