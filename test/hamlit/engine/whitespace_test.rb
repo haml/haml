@@ -102,5 +102,14 @@ describe Hamlit::Engine do
             hello
       HAML
     end
+
+    it 'does not nuke inside script' do
+      assert_render(%Q|<div><span>\nhello\n</span>1</div>|, <<-HAML.unindent)
+        %div><
+          = 1.times do
+            %span>
+              hello
+      HAML
+    end
   end
 end

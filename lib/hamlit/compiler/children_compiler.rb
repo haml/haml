@@ -60,8 +60,7 @@ module Hamlit
       def nuke_inner_whitespace?(node)
         case
         when node.type == :tag
-          node.value[:nuke_inner_whitespace] ||
-            (node.parent && node.parent.type != :tag && nuke_inner_whitespace?(node.parent))
+          node.value[:nuke_inner_whitespace]
         when node.parent.nil?
           false
         else
