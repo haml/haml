@@ -26,9 +26,7 @@ module Hamlit
         when node.value[:value].nil? && self_closing?(node)
           nil
         when node.value[:parse]
-          if RubyExpression.string_literal?(node.value[:value])
-            return StringInterpolation.compile_node(node, :value).push([:newline])
-          end
+          return compile_string(node) if RubyExpression.string_literal?(node.value[:value])
 
           var = @unique_identifier.generate
           [:multi,
@@ -40,6 +38,26 @@ module Hamlit
         else
           [:static, node.value[:value]]
         end
+      end
+
+      def compile_string(node)
+        temple = [:multi]
+        StringInterpolation.compile(node.value[:value]).each do |type, value|
+          case type
+          when :static
+            value = Temple::Utils.escape_html(value) if node.value[:escape_html]
+            temple << [:static, value]
+          when :dynamic
+            if Hamlit::StaticAnalyzer.static?(value)
+              value = eval(value).to_s
+              value = Temple::Utils.escape_html(value) if node.value[:escape_html] || node.value[:escape_interpolation]
+              temple << [:static, value]
+            else
+              temple << [:escape, node.value[:escape_html] || node.value[:escape_interpolation], [:dynamic, value]]
+            end
+          end
+        end
+        temple << [:newline]
       end
 
       def self_closing?(node)

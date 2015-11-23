@@ -16,27 +16,6 @@ module Hamlit::StringInterpolation
       end
     end
 
-    # Compile Hamlit::HamlParser::ParseNode into Temple AST.
-    def compile_node(node, key)
-      [:multi].tap do |temple|
-        compile(node.value[key]).each do |type, value|
-          case type
-          when :static
-            value = Temple::Utils.escape_html(value) if node.value[:escape_html]
-            temple << [:static, value]
-          when :dynamic
-            if Hamlit::StaticAnalyzer.static?(value)
-              value = eval(value).to_s
-              value = Temple::Utils.escape_html(value) if node.value[:escape_html] || node.value[:escape_interpolation]
-              temple << [:static, value]
-            else
-              temple << [:escape, node.value[:escape_html] || node.value[:escape_interpolation], [:dynamic, value]]
-            end
-          end
-        end
-      end
-    end
-
     private
 
     def strip_quotes!(tokens)

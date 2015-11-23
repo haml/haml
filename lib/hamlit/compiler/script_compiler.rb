@@ -12,7 +12,7 @@ module Hamlit
       def compile(node, &block)
         case
         when node.children.empty? && RubyExpression.string_literal?(node.value[:text])
-          StringInterpolation.compile_node(node, :text).push([:newline])
+          string_compile(node)
         when node.children.empty? && StaticAnalyzer.static?(node.value[:text])
           static_compile(node)
         else
@@ -21,6 +21,27 @@ module Hamlit
       end
 
       private
+
+      # String-interpolated plain text must be compiled with this method
+      def string_compile(node)
+        temple = [:multi]
+        StringInterpolation.compile(node.value[:text]).each do |type, value|
+          case type
+          when :static
+            value = Temple::Utils.escape_html(value) if node.value[:escape_html]
+            temple << [:static, value]
+          when :dynamic
+            if Hamlit::StaticAnalyzer.static?(value)
+              value = eval(value).to_s
+              value = Temple::Utils.escape_html(value) if node.value[:escape_html] || node.value[:escape_interpolation]
+              temple << [:static, value]
+            else
+              temple << [:escape, node.value[:escape_html] || node.value[:escape_interpolation], [:dynamic, value]]
+            end
+          end
+        end
+        temple << [:newline]
+      end
 
       def static_compile(node)
         str = eval("(#{node.value[:text]}).to_s")
