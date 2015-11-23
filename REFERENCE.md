@@ -94,10 +94,10 @@ This design allows us to reduce work on runtime and is originally in [Faml](http
 
 ### Limited boolean attributes
 In Haml, `%a{ foo: false }` is rendered as `<a></a>`, whatever `foo` is.
-In Hamlit, this feature is supported for only boolean attributes, which is in
+In Hamlit, this feature is supported for only boolean attributes, which are defined by
 http://www.w3.org/TR/xhtml1/guidelines.html or https://html.spec.whatwg.org/.
 The list is the same as `ActionView::Helpers::TagHelper::BOOLEAN_ATTRIBUTES`.
-And `data-*` is also regarded as boolean.
+In addition, `data-*` is also regarded as boolean.
 
 Since foo is not boolean attribute, `%a{ foo: false }` is rendered as `<a foo='false'></a>` (`foo` is not removed).
 This is the same behavior as Rails helpers.
