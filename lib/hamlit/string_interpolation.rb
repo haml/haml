@@ -16,6 +16,22 @@ module Hamlit::StringInterpolation
       end
     end
 
+    # Compile Hamlit::HamlParser::ParseNode into Temple AST.
+    def compile_node(node, key)
+      [:multi].tap do |temple|
+        compile(node.value[key]).each do |type, value|
+          case type
+          when :static
+            value = Temple::Utils.escape_html(value) if node.value[:escape_html]
+            value = ::Hamlit::HamlHelpers.find_and_preserve(value, %w(textarea pre code)) if node.value[:preserve]
+            temple << [:static, value]
+          when :dynamic
+            temple << [:escape, node.value[:escape_html] || node.value[:escape_interpolation], [:dynamic, value]]
+          end
+        end
+      end
+    end
+
     private
 
     def strip_quotes!(tokens)

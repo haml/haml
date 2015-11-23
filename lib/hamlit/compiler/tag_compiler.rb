@@ -1,5 +1,6 @@
 require 'hamlit/parser/haml_util'
 require 'hamlit/compiler/attribute_compiler'
+require 'hamlit/string_interpolation'
 
 module Hamlit
   class Compiler
@@ -25,6 +26,10 @@ module Hamlit
         when node.value[:value].nil? && self_closing?(node)
           nil
         when node.value[:parse]
+          if RubyExpression.string_literal?(node.value[:value])
+            return StringInterpolation.compile_node(node, :value).push([:newline])
+          end
+
           var = @unique_identifier.generate
           [:multi,
            [:code, "#{var} = (#{node.value[:value]}"],
