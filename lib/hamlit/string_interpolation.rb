@@ -1,32 +1,33 @@
 require 'ripper'
+require 'hamlit/ruby_expression'
 
 module Hamlit::StringInterpolation
   class << self
     # `code` param must be valid string literal
     def compile(code)
       [].tap do |exps|
-        tokens = Ripper.lex(code.strip)
-        strip_comment!(tokens)
+        code   = Hamlit::RubyExpression.strip_comment(code)
+        tokens = Ripper.lex(code)
 
-        raise Hamlit::InternalError if tokens.size < 2
+        if tokens.size < 2
+          raise Hamlit::InternalError.new("Expected token size >= 2 but got: #{tokens.size}")
+        end
         compile_tokens!(exps, tokens)
       end
     end
 
     private
 
-    def strip_comment!(tokens)
-      while tokens.last && %i[on_comment on_sp].include?(tokens.last[1])
-        tokens.pop
-      end
-    end
-
     def strip_quotes!(tokens)
       _, type, beg_str = tokens.shift
-      raise Hamlit::InternalError if type != :on_tstring_beg
+      if type != :on_tstring_beg
+        raise Hamlit::InternalError.new("Expected :on_tstring_beg but got: #{type}")
+      end
 
       _, type, end_str = tokens.pop
-      raise Hamlit::InternalError if type != :on_tstring_end
+      if type != :on_tstring_end
+        raise Hamlit::InternalError.new("Expected :on_tstring_end but got: #{type}")
+      end
 
       [beg_str, end_str]
     end
