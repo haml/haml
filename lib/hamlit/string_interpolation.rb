@@ -9,8 +9,6 @@ module Hamlit::StringInterpolation
         strip_comment!(tokens)
 
         raise Hamlit::InternalError if tokens.size < 2
-        strip_quotes!(tokens)
-
         compile_tokens!(exps, tokens)
       end
     end
@@ -24,20 +22,24 @@ module Hamlit::StringInterpolation
     end
 
     def strip_quotes!(tokens)
-      _, type, _ = tokens.shift
+      _, type, beg_str = tokens.shift
       raise Hamlit::InternalError if type != :on_tstring_beg
 
-      _, type, _ = tokens.pop
+      _, type, end_str = tokens.pop
       raise Hamlit::InternalError if type != :on_tstring_end
+
+      [beg_str, end_str]
     end
 
     def compile_tokens!(exps, tokens)
+      beg_str, end_str = strip_quotes!(tokens)
+
       until tokens.empty?
         _, type, str = tokens.shift
 
         case type
         when :on_tstring_content
-          exps << [:static, str]
+          exps << [:static, eval("#{beg_str}#{str}#{end_str}")]
         when :on_embexpr_beg
           embedded = shift_balanced_embexpr(tokens)
           exps << [:dynamic, embedded] unless embedded.empty?

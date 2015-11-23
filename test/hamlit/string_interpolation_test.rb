@@ -15,9 +15,14 @@ describe Hamlit::StringInterpolation do
     it { assert_compile([[:static, ' '], [:dynamic, %q[ " #{ '#{}' } " ]]], %q|" #{ " #{ '#{}' } " }"|) }
     it { assert_compile([[:static, 'a'], [:dynamic, 'b'], [:static, 'c'], [:dynamic, 'd'], [:static, 'e']], %q|%Q[a#{b}c#{d}e]|) }
     it { assert_compile([[:static, 'a#{b}c#{d}e']], %q|%q[a#{b}c#{d}e]|) }
-    it { assert_compile([[:static, '\#{}'], [:dynamic, '123']], %q|"\#{}#{123}"|) }
+    it { assert_compile([[:static, '#{}'], [:dynamic, '123']], %q|"\#{}#{123}"|) }
     it { assert_compile([[:dynamic, " '}' "]], %q|"#{ '}' }"|) }
     it { assert_compile([[:static, 'a']], %q| "a" # hello |) }
+    it { assert_compile([[:static, '"']], %q|"\""|) }
+    it { assert_compile([[:static, '\\"']], %q|"\\\\\\""|) }
+    it { assert_compile([[:static, '\"']], %q|'\"'|) }
+    it { assert_compile([[:static, '\"']], %q|'\\"'|) }
+    it { assert_compile([[:static, '\\"']], %q|'\\\"'|) }
 
     describe 'invalid argument' do
       it 'raises internal error' do
