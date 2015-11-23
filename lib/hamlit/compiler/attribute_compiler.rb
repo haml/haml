@@ -1,6 +1,8 @@
 require 'hamlit/attribute_builder'
 require 'hamlit/hash_parser'
+require 'hamlit/ruby_expression'
 require 'hamlit/static_analyzer'
+require 'hamlit/string_interpolation'
 
 module Hamlit
   class Compiler
@@ -109,14 +111,27 @@ module Hamlit
       def compile_common!(temple, key, values)
         type, exp = values.last
 
-        if type == :dynamic && StaticAnalyzer.static?(exp)
-          type, exp = :static, eval("(#{exp}).to_s")
+        case
+        when type == :dynamic && StaticAnalyzer.static?(exp)
+          temple << [:html, :attr, key, [:escape, @escape_attrs, [:static, eval(exp).to_s]]]
+        when type == :dynamic && RubyExpression.string_literal?(exp)
+          value_temple = [:multi]
+          StringInterpolation.compile(exp).each do |type, v|
+            case type
+            when :static
+              value_temple << [:escape, @escape_attrs, [:static, v]]
+            when :dynamic
+              if Hamlit::StaticAnalyzer.static?(v)
+                value_temple << [:escape, @escape_attrs, [:static, eval(v).to_s]]
+              else
+                value_temple << [:escape, @escape_attrs, [:dynamic, v]]
+              end
+            end
+          end
+          temple << [:html, :attr, key, value_temple]
+        else
+          temple << [:html, :attr, key, [:escape, @escape_attrs, [type, exp]]]
         end
-        temple << build_attr(key, type, exp)
-      end
-
-      def build_attr(key, type, exp)
-        [:html, :attr, key, [:escape, @escape_attrs, [type, exp]]]
       end
 
       def attribute_builder(type, values)
