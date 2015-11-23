@@ -111,6 +111,10 @@ describe Hamlit::Engine do
     it { assert_haml(%q|%a{ :'data-disabled' => true }|) }
     it { assert_haml(%q|%a{ data: { nil => 3 } }|) }
     it { assert_haml(%q|%a{ data: 3 }|) }
+
+    it { assert_haml(%q|%a{ data: { overlay_modal: 'foo' } }|) }
+    it { assert_haml(%q|%a{ data: { overlay_modal: true } }|) }
+    it { assert_haml(%q|%a{ data: { overlay_modal: false } }|) }
   end
 
   describe 'boolean attributes' do
@@ -150,18 +154,18 @@ describe Hamlit::Engine do
     it { assert_haml(%q|%input(checked=true)|) }
     it { assert_haml(%q|%input(checked=true)|, format: :xhtml) }
 
-    it { assert_haml(%q|%input{ 'data-overlay-modal' => nil }|) }
-    it { assert_haml(%q|%input{ 'data-overlay-modal' => false }|) }
-    it { assert_haml(%q|%input{ 'data-overlay-modal' => true }|) }
-    it { assert_haml(%q|%input{ 'data-overlay-modal' => 'false' }|) }
+    it { assert_haml(%q|%input{ 'data-overlay_modal' => nil }|) }
+    it { assert_haml(%q|%input{ 'data-overlay_modal' => false }|) }
+    it { assert_haml(%q|%input{ 'data-overlay_modal' => true }|) }
+    it { assert_haml(%q|%input{ 'data-overlay_modal' => 'false' }|) }
 
-    it { assert_haml(%q|%input{ :'data-overlay-modal' => val = nil }|) }
-    it { assert_haml(%q|%input{ :'data-overlay-modal' => val = false }|) }
-    it { assert_haml(%q|%input{ :'data-overlay-modal' => val = true }|) }
-    it { assert_haml(%q|%input{ :'data-overlay-modal' => val = 'false' }|) }
+    it { assert_haml(%q|%input{ :'data-overlay_modal' => val = nil }|) }
+    it { assert_haml(%q|%input{ :'data-overlay_modal' => val = false }|) }
+    it { assert_haml(%q|%input{ :'data-overlay_modal' => val = true }|) }
+    it { assert_haml(%q|%input{ :'data-overlay_modal' => val = 'false' }|) }
 
-    it { assert_haml(%q|%a{ hash }|, locals: { hash: { 'data-overlay-modal' => false } }) }
-    it { assert_haml(%q|%a{ hash }|, locals: { hash: { 'data-overlay-modal' => true } }) }
+    it { assert_haml(%q|%a{ hash }|, locals: { hash: { 'data-overlay_modal' => false } }) }
+    it { assert_haml(%q|%a{ hash }|, locals: { hash: { 'data-overlay_modal' => true } }) }
   end
 
   describe 'common attributes' do

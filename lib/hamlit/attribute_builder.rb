@@ -72,16 +72,16 @@ module Hamlit::AttributeBuilder
 
     def build_data(escape_attrs, quote, *hashes)
       attrs = []
-      hash = flat_hyphenate(*hashes)
+      hash = flatten_attributes(data: hashes.first)
 
       hash.sort_by(&:first).each do |key, value|
-        case key
-        when nil
-          attrs << " data=#{quote}#{escape_html(escape_attrs, value.to_s)}#{quote}"
-        when *BOOLEAN_ATTRIBUTES
-          attrs << " data-#{key}" if value
+        case value
+        when true
+          attrs << " #{key}"
+        when nil, false
+          # noop
         else
-          attrs << " data-#{key}=#{quote}#{escape_html(escape_attrs, value.to_s)}#{quote}"
+          attrs << " #{key}=#{quote}#{escape_html(escape_attrs, value.to_s)}#{quote}"
         end
       end
       attrs.join
@@ -89,30 +89,25 @@ module Hamlit::AttributeBuilder
 
     private
 
-    def flat_hyphenate(*hashes)
-      result = {}
-      hashes.each do |hash|
-        unless hash.is_a?(Hash)
-          result[nil] = hash
-          next
-        end
+    def flatten_attributes(attributes)
+      flattened = {}
 
-        hash.each do |key, value|
-          key = key.to_s.tr('_'.freeze, '-'.freeze) unless key.nil?
-          case value
-          when hash
-            # ignore cyclic reference
-          when Hash
-            key = '' if key.nil?
-            flat_hyphenate(value).each do |k, v|
-              result["#{key}-#{k}"] = v
+      attributes.each do |key, value|
+        case value
+        when attributes
+        when Hash
+          flatten_attributes(value).each do |k, v|
+            if k
+              flattened["#{key}-#{k.to_s.gsub(/_/, '-')}"] = v
+            else
+              flattened[key] = v
             end
-          else
-            result[key] = value
           end
+        else
+          flattened[key] = value if value
         end
       end
-      result
+      flattened
     end
 
     def stringify_keys(hash)

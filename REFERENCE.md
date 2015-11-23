@@ -142,7 +142,7 @@ Multiple class specification results in unique alphabetical sort.
 ```
 
 ### data attribute
-Hyphenation is supported but boolean is not supported.
+Completely compatible with Haml, hyphenation and boolean are supported.
 
 ```rb
 # Input
