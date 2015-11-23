@@ -7,10 +7,10 @@ require 'hamlit/parser/haml_util'
 module Hamlit
   RailsTemplate = Temple::Templates::Rails.create(
     Hamlit::Engine,
-    generator:   Temple::Generators::RailsOutputBuffer,
-    register_as: :haml,
-    escape_html: true,
-    streaming:   true,
+    generator:     Temple::Generators::RailsOutputBuffer,
+    register_as:   :haml,
+    use_html_safe: true,
+    streaming:     true,
   )
 
   # https://github.com/haml/haml/blob/4.0.7/lib/haml/template.rb

@@ -27,6 +27,9 @@ describe Hamlit::RailsTemplate do
     assert_equal %Q|<a href='&lt;script&gt;alert(&quot;a&quot;);&lt;/script&gt;'></a>\n|, render(<<-HAML.unindent)
       %a{ href: '<script>alert("a");</script>' }
     HAML
+    assert_equal %Q|<a href='<script>'></a>\n|, render(<<-HAML.unindent)
+      %a{ href: '<script>'.html_safe }
+    HAML
   end
 
   specify 'boolean attributes' do
