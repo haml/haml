@@ -34,11 +34,12 @@ reduce string allocation and concatenation easily.
 
 #### Static analyzer
 Hamlit analyzes Ruby expressions with Ripper and render it on compilation if the expression
-is static.
+is static. And Hamlit can also compile string literal with string interpolation to reduce
+string allocation and concatenation on runtime.
 
 #### C extension to build attributes
 While Hamlit has static analyzer and static attributes are rendered on compilation,
-dynamic attributes should be rendered on runtime. So Hamlit optimizes rendering on runtime
+dynamic attributes must be rendered on runtime. So Hamlit optimizes rendering on runtime
 with C extension.
 
 ## Usage
