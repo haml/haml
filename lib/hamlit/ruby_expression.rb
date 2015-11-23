@@ -1,7 +1,7 @@
 require 'ripper'
 
 module Hamlit
-  class SyntaxChecker < Ripper
+  class RubyExpression < Ripper
     class ParseError < StandardError; end
 
     def self.syntax_error?(code)

@@ -1,4 +1,4 @@
-require 'hamlit/syntax_checker'
+require 'hamlit/ruby_expression'
 
 module Hamlit
   class HashParser
@@ -11,7 +11,7 @@ module Hamlit
 
     def parse(text)
       exp = wrap_bracket(text)
-      return if SyntaxChecker.syntax_error?(exp)
+      return if RubyExpression.syntax_error?(exp)
 
       hash = {}
       tokens = Ripper.lex(exp)[1..-2] || []

@@ -1,4 +1,4 @@
-require 'hamlit/syntax_checker'
+require 'hamlit/ruby_expression'
 
 module Hamlit
   class StaticAnalyzer
@@ -26,7 +26,7 @@ module Hamlit
 
     def self.static?(exp)
       return false if exp.nil? || exp.strip.empty?
-      return false if SyntaxChecker.syntax_error?(exp)
+      return false if RubyExpression.syntax_error?(exp)
 
       Ripper.lex(exp).each do |(_, col), token, str|
         case token
