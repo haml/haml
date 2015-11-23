@@ -32,6 +32,7 @@ describe Hamlit::StaticAnalyzer do
       it { assert_static(false, '"" + bar') }
       it { assert_static(false, '"" ** bar') }
       it { assert_static(false, '"".gsub(/foo/, "bar")') }
+      it { assert_static(false, '"".freeze') }
       it { assert_static(false, '1.times {}') }
       it { assert_static(false, '[3, 1.2, [2i, "hello #{ nya } world"]]') }
       it { assert_static(false, 'self') }
