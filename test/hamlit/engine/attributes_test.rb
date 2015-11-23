@@ -77,6 +77,22 @@ describe Hamlit::Engine do
       it { assert_haml(%q|%div{ class: [false, 'a', nil] }|) }
       it { assert_haml(%q|%div{ class: %q[b a] }|) }
       it { assert_haml(%q|%div{ class: %q[b a b] }|) }
+
+      it { assert_haml(%q|%span.c2{class: ["c1", "c3", :c2]}|) }
+      it { assert_haml(%q|%span{class: [1, nil, false, true]}|) }
+      it do
+        assert_haml(<<-HAML.unindent)
+          - v = [1, nil, false, true]
+          %span{class: v}
+        HAML
+      end
+      it do
+        assert_haml(<<-HAML.unindent)
+          - h1 = {class: 'c1', id: ['id1', 'id3']}
+          - h2 = {class: [{}, 'c2'], id: 'id2'}
+          %span#main.content{h1, h2} hello
+        HAML
+      end
     end
 
     describe 'incompatibility' do
