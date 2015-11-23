@@ -32,8 +32,6 @@ module Hamlit
            [:code, ')'.freeze],
            [:escape, node.value[:escape_html], [:dynamic, var]]
           ]
-        when ::Hamlit::HamlUtil.contains_interpolation?(node.value[:value])
-          [:dynamic, node.value[:value]]
         else
           [:static, node.value[:value]]
         end
