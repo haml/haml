@@ -10,3 +10,7 @@
 .sass-cache
 /hamlit1
 .ruby-version
+*.bundle
+*.so
+*.o
+*.a

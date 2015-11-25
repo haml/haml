@@ -1,3 +1,4 @@
+require 'hamlit/hamlit'
 require 'hamlit/object_ref'
 require 'temple/utils'
 

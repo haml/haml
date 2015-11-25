@@ -1,5 +1,6 @@
 require 'bundler/gem_tasks'
 require 'rake/testtask'
+require 'rake/extensiontask'
 
 Dir['benchmark/*.rake'].each { |b| import(b) }
 
@@ -70,5 +71,9 @@ namespace :test do
   end
 end
 
-task default: %w[hamlit:test]
-task test: %w[test:all]
+Rake::ExtensionTask.new(:hamlit) do |ext|
+  ext.lib_dir = 'lib/hamlit'
+end
+
+task default: %w[compile hamlit:test]
+task test: %w[compile test:all]
