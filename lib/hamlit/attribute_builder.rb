@@ -37,10 +37,6 @@ module Hamlit::AttributeBuilder
       buf.join
     end
 
-    def build_id(escape_attrs, *values)
-      escape_html(escape_attrs, values.flatten.select { |v| v }.join('_'))
-    end
-
     def build_class(escape_attrs, *values)
       if values.size == 1
         value = values.first

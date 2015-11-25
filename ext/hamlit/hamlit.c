@@ -1,6 +1,48 @@
 #include <ruby.h>
 
+static VALUE
+attr_build_id(VALUE escape_attrs, VALUE ids)
+{
+  VALUE truthy_ids, id, attr_value, mUtils;
+  int i;
+
+  ids = rb_funcall(ids, rb_intern("flatten"), 0);
+
+  truthy_ids = rb_ary_new();
+  for (i = 0; i < RARRAY_LEN(ids); i++) {
+    id = rb_ary_entry(ids, i);
+    if (!NIL_P(id) && id != Qfalse) {
+      rb_ary_push(truthy_ids, id);
+    }
+  }
+
+  attr_value = rb_funcall(truthy_ids, rb_intern("join"), 1, rb_str_new_literal("_"));
+  if (RTEST(escape_attrs)) {
+    mUtils = rb_const_get(rb_const_get(rb_cObject, rb_intern("Temple")), rb_intern("Utils"));
+    attr_value = rb_funcall(mUtils, rb_intern("escape_html"), 1, attr_value);
+  }
+
+  return attr_value;
+}
+
+static VALUE
+rb_attr_build_id(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
+{
+  VALUE array;
+
+  rb_check_arity(argc, 1, UNLIMITED_ARGUMENTS);
+  rb_scan_args(argc - 1, argv + 1, "*", &array);
+
+  return attr_build_id(argv[0], array);
+}
+
 void
 Init_hamlit(void)
 {
+  VALUE mHamlit, mAttributeBuilder;
+
+  mHamlit           = rb_define_module("Hamlit");
+  mAttributeBuilder = rb_define_module_under(mHamlit, "AttributeBuilder");
+
+  rb_define_singleton_method(mAttributeBuilder, "build_id", rb_attr_build_id, -1);
 }
