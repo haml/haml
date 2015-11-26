@@ -42,6 +42,9 @@ build:
 
     - rvm-use:
         version: 2.1.7
+    - script:
+        name: update bundler
+        code: gem update bundler
     - bundle-install
     - script:
         name: test all
@@ -49,6 +52,9 @@ build:
 
     - rvm-use:
         version: 2.0.0
+    - script:
+        name: update bundler
+        code: gem update bundler
     - bundle-install
     - script:
         name: test all
