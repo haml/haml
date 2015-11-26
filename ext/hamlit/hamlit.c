@@ -7,12 +7,13 @@ static VALUE
 attr_build_id(VALUE escape_attrs, VALUE ids)
 {
   VALUE truthy_ids, id, attr_value, mUtils;
-  int i;
+  int i, len;
 
   ids = rb_funcall(ids, id_flatten, 0);
 
   truthy_ids = rb_ary_new();
-  for (i = 0; i < RARRAY_LEN(ids); i++) {
+  len = RARRAY_LEN(ids);
+  for (i = 0; i < len; i++) {
     id = rb_ary_entry(ids, i);
     if (!NIL_P(id) && id != Qfalse) {
       rb_ary_push(truthy_ids, id);
