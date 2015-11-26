@@ -13,8 +13,8 @@ attr_build_id(VALUE escape_attrs, VALUE ids)
 
   ids = rb_funcall(ids, id_flatten, 0);
 
-  truthy_ids = rb_ary_new();
   len = RARRAY_LEN(ids);
+  truthy_ids = rb_ary_new2(len);
   for (i = 0; i < len; i++) {
     id = rb_ary_entry(ids, i);
     if (!NIL_P(id) && id != Qfalse) {
