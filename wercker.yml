@@ -42,12 +42,14 @@ build:
 
     - rvm-use:
         version: 2.1.7
+    - bundle-install
     - script:
         name: test all
         code: bundle exec rake test
 
     - rvm-use:
         version: 2.0.0
+    - bundle-install
     - script:
         name: test all
         code: bundle exec rake test
