@@ -59,5 +59,5 @@ Init_hamlit(void)
   id_join    = rb_intern("join");
 
   id_underscore = rb_intern("UNDERSCORE");
-  rb_const_set(mAttributeBuilder, id_underscore, rb_obj_freeze(rb_str_new2("_")));
+  rb_const_set(mAttributeBuilder, id_underscore, rb_obj_freeze(rb_str_new_cstr("_")));
 }
