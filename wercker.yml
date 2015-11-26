@@ -36,3 +36,15 @@ build:
     - script:
         name: "[benchmark] static analyzer"
         code: bin/bench bench -t benchmark/etc/static_analyzer.haml
+
+    - rvm-use:
+        version: 2.1.7
+    - script:
+        name: test all
+        code: bundle exec rake test
+
+    - rvm-use:
+        version: 2.0.0
+    - script:
+        name: test all
+        code: bundle exec rake test
