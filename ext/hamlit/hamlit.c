@@ -1,7 +1,9 @@
 #include <ruby.h>
 
+VALUE mAttributeBuilder;
 static ID id_temple, id_utils, id_escape_html;
 static ID id_flatten, id_join;
+static ID id_underscore;
 
 static VALUE
 attr_build_id(VALUE escape_attrs, VALUE ids)
@@ -20,7 +22,7 @@ attr_build_id(VALUE escape_attrs, VALUE ids)
     }
   }
 
-  attr_value = rb_funcall(truthy_ids, id_join, 1, rb_str_new_literal("_"));
+  attr_value = rb_funcall(truthy_ids, id_join, 1, rb_const_get(mAttributeBuilder, id_underscore));
   if (RTEST(escape_attrs)) {
     mUtils = rb_const_get(rb_const_get(rb_cObject, id_temple), id_utils);
     attr_value = rb_funcall(mUtils, id_escape_html, 1, attr_value);
@@ -43,7 +45,7 @@ rb_attr_build_id(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
 void
 Init_hamlit(void)
 {
-  VALUE mHamlit, mAttributeBuilder;
+  VALUE mHamlit;
 
   mHamlit           = rb_define_module("Hamlit");
   mAttributeBuilder = rb_define_module_under(mHamlit, "AttributeBuilder");
@@ -55,4 +57,7 @@ Init_hamlit(void)
 
   id_flatten = rb_intern("flatten");
   id_join    = rb_intern("join");
+
+  id_underscore = rb_intern("UNDERSCORE");
+  rb_const_set(mAttributeBuilder, id_underscore, rb_obj_freeze(rb_str_new2("_")));
 }
