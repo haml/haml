@@ -1,12 +1,15 @@
 #include <ruby.h>
 
+static ID id_temple, id_utils, id_escape_html;
+static ID id_flatten, id_join;
+
 static VALUE
 attr_build_id(VALUE escape_attrs, VALUE ids)
 {
   VALUE truthy_ids, id, attr_value, mUtils;
   int i;
 
-  ids = rb_funcall(ids, rb_intern("flatten"), 0);
+  ids = rb_funcall(ids, id_flatten, 0);
 
   truthy_ids = rb_ary_new();
   for (i = 0; i < RARRAY_LEN(ids); i++) {
@@ -16,10 +19,10 @@ attr_build_id(VALUE escape_attrs, VALUE ids)
     }
   }
 
-  attr_value = rb_funcall(truthy_ids, rb_intern("join"), 1, rb_str_new_literal("_"));
+  attr_value = rb_funcall(truthy_ids, id_join, 1, rb_str_new_literal("_"));
   if (RTEST(escape_attrs)) {
-    mUtils = rb_const_get(rb_const_get(rb_cObject, rb_intern("Temple")), rb_intern("Utils"));
-    attr_value = rb_funcall(mUtils, rb_intern("escape_html"), 1, attr_value);
+    mUtils = rb_const_get(rb_const_get(rb_cObject, id_temple), id_utils);
+    attr_value = rb_funcall(mUtils, id_escape_html, 1, attr_value);
   }
 
   return attr_value;
@@ -43,6 +46,12 @@ Init_hamlit(void)
 
   mHamlit           = rb_define_module("Hamlit");
   mAttributeBuilder = rb_define_module_under(mHamlit, "AttributeBuilder");
-
   rb_define_singleton_method(mAttributeBuilder, "build_id", rb_attr_build_id, -1);
+
+  id_temple      = rb_intern("Temple");
+  id_utils       = rb_intern("Utils");
+  id_escape_html = rb_intern("escape_html");
+
+  id_flatten = rb_intern("flatten");
+  id_join    = rb_intern("join");
 }
