@@ -16,6 +16,9 @@ build:
         name: test all
         code: bundle exec rake test
     - script:
+        name: Hamlit::AttributeBuilder.build_id micro benchmark
+        code: benchmark/ext/build_id.rb
+    - script:
         name: "[benchmark] static attributes"
         code: bin/bench bench -t benchmark/boolean_attribute.haml benchmark/class_attribute.haml benchmark/id_attribute.haml benchmark/data_attribute.haml benchmark/common_attribute.haml
     - script:
