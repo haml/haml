@@ -3,8 +3,7 @@
 #include "houdini.h"
 
 VALUE mAttributeBuilder;
-static ID id_flatten, id_join;
-static ID id_underscore;
+static ID id_flatten, id_underscore;
 
 static VALUE
 escape_html(VALUE str)
@@ -44,7 +43,7 @@ attr_build_id(VALUE escape_attrs, VALUE ids)
     }
   }
 
-  attr_value = rb_funcall(truthy_ids, id_join, 1, rb_const_get(mAttributeBuilder, id_underscore));
+  attr_value = rb_ary_join(truthy_ids, rb_const_get(mAttributeBuilder, id_underscore));
   if (RTEST(escape_attrs)) {
     attr_value = escape_html(attr_value);
   }
@@ -76,7 +75,6 @@ Init_hamlit(void)
   rb_define_singleton_method(mAttributeBuilder, "build_id", rb_attr_build_id, -1);
 
   id_flatten = rb_intern("flatten");
-  id_join    = rb_intern("join");
 
   id_underscore = rb_intern("UNDERSCORE");
   rb_const_set(mAttributeBuilder, id_underscore, rb_obj_freeze(rb_str_new_cstr("_")));
