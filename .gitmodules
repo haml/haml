@@ -1,0 +1,3 @@
+[submodule "ext/hamlit/houdini"]
+	path = ext/hamlit/houdini
+	url = https://github.com/vmg/houdini
