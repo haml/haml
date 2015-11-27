@@ -1,14 +1,30 @@
 #include <ruby.h>
+#include <ruby/encoding.h>
+#include "houdini.h"
 
 VALUE mAttributeBuilder;
-static ID id_temple, id_utils, id_escape_html;
 static ID id_flatten, id_join;
 static ID id_underscore;
 
 static VALUE
+escape_html(VALUE str)
+{
+  gh_buf buf = GH_BUF_INIT;
+
+  Check_Type(str, T_STRING);
+
+  if (houdini_escape_html0(&buf, (const uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), 0)) {
+    str = rb_enc_str_new(buf.ptr, buf.size, rb_utf8_encoding());
+    gh_buf_free(&buf);
+  }
+
+  return str;
+}
+
+static VALUE
 attr_build_id(VALUE escape_attrs, VALUE ids)
 {
-  VALUE truthy_ids, id, attr_value, mUtils;
+  VALUE truthy_ids, id, attr_value;
   int i, len;
 
   ids = rb_funcall(ids, id_flatten, 0);
@@ -24,8 +40,7 @@ attr_build_id(VALUE escape_attrs, VALUE ids)
 
   attr_value = rb_funcall(truthy_ids, id_join, 1, rb_const_get(mAttributeBuilder, id_underscore));
   if (RTEST(escape_attrs)) {
-    mUtils = rb_const_get(rb_const_get(rb_cObject, id_temple), id_utils);
-    attr_value = rb_funcall(mUtils, id_escape_html, 1, attr_value);
+    attr_value = escape_html(attr_value);
   }
 
   return attr_value;
@@ -50,10 +65,6 @@ Init_hamlit(void)
   mHamlit           = rb_define_module("Hamlit");
   mAttributeBuilder = rb_define_module_under(mHamlit, "AttributeBuilder");
   rb_define_singleton_method(mAttributeBuilder, "build_id", rb_attr_build_id, -1);
-
-  id_temple      = rb_intern("Temple");
-  id_utils       = rb_intern("Utils");
-  id_escape_html = rb_intern("escape_html");
 
   id_flatten = rb_intern("flatten");
   id_join    = rb_intern("join");
