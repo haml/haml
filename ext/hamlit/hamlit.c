@@ -3,7 +3,7 @@
 #include "houdini.h"
 
 VALUE mAttributeBuilder;
-static ID id_flatten, id_join;
+static ID id_flatten, id_join, id_to_s;
 static ID id_underscore;
 
 static VALUE
@@ -19,6 +19,13 @@ escape_html(VALUE str)
   }
 
   return str;
+}
+
+static VALUE
+rb_escape_html(RB_UNUSED_VAR(VALUE self), VALUE str)
+{
+  str = rb_funcall(str, id_to_s, 0);
+  return escape_html(str);
 }
 
 static VALUE
@@ -60,14 +67,18 @@ rb_attr_build_id(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
 void
 Init_hamlit(void)
 {
-  VALUE mHamlit;
+  VALUE mHamlit, mUtils;
 
-  mHamlit           = rb_define_module("Hamlit");
+  mHamlit = rb_define_module("Hamlit");
+  mUtils  = rb_define_module_under(mHamlit, "Utils");
+  rb_define_singleton_method(mUtils, "escape_html", rb_escape_html, 1);
+
   mAttributeBuilder = rb_define_module_under(mHamlit, "AttributeBuilder");
   rb_define_singleton_method(mAttributeBuilder, "build_id", rb_attr_build_id, -1);
 
   id_flatten = rb_intern("flatten");
   id_join    = rb_intern("join");
+  id_to_s    = rb_intern("to_s");
 
   id_underscore = rb_intern("UNDERSCORE");
   rb_const_set(mAttributeBuilder, id_underscore, rb_obj_freeze(rb_str_new_cstr("_")));

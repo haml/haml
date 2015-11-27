@@ -1,6 +1,7 @@
 require 'temple'
 require 'hamlit/parser'
 require 'hamlit/compiler'
+require 'hamlit/escapable'
 require 'hamlit/html'
 
 module Hamlit
@@ -20,7 +21,7 @@ module Hamlit
     use Parser
     use Compiler
     use HTML
-    filter :Escapable
+    use Escapable
     filter :ControlFlow
     filter :MultiFlattener
     filter :StaticMerger

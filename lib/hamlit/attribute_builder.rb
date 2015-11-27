@@ -1,6 +1,6 @@
 require 'hamlit/hamlit'
 require 'hamlit/object_ref'
-require 'temple/utils'
+require 'hamlit/utils'
 
 module Hamlit::AttributeBuilder
   BOOLEAN_ATTRIBUTES = %w[disabled readonly multiple checked autobuffer
@@ -134,7 +134,7 @@ module Hamlit::AttributeBuilder
 
     def escape_html(escape_attrs, str)
       if escape_attrs
-        Temple::Utils.escape_html(str)
+        Hamlit::Utils.escape_html(str)
       else
         str
       end
