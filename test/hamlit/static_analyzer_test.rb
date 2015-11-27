@@ -14,8 +14,7 @@ describe Hamlit::StaticAnalyzer do
       it { assert_static(true, '[true, false, nil, (true)]') }
       it { assert_static(true, '3') }
       it { assert_static(true, '1.2') }
-      it { assert_static(true, '2i') }
-      it { assert_static(true, '[3, 1.2, [2i, "hello #{ 123 } world"]]') }
+      it { assert_static(true, '[3, 1.2, [false, "hello #{ 123 } world"]]') }
       it { assert_static(true, '(3)') }
       it { assert_static(true, '""') }
       it { assert_static(true, '"hello world"') }
@@ -23,6 +22,10 @@ describe Hamlit::StaticAnalyzer do
       it { assert_static(true, '{}') }
       it { assert_static(true, '{ "key" => "value" }') }
       it { assert_static(true, '{ key: "value" }') }
+
+      if RUBY_VERSION >= '2.1.0'
+        it { assert_static(true, '2i') }
+      end
     end
 
     describe 'dynamic expression' do
