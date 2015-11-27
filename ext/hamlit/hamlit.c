@@ -3,7 +3,7 @@
 #include "houdini.h"
 
 VALUE mAttributeBuilder;
-static ID id_flatten, id_join, id_to_s;
+static ID id_flatten, id_join;
 static ID id_underscore;
 
 static VALUE
@@ -24,8 +24,7 @@ escape_html(VALUE str)
 static VALUE
 rb_escape_html(RB_UNUSED_VAR(VALUE self), VALUE str)
 {
-  str = rb_funcall(str, id_to_s, 0);
-  return escape_html(str);
+  return escape_html(rb_convert_type(str, T_STRING, "String", "to_s"));
 }
 
 static VALUE
@@ -78,7 +77,6 @@ Init_hamlit(void)
 
   id_flatten = rb_intern("flatten");
   id_join    = rb_intern("join");
-  id_to_s    = rb_intern("to_s");
 
   id_underscore = rb_intern("UNDERSCORE");
   rb_const_set(mAttributeBuilder, id_underscore, rb_obj_freeze(rb_str_new_cstr("_")));
