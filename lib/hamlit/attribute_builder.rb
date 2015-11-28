@@ -20,7 +20,7 @@ module Hamlit::AttributeBuilder
 
       keys = hashes.map(&:keys).flatten.sort.uniq
       keys.each do |key|
-        values = hashes.map { |h| h[key] }.compact
+        values = hashes.select { |h| h.has_key?(key) }.map { |h| h[key] }
         case key
         when 'id'.freeze
           buf << " id=#{quote}#{build_id(escape_attrs, *values)}#{quote}"
@@ -31,7 +31,7 @@ module Hamlit::AttributeBuilder
         when *BOOLEAN_ATTRIBUTES, /\Adata-/
           build_boolean!(escape_attrs, quote, format, buf, key, values)
         else
-          buf << " #{key}=#{quote}#{escape_html(escape_attrs, values.first.to_s)}#{quote}"
+          buf << " #{key}=#{quote}#{escape_html(escape_attrs, values.last.to_s)}#{quote}"
         end
       end
       buf.join

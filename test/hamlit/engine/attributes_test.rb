@@ -141,6 +141,13 @@ describe Hamlit::Engine do
         %a(data=new){ hash, data: old }
       HAML
     end
+    it do
+      assert_haml(<<-HAML.unindent)
+        - h1 = { data: 'should be overwritten' }
+        - h2 = { data: nil }
+        %div{ h1, h2 }
+      HAML
+    end
   end
 
   describe 'boolean attributes' do
@@ -197,12 +204,20 @@ describe Hamlit::Engine do
   describe 'common attributes' do
     describe 'compatibility' do
       it { assert_haml(%Q|%a{ href: '/search?foo=bar&hoge=<fuga>' }|) }
+      it { assert_haml(%Q|- h = {foo: 1, 'foo' => 2}\n%span{ h }|) }
       it { assert_haml(%q|%span(foo='new'){ foo: 'old' }|, locals: { new: 'new', old: 'old' }) }
       it { assert_haml(%q|%span(foo=new){ foo: 'old' }|,   locals: { new: 'new', old: 'old' }) }
       it { assert_haml(%q|%span(foo=new){ foo: old }|,     locals: { new: 'new', old: 'old' }) }
       it { assert_haml(%q|%span{ foo: 'old' }(foo='new')|, locals: { new: 'new', old: 'old' }) }
       it { assert_haml(%q|%span{ foo: 'old' }(foo=new)|,   locals: { new: 'new', old: 'old' }) }
       it { assert_haml(%q|%span{ foo: old }(foo=new)|,     locals: { new: 'new', old: 'old' }) }
+      it do
+        assert_haml(<<-HAML.unindent)
+          - h1 = { foo: 1 }
+          - h2 = { foo: 2 }
+          %div{ h1, h2 }
+        HAML
+      end
     end
 
     describe 'incompatibility' do
@@ -211,6 +226,13 @@ describe Hamlit::Engine do
       it { assert_render(%Q|<input value='false'>\n|, %q|%input{ value: false }|) }
       it { assert_render(%Q|<input value='false'>\n|, %q|%input{ value: val }|, locals: { val: false }) }
       it { assert_render(%Q|<input value='false'>\n|, %q|%input{ hash }|, locals: { hash: { value: false } }) }
+      it do
+        assert_render(%Q|<div foo=''></div>\n|, <<-HAML.unindent)
+          - h1 = { foo: 'should be overwritten' }
+          - h2 = { foo: nil }
+          %div{ h1, h2 }
+        HAML
+      end
     end
   end
 
