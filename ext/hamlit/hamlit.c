@@ -5,6 +5,20 @@
 VALUE mAttributeBuilder;
 static ID id_flatten, id_underscore;
 
+static void
+delete_falsey_values(VALUE values)
+{
+  VALUE value;
+  long i;
+
+  for (i = RARRAY_LEN(values) - 1; 0 <= i; i--) {
+    value = rb_ary_entry(values, i);
+    if (!RTEST(value)) {
+      rb_ary_delete_at(values, i);
+    }
+  }
+}
+
 static VALUE
 escape_html(VALUE str)
 {
@@ -21,32 +35,31 @@ escape_html(VALUE str)
 }
 
 static VALUE
+escape_attribute(VALUE escape_attrs, VALUE str)
+{
+  if (RTEST(escape_attrs)) {
+    return escape_html(str);
+  } else {
+    return str;
+  }
+}
+
+static VALUE
 rb_escape_html(RB_UNUSED_VAR(VALUE self), VALUE str)
 {
   return escape_html(rb_convert_type(str, T_STRING, "String", "to_s"));
 }
 
 static VALUE
-hamlit_build_id(VALUE escape_attrs, VALUE ids)
+hamlit_build_id(VALUE escape_attrs, VALUE values)
 {
-  VALUE id, attr_value;
-  long i;
+  VALUE attr_value;
 
-  ids = rb_funcall(ids, id_flatten, 0);
+  values = rb_funcall(values, id_flatten, 0);
+  delete_falsey_values(values);
 
-  for (i = RARRAY_LEN(ids) - 1; 0 <= i; i--) {
-    id = rb_ary_entry(ids, i);
-    if (!RTEST(id)) {
-      rb_ary_delete_at(ids, i);
-    }
-  }
-
-  attr_value = rb_ary_join(ids, rb_const_get(mAttributeBuilder, id_underscore));
-  if (RTEST(escape_attrs)) {
-    attr_value = escape_html(attr_value);
-  }
-
-  return attr_value;
+  attr_value = rb_ary_join(values, rb_const_get(mAttributeBuilder, id_underscore));
+  return escape_attribute(escape_attrs, attr_value);
 }
 
 static VALUE
