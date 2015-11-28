@@ -29,21 +29,20 @@ rb_escape_html(RB_UNUSED_VAR(VALUE self), VALUE str)
 static VALUE
 attr_build_id(VALUE escape_attrs, VALUE ids)
 {
-  VALUE truthy_ids, id, attr_value;
-  int i, len;
+  VALUE id, attr_value;
+  long i, len;
 
   ids = rb_funcall(ids, id_flatten, 0);
 
   len = RARRAY_LEN(ids);
-  truthy_ids = rb_ary_new2(len);
-  for (i = 0; i < len; i++) {
+  for (i = len - 1; 0 <= i; i--) {
     id = rb_ary_entry(ids, i);
-    if (RTEST(id)) {
-      rb_ary_push(truthy_ids, id);
+    if (!RTEST(id)) {
+      rb_ary_delete_at(ids, i);
     }
   }
 
-  attr_value = rb_ary_join(truthy_ids, rb_const_get(mAttributeBuilder, id_underscore));
+  attr_value = rb_ary_join(ids, rb_const_get(mAttributeBuilder, id_underscore));
   if (RTEST(escape_attrs)) {
     attr_value = escape_html(attr_value);
   }
