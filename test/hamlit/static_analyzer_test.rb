@@ -12,6 +12,7 @@ describe Hamlit::StaticAnalyzer do
       it { assert_static(true, '()') }
       it { assert_static(true, '(nil)') }
       it { assert_static(true, '[true, false, nil, (true)]') }
+      it { assert_static(true, '%w[1 2 3]') }
       it { assert_static(true, '3') }
       it { assert_static(true, '1.2') }
       it { assert_static(true, '[3, 1.2, [false, "hello #{ 123 } world"]]') }

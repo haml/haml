@@ -6,6 +6,7 @@ module Hamlit
       on_tstring_beg on_tstring_end on_tstring_content
       on_embexpr_beg on_embexpr_end
       on_lbracket on_rbracket
+      on_qwords_beg on_words_sep on_qwords_sep
       on_lparen on_rparen
       on_lbrace on_rbrace on_label
       on_int on_float on_imaginary
