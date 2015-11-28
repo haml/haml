@@ -38,7 +38,7 @@ attr_build_id(VALUE escape_attrs, VALUE ids)
   truthy_ids = rb_ary_new2(len);
   for (i = 0; i < len; i++) {
     id = rb_ary_entry(ids, i);
-    if (!NIL_P(id) && id != Qfalse) {
+    if (RTEST(id)) {
       rb_ary_push(truthy_ids, id);
     }
   }
