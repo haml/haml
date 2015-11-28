@@ -16,8 +16,8 @@ build:
         name: test all
         code: bundle exec rake test
     - script:
-        name: Hamlit::AttributeBuilder.build_id micro benchmark
-        code: benchmark/ext/build_id.rb
+        name: Hamlit::AttributeBuilder.build_data micro benchmark
+        code: benchmark/ext/build_data.rb
     - script:
         name: "[benchmark] static attributes"
         code: bin/bench bench -t benchmark/boolean_attribute.haml benchmark/class_attribute.haml benchmark/id_attribute.haml benchmark/data_attribute.haml benchmark/common_attribute.haml
@@ -25,20 +25,8 @@ build:
         name: "[benchmark] dynamic attributes"
         code: bin/bench bench -t benchmark/dynamic_attributes/boolean_attribute.haml benchmark/dynamic_attributes/class_attribute.haml benchmark/dynamic_attributes/id_attribute.haml benchmark/dynamic_attributes/data_attribute.haml benchmark/dynamic_attributes/common_attribute.haml
     - script:
-        name: "[benchmark] plain text"
-        code: bin/bench bench -t benchmark/plain.haml
-    - script:
-        name: "[benchmark] script"
-        code: bin/bench bench -t benchmark/script.haml
-    - script:
         name: "[benchmark] attribute_builder bench by faml"
         code: bin/bench bench -t benchmark/etc/attribute_builder.haml
-    - script:
-        name: "[benchmark] slim-template/slim/benchmarks"
-        code: bundle exec ruby benchmark/slim/run-benchmarks.rb
-    - script:
-        name: "[benchmark] static analyzer"
-        code: bin/bench bench -t benchmark/etc/static_analyzer.haml
 
     - rvm-use:
         version: 2.1.7
