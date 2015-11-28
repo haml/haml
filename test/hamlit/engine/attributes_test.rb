@@ -123,6 +123,15 @@ describe Hamlit::Engine do
     it { assert_haml(%q|%a{ data: { overlay_modal: 'foo' } }|) }
     it { assert_haml(%q|%a{ data: { overlay_modal: true } }|) }
     it { assert_haml(%q|%a{ data: { overlay_modal: false } }|) }
+
+    it do
+      assert_haml(<<-HAML.unindent)
+        - old = { disabled: true,  checked: false, href: false, 'hello-world' => '<>/' }
+        - new = { disabled: false, checked: true,  href: '<>/', hello: {}, 'hello_hoge' => true, foo: { 'bar&baz' => 'hoge' } }
+        - hash = { data: { href: true, hash: true } }
+        %a(data=new){ hash, data: old }
+      HAML
+    end
   end
 
   describe 'boolean attributes' do

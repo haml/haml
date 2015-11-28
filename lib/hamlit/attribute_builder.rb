@@ -39,7 +39,12 @@ module Hamlit::AttributeBuilder
 
     def build_data(escape_attrs, quote, *hashes)
       attrs = []
-      hash = flatten_attributes(data: hashes.first)
+      if hashes.size > 1
+        hash = merge_hashes(hashes)
+      else
+        hash = hashes.first
+      end
+      hash = flatten_attributes(data: hash)
 
       hash.sort_by(&:first).each do |key, value|
         case value
@@ -55,6 +60,16 @@ module Hamlit::AttributeBuilder
     end
 
     private
+
+    def merge_hashes(hashes)
+      merged = {}
+      hashes.each do |hash|
+        hash.each do |h, k|
+          merged[h] = k
+        end
+      end
+      merged
+    end
 
     def flatten_attributes(attributes)
       flattened = {}
