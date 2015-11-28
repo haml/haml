@@ -37,13 +37,9 @@ module Hamlit::AttributeBuilder
       buf.join
     end
 
-    def build_data(escape_attrs, quote, *hashes)
+    def build_data(escape_attrs, quote, *values)
       attrs = []
-      if hashes.size > 1
-        hash = merge_hashes(hashes)
-      else
-        hash = hashes.first
-      end
+      hash = merge_values(values)
       hash = flatten_attributes(data: hash)
 
       hash.sort_by(&:first).each do |key, value|
@@ -61,28 +57,42 @@ module Hamlit::AttributeBuilder
 
     private
 
-    def merge_hashes(hashes)
+    def merge_values(values)
+      if values.size == 1
+        value = values.first
+        if value.is_a?(Hash)
+          return value
+        else
+          return { nil => value }
+        end
+      end
+
       merged = {}
-      hashes.each do |hash|
-        hash.each do |h, k|
-          merged[h] = k
+      values.each do |value|
+        if value.is_a?(Hash)
+          value.each do |k, v|
+            merged[k] = v
+          end
+        else
+          merged[nil] = value
         end
       end
       merged
     end
 
-    def flatten_attributes(attributes)
+    def flatten_attributes(attributes, seen = [])
       flattened = {}
 
-      attributes.each do |key, value|
+      attributes.sort {|x, y| x[0].to_s <=> y[0].to_s}.each do |key, value|
+        next if seen.include?(value)
         case value
-        when attributes
         when Hash
-          flatten_attributes(value).each do |k, v|
-            if k
-              flattened["#{key}-#{k.to_s.gsub(/_/, '-')}"] = v
-            else
+          seen << value
+          flatten_attributes(value, seen).each do |k, v|
+            if k == nil
               flattened[key] = v
+            else
+              flattened["#{key}-#{k.to_s.gsub(/_/, '-')}"] = v
             end
           end
         else

@@ -119,10 +119,19 @@ describe Hamlit::Engine do
     it { assert_haml(%q|%a{ :'data-disabled' => true }|) }
     it { assert_haml(%q|%a{ data: { nil => 3 } }|) }
     it { assert_haml(%q|%a{ data: 3 }|) }
+    it { assert_haml(%q|%a(data=3)|) }
 
     it { assert_haml(%q|%a{ data: { overlay_modal: 'foo' } }|) }
     it { assert_haml(%q|%a{ data: { overlay_modal: true } }|) }
     it { assert_haml(%q|%a{ data: { overlay_modal: false } }|) }
+
+    it { assert_haml(%q|%a{ data: true }|) }
+    it { assert_haml(%q|%a{ data: { nil => true } }|) }
+    it { assert_haml(%q|%a{ data: { false => true } }|) }
+
+    it { assert_haml(%q|%a{ { data: { 'foo-bar' => 1 } }, data: { foo: { bar: 2 } } }|) }
+    it { assert_haml(%q|%a{ { data: { foo: { bar: 2 } } }, data: { 'foo-bar' => 2 } }|) }
+    it { assert_haml(%q|%a{ { data: { :'foo-bar' => 1 } }, data: { 'foo-bar' => 2 } }|) }
 
     it do
       assert_haml(<<-HAML.unindent)
