@@ -37,26 +37,6 @@ module Hamlit::AttributeBuilder
       buf.join
     end
 
-    def build_class(escape_attrs, *values)
-      if values.size == 1
-        return build_single_class(escape_attrs, values.first)
-      end
-
-      classes = []
-      values.each do |value|
-        case
-        when value.is_a?(String)
-          classes += value.split(' ')
-        when value.is_a?(Array)
-          classes += value.flatten.select { |v| v }
-        when value
-          classes << value.to_s
-        end
-      end
-      classes = classes.map(&:to_s).sort.uniq
-      escape_html(escape_attrs, classes.join(' '))
-    end
-
     def build_data(escape_attrs, quote, *hashes)
       attrs = []
       hash = flatten_attributes(data: hashes.first)
@@ -75,20 +55,6 @@ module Hamlit::AttributeBuilder
     end
 
     private
-
-    def build_single_class(escape_attrs, value)
-      case
-      when value.is_a?(String)
-        # noop
-      when value.is_a?(Array)
-        value = value.flatten.select { |v| v }.map(&:to_s).join(' ')
-      when value
-        value = value.to_s
-      else
-        value = ''
-      end
-      escape_html(escape_attrs, value)
-    end
 
     def flatten_attributes(attributes)
       flattened = {}
