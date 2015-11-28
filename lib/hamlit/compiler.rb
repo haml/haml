@@ -5,20 +5,19 @@ require 'hamlit/compiler/script_compiler'
 require 'hamlit/compiler/silent_script_compiler'
 require 'hamlit/compiler/tag_compiler'
 require 'hamlit/filters'
-require 'hamlit/unique_identifier'
+require 'hamlit/identity'
 
 module Hamlit
   class Compiler
     def initialize(options = {})
-      unique_identifier       = UniqueIdentifier.new
+      identity                = Identity.new
       @children_compiler      = ChildrenCompiler.new
       @comment_compiler       = CommentCompiler.new
       @doctype_compiler       = DoctypeCompiler.new(options)
-      @script_compiler        = ScriptCompiler.new(unique_identifier)
-      @silent_script_compiler = SilentScriptCompiler.new
-      @tag_compiler           = TagCompiler.new(unique_identifier, options)
-
       @filter_compiler        = Filters.new(options)
+      @script_compiler        = ScriptCompiler.new(identity)
+      @silent_script_compiler = SilentScriptCompiler.new
+      @tag_compiler           = TagCompiler.new(identity, options)
     end
 
     def call(ast)

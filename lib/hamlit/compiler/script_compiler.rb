@@ -5,8 +5,8 @@ require 'hamlit/string_interpolation'
 module Hamlit
   class Compiler
     class ScriptCompiler
-      def initialize(unique_identifier)
-        @unique_identifier = unique_identifier
+      def initialize(identity)
+        @identity = identity
       end
 
       def compile(node, &block)
@@ -54,7 +54,7 @@ module Hamlit
       end
 
       def dynamic_compile(node, &block)
-        var = @unique_identifier.generate
+        var = @identity.generate
         temple = compile_script_assign(var, node, &block)
         temple << compile_script_result(var, node)
       end

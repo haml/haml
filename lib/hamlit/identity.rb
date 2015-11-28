@@ -1,5 +1,5 @@
 module Hamlit
-  class UniqueIdentifier
+  class Identity
     def initialize
       @unique_id = 0
     end

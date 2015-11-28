@@ -7,8 +7,8 @@ require 'hamlit/string_interpolation'
 module Hamlit
   class Compiler
     class AttributeCompiler
-      def initialize(unique_identifier, options)
-        @unique_identifier = unique_identifier
+      def initialize(identity, options)
+        @identity = identity
         @quote  = options[:attr_quote]
         @format = options[:format]
         @escape_attrs = options[:escape_attrs]
@@ -98,7 +98,7 @@ module Hamlit
           else temple << [:html, :attr, key, [:escape, @escape_attrs, [:static, value]]]
           end
         else
-          var = @unique_identifier.generate
+          var = @identity.generate
           temple << [
             :case, "(#{var} = (#{exp}))",
             ['true', [:html, :attr, key, @format == :xhtml ? [:static, key] : [:multi]]],

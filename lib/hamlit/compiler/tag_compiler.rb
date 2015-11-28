@@ -5,10 +5,10 @@ require 'hamlit/string_interpolation'
 module Hamlit
   class Compiler
     class TagCompiler
-      def initialize(unique_identifier, options)
+      def initialize(identity, options)
         @autoclose = options[:autoclose]
-        @unique_identifier  = unique_identifier
-        @attribute_compiler = AttributeCompiler.new(unique_identifier, options)
+        @identity  = identity
+        @attribute_compiler = AttributeCompiler.new(identity, options)
       end
 
       def compile(node, &block)
@@ -28,7 +28,7 @@ module Hamlit
         when node.value[:parse]
           return compile_string(node) if RubyExpression.string_literal?(node.value[:value])
 
-          var = @unique_identifier.generate
+          var = @identity.generate
           [:multi,
            [:code, "#{var} = (#{node.value[:value]}"],
            [:newline],
