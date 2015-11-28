@@ -23,8 +23,12 @@ describe Hamlit::Engine do
 
     describe 'incompatibility' do
       it { assert_render(%Q|<div id='a'></div>\n|,   %q|#a{ id: [] }|) }
-      it { assert_render(%Q|<a id=''></a>\n|,        %q|%a{ id: [nil, false] }|) }
+      it { assert_render(%Q|<div id=''></div>\n|,    %q|%div{ id: [nil, false] }|) }
       it { assert_render(%Q|<div id='c_a'></div>\n|, %q|#d#c{ id: [] }(id=id)|, locals: { id: 'a' }) }
+      it { assert_render(%Q|<div id=''></div>\n|,    %q|%div{ id: nil }|) }
+      it { assert_render(%Q|<input id=''>\n|,        %q|%input{ id: false }|) }
+      it { assert_render(%Q|<input id=''>\n|,        %q|%input{ id: val }|, locals: { val: false }) }
+      it { assert_render(%Q|<input id=''>\n|,        %q|%input{ hash }|, locals: { hash: { id: false } }) }
     end
   end
 
@@ -97,6 +101,10 @@ describe Hamlit::Engine do
 
     describe 'incompatibility' do
       it { assert_render(%Q|<div class=''></div>\n|, %q|%div{ class: nil }|) }
+      it { assert_render(%Q|<div class=''></div>\n|, %q|%div{ class: false }|) }
+      it { assert_render(%Q|<div class=''></div>\n|, %q|%div{ class: false }|) }
+      it { assert_render(%Q|<div class=''></div>\n|, %q|%div{ class: val }|, locals: { val: false }) }
+      it { assert_render(%Q|<div class=''></div>\n|, %q|%div{ hash }|, locals: { hash: { class: false } }) }
     end
   end
 
@@ -181,6 +189,10 @@ describe Hamlit::Engine do
 
     describe 'incompatibility' do
       it { assert_render(%Q|<a href='&#39;&quot;'></a>\n|, %q|%a{ href: "'\"" }|) }
+      it { assert_render(%Q|<input value=''>\n|,      %q|%input{ value: nil }|) }
+      it { assert_render(%Q|<input value='false'>\n|, %q|%input{ value: false }|) }
+      it { assert_render(%Q|<input value='false'>\n|, %q|%input{ value: val }|, locals: { val: false }) }
+      it { assert_render(%Q|<input value='false'>\n|, %q|%input{ hash }|, locals: { hash: { value: false } }) }
     end
   end
 

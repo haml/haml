@@ -97,7 +97,7 @@ In Haml, `%a{ foo: false }` is rendered as `<a></a>`, whatever `foo` is.
 In Hamlit, this feature is supported for only boolean attributes, which are defined by
 http://www.w3.org/TR/xhtml1/guidelines.html or https://html.spec.whatwg.org/.
 The list is the same as `ActionView::Helpers::TagHelper::BOOLEAN_ATTRIBUTES`.
-In addition, `data-*` is also regarded as boolean.
+In addition, data-\* is also regarded as boolean.
 
 Since foo is not boolean attribute, `%a{ foo: false }` is rendered as `<a foo='false'></a>` (`foo` is not removed).
 This is the same behavior as Rails helpers.
@@ -115,30 +115,40 @@ So there are 5 types of attributes in Hamlit.
 
 ### id attribute
 Almost the same behavior as Haml, except no hyphenation and boolean support.
-Multiple id specification results in `_`-concatenation.
+Arrays are flattened, falsey values are removed (but attribute itself is not removed)
+and merging multiple ids results in concatenation by "\_".
 
 ```rb
 # Input
-%div{ id: %w[foo bar] }
 #foo{ id: 'bar' }
+%div{ id: %w[foo bar] }
+%div{ id: ['foo', false, ['bar', nil]] }
+%div{ id: false }
 
 # Output
 <div id='foo_bar'></span>
 <div id='foo_bar'></span>
+<div id='foo_bar'></span>
+<div id=''></span>
 ```
 
 ### class attribute
 Almost the same behavior as Haml, except no hyphenation and boolean support.
-Multiple class specification results in unique alphabetical sort.
+Arrays are flattened, falsey values are removed (but attribute itself is not removed)
+and merging multiple classes results in unique alphabetical sort.
 
 ```rb
 # Input
-%div{ class: 'd c b a' }
 .d.a(class='b c'){ class: 'c a' }
+%div{ class: 'd c b a' }
+%div{ class: ['d', nil, 'c', [false, 'b', 'a']] }
+%div{ class: false }
 
 # Output
-<div class='d c b a'></div>
 <div class='a b c d'></div>
+<div class='d c b a'></div>
+<div class='d c b a'></div>
+<div class=''></div>
 ```
 
 ### data attribute
@@ -177,10 +187,10 @@ defer reversed ismap seamless muted required autofocus novalidate formnovalidate
 itemscope allowfullscreen default inert sortable truespeed typemustmatch
 ```
 
-`data-*` is also regarded as boolean.
+"data-\*" is also regarded as boolean.
 
 ### other attributes
-No hyphenation and boolean support.
+No hyphenation and boolean support. `false` is rendered as "false" (like Rails helpers).
 
 ```rb
 # Input
