@@ -30,12 +30,11 @@ static VALUE
 attr_build_id(VALUE escape_attrs, VALUE ids)
 {
   VALUE id, attr_value;
-  long i, len;
+  long i;
 
   ids = rb_funcall(ids, id_flatten, 0);
 
-  len = RARRAY_LEN(ids);
-  for (i = len - 1; 0 <= i; i--) {
+  for (i = RARRAY_LEN(ids) - 1; 0 <= i; i--) {
     id = rb_ary_entry(ids, i);
     if (!RTEST(id)) {
       rb_ary_delete_at(ids, i);
@@ -66,15 +65,15 @@ Init_hamlit(void)
 {
   VALUE mHamlit, mUtils;
 
-  mHamlit = rb_define_module("Hamlit");
-  mUtils  = rb_define_module_under(mHamlit, "Utils");
-  rb_define_singleton_method(mUtils, "escape_html", rb_escape_html, 1);
-
+  mHamlit           = rb_define_module("Hamlit");
+  mUtils            = rb_define_module_under(mHamlit, "Utils");
   mAttributeBuilder = rb_define_module_under(mHamlit, "AttributeBuilder");
+
+  rb_define_singleton_method(mUtils, "escape_html", rb_escape_html, 1);
   rb_define_singleton_method(mAttributeBuilder, "build_id", rb_attr_build_id, -1);
 
-  id_flatten = rb_intern("flatten");
-
+  id_flatten    = rb_intern("flatten");
   id_underscore = rb_intern("UNDERSCORE");
+
   rb_const_set(mAttributeBuilder, id_underscore, rb_obj_freeze(rb_str_new_cstr("_")));
 }
