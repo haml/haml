@@ -27,7 +27,7 @@ rb_escape_html(RB_UNUSED_VAR(VALUE self), VALUE str)
 }
 
 static VALUE
-attr_build_id(VALUE escape_attrs, VALUE ids)
+hamlit_build_id(VALUE escape_attrs, VALUE ids)
 {
   VALUE id, attr_value;
   long i;
@@ -50,14 +50,14 @@ attr_build_id(VALUE escape_attrs, VALUE ids)
 }
 
 static VALUE
-rb_attr_build_id(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
+rb_hamlit_build_id(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
 {
   VALUE array;
 
   rb_check_arity(argc, 1, UNLIMITED_ARGUMENTS);
   rb_scan_args(argc - 1, argv + 1, "*", &array);
 
-  return attr_build_id(argv[0], array);
+  return hamlit_build_id(argv[0], array);
 }
 
 void
@@ -70,7 +70,7 @@ Init_hamlit(void)
   mAttributeBuilder = rb_define_module_under(mHamlit, "AttributeBuilder");
 
   rb_define_singleton_method(mUtils, "escape_html", rb_escape_html, 1);
-  rb_define_singleton_method(mAttributeBuilder, "build_id", rb_attr_build_id, -1);
+  rb_define_singleton_method(mAttributeBuilder, "build_id", rb_hamlit_build_id, -1);
 
   id_flatten    = rb_intern("flatten");
   id_underscore = rb_intern("UNDERSCORE");
