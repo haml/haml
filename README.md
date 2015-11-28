@@ -72,10 +72,10 @@ set :haml, { escape_html: false }
 
 ## Command line interface
 
-'hamlit' command is available if you install thor gem with `gem install thor`.
+You can see compiled code or rendering result with "hamlit" command.
 
 ```bash
-$ gem install hamlit thor
+$ gem install hamlit
 $ hamlit --help
 Commands:
   hamlit compile HAML    # Show compile result
@@ -85,15 +85,17 @@ Commands:
   hamlit temple HAML     # Show temple intermediate expression
 
 $ cat in.haml
-.foo#bar
+- user_id = 123
+%a{ href: "/users/#{user_id}" }
 
 # Show compiled code
 $ hamlit compile in.haml
-_buf = "<div class='foo' id='bar'></div>\n"
+_buf = [];  user_id = 123;
+; _buf << ("<a href='/users/".freeze); _buf << (::Hamlit::Utils.escape_html((user_id))); _buf << ("'></a>\n".freeze); _buf = _buf.join
 
 # Render html
 $ hamlit render in.haml
-<div class='foo' id='bar'></div>
+<a href='/users/123'></a>
 ```
 
 ## Contributing

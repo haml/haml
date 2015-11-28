@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'escape_utils'
   spec.add_dependency 'temple', '~> 0.7.6'
+  spec.add_dependency 'thor'
   spec.add_dependency 'tilt'
 
   spec.add_development_dependency 'bundler', '~> 1.10'
@@ -37,6 +38,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'sass'
   spec.add_development_dependency 'slim'
   spec.add_development_dependency 'therubyracer'
-  spec.add_development_dependency 'thor', '~> 0.19'
   spec.add_development_dependency 'unindent'
 end
