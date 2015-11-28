@@ -37,65 +37,7 @@ module Hamlit::AttributeBuilder
       buf.join
     end
 
-    def build_data(escape_attrs, quote, *values)
-      attrs = []
-      hash = merge_data_attrs(values)
-      hash = flatten_data_attrs(hash)
-
-      hash.sort_by(&:first).each do |key, value|
-        case value
-        when true
-          attrs << " #{key}"
-        when nil, false
-          # noop
-        else
-          attrs << " #{key}=#{quote}#{escape_html(escape_attrs, value.to_s)}#{quote}"
-        end
-      end
-      attrs.join
-    end
-
     private
-
-    def merge_data_attrs(values)
-      merged = {}
-      values.each do |value|
-        if value.is_a?(Hash)
-          value.each do |k, v|
-            if k == nil
-              merged['data'.freeze] = v
-            else
-              merged["data-#{k.to_s.tr('_', '-')}"] = v
-            end
-          end
-        else
-          merged['data'.freeze] = value
-        end
-      end
-      merged
-    end
-
-    def flatten_data_attrs(hash, seen = [])
-      flattened = {}
-
-      hash.sort {|x, y| x[0].to_s <=> y[0].to_s}.each do |key, value|
-        next if seen.include?(value)
-        case value
-        when Hash
-          seen << value
-          flatten_data_attrs(value, seen).each do |k, v|
-            if k == nil
-              flattened[key] = v
-            else
-              flattened["#{key}-#{k.to_s.gsub(/_/, '-')}"] = v
-            end
-          end
-        else
-          flattened[key] = value if value
-        end
-      end
-      flattened
-    end
 
     def stringify_keys(hash)
       result = {}

@@ -3,8 +3,14 @@
 #include "houdini.h"
 
 VALUE mAttributeBuilder;
-static ID id_flatten, id_uniq_bang;
-static ID id_space, id_underscore;
+static ID id_flatten, id_keys, id_prepend, id_tr, id_uniq_bang;
+static ID id_data, id_equal, id_hyphen, id_space, id_underscore;
+
+static VALUE str_data()        { return rb_const_get(mAttributeBuilder, id_data); }
+static VALUE str_equal()       { return rb_const_get(mAttributeBuilder, id_equal); }
+static VALUE str_hyphen()      { return rb_const_get(mAttributeBuilder, id_hyphen); }
+static VALUE str_space()       { return rb_const_get(mAttributeBuilder, id_space); }
+static VALUE str_underscore()  { return rb_const_get(mAttributeBuilder, id_underscore); }
 
 static void
 delete_falsey_values(VALUE values)
@@ -27,9 +33,9 @@ to_s(VALUE value)
 }
 
 static VALUE
-space()
+hyphenate(VALUE str)
 {
-  return rb_const_get(mAttributeBuilder, id_space);
+  return rb_funcall(str, id_tr, 2, str_underscore(), str_hyphen());
 }
 
 static VALUE
@@ -84,7 +90,7 @@ hamlit_build_single_class(VALUE escape_attrs, VALUE value)
     case T_ARRAY:
       value = rb_funcall(value, id_flatten, 0);
       delete_falsey_values(value);
-      value = rb_ary_join(value, space());
+      value = rb_ary_join(value, str_space());
       break;
     default:
       if (RTEST(value)) {
@@ -129,7 +135,134 @@ hamlit_build_multi_class(VALUE escape_attrs, VALUE values)
   rb_ary_sort_bang(buf);
   rb_funcall(buf, id_uniq_bang, 0);
 
-  return escape_attribute(escape_attrs, rb_ary_join(buf, space()));
+  return escape_attribute(escape_attrs, rb_ary_join(buf, str_space()));
+}
+
+static int
+merge_data_attrs_i(VALUE key, VALUE value, VALUE merged)
+{
+  if (NIL_P(key)) {
+    rb_hash_aset(merged, str_data(), value);
+  } else {
+    key = rb_str_concat(rb_str_new_cstr("data-"), to_s(key));
+    rb_hash_aset(merged, key, value);
+  }
+  return ST_CONTINUE;
+}
+
+static VALUE
+merge_data_attrs(VALUE values)
+{
+  long i;
+  VALUE value, merged = rb_hash_new();
+
+  for (i = 0; i < RARRAY_LEN(values); i++) {
+    value = rb_ary_entry(values, i);
+    switch (TYPE(value)) {
+      case T_HASH:
+        rb_hash_foreach(value, merge_data_attrs_i, merged);
+        break;
+      default:
+        rb_hash_aset(merged, str_data(), value);
+        break;
+    }
+  }
+  return merged;
+}
+
+struct flatten_data_attrs_i2_arg {
+  VALUE flattened;
+  VALUE key;
+};
+
+static int
+flatten_data_attrs_i2(VALUE k, VALUE v, VALUE ptr)
+{
+  VALUE key;
+  struct flatten_data_attrs_i2_arg *arg = (struct flatten_data_attrs_i2_arg *)ptr;
+
+  if (!RTEST(v)) return ST_CONTINUE;
+
+  if (k == Qnil) {
+    rb_hash_aset(arg->flattened, arg->key, v);
+  } else {
+    key = rb_str_dup(arg->key);
+    rb_str_cat_cstr(key, "-");
+    rb_str_concat(key, to_s(k));
+
+    rb_hash_aset(arg->flattened, key, v);
+  }
+  return ST_CONTINUE;
+}
+
+static VALUE flatten_data_attrs(VALUE attrs);
+
+static int
+flatten_data_attrs_i(VALUE key, VALUE value, VALUE flattened)
+{
+  struct flatten_data_attrs_i2_arg arg;
+  key = hyphenate(to_s(key));
+
+  switch (TYPE(value)) {
+    case T_HASH:
+      value = flatten_data_attrs(value);
+      arg.key       = key;
+      arg.flattened = flattened;
+      rb_hash_foreach(value, flatten_data_attrs_i2, (VALUE)(&arg));
+      break;
+    default:
+      if (RTEST(value)) rb_hash_aset(flattened, key, value);
+      break;
+  }
+  return ST_CONTINUE;
+}
+
+static VALUE
+flatten_data_attrs(VALUE attrs)
+{
+  VALUE flattened = rb_hash_new();
+  rb_hash_foreach(attrs, flatten_data_attrs_i, flattened);
+
+  return flattened;
+}
+
+static VALUE
+hamlit_build_data(VALUE escape_attrs, VALUE quote, VALUE values)
+{
+  long i, len;
+  VALUE attrs, buf, keys, key, value;
+
+  attrs = merge_data_attrs(values);
+  attrs = flatten_data_attrs(attrs);
+  keys  = rb_ary_sort_bang(rb_funcall(attrs, id_keys, 0));
+  len   = RARRAY_LEN(keys);
+  buf   = rb_ary_new2(len);
+
+  for (i = 0; i < len; i++) {
+    key   = rb_ary_entry(keys, i);
+    value = rb_hash_aref(attrs, key);
+
+    switch (value) {
+      case Qtrue:
+        rb_ary_push(buf, str_space());
+        rb_ary_push(buf, key);
+        break;
+      case Qnil:
+        break; // noop
+      case Qfalse:
+        break; // noop
+      default:
+        rb_ary_push(buf, str_space());
+        rb_ary_push(buf, key);
+        rb_ary_push(buf, str_equal());
+        rb_ary_push(buf, quote);
+        rb_ary_push(buf, escape_attribute(escape_attrs, to_s(value)));
+        rb_ary_push(buf, quote);
+        break;
+    }
+  }
+
+  return rb_ary_join(buf, rb_output_fs);
 }
 
 static VALUE
@@ -158,6 +291,17 @@ rb_hamlit_build_class(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
   }
 }
 
+static VALUE
+rb_hamlit_build_data(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
+{
+  VALUE array;
+
+  rb_check_arity(argc, 2, UNLIMITED_ARGUMENTS);
+  rb_scan_args(argc - 2, argv + 2, "*", &array);
+
+  return hamlit_build_data(argv[0], argv[1], array);
+}
+
 void
 Init_hamlit(void)
 {
@@ -170,13 +314,23 @@ Init_hamlit(void)
   rb_define_singleton_method(mUtils, "escape_html", rb_escape_html, 1);
   rb_define_singleton_method(mAttributeBuilder, "build_id", rb_hamlit_build_id, -1);
   rb_define_singleton_method(mAttributeBuilder, "build_class", rb_hamlit_build_class, -1);
+  rb_define_singleton_method(mAttributeBuilder, "build_data", rb_hamlit_build_data, -1);
 
   id_flatten   = rb_intern("flatten");
+  id_keys      = rb_intern("keys");
+  id_prepend   = rb_intern("prepend");
+  id_tr        = rb_intern("tr");
   id_uniq_bang = rb_intern("uniq!");
 
+  id_data       = rb_intern("DATA");
+  id_equal      = rb_intern("EQUAL");
+  id_hyphen     = rb_intern("HYPHEN");
   id_space      = rb_intern("SPACE");
   id_underscore = rb_intern("UNDERSCORE");
 
+  rb_const_set(mAttributeBuilder, id_data,       rb_obj_freeze(rb_str_new_cstr("data")));
+  rb_const_set(mAttributeBuilder, id_equal,      rb_obj_freeze(rb_str_new_cstr("=")));
+  rb_const_set(mAttributeBuilder, id_hyphen,     rb_obj_freeze(rb_str_new_cstr("-")));
   rb_const_set(mAttributeBuilder, id_space,      rb_obj_freeze(rb_str_new_cstr(" ")));
   rb_const_set(mAttributeBuilder, id_underscore, rb_obj_freeze(rb_str_new_cstr("_")));
 }
