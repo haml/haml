@@ -187,7 +187,7 @@ flatten_data_attrs_i2(VALUE k, VALUE v, VALUE ptr)
     rb_hash_aset(arg->flattened, arg->key, v);
   } else {
     key = rb_str_dup(arg->key);
-    rb_str_cat_cstr(key, "-");
+    rb_str_cat(key, "-", 1);
     rb_str_concat(key, to_s(k));
 
     rb_hash_aset(arg->flattened, key, v);
