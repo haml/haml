@@ -229,40 +229,39 @@ flatten_data_attrs(VALUE attrs)
 static VALUE
 hamlit_build_data(VALUE escape_attrs, VALUE quote, VALUE values)
 {
-  long i, len;
+  long i;
   VALUE attrs, buf, keys, key, value;
 
   attrs = merge_data_attrs(values);
   attrs = flatten_data_attrs(attrs);
   keys  = rb_ary_sort_bang(rb_funcall(attrs, id_keys, 0));
-  len   = RARRAY_LEN(keys);
-  buf   = rb_ary_new2(len);
+  buf   = rb_str_new("", 0);
 
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < RARRAY_LEN(keys); i++) {
     key   = rb_ary_entry(keys, i);
     value = rb_hash_aref(attrs, key);
 
     switch (value) {
       case Qtrue:
-        rb_ary_push(buf, str_space());
-        rb_ary_push(buf, key);
+        rb_str_concat(buf, str_space());
+        rb_str_concat(buf, key);
         break;
       case Qnil:
         break; // noop
       case Qfalse:
         break; // noop
       default:
-        rb_ary_push(buf, str_space());
-        rb_ary_push(buf, key);
-        rb_ary_push(buf, str_equal());
-        rb_ary_push(buf, quote);
-        rb_ary_push(buf, escape_attribute(escape_attrs, to_s(value)));
-        rb_ary_push(buf, quote);
+        rb_str_concat(buf, str_space());
+        rb_str_concat(buf, key);
+        rb_str_concat(buf, str_equal());
+        rb_str_concat(buf, quote);
+        rb_str_concat(buf, escape_attribute(escape_attrs, to_s(value)));
+        rb_str_concat(buf, quote);
         break;
     }
   }
 
-  return rb_ary_join(buf, rb_output_fs);
+  return buf;
 }
 
 static VALUE
