@@ -1,10 +1,12 @@
 #include <ruby.h>
 #include <ruby/encoding.h>
 #include "houdini.h"
+#include "string.h"
 
-VALUE mAttributeBuilder;
-static ID id_flatten, id_keys, id_prepend, id_tr, id_uniq_bang;
+VALUE mAttributeBuilder, mObjectRef;
+static ID id_flatten, id_keys, id_parse, id_prepend, id_tr, id_uniq_bang;
 static ID id_data, id_equal, id_hyphen, id_space, id_underscore;
+static ID id_boolean_attributes, id_xhtml;
 
 static VALUE str_data()        { return rb_const_get(mAttributeBuilder, id_data); }
 static VALUE str_equal()       { return rb_const_get(mAttributeBuilder, id_equal); }
@@ -24,6 +26,12 @@ delete_falsey_values(VALUE values)
       rb_ary_delete_at(values, i);
     }
   }
+}
+
+static int
+str_eq(VALUE str, const char *cstr)
+{
+  return strcmp(RSTRING_PTR(str), cstr) == 0;
 }
 
 static VALUE
@@ -145,6 +153,16 @@ hamlit_build_multi_class(VALUE escape_attrs, VALUE values)
   rb_funcall(buf, id_uniq_bang, 0);
 
   return escape_attribute(escape_attrs, rb_ary_join(buf, str_space()));
+}
+
+static VALUE
+hamlit_build_class(VALUE escape_attrs, VALUE array)
+{
+  if (RARRAY_LEN(array) == 1) {
+    return hamlit_build_single_class(escape_attrs, rb_ary_entry(array, 0));
+  } else {
+    return hamlit_build_multi_class(escape_attrs, array);
+  }
 }
 
 static int
@@ -274,6 +292,143 @@ hamlit_build_data(VALUE escape_attrs, VALUE quote, VALUE values)
 }
 
 static VALUE
+parse_object_ref(VALUE object_ref)
+{
+  return rb_funcall(mObjectRef, id_parse, 1, object_ref);
+}
+
+static int
+merge_all_attrs_i(VALUE key, VALUE value, VALUE merged)
+{
+  VALUE array;
+
+  key = to_s(key);
+  if (str_eq(key, "id") || str_eq(key, "class") || str_eq(key, "data")) {
+    array = rb_hash_aref(merged, key);
+    if (NIL_P(array)) {
+      array = rb_ary_new2(1);
+      rb_hash_aset(merged, key, array);
+    }
+    rb_ary_push(array, value);
+  } else {
+    rb_hash_aset(merged, key, value);
+  }
+  return ST_CONTINUE;
+}
+
+static VALUE
+merge_all_attrs(VALUE hashes)
+{
+  long i;
+  VALUE hash, merged = rb_hash_new();
+
+  for (i = 0; i < RARRAY_LEN(hashes); i++) {
+    hash = rb_ary_entry(hashes, i);
+    rb_hash_foreach(hash, merge_all_attrs_i, merged);
+  }
+  return merged;
+}
+
+int
+is_boolean_attribute(VALUE key)
+{
+  VALUE boolean_attributes;
+  if (str_eq(rb_str_substr(key, 0, 5), "data-")) return 1;
+
+  boolean_attributes = rb_const_get(mAttributeBuilder, id_boolean_attributes);
+  return RTEST(rb_ary_includes(boolean_attributes, key));
+}
+
+void
+hamlit_build_for_id(VALUE escape_attrs, VALUE quote, VALUE buf, VALUE values)
+{
+  rb_str_cat(buf, " id=", 4);
+  rb_str_concat(buf, quote);
+  rb_str_concat(buf, hamlit_build_id(escape_attrs, values));
+  rb_str_concat(buf, quote);
+}
+
+void
+hamlit_build_for_class(VALUE escape_attrs, VALUE quote, VALUE buf, VALUE values)
+{
+  rb_str_cat(buf, " class=", 7);
+  rb_str_concat(buf, quote);
+  rb_str_concat(buf, hamlit_build_class(escape_attrs, values));
+  rb_str_concat(buf, quote);
+}
+
+void
+hamlit_build_for_data(VALUE escape_attrs, VALUE quote, VALUE buf, VALUE values)
+{
+  rb_str_concat(buf, hamlit_build_data(escape_attrs, quote, values));
+}
+
+void
+hamlit_build_for_others(VALUE escape_attrs, VALUE quote, VALUE buf, VALUE key, VALUE value)
+{
+  rb_str_cat(buf, " ", 1);
+  rb_str_concat(buf, key);
+  rb_str_cat(buf, "=", 1);
+  rb_str_concat(buf, quote);
+  rb_str_concat(buf, escape_attribute(escape_attrs, to_s(value)));
+  rb_str_concat(buf, quote);
+}
+
+void
+hamlit_build_for_boolean(VALUE escape_attrs, VALUE quote, VALUE format, VALUE buf, VALUE key, VALUE value)
+{
+  switch (value) {
+    case Qtrue:
+      rb_str_cat(buf, " ", 1);
+      rb_str_concat(buf, key);
+      if ((TYPE(format) == T_SYMBOL || TYPE(format) == T_STRING) && rb_to_id(format) == id_xhtml) {
+        rb_str_cat(buf, "=", 1);
+        rb_str_concat(buf, quote);
+        rb_str_concat(buf, key);
+        rb_str_concat(buf, quote);
+      }
+      break;
+    case Qfalse:
+      break; // noop
+    case Qnil:
+      break; // noop
+    default:
+      hamlit_build_for_others(escape_attrs, quote, buf, key, value);
+      break;
+  }
+}
+
+static VALUE
+hamlit_build(VALUE escape_attrs, VALUE quote, VALUE format, VALUE object_ref, VALUE hashes)
+{
+  long i;
+  VALUE attrs, buf, key, keys, value;
+
+  if (!NIL_P(object_ref)) rb_ary_push(hashes, parse_object_ref(object_ref));
+  attrs = merge_all_attrs(hashes);
+  buf   = rb_str_new("", 0);
+  keys  = rb_ary_sort_bang(rb_funcall(attrs, id_keys, 0));
+
+  for (i = 0; i < RARRAY_LEN(keys); i++) {
+    key   = rb_ary_entry(keys, i);
+    value = rb_hash_aref(attrs, key);
+    if (str_eq(key, "id")) {
+      hamlit_build_for_id(escape_attrs, quote, buf, value);
+    } else if (str_eq(key, "class")) {
+      hamlit_build_for_class(escape_attrs, quote, buf, value);
+    } else if (str_eq(key, "data")) {
+      hamlit_build_for_data(escape_attrs, quote, buf, value);
+    } else if (is_boolean_attribute(key)) {
+      hamlit_build_for_boolean(escape_attrs, quote, format, buf, key, value);
+    } else {
+      hamlit_build_for_others(escape_attrs, quote, buf, key, value);
+    }
+  }
+
+  return buf;
+}
+
+static VALUE
 rb_hamlit_build_id(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
 {
   VALUE array;
@@ -292,11 +447,7 @@ rb_hamlit_build_class(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
   rb_check_arity(argc, 1, UNLIMITED_ARGUMENTS);
   rb_scan_args(argc - 1, argv + 1, "*", &array);
 
-  if (RARRAY_LEN(array) == 1) {
-    return hamlit_build_single_class(argv[0], rb_ary_entry(array, 0));
-  } else {
-    return hamlit_build_multi_class(argv[0], array);
-  }
+  return hamlit_build_class(argv[0], array);
 }
 
 static VALUE
@@ -310,22 +461,36 @@ rb_hamlit_build_data(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
   return hamlit_build_data(argv[0], argv[1], array);
 }
 
+static VALUE
+rb_hamlit_build(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
+{
+  VALUE array;
+
+  rb_check_arity(argc, 4, UNLIMITED_ARGUMENTS);
+  rb_scan_args(argc - 4, argv + 4, "*", &array);
+
+  return hamlit_build(argv[0], argv[1], argv[2], argv[3], array);
+}
+
 void
 Init_hamlit(void)
 {
   VALUE mHamlit, mUtils;
 
   mHamlit           = rb_define_module("Hamlit");
+  mObjectRef        = rb_define_module_under(mHamlit, "ObjectRef");
   mUtils            = rb_define_module_under(mHamlit, "Utils");
   mAttributeBuilder = rb_define_module_under(mHamlit, "AttributeBuilder");
 
   rb_define_singleton_method(mUtils, "escape_html", rb_escape_html, 1);
+  rb_define_singleton_method(mAttributeBuilder, "build", rb_hamlit_build, -1);
   rb_define_singleton_method(mAttributeBuilder, "build_id", rb_hamlit_build_id, -1);
   rb_define_singleton_method(mAttributeBuilder, "build_class", rb_hamlit_build_class, -1);
   rb_define_singleton_method(mAttributeBuilder, "build_data", rb_hamlit_build_data, -1);
 
   id_flatten   = rb_intern("flatten");
   id_keys      = rb_intern("keys");
+  id_parse     = rb_intern("parse");
   id_prepend   = rb_intern("prepend");
   id_tr        = rb_intern("tr");
   id_uniq_bang = rb_intern("uniq!");
@@ -335,6 +500,9 @@ Init_hamlit(void)
   id_hyphen     = rb_intern("HYPHEN");
   id_space      = rb_intern("SPACE");
   id_underscore = rb_intern("UNDERSCORE");
+
+  id_boolean_attributes = rb_intern("BOOLEAN_ATTRIBUTES");
+  id_xhtml = rb_intern("xhtml");
 
   rb_const_set(mAttributeBuilder, id_data,       rb_obj_freeze(rb_str_new_cstr("data")));
   rb_const_set(mAttributeBuilder, id_equal,      rb_obj_freeze(rb_str_new_cstr("=")));
