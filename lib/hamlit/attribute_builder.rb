@@ -14,24 +14,23 @@ module Hamlit::AttributeBuilder
   # class methods which takes all options as arguments for performance.
   class << self
     def build(escape_attrs, quote, format, object_ref, *hashes)
-      buf    = []
-      hashes = hashes.map { |h| stringify_keys(h) }
       hashes << Hamlit::ObjectRef.parse(object_ref) if object_ref
+      buf  = []
+      hash = merge_all_attrs(hashes)
 
-      keys = hashes.map(&:keys).flatten.sort.uniq
+      keys = hash.keys.sort!
       keys.each do |key|
-        values = hashes.select { |h| h.has_key?(key) }.map { |h| h[key] }
         case key
         when 'id'.freeze
-          buf << " id=#{quote}#{build_id(escape_attrs, *values)}#{quote}"
+          buf << " id=#{quote}#{build_id(escape_attrs, *hash[key])}#{quote}"
         when 'class'.freeze
-          buf << " class=#{quote}#{build_class(escape_attrs, *values)}#{quote}"
+          buf << " class=#{quote}#{build_class(escape_attrs, *hash[key])}#{quote}"
         when 'data'.freeze
-          buf << build_data(escape_attrs, quote, *values)
+          buf << build_data(escape_attrs, quote, *hash[key])
         when *BOOLEAN_ATTRIBUTES, /\Adata-/
-          build_boolean!(escape_attrs, quote, format, buf, key, values)
+          build_boolean!(escape_attrs, quote, format, buf, key, hash[key])
         else
-          buf << " #{key}=#{quote}#{escape_html(escape_attrs, values.last.to_s)}#{quote}"
+          buf << " #{key}=#{quote}#{escape_html(escape_attrs, hash[key].to_s)}#{quote}"
         end
       end
       buf.join
@@ -39,16 +38,24 @@ module Hamlit::AttributeBuilder
 
     private
 
-    def stringify_keys(hash)
-      result = {}
-      hash.each do |key, value|
-        result[key.to_s] = value
+    def merge_all_attrs(hashes)
+      merged = {}
+      hashes.each do |hash|
+        hash.each do |key, value|
+          key = key.to_s
+          case key
+          when 'id'.freeze, 'class'.freeze, 'data'.freeze
+            merged[key] ||= []
+            merged[key] << value
+          else
+            merged[key] = value
+          end
+        end
       end
-      result
+      merged
     end
 
-    def build_boolean!(escape_attrs, quote, format, buf, key, values)
-      value = values.last
+    def build_boolean!(escape_attrs, quote, format, buf, key, value)
       case value
       when true
         case format
