@@ -35,7 +35,16 @@ to_s(VALUE value)
 static VALUE
 hyphenate(VALUE str)
 {
-  return rb_funcall(str, id_tr, 2, str_underscore(), str_hyphen());
+  long i;
+
+  if (OBJ_FROZEN(str)) str = rb_str_dup(str);
+
+  for (i = 0; i < RSTRING_LEN(str); i++) {
+    if (RSTRING_PTR(str)[i] == '_') {
+      rb_str_update(str, i, 1, str_hyphen());
+    }
+  }
+  return str;
 }
 
 static VALUE
@@ -77,7 +86,7 @@ hamlit_build_id(VALUE escape_attrs, VALUE values)
   values = rb_funcall(values, id_flatten, 0);
   delete_falsey_values(values);
 
-  attr_value = rb_ary_join(values, rb_const_get(mAttributeBuilder, id_underscore));
+  attr_value = rb_ary_join(values, str_underscore());
   return escape_attribute(escape_attrs, attr_value);
 }
 
