@@ -1,4 +1,29 @@
 language: ruby
-rvm:
-  - 2.2.3
-before_install: gem install bundler -v 1.10.6
+sudo: false
+cache: bundler
+script:
+  - "bundle exec rake $TASK"
+matrix:
+  include:
+    - rvm: 2.0.0
+      env: TASK=test
+    - rvm: 2.1
+      env: TASK=test
+    - rvm: 2.2
+      env: TASK=test
+    - rvm: 2.2
+      env: TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
+    - rvm: 2.2
+      env: TEMPLATE=benchmark/dynamic_attributes/boolean_attribute.haml,benchmark/dynamic_attributes/class_attribute.haml,benchmark/dynamic_attributes/id_attribute.haml,benchmark/dynamic_attributes/data_attribute.haml,benchmark/dynamic_attributes/common_attribute.haml
+    - rvm: 2.2
+      env: TEMPLATE=benchmark/etc/attribute_builder.haml
+    - rvm: 2.2
+      env: TEIM_BENCH=1 rake bench
+    - rvm: 2.2
+      env: TEMPLATE=test/haml/templates/standard.haml COMPILE=1 rake bench
+  allow_failures:
+    - env: TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
+    - env: TEMPLATE=benchmark/dynamic_attributes/boolean_attribute.haml,benchmark/dynamic_attributes/class_attribute.haml,benchmark/dynamic_attributes/id_attribute.haml,benchmark/dynamic_attributes/data_attribute.haml,benchmark/dynamic_attributes/common_attribute.haml
+    - env: TEMPLATE=benchmark/etc/attribute_builder.haml
+    - env: SLIM_BENCH=1 rake bench
+    - env: TEMPLATE=test/haml/templates/standard.haml COMPILE=1 rake bench
