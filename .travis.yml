@@ -1,6 +1,7 @@
 language: ruby
-sudo: false
-cache: bundler
+branches:
+  only:
+    - master
 script:
   - "bundle exec rake $TASK"
 matrix:
@@ -12,18 +13,18 @@ matrix:
     - rvm: 2.2
       env: TASK=test
     - rvm: 2.2
-      env: TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
+      env: TASK=bench TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
     - rvm: 2.2
-      env: TEMPLATE=benchmark/dynamic_attributes/boolean_attribute.haml,benchmark/dynamic_attributes/class_attribute.haml,benchmark/dynamic_attributes/id_attribute.haml,benchmark/dynamic_attributes/data_attribute.haml,benchmark/dynamic_attributes/common_attribute.haml
+      env: TASK=bench TEMPLATE=benchmark/dynamic_attributes/boolean_attribute.haml,benchmark/dynamic_attributes/class_attribute.haml,benchmark/dynamic_attributes/id_attribute.haml,benchmark/dynamic_attributes/data_attribute.haml,benchmark/dynamic_attributes/common_attribute.haml
     - rvm: 2.2
-      env: TEMPLATE=benchmark/etc/attribute_builder.haml
+      env: TASK=bench TEMPLATE=benchmark/etc/attribute_builder.haml
     - rvm: 2.2
-      env: TEIM_BENCH=1 rake bench
+      env: TASK=bench SLIM_BENCH=1
     - rvm: 2.2
-      env: TEMPLATE=test/haml/templates/standard.haml COMPILE=1 rake bench
+      env: TASK=bench TEMPLATE=test/haml/templates/standard.haml COMPILE=1
   allow_failures:
-    - env: TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
-    - env: TEMPLATE=benchmark/dynamic_attributes/boolean_attribute.haml,benchmark/dynamic_attributes/class_attribute.haml,benchmark/dynamic_attributes/id_attribute.haml,benchmark/dynamic_attributes/data_attribute.haml,benchmark/dynamic_attributes/common_attribute.haml
-    - env: TEMPLATE=benchmark/etc/attribute_builder.haml
-    - env: SLIM_BENCH=1 rake bench
-    - env: TEMPLATE=test/haml/templates/standard.haml COMPILE=1 rake bench
+    - env: TASK=bench TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
+    - env: TASK=bench TEMPLATE=benchmark/dynamic_attributes/boolean_attribute.haml,benchmark/dynamic_attributes/class_attribute.haml,benchmark/dynamic_attributes/id_attribute.haml,benchmark/dynamic_attributes/data_attribute.haml,benchmark/dynamic_attributes/common_attribute.haml
+    - env: TASK=bench TEMPLATE=benchmark/etc/attribute_builder.haml
+    - env: TASK=bench SLIM_BENCH=1
+    - env: TASK=bench TEMPLATE=test/haml/templates/standard.haml COMPILE=1
