@@ -3,13 +3,14 @@
 /Gemfile.lock
 /_yardoc/
 /coverage/
+/doc/
 /pkg/
 /spec/reports/
 /tmp/
+.sass-cache
+/hamlit1
+.ruby-version
 *.bundle
 *.so
 *.o
 *.a
-*.cache
-mkmf.log
-.sass-cache/

@@ -1,18 +1,20 @@
-require 'hamlit/filters/base'
-
 module Hamlit
-  module Filters
+  class Filters
     class Escaped < Base
-      def compile(lines)
-        ast = [:haml, :text, lines.join("\n")]
-        ast = [:multi, escape_html(ast)]
-        ast
+      def compile(node)
+        text = node.value[:text].rstrip
+        temple = compile_text(text)
+        [:escape, true, temple]
       end
 
       private
 
-      def escape_html(ast)
-        [:escape, true, ast]
+      def compile_text(text)
+        if ::Hamlit::HamlUtil.contains_interpolation?(text)
+          [:dynamic, ::Hamlit::HamlUtil.slow_unescape_interpolation(text)]
+        else
+          [:static, text]
+        end
       end
     end
   end

@@ -1,8 +1,10 @@
 require 'hamlit/engine'
-require 'hamlit/template'
+require 'hamlit/error'
 require 'hamlit/version'
+require 'hamlit/template'
 
 begin
+  require 'rails'
   require 'hamlit/railtie'
 rescue LoadError
 end

@@ -1,3 +1,21 @@
+## v2.0.0
+
+- Full scratch of internal implementation
+  - Rendering is strongly optimized
+     - Static analyzer is introduced
+     - Built with C extension for runtime rendering
+     - Optimized compilation for 5 types of attributes
+  - Compilation became faster too
+  - Many rendering incompatibilities are resolved
+  - Object reference support
+  - Breaking changes:
+     - Replaced parser with original Haml's one
+         - Incompatible parsing error will never happen, but we can no longer parse attributes with Ripper
+     - Unified behavior for both static and dynamic attributes, see [5 types of attributes](REFERENCE.md#5-types-of-attributes)
+         - Though inconsistent behavior is removed, we can no longer rely on completely-Haml-compatible behavior of static attributes and pass haml-spec
+     - Added :escape\_attrs option
+         - You should specify HTML-escaping availability for script and attrs separately.
+
 ## v1.7.2
 
 - Bugfix about parsing a content of tag

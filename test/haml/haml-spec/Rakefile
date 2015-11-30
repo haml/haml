@@ -1,0 +1,85 @@
+$:.unshift File.expand_path('../../lib', __FILE__)
+
+require 'yaml'
+require 'unindent'
+require 'open-uri'
+
+def escape_name(name, replacer)
+  name.gsub(/[\s\-\(\)\.\.+'\/<>&=~\!]+/, replacer)
+end
+
+def generate_spec(mode)
+  spec = <<-SPEC.unindent
+    require "minitest/autorun"
+    require "hamlit"
+    require "haml"
+
+    # This is a spec converted by haml-spec.
+    # See: https://github.com/haml/haml-spec
+    class #{mode.capitalize}Test < MiniTest::Test
+      HAML_DEFAULT_OPTIONS = { ugly: #{mode == :ugly}, escape_html: true }.freeze
+      HAMLIT_DEFAULT_OPTIONS = { escape_html: true }.freeze
+
+      def self.haml_result(haml, options, locals)
+        Haml::Engine.new(haml, HAML_DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
+      end
+
+      def self.hamlit_result(haml, options, locals)
+        eval Hamlit::Engine.new(haml, HAMLIT_DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
+      end
+
+  SPEC
+
+  contexts = YAML.load(File.read(File.expand_path('./tests.yml', __dir__)))
+  contexts.each_with_index do |context, index|
+    spec += "\n" if index != 0
+    spec += "  class #{escape_name(context[0], '').capitalize} < MiniTest::Test\n"
+
+    tests = []
+    context[1].each do |name, test|
+      tests << {
+        name: name,
+        html: test['html'],
+        haml: test['haml'],
+        locals: test['locals'],
+        config: test['config'],
+      }
+    end
+
+    spec += tests.map { |test|
+      locals  = Hash[(test[:locals] || {}).map {|x, y| [x.to_sym, y]}]
+      options = Hash[(test[:config] || {}).map {|x, y| [x.to_sym, y]}]
+      options[:format] = options[:format].to_sym if options[:format]
+
+      generate_specify(test, locals, options, mode)
+    }.join("\n")
+    spec += "  end\n"
+  end
+
+  spec += "end\n"
+  File.write("#{mode}_test.rb", spec)
+end
+
+def generate_specify(test, locals, options, mode)
+  <<-SPEC
+    def test_#{escape_name(test[:name], '_')}
+      haml    = %q{#{test[:haml]}}
+      html    = %q{#{test[:html]}}
+      locals  = #{locals}
+      options = #{options}
+      haml_result = #{mode.capitalize}Test.haml_result(haml, options, locals)
+      hamlit_result = #{mode.capitalize}Test.hamlit_result(haml, options, locals)
+      assert_equal haml_result, hamlit_result
+    end
+  SPEC
+end
+
+desc 'Convert tests.yml into ugly tests'
+task :pretty do
+  generate_spec(:pretty)
+end
+
+desc 'Convert tests.yml into ugly tests'
+task :ugly do
+  generate_spec(:ugly)
+end

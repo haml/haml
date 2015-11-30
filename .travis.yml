@@ -1,42 +1,30 @@
 language: ruby
-rvm:
-  - 2.0.0
-  - 2.1
-  - 2.2
-sudo: false
-cache: bundler
+branches:
+  only:
+    - master
 script:
   - "bundle exec rake $TASK"
-gemfile:
-  - Gemfile
-  - spec/rails/Gemfile
-env:
-  - TASK=spec
-  - TASK=rails:spec
-  - TASK=bench TIME=20
-  - TASK=bench TIME=20 HTML_ESCAPE=1
 matrix:
+  include:
+    - rvm: 2.0.0
+      env: TASK=test
+    - rvm: 2.1
+      env: TASK=test
+    - rvm: 2.2
+      env: TASK=test
+    - rvm: 2.2
+      env: TASK=bench TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
+    - rvm: 2.2
+      env: TASK=bench TEMPLATE=benchmark/dynamic_attributes/boolean_attribute.haml,benchmark/dynamic_attributes/class_attribute.haml,benchmark/dynamic_attributes/id_attribute.haml,benchmark/dynamic_attributes/data_attribute.haml,benchmark/dynamic_attributes/common_attribute.haml
+    - rvm: 2.2
+      env: TASK=bench TEMPLATE=benchmark/etc/attribute_builder.haml
+    - rvm: 2.2
+      env: TASK=bench SLIM_BENCH=1
+    - rvm: 2.2
+      env: TASK=bench TEMPLATE=test/haml/templates/standard.haml COMPILE=1
   allow_failures:
-    - env: TASK=bench TIME=20
-    - env: TASK=bench TIME=20 HTML_ESCAPE=1
-  exclude:
-    - env: TASK=spec
-      gemfile: spec/rails/Gemfile
-    - env: TASK=rails:spec
-      gemfile: Gemfile
-    - env: TASK=bench TIME=20
-      gemfile: spec/rails/Gemfile
-    - env: TASK=bench TIME=20 HTML_ESCAPE=1
-      gemfile: spec/rails/Gemfile
-    - rvm: 2.1
-      env: TASK=rails:spec
-    - rvm: 2.1
-      env: TASK=bench TIME=20
-    - rvm: 2.1
-      env: TASK=bench TIME=20 HTML_ESCAPE=1
-    - rvm: 2.0.0
-      env: TASK=rails:spec
-    - rvm: 2.0.0
-      env: TASK=bench TIME=20
-    - rvm: 2.0.0
-      env: TASK=bench TIME=20 HTML_ESCAPE=1
+    - env: TASK=bench TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
+    - env: TASK=bench TEMPLATE=benchmark/dynamic_attributes/boolean_attribute.haml,benchmark/dynamic_attributes/class_attribute.haml,benchmark/dynamic_attributes/id_attribute.haml,benchmark/dynamic_attributes/data_attribute.haml,benchmark/dynamic_attributes/common_attribute.haml
+    - env: TASK=bench TEMPLATE=benchmark/etc/attribute_builder.haml
+    - env: TASK=bench SLIM_BENCH=1
+    - env: TASK=bench TEMPLATE=test/haml/templates/standard.haml COMPILE=1

@@ -1,11 +1,13 @@
-require 'hamlit/filters/tilt'
-
 module Hamlit
-  module Filters
-    class Coffee < Filters::Tilt
-      def compile(lines)
-        ast = [:html, :tag, 'script', [:html, :attrs]]
-        compile_with_tilt('coffee', lines.join("\n"), ast)
+  class Filters
+    class Coffee < TiltBase
+      def compile(node)
+        require 'tilt/coffee' if explicit_require?
+        temple = [:multi]
+        temple << [:static, "<script>\n".freeze]
+        temple << compile_with_tilt(node, 'coffee', indent_width: 2)
+        temple << [:static, "</script>".freeze]
+        temple
       end
     end
   end

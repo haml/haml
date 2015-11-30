@@ -1,10 +1,9 @@
-require 'hamlit/filters/tilt'
-
 module Hamlit
-  module Filters
-    class Markdown < Filters::Tilt
-      def compile(lines)
-        compile_with_tilt('markdown', lines.join("\n"), [], indent_width: 0)
+  class Filters
+    class Markdown < TiltBase
+      def compile(node)
+        require 'tilt/redcarpet' if explicit_require?
+        compile_with_tilt(node, 'markdown')
       end
     end
   end

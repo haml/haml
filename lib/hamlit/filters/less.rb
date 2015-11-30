@@ -1,11 +1,13 @@
-require 'hamlit/filters/tilt'
-
 module Hamlit
-  module Filters
-    class Less < Filters::Tilt
-      def compile(lines)
-        ast = [:html, :tag, 'style', [:html, :attrs]]
-        compile_with_tilt('less', lines.join("\n"), ast)
+  class Filters
+    class Less < TiltBase
+      def compile(node)
+        require 'tilt/less' if explicit_require?
+        temple = [:multi]
+        temple << [:static, "<style>\n".freeze]
+        temple << compile_with_tilt(node, 'less', indent_width: 2)
+        temple << [:static, "</style>".freeze]
+        temple
       end
     end
   end

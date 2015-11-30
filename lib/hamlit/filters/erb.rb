@@ -1,10 +1,8 @@
-require 'hamlit/filters/tilt'
-
 module Hamlit
-  module Filters
-    class Erb < Filters::Tilt
-      def compile(lines)
-        compile_with_tilt('erb', lines.join("\n"), [], indent_width: 0)
+  class Filters
+    class Erb < TiltBase
+      def compile(node)
+        compile_with_tilt(node, 'erb')
       end
     end
   end

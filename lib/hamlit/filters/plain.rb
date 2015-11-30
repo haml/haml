@@ -1,20 +1,16 @@
-require 'hamlit/filters/base'
-
 module Hamlit
-  module Filters
+  class Filters
     class Plain < Base
-      def compile(lines)
-        ast = [:multi]
-        text = compile_lines(lines)
-        text.gsub!(/\n\Z/, '') unless string_interpolated?(text)
-        ast << [:haml, :text, text]
-        ast
-      end
-
-      private
-
-      def string_interpolated?(text)
-        text =~ /\#{[^\#{}]*}/
+      def compile(node)
+        text = node.value[:text].rstrip
+        if ::Hamlit::HamlUtil.contains_interpolation?(text)
+          # FIXME: Confirm whether this is correct or not
+          text << "\n".freeze
+          text = ::Hamlit::HamlUtil.slow_unescape_interpolation(text)
+          [:escape, true, [:dynamic, text]]
+        else
+          [:static, text]
+        end
       end
     end
   end

@@ -1,3 +1,3 @@
 module Hamlit
-  VERSION = "1.7.2"
+  VERSION = '0.1.0'
 end

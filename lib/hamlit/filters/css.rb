@@ -1,14 +1,31 @@
-require 'hamlit/filters/base'
-
 module Hamlit
-  module Filters
-    class Css < Base
-      def compile(lines)
-        if options[:format] == :xhtml
-          return compile_xhtml('style', 'text/css', lines)
+  class Filters
+    class Css < TextBase
+      def compile(node)
+        case @format
+        when :xhtml
+          compile_xhtml(node)
+        else
+          compile_html(node)
         end
+      end
 
-        compile_html('style', lines)
+      private
+
+      def compile_html(node)
+        temple = [:multi]
+        temple << [:static, "<style>\n".freeze]
+        compile_text!(temple, node, '  '.freeze)
+        temple << [:static, "\n</style>".freeze]
+        temple
+      end
+
+      def compile_xhtml(node)
+        temple = [:multi]
+        temple << [:static, "<style type='text/css'>\n  /*<![CDATA[*/\n".freeze]
+        compile_text!(temple, node, '    '.freeze)
+        temple << [:static, "\n  /*]]>*/\n</style>".freeze]
+        temple
       end
     end
   end

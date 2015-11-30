@@ -1,11 +1,13 @@
-require 'hamlit/filters/tilt'
-
 module Hamlit
-  module Filters
-    class Scss < Filters::Tilt
-      def compile(lines)
-        ast = [:html, :tag, 'style', [:html, :attrs]]
-        compile_with_tilt('scss', lines.join("\n"), ast)
+  class Filters
+    class Scss < TiltBase
+      def compile(node)
+        require 'tilt/sass' if explicit_require?
+        temple = [:multi]
+        temple << [:static, "<style>\n".freeze]
+        temple << compile_with_tilt(node, 'scss', indent_width: 2)
+        temple << [:static, "</style>".freeze]
+        temple
       end
     end
   end

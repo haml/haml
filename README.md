@@ -2,27 +2,18 @@
 
 [![Gem Version](https://badge.fury.io/rb/hamlit.svg)](http://badge.fury.io/rb/hamlit)
 [![Build Status](https://travis-ci.org/k0kubun/hamlit.svg?branch=master)](https://travis-ci.org/k0kubun/hamlit)
-[![Coverage Status](https://coveralls.io/repos/k0kubun/hamlit/badge.svg?branch=master)](https://coveralls.io/r/k0kubun/hamlit?branch=master)
-[![Code Climate](https://codeclimate.com/github/k0kubun/hamlit/badges/gpa.svg)](https://codeclimate.com/github/k0kubun/hamlit)
 
-Hamlit is a high performance [haml](https://github.com/haml/haml) implementation.
+Hamlit is a high performance [Haml](https://github.com/haml/haml) implementation.
 
-## Installation
+## Introduction
 
-Add this line to your application's Gemfile:
+### What is Hamlit?
+Hamlit is another implementation of [Haml](https://github.com/haml/haml).
+With some [limitations](REFERENCE.md#limitations) by design for performance,
+Hamlit is **7.16x times faster** than original haml gem in [this benchmark](benchmark/slim/run-benchmarks.rb),
+which is an HTML-escaped version of [slim-template/slim's one](https://github.com/slim-template/slim/blob/v3.0.6/benchmarks/run-benchmarks.rb) for fairness.
 
-```ruby
-gem 'hamlit'
-```
-
-or just replace `gem "haml"` with `gem "hamlit"`.
-
-## Features
-### Fast rendering
-
-![](http://i.gyazo.com/4fe00ff2ac2fa959dfcf86a5e27dc914.png)
-
-Hamlit's rendering is **7.16x times faster** than original haml.
+![Hamlit Benchmark](http://i.gyazo.com/4fe00ff2ac2fa959dfcf86a5e27dc914.png)
 
 ```
     erubis:   114501.6 i/s
@@ -32,56 +23,123 @@ Hamlit's rendering is **7.16x times faster** than original haml.
       haml:    15750.6 i/s - 7.27x slower
 ```
 
-[This benchmark](https://github.com/k0kubun/hamlit/blob/4e5655c4ba1d51c85b4551c3b22baa6d7780d208/benchmarks/benchmark.rb)
-is the same as [slim-template/slim](https://github.com/slim-template/slim)'s one for fairness.
-([The result on travis CI](https://travis-ci.org/k0kubun/hamlit/jobs/58162910))
+### Why is Hamlit faster?
 
-### Better parser
+#### Less string concatenation by design
+As written in [limitations](REFERENCE.md#limitations), Hamlit drops some not-so-important features which require
+works on runtime. With the optimized language design, we can reduce the string concatenation
+to build attributes.
 
-Haml's attribute parser is not so good. For example, raises syntax error for `%a{ b: '}' }`.
-Hamlit's attribute parser is implemented with Ripper, which is an official lexer for Ruby,
-so it is able to parse such an attribute.
+#### Temple optimizers
+Hamlit is built with [Temple](https://github.com/judofyr/temple), which is a framework to build
+template engines and also used in Slim. By using the framework and its optimizers, Hamlit can
+reduce string allocation and concatenation easily.
 
-### Passing haml-spec
+#### Static analyzer
+Hamlit analyzes Ruby expressions with Ripper and render it on compilation if the expression
+is static. And Hamlit can also compile string literal with string interpolation to reduce
+string allocation and concatenation on runtime.
 
-[haml/haml-spec](https://github.com/haml/haml-spec) is a basic suite of tests for Haml interpreters.
-For all test cases in haml-spec, Hamlit behaves the same as Haml (ugly and escape\_html mode only, which is used on production).
-
-Hamlit is used on [githubranking.com](http://githubranking.com/).
+#### C extension to build attributes
+While Hamlit has static analyzer and static attributes are rendered on compilation,
+dynamic attributes must be rendered on runtime. So Hamlit optimizes rendering on runtime
+with C extension.
 
 ## Usage
 
-Basically the same as [haml](https://github.com/haml/haml).
-Check out the [reference documentation](http://haml.info/docs/yardoc/file.REFERENCE.html) for details.
+See [REFERENCE.md](REFERENCE.md) for detail features of Hamlit.
 
 ### Rails
-Just update Gemfile.
+
+Add this line to your application's Gemfile or just replace `gem "haml"` with `gem "hamlit"`.
+It enables rendering by Hamlit for \*.haml automatically.
+
+```rb
+gem 'hamlit'
+```
+
+If you want to use view generator, consider using [hamlit-rails](https://github.com/mfung/hamlit-rails).
 
 ### Sinatra
-Update Gemfile. Html escaping is enabled by default.
-If you want to disable it, add following code.
+
+Replace `gem "haml"` with `gem "hamlit"` in Gemfile, and require "hamlit".
+See [sample/sinatra](sample/sinatra) for working sample.
+
+While Haml disables `escape_html` option by default, Hamlit enables it for security.
+If you want to disable it, please write:
 
 ```rb
 set :haml, { escape_html: false }
 ```
 
-## Why high performance?
-### Less work on runtime
-Haml's rendering is very slow because generated code by haml runs many operations on runtime.
-For example, Haml::Util is extended on view, attribute rendering runs even if it is a
-static value and the values in attribute is sorted. All of them is achieved on runtime.
 
-Hamlit extends ActionView beforehand, attribute rendering is done when compiled if it
-is a static hash and no unnecessary operation is done on runtime.
+## Command line interface
 
-### Temple optimizers
-Hamlit is implemented with [temple](https://github.com/judofyr/temple), which is a template
-engine framework for Ruby. Temple has some great optimizers for generated code. Thus generated
-code by Hamlit is very fast.
+You can see compiled code or rendering result with "hamlit" command.
 
-Not only relying on temple optimizers, but also Hamlit's compiler cares about many cases
-to optimize performance such as string interpolation.
+```bash
+$ gem install hamlit
+$ hamlit --help
+Commands:
+  hamlit compile HAML    # Show compile result
+  hamlit help [COMMAND]  # Describe available commands or one specific command
+  hamlit parse HAML      # Show parse result
+  hamlit render HAML     # Render haml template
+  hamlit temple HAML     # Show temple intermediate expression
+
+$ cat in.haml
+- user_id = 123
+%a{ href: "/users/#{user_id}" }
+
+# Show compiled code
+$ hamlit compile in.haml
+_buf = [];  user_id = 123;
+; _buf << ("<a href='/users/".freeze); _buf << (::Hamlit::Utils.escape_html((user_id))); _buf << ("'></a>\n".freeze); _buf = _buf.join
+
+# Render html
+$ hamlit render in.haml
+<a href='/users/123'></a>
+```
+
+## Contributing
+
+### Development
+
+Contributions are welcomed. It'd be good to see
+[Temple's EXPRESSIONS.md](https://github.com/judofyr/temple/blob/v0.7.6/EXPRESSIONS.md)
+to learn Temple which is a template engine framework used in Hamlit.
+
+```bash
+$ git clone https://github.com/k0kubun/hamlit
+$ cd hamlit
+$ bundle install
+
+# Run all tests
+$ bundle exec rake test
+
+# Run one test
+$ bundle exec ruby -Ilib:test -rtest_helper test/hamlit/line_number_test.rb -l 12
+
+# Show compiling/rendering result of some template
+$ bundle exec exe/hamlit compile in.haml
+$ bundle exec exe/hamlit render in.haml
+
+# Use rails app to debug Hamlit
+$ cd sample/rails
+$ bundle install
+$ bundle exec rails s
+```
+
+### Reporting an issue
+
+Please report an issue with following information:
+
+- Full error backtrace
+- Haml template
+- Ruby version
+- Hamlit version
+- Rails/Sinatra version
 
 ## License
 
-MIT License
+Copyright (c) 2015 Takashi Kokubun

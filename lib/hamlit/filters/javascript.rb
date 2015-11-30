@@ -1,14 +1,31 @@
-require 'hamlit/filters/base'
-
 module Hamlit
-  module Filters
-    class Javascript < Base
-      def compile(lines)
-        if options[:format] == :xhtml
-          return compile_xhtml('script', 'text/javascript', lines)
+  class Filters
+    class Javascript < TextBase
+      def compile(node)
+        case @format
+        when :xhtml
+          compile_xhtml(node)
+        else
+          compile_html(node)
         end
+      end
 
-        compile_html('script', lines)
+      private
+
+      def compile_html(node)
+        temple = [:multi]
+        temple << [:static, "<script>\n".freeze]
+        compile_text!(temple, node, '  '.freeze)
+        temple << [:static, "\n</script>".freeze]
+        temple
+      end
+
+      def compile_xhtml(node)
+        temple = [:multi]
+        temple << [:static, "<script type='text/javascript'>\n  //<![CDATA[\n".freeze]
+        compile_text!(temple, node, '    '.freeze)
+        temple << [:static, "\n  //]]>\n</script>".freeze]
+        temple
       end
     end
   end
