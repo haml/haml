@@ -10,17 +10,17 @@ Hamlit is a high performance [Haml](https://github.com/haml/haml) implementation
 ### What is Hamlit?
 Hamlit is another implementation of [Haml](https://github.com/haml/haml).
 With some [limitations](REFERENCE.md#limitations) by design for performance,
-Hamlit is **7.16x times faster** than original haml gem in [this benchmark](benchmark/slim/run-benchmarks.rb),
-which is an HTML-escaped version of [slim-template/slim's one](https://github.com/slim-template/slim/blob/v3.0.6/benchmarks/run-benchmarks.rb) for fairness.
+Hamlit is **8.54x times faster** than original haml gem in [this benchmark](benchmark/slim/run-benchmarks.rb),
+which is an HTML-escaped version of [slim-template/slim's one](https://github.com/slim-template/slim/blob/v3.0.6/benchmarks/run-benchmarks.rb) for fairness. ([Result on Travis](https://travis-ci.org/k0kubun/hamlit/jobs/93928561))
 
-![Hamlit Benchmark](http://i.gyazo.com/4fe00ff2ac2fa959dfcf86a5e27dc914.png)
+![Hamlit Benchmark](https://i.gyazo.com/ac9eb910c7261cc0181bd7427c860d79.png)
 
 ```
-    erubis:   114501.6 i/s
-    hamlit:   112888.1 i/s - 1.01x slower
-      slim:   103298.5 i/s - 1.11x slower
-      faml:    88675.4 i/s - 1.29x slower
-      haml:    15750.6 i/s - 7.27x slower
+       hamlit v2.0.1:   122622.3 i/s
+         faml v0.7.0:    94239.1 i/s - 1.30x slower
+         slim v3.0.6:    89143.0 i/s - 1.38x slower
+       erubis v2.7.0:    65047.8 i/s - 1.89x slower
+  haml v5.0.0.beta.2:    14363.6 i/s - 8.54x slower
 ```
 
 ### Why is Hamlit faster?
