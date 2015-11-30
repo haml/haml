@@ -75,5 +75,16 @@ Rake::ExtensionTask.new(:hamlit) do |ext|
   ext.lib_dir = 'lib/hamlit'
 end
 
+desc 'bench task for CI'
+task bench: :compile do
+  if ENV['SLIM_BENCH'] == '1'
+    cmd = %w[bundle exec ruby benchmark/slim/run-benchmarks.rb]
+  else
+    cmd = ['bin/bench', 'bench', ('-c' if ENV['COMPILE'] == '1'), *ENV['TEMPLATE'].split(',')].compact
+  end
+  system('bin/clone')
+  exit system(*cmd)
+end
+
 task default: %w[compile hamlit:test]
 task test: %w[compile test:all]

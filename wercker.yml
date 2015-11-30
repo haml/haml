@@ -10,23 +10,23 @@ build:
     - bundle-install
 
     - script:
-        name: clone hamlit1
-        code: bin/clone
-    - script:
         name: test all
         code: bundle exec rake test
     - script:
-        name: Hamlit::AttributeBuilder.build_data micro benchmark
-        code: benchmark/ext/build_data.rb
-    - script:
         name: "[benchmark] static attributes"
-        code: bin/bench bench -t benchmark/boolean_attribute.haml benchmark/class_attribute.haml benchmark/id_attribute.haml benchmark/data_attribute.haml benchmark/common_attribute.haml
+        code: TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml bundle exec rake bench
     - script:
         name: "[benchmark] dynamic attributes"
-        code: bin/bench bench -t benchmark/dynamic_attributes/boolean_attribute.haml benchmark/dynamic_attributes/class_attribute.haml benchmark/dynamic_attributes/id_attribute.haml benchmark/dynamic_attributes/data_attribute.haml benchmark/dynamic_attributes/common_attribute.haml
+        code: TEMPLATE=benchmark/dynamic_attributes/boolean_attribute.haml,benchmark/dynamic_attributes/class_attribute.haml,benchmark/dynamic_attributes/id_attribute.haml,benchmark/dynamic_attributes/data_attribute.haml,benchmark/dynamic_attributes/common_attribute.haml bundle exec rake bench
     - script:
         name: "[benchmark] attribute_builder bench by faml"
-        code: bin/bench bench -t benchmark/etc/attribute_builder.haml
+        code: TEMPLATE=benchmark/etc/attribute_builder.haml bundle exec rake bench
+    - script:
+        name: "[benchmark] benchmark by slim"
+        code: SLIM_BENCH=1 bundle exec rake bench
+    - script:
+        name: "[benchmark] compilation of haml's standard.haml"
+        code: TEMPLATE=test/haml/templates/standard.haml COMPILE=1 bundle exec rake bench
 
     - rvm-use:
         version: 2.1.7
