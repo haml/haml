@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/k0kubun/hamlit'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features|hamlit1|sample)/}) }
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features|hamlit1|sample)/}) } + `git -C ext/hamlit/houdini ls-files -z`.split("\x0").map { |path| "ext/hamlit/houdini/#{path}" }
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.extensions    = ['ext/hamlit/extconf.rb']
