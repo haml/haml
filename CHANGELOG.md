@@ -1,4 +1,8 @@
-## v2.0.0
+## v2.0.1
+
+- Fix build failure of native extension
+
+## v2.0.0 (yanked due to gemspec mistake)
 
 - Full scratch of internal implementation
   - Rendering is strongly optimized
