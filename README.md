@@ -1,5 +1,8 @@
 # Hamlit
 
+[![Gem Version](https://badge.fury.io/rb/hamlit.svg)](http://badge.fury.io/rb/hamlit)
+[![Build Status](https://travis-ci.org/k0kubun/hamlit.svg?branch=master)](https://travis-ci.org/k0kubun/hamlit)
+
 Hamlit is a high performance [Haml](https://github.com/haml/haml) implementation.
 
 ## Introduction
