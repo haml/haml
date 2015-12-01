@@ -15,7 +15,7 @@ class Bench < Thor
   option :compile, type: :boolean, aliases: ['-c']
   option :show_code, type: :boolean, aliases: ['-s']
   def bench(*files)
-    files.each { |file| render(file) unless options[:compile] }
+    files.each { |file| render(file) }
     files.each { |file| compile(file) if options[:compile] }
     files.each { |file| code(file) if options[:show_code] }
   end
