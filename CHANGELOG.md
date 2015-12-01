@@ -1,17 +1,20 @@
 # Change Log
 
 All notable changes to this project will be documented in this file. This
-project adheres to [Semantic Versioning]. This change log is based upon
-[keep-a-changelog].
+project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
+[keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
-## [Unreleased]
+## [HEAD]
+- No changes
 
 ## [2.0.1] - 2015-11-30
 
 ### Fixed
 - Fix build failure of native extension
 
-## [2.0.0] - 2015-11-30 [YANKED] due to gemspec mistake
+## [2.0.0] - 2015-11-30 [YANKED]
+### Added
+- Support object reference
 
 ### Changed
 - Full scratch of internal implementation
@@ -21,7 +24,6 @@ project adheres to [Semantic Versioning]. This change log is based upon
      - Optimized compilation for 5 types of attributes
   - Compilation became faster too
   - Many rendering incompatibilities are resolved
-  - Object reference support
 - [**breaking**] Replaced parser with original Haml's one
   - Incompatible parsing error will never happen, but we can no longer parse
     attributes with Ripper
@@ -331,7 +333,7 @@ Added
 - Escape haml operators by backslash
   [#11](https://github.com/k0kubun/hamlit/issues/11).  *Thanks to @mono0x*
 
-## [0.4.0] - 2015-04-05 [YANKED] This behavior is not compatible with Haml.
+## [0.4.0] - 2015-04-05 [YANKED]
 
 ### Added
 - Automatically escape html in sinatra
@@ -365,13 +367,13 @@ Added
 ### Added
 - Specify a version in dependency of temple
 
-## [0.2.0]- 2015-03-30
+## [0.2.0] - 2015-03-30
 
 ### Added
 - Allow comments in script [#3](https://github.com/k0kubun/hamlit/issues/3).
   *Thanks to @eagletmt*
 
-## [0.1.3]- 2015-03-30
+## [0.1.3] - 2015-03-30
 
 ### Fixed
 - Bugfix for [#1](https://github.com/k0kubun/hamlit/issues/1) attribute nesting
@@ -395,9 +397,6 @@ Added
 - Initial release
   - Passing haml-spec with ugly mode
 
-[Semantic Versioning]: http://semver.org/
-[keep-a-changelog]: https://github.com/olivierlacan/keep-a-changelog
-[Unreleased]: https://github.com/k0kubun/hamlit/compare/v2.0.1...HEAD
 [0.1.0]: https://github.com/k0kubun/hamlit/compare/9cf8216...v0.1.0
 [0.1.1]: https://github.com/k0kubun/hamlit/compare/v0.1.0...v0.1.1
 [0.1.2]: https://github.com/k0kubun/hamlit/compare/v0.1.1...v0.1.2
@@ -458,3 +457,4 @@ Added
 [1.7.2]: https://github.com/k0kubun/hamlit/compare/v1.7.1...v1.7.2
 [2.0.0]: https://github.com/k0kubun/hamlit/compare/v1.7.2...v2.0.0
 [2.0.1]: https://github.com/k0kubun/hamlit/compare/v2.0.0...v2.0.1
+[HEAD]: https://github.com/k0kubun/hamlit/compare/v2.0.1...HEAD
