@@ -1,16 +1,19 @@
 # Change Log
 
 All notable changes to this project will be documented in this file. This
-project adheres to [Semantic Versioning].
+project adheres to [Semantic Versioning]. This change log is based upon
+[keep-a-changelog].
 
 ## [Unreleased]
 
 ## [2.0.1] - 2015-11-30
 
+### Fixed
 - Fix build failure of native extension
 
 ## [2.0.0] - 2015-11-30 [YANKED] due to gemspec mistake
 
+### Changed
 - Full scratch of internal implementation
   - Rendering is strongly optimized
      - Static analyzer is introduced
@@ -19,162 +22,199 @@ project adheres to [Semantic Versioning].
   - Compilation became faster too
   - Many rendering incompatibilities are resolved
   - Object reference support
-  - Breaking changes:
-     - Replaced parser with original Haml's one
-         - Incompatible parsing error will never happen, but we can no longer
-           parse attributes with Ripper
-     - Unified behavior for both static and dynamic attributes, see [5 types of
-       attributes](REFERENCE.md#5-types-of-attributes)
-         - Though inconsistent behavior is removed, we can no longer rely on
-           completely-Haml-compatible behavior of static attributes and pass
-           haml-spec
-     - Added :escape\_attrs option
-         - You should specify HTML-escaping availability for script and attrs
-           separately.
+- [**breaking**] Replaced parser with original Haml's one
+  - Incompatible parsing error will never happen, but we can no longer parse
+    attributes with Ripper
+- [**breaking**] Unified behavior for both static and dynamic attributes, see
+  [5 types of attributes](REFERENCE.md#5-types-of-attributes)
+  - Though inconsistent behavior is removed, we can no longer rely on
+    completely-Haml-compatible behavior of static attributes and pass haml-spec
+- [**breaking**] Added :escape\_attrs option
+  - You should specify HTML-escaping availability for script and attrs
+    separately.
 
 ## [1.7.2] - 2015-07-22
 
+### Fixed
 - Bugfix about parsing a content of tag
   - This was introduced in v1.6.6.
 
 ## [1.7.1] - 2015-07-21
 
+### Fixed
 - Don't escape a block content of some helpers
-  - https://github.com/k0kubun/hamlit/issues/35
-  - Thanks to @felixbuenemann
+  [#35](https://github.com/k0kubun/hamlit/issues/35). *Thanks to @felixbuenemann*
 
 ## [1.7.0] - 2015-07-09
 
+### Added
 - Support Ruby 2.2.0 hash syntax
   - like `{ "hyphened-key": "value" }`
 
 ## [1.6.7] - 2015-06-27
 
+### Fixed
 - Remove unused variables and avoid shadowing
   - To suppress warnings in application using `rspec --warnings`
 
 ## [1.6.6] - 2015-06-24
 
+### Added
 - Allow hyphenated HTML-style attributes
-  - https://github.com/k0kubun/hamlit/pull/29
-  - Thanks to @babelfish
+  [pull #29](https://github.com/k0kubun/hamlit/pull/29). *thanks to @babelfish*
 
 ## [1.6.5] - 2015-06-13
 
+### Fixed
 - Don't duplicate element class and attribute class
 - Raise an error for an empty tag name
 
 ## [1.6.4] - 2015-06-13
 
+### Changed
 - Show human-friendly error messages
+
+### Fixed
 - Fix line number of runtime syntax error
-- Increase the number of checked cases for illegal nesting
-  - Thanks to @eagletmt
+- Increase the number of checked cases for illegal nesting.
+  *Thanks to @eagletmt*
 
 ## [1.6.3] - 2015-06-13
 
+### Fixed
 - Fix ! and & parsing inside a tag
-  - https://github.com/k0kubun/hamlit/issues/27#issuecomment-111593458
-  - Thanks to @leesmith
+  [#27](https://github.com/k0kubun/hamlit/issues/27#issuecomment-111593458).
+  *Thanks to @leesmith*
 
 ## [1.6.2] - 2015-06-11
 
+### Fixed
 - Reject a content for self-closing tags
 - Reject nesing within self-closing tags
 
 ## [1.6.1] - 2015-06-11
 
+### Fixed
 - Parse N-space indentation
-  - https://github.com/k0kubun/hamlit/issues/26
-  - Thanks to @eagletmt
+  [#26](https://github.com/k0kubun/hamlit/issues/26). *Thanks to @eagletmt*
 
 ## [1.6.0] - 2015-06-11
 
+### Fixed
 - Fix line number of compiled code for new attributes
-- Render HTML entities normally for plain text
-  - https://github.com/k0kubun/hamlit/issues/27
-  - Thanks to @jeffblake
+- Render HTML entities normally for plain text 
+  [#27](https://github.com/k0kubun/hamlit/issues/27). *Thanks to @jeffblake*
 
 ## [1.5.9] - 2015-06-08
 
+### Fixed
 - Reject silent script after a tag
 
 ## [1.5.8] - 2015-06-08
 
+### Fixed
 - Fix parsing inline script for != and &=
 
 ## [1.5.7] - 2015-06-08
 
+### Fixed
 - Fix the behavior for multi-line script
 
 ## [1.5.6] - 2015-06-07
 
+### Added
 - Raise error for unbalanced brackets
+
+### Changed
 - Don't render newline after block script
 
 ## [1.5.5] - 2015-06-07
 
+### Added
 - Support &, &== operator
+
+### Changed
 - Depend on v0.7.6 of temple for refactoring
+
+### Fixed
 - Fix a trivial diff of rendering multiline operator
 
 ## [1.5.4] - 2015-06-07
 
+### Changed
 - Recursively remove whitespace inside a tag
+
+### Fixed
 - Fix ! operator immediately before whitespace
 
 ## [1.5.3] - 2015-06-06
 
+### Added
 - Support !, !=, !==, &= and ~ as inline operators
 
 ## [1.5.2] - 2015-06-06
 
+### Changed
 - Disable html escaping in CSS and JavaScript filter
 
 ## [1.5.1] - 2015-06-05
 
+### Changed
 - Remove outer whitespace in the block
 
 ## [1.5.0] - 2015-06-03
 
+### Changed
 - Remake implementation of outer whitespace removal
 
 ## [1.4.7] - 2015-06-03
 
+### Changed
 - Sort static old attributes by name
+
+### Fixed
 - Bugfix for old array attributes with class element
 
 ## [1.4.6] - 2015-06-03
 
+### Added
 - Support `!==`, `==` operator
+
+### Fixed
 - Avoid regarding spaced block as multiline
 
 ## [1.4.5] - 2015-06-02
 
+### Fixed
 - Support Ruby 2.0 and 2.1 for v1.4.4
 
 ## [1.4.4] - 2015-06-02 [YANKED]
 
+### Fixed
 - Fix old attribute parser to be more flexible
   - Accept multiple hashes as old attributes
   - Accept old attributes with hash and literal
 
 ## [1.4.3] - 2015-06-02
 
+### Changed
 - Allow `when` to have multiple candidates
 - Allow `rescue` to specify an error variable
 
 ## [1.4.2] - 2015-05-31
 
+### Added
 - Support `!` operator
   - It disables html escaping for interpolated text
 
 ## [1.4.1] - 2015-05-31
 
+### Fixed
 - Fix code mistake in 1.4.0
 
 ## [1.4.0] - 2015-05-31 [YANKED]
 
+### Added
 - Escape interpolated string in plain text
 
 ## [1.3.2] - 2015-05-30
@@ -183,167 +223,180 @@ project adheres to [Semantic Versioning].
 
 ## [1.3.1] - 2015-05-30
 
+### Fixed
 - Bugfix about a backslash-only comment
 - Don't strip a plain text
 
 ## [1.3.0] - 2015-05-16
 
+### Added
 - Resurrect escape\_html option
+  [#25](https://github.com/k0kubun/hamlit/issues/25).
+  *Thanks to @resistorsoftware*
   - Still enabled by default
   - This has been dropped since v0.6.0
-  - https://github.com/k0kubun/hamlit/issues/25
-  - Thanks to @resistorsoftware
 
 ## [1.2.1] - 2015-05-15
 
+### Fixed
 - Fix the list of boolean attributes
-  - https://github.com/k0kubun/hamlit/issues/24
-  - Thanks to @jeffblake
+  [#24](https://github.com/k0kubun/hamlit/issues/24). *Thanks to @jeffblake*
 
 ## [1.2.0] - 2015-05-06
 
+Added
 - Support `succeed`, `precede` and `surround`
-  - https://github.com/k0kubun/hamlit/issues/22
-  - Thanks to @sneakernets
+  [#22](https://github.com/k0kubun/hamlit/issues/22). *Thanks to @sneakernets*
 
 ## [1.1.1] - 2015-05-06
 
+### Fixed
 - Bugfix of rendering array attributes
 
 ## [1.1.0] - 2015-05-06
 
+### Fixed 
 - Join id and class attributes
-  - https://github.com/k0kubun/hamlit/issues/23
-  - Thanks to @felixbuenemann
+  [#23](https://github.com/k0kubun/hamlit/issues/23).
+  *Thanks to @felixbuenemann*
 
 ## [1.0.0] - 2015-04-12
 
+### Added
 - Use escape\_utils gem for faster escape\_html
 
 ## [0.6.2] - 2015-04-12
 
+### Fixed 
 - Don't render falsy attributes
-  - https://github.com/k0kubun/hamlit/issues/2
-  - Thanks to @eagletmt
+  [#2](https://github.com/k0kubun/hamlit/issues/2). *Thanks to @eagletmt*
 
 ## [0.6.1] - 2015-04-12
 
+### Fixed
 - Bugfix of line numbers for better error backtrace
-  - https://github.com/k0kubun/hamlit/pull/19
+  [pull #19](https://github.com/k0kubun/hamlit/pull/19)
 
 ## [0.6.0] - 2015-04-12
 
+### Added
 - Automatically escape html in all situations
-  - https://github.com/k0kubun/hamlit/pull/18
+  [pull #18](https://github.com/k0kubun/hamlit/pull/18)
 
 ## [0.5.3] - 2015-04-12
 
+### Fixed
 - Bugfix for syntax error in data attribute hash
-  - https://github.com/k0kubun/hamlit/issues/17
-  - Thanks to @eagletmt
+  [#17](https://github.com/k0kubun/hamlit/issues/17).  *Thanks to @eagletmt*
 
 ## [0.5.2] - 2015-04-12
 
+### Fixed
 - Bugfix for silent script without block
-  - https://github.com/k0kubun/hamlit/issues/16
-  - Thanks to @eagletmt
+  [#16](https://github.com/k0kubun/hamlit/issues/16).  *Thanks to @eagletmt*
 
 ## [0.5.1] - 2015-04-12
 
+### Fixed
 - Bugfix about duplicated id and class
-  - https://github.com/k0kubun/hamlit/issues/4
-  - Thanks to @os0x
+  [#4](https://github.com/k0kubun/hamlit/issues/4).  *Thanks to @os0x*
 
 ## [0.5.0] - 2015-04-12
 
+### Fixed
 - Escape special characters in attribute values
- - https://github.com/k0kubun/hamlit/issues/10
- - Thanks to @mono0x, @eagletmt
+  [#10](https://github.com/k0kubun/hamlit/issues/10). *Thanks to @mono0x,
+  @eagletmt*
 
 ## [0.4.3] - 2015-04-12
 
-- Allow empty else statement
-  - https://github.com/k0kubun/hamlit/issues/14
-  - Thanks to @jeffblake
-- Accept comment-only script
-  - https://github.com/k0kubun/hamlit/issues/13
-  - Thanks to @jeffblake
+### Fixed
+- Allow empty else statement [#14](https://github.com/k0kubun/hamlit/issues/14).
+  *Thanks to @jeffblake*
+- Accept comment-only script [#13](https://github.com/k0kubun/hamlit/issues/13).
+  *Thanks to @jeffblake*
 
 ## [0.4.2] - 2015-04-05
 
+### Fixed
 - Bugfix about parsing nested attributes
-  - https://github.com/k0kubun/hamlit/issues/12
-  - Thanks to @creasty
+  [#12](https://github.com/k0kubun/hamlit/issues/12). *Thanks to @creasty*
 
 ## [0.4.1] - 2015-04-05
 
+### Removed
+- Automatic escape html is sintara, consult `README.md`.
+
+### Fixed
 - Escape haml operators by backslash
-  - https://github.com/k0kubun/hamlit/issues/11
-  - Thanks to @mono0x
+  [#11](https://github.com/k0kubun/hamlit/issues/11).  *Thanks to @mono0x*
 
-## [0.4.0] - 2015-04-05 [YANKED]
+## [0.4.0] - 2015-04-05 [YANKED] This behavior is not compatible with Haml.
 
+### Added
 - Automatically escape html in sinatra
-  - This behavior is not compatible with Haml.
-  - Removed from next version.
 
 ## [0.3.4] - 2015-04-02
 
-- Allow tab indentation
-  - https://github.com/k0kubun/hamlit/issues/9
-  - Thanks to @tdtds
+### Fixed
+- Allow tab indentation [#9](https://github.com/k0kubun/hamlit/issues/9).
+  *Thanks to @tdtds*
 
 ## [0.3.3] - 2015-04-01
 
-- Accept multi byte parsing
-  - https://github.com/k0kubun/hamlit/issues/8
-  - Thanks to @machu
+### Fixed
+- Accept multi byte parsing [#8](https://github.com/k0kubun/hamlit/issues/8).
+  *Thanks to @machu*
 
 ## [0.3.2] - 2015-03-31
 
-- Bugfix for compiling old attributes
-  - https://github.com/k0kubun/hamlit/issues/7
-  - Thanks to @creasty
+### Fixed
+- Bugfix for compiling old attributes [#7](https://github.com/k0kubun/hamlit/issues/7).
+  *Thanks to @creasty*
 
 ## [0.3.1] - 2015-03-31
 
-- Hyphenate data attributes
-  - https://github.com/k0kubun/hamlit/issues/5
-  - Thanks to @os0x
+### Fixed
+- Hyphenate data attributes [#5](https://github.com/k0kubun/hamlit/issues/5).
+  *Thanks to @os0x*
 
 ## [0.3.0] - 2015-03-31
 
+### Added
 - Specify a version in dependency of temple
 
 ## [0.2.0]- 2015-03-30
 
-- Allow comments in script
-  - https://github.com/k0kubun/hamlit/issues/3
-  - Thanks to @eagletmt
+### Added
+- Allow comments in script [#3](https://github.com/k0kubun/hamlit/issues/3).
+  *Thanks to @eagletmt*
 
 ## [0.1.3]- 2015-03-30
 
-- Bugfix for attribute nesting on runtime
-  - https://github.com/k0kubun/hamlit/issues/1
-  - Thanks to @eagletmt
+### Fixed
+- Bugfix for [#1](https://github.com/k0kubun/hamlit/issues/1) attribute nesting
+  on runtime. *Thanks to @eagletmt*
 
 ## [0.1.2] - 2015-03-30
 
+### Fixed
 - Ignore false or nil values in attributes
-  - Partial fix for https://github.com/k0kubun/hamlit/issues/2
-  - Thanks to @eagletmt
+  - Partial fix for [#2](https://github.com/k0kubun/hamlit/issues/2).
+    *Thanks to @eagletmt*
 
 ## [0.1.1] - 2015-03-30
 
+### Removed
 - Drop obsolete `--ugly` option for CLI
-  - Currently pretty mode is not implemented #2.
+  - Currently pretty mode is not implemented #2
 
 ## [0.1.0] - 2015-03-30
 
 - Initial release
-  - Passing haml-spec with ugly mode.
+  - Passing haml-spec with ugly mode
 
 [Semantic Versioning]: http://semver.org/
+[keep-a-changelog]: https://github.com/olivierlacan/keep-a-changelog
 [Unreleased]: https://github.com/k0kubun/hamlit/compare/v2.0.1...HEAD
 [0.1.0]: https://github.com/k0kubun/hamlit/compare/9cf8216...v0.1.0
 [0.1.1]: https://github.com/k0kubun/hamlit/compare/v0.1.0...v0.1.1
