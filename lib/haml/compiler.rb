@@ -6,10 +6,16 @@ module Haml
 
     def initialize(options)
       @options     = options
+      @options     = Options.new(options) unless options.is_a?(Options)
       @output_tabs = 0
       @to_merge    = []
       @precompiled = ''
       @node        = nil
+    end
+
+    def call(node)
+      compile(node)
+      @precompiled
     end
 
     def compile(node)
@@ -21,18 +27,6 @@ module Haml
       end
     ensure
       @node = parent
-    end
-
-    # The source code that is evaluated to produce the Haml document.
-    #
-    # This is automatically converted to the correct encoding
-    # (see {file:REFERENCE.md#encodings the `:encoding` option}).
-    #
-    # @return [String]
-    def precompiled
-      encoding = Encoding.find(@options.encoding)
-      return @precompiled.force_encoding(encoding) if encoding == Encoding::ASCII_8BIT
-      return @precompiled.encode(encoding)
     end
 
     private

@@ -1,18 +1,6 @@
 require 'temple'
 
 module Haml
-  class CompilerFilter
-    def initialize(options = {})
-      @options = Options.new(options)
-    end
-
-    def call(node)
-      compiler = @options.compiler_class.new(@options)
-      compiler.compile(node)
-      compiler.precompiled
-    end
-  end
-
   class TempleEngine < Temple::Engine
     define_options(
       :attr_wrapper         => "'",
@@ -37,14 +25,20 @@ module Haml
       :trace                => false
     )
 
-    use :Parser, -> { options[:parser_class] }
-    use CompilerFilter
+    use :Parser,   -> { options[:parser_class] }
+    use :Compiler, -> { options[:compiler_class] }
 
     def compile(template)
       initialize_encoding(template, options[:encoding])
       @precompiled = call(template)
     end
 
+    # The source code that is evaluated to produce the Haml document.
+    #
+    # This is automatically converted to the correct encoding
+    # (see {file:REFERENCE.md#encodings the `:encoding` option}).
+    #
+    # @return [String]
     def precompiled
       encoding = Encoding.find(@encoding || '')
       return @precompiled.force_encoding(encoding) if encoding == Encoding::ASCII_8BIT
@@ -55,6 +49,12 @@ module Haml
       "#{precompiled};#{precompiled_method_return_value}"
     end
 
+    # The source code that is evaluated to produce the Haml document.
+    #
+    # This is automatically converted to the correct encoding
+    # (see {file:REFERENCE.md#encodings the `:encoding` option}).
+    #
+    # @return [String]
     def precompiled_with_ambles(local_names)
       preamble = <<END.tr!("\n", ';')
 begin
