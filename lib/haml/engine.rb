@@ -7,6 +7,7 @@ require 'haml/helpers'
 require 'haml/buffer'
 require 'haml/filters'
 require 'haml/error'
+require 'haml/temple_engine'
 
 module Haml
   # This is the frontend for using Haml programmatically.
@@ -63,6 +64,9 @@ module Haml
       @compiler = @options.compiler_class.new(@options)
 
       @compiler.compile(parser.parse)
+
+      @temple_engine = TempleEngine.new(options)
+      @temple_engine.compile(@template)
     end
 
     # Processes the template and returns the result as a string.
@@ -122,7 +126,7 @@ module Haml
       scope_object.extend(Haml::Helpers)
       scope_object.instance_variable_set(:@haml_buffer, buffer)
       begin
-        eval(@compiler.precompiled_with_return_value, scope, @options.filename, @options.line)
+        eval(@temple_engine.precompiled_with_return_value, scope, @options.filename, @options.line)
       rescue ::SyntaxError => e
         raise SyntaxError, e.message
       end

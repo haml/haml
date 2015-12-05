@@ -21,6 +21,14 @@ module Haml
     alias_method :precompiled_method_return_value, :precompiled_method_return_value_with_haml_xss
   end
 
+  class TempleEngine
+    def precompiled_method_return_value_with_haml_xss
+      "::Haml::Util.html_safe(#{precompiled_method_return_value_without_haml_xss})"
+    end
+    alias_method :precompiled_method_return_value_without_haml_xss, :precompiled_method_return_value
+    alias_method :precompiled_method_return_value, :precompiled_method_return_value_with_haml_xss
+  end
+
   module Helpers
     include Haml::Helpers::XssMods
   end
