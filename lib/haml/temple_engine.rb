@@ -1,16 +1,6 @@
 require 'temple'
 
 module Haml
-  class ParserFilter
-    def initialize(options = {})
-      @options = Options.new(options)
-    end
-
-    def call(template)
-      @options.parser_class.new(template, @options).parse
-    end
-  end
-
   class CompilerFilter
     def initialize(options = {})
       @options = Options.new(options)
@@ -47,7 +37,7 @@ module Haml
       :trace                => false
     )
 
-    use ParserFilter
+    use :Parser, -> { options[:parser_class] }
     use CompilerFilter
 
     def compile(template)
