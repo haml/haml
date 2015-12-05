@@ -1,17 +1,25 @@
 require 'temple'
 
 module Haml
-  class EngineFilter
+  class ParserFilter
     def initialize(options = {})
       @options = Options.new(options)
     end
 
     def call(template)
-      parser    = @options.parser_class.new(template, @options)
-      @compiler = @options.compiler_class.new(@options)
+      @options.parser_class.new(template, @options).parse
+    end
+  end
 
-      @compiler.compile(parser.parse)
-      @compiler.precompiled
+  class CompilerFilter
+    def initialize(options = {})
+      @options = Options.new(options)
+    end
+
+    def call(node)
+      compiler = @options.compiler_class.new(@options)
+      compiler.compile(node)
+      compiler.precompiled
     end
   end
 
@@ -39,7 +47,8 @@ module Haml
       :trace                => false
     )
 
-    use EngineFilter
+    use ParserFilter
+    use CompilerFilter
 
     def compile(template)
       initialize_encoding(template, options[:encoding])
