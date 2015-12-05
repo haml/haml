@@ -36,7 +36,6 @@ module Haml
     attr_accessor :indentation
 
     attr_accessor :compiler
-    attr_accessor :parser
 
     # Tilt currently depends on these moved methods, provide a stable API
     def_delegators :compiler, :precompiled, :precompiled_method_return_value
@@ -60,10 +59,10 @@ module Haml
 
       initialize_encoding options[:encoding]
 
-      @parser   = @options.parser_class.new(@template, @options)
+      parser    = @options.parser_class.new(@template, @options)
       @compiler = @options.compiler_class.new(@options)
 
-      @compiler.compile(@parser.parse)
+      @compiler.compile(parser.parse)
     end
 
     # Processes the template and returns the result as a string.
