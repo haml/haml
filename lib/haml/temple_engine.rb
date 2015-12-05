@@ -56,6 +56,23 @@ module Haml
       "#{precompiled};#{precompiled_method_return_value}"
     end
 
+    def precompiled_with_ambles(local_names)
+      preamble = <<END.tr!("\n", ';')
+begin
+extend Haml::Helpers
+_hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{Options.new(options).for_buffer.inspect})
+_erbout = _hamlout.buffer
+@output_buffer = output_buffer ||= ActionView::OutputBuffer.new rescue nil
+END
+      postamble = <<END.tr!("\n", ';')
+#{precompiled_method_return_value}
+ensure
+@haml_buffer = @haml_buffer.upper if @haml_buffer
+end
+END
+      "#{preamble}#{locals_code(local_names)}#{precompiled};#{postamble}"
+    end
+
     private
 
     def initialize_encoding(template, given_value)
@@ -70,6 +87,28 @@ module Haml
     # This method exists so it can be monkeypatched to return modified values.
     def precompiled_method_return_value
       "_erbout"
+    end
+
+    def locals_code(names)
+      names = names.keys if Hash === names
+
+      names.each_with_object('') do |name, code|
+        # Can't use || because someone might explicitly pass in false with a symbol
+        sym_local = "_haml_locals[#{inspect_obj(name.to_sym)}]"
+        str_local = "_haml_locals[#{inspect_obj(name.to_s)}]"
+        code << "#{name} = #{sym_local}.nil? ? #{str_local} : #{sym_local};"
+      end
+    end
+
+    def inspect_obj(obj)
+      case obj
+      when String
+        %Q!"#{obj.gsub(/[\x00-\x7F]+/) {|s| s.inspect[1...-1]}}"!
+      when Symbol
+        ":#{inspect_obj(obj.to_s)}"
+      else
+        obj.inspect
+      end
     end
   end
 end

@@ -170,7 +170,7 @@ module Haml
 
       begin
         eval("Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {};" <<
-             compiler.precompiled_with_ambles(local_names) << "}\n", scope, @options.filename, @options.line)
+             @temple_engine.precompiled_with_ambles(local_names) << "}\n", scope, @options.filename, @options.line)
       rescue ::SyntaxError => e
         raise SyntaxError, e.message
       end
@@ -217,7 +217,7 @@ module Haml
     def def_method(object, name, *local_names)
       method = object.is_a?(Module) ? :module_eval : :instance_eval
 
-      object.send(method, "def #{name}(_haml_locals = {}); #{compiler.precompiled_with_ambles(local_names)}; end",
+      object.send(method, "def #{name}(_haml_locals = {}); #{@temple_engine.precompiled_with_ambles(local_names)}; end",
                   @options.filename, @options.line)
     end
 
