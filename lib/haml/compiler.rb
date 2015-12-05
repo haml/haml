@@ -35,50 +35,7 @@ module Haml
       return @precompiled.encode(encoding)
     end
 
-    def precompiled_with_return_value
-      "#{precompiled};#{precompiled_method_return_value}"
-    end
-
-    # Returns the precompiled string with the preamble and postamble.
-    #
-    # Initializes to ActionView::OutputBuffer when available; this is necessary
-    # to avoid ordering issues with partial layouts in Rails. If not available,
-    # initializes to nil.
-    def precompiled_with_ambles(local_names)
-      preamble = <<END.tr!("\n", ';')
-begin
-extend Haml::Helpers
-_hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{options.for_buffer.inspect})
-_erbout = _hamlout.buffer
-@output_buffer = output_buffer ||= ActionView::OutputBuffer.new rescue nil
-END
-      postamble = <<END.tr!("\n", ';')
-#{precompiled_method_return_value}
-ensure
-@haml_buffer = @haml_buffer.upper if @haml_buffer
-end
-END
-      "#{preamble}#{locals_code(local_names)}#{precompiled}#{postamble}"
-    end
-
-    # Returns the string used as the return value of the precompiled method.
-    # This method exists so it can be monkeypatched to return modified values.
-    def precompiled_method_return_value
-      "_erbout"
-    end
-
     private
-
-    def locals_code(names)
-      names = names.keys if Hash === names
-
-      names.each_with_object('') do |name, code|
-        # Can't use || because someone might explicitly pass in false with a symbol
-        sym_local = "_haml_locals[#{inspect_obj(name.to_sym)}]"
-        str_local = "_haml_locals[#{inspect_obj(name.to_s)}]"
-        code << "#{name} = #{sym_local}.nil? ? #{str_local} : #{sym_local};"
-      end
-    end
 
     def compile_root
       @dont_indent_next_line = @dont_tab_up_next_text = false

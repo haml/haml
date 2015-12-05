@@ -11,7 +11,7 @@ module Haml
       @compiler = @options.compiler_class.new(@options)
 
       @compiler.compile(parser.parse)
-      @compiler.precompiled_with_return_value
+      @compiler.precompiled
     end
   end
 
@@ -70,7 +70,7 @@ ensure
 @haml_buffer = @haml_buffer.upper if @haml_buffer
 end
 END
-      "#{preamble}#{locals_code(local_names)}#{precompiled};#{postamble}"
+      "#{preamble}#{locals_code(local_names)}#{precompiled}#{postamble}"
     end
 
     private

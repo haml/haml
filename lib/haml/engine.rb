@@ -36,8 +36,6 @@ module Haml
     # @return [String]
     attr_accessor :indentation
 
-    attr_accessor :compiler
-
     # Tilt currently depends on these moved methods, provide a stable API
     def_delegators :compiler, :precompiled, :precompiled_method_return_value
 
@@ -58,15 +56,13 @@ module Haml
         raise Haml::Error.new(msg, line)
       end
 
-      initialize_encoding options[:encoding]
-
-      parser    = @options.parser_class.new(@template, @options)
-      @compiler = @options.compiler_class.new(@options)
-
-      @compiler.compile(parser.parse)
-
       @temple_engine = TempleEngine.new(options)
       @temple_engine.compile(@template)
+    end
+
+    # Deprecated API for backword compatibility
+    def compiler
+      @temple_engine
     end
 
     # Processes the template and returns the result as a string.
@@ -222,12 +218,6 @@ module Haml
     end
 
     private
-
-    def initialize_encoding(given_value)
-      unless given_value
-        @options.encoding = Encoding.default_internal || @template.encoding
-      end
-    end
 
     def set_locals(locals, scope, scope_object)
       scope_object.instance_variable_set :@_haml_locals, locals
