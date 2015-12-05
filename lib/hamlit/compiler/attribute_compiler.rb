@@ -1,5 +1,5 @@
 require 'hamlit/attribute_builder'
-require 'hamlit/hash_parser'
+require 'hamlit/attribute_parser'
 require 'hamlit/ruby_expression'
 require 'hamlit/static_analyzer'
 require 'hamlit/string_interpolation'
@@ -18,7 +18,7 @@ module Hamlit
         hashes = []
         return runtime_compile(node) if node.value[:object_ref] != :nil
         node.value[:attributes_hashes].each do |attribute_str|
-          hash = HashParser.parse(attribute_str)
+          hash = AttributeParser.parse(attribute_str)
           return runtime_compile(node) unless hash
           hashes << hash
         end

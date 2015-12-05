@@ -1,7 +1,7 @@
 require 'hamlit/ruby_expression'
 
 module Hamlit
-  class HashParser
+  class AttributeParser
     class ParseSkip < StandardError
     end
 
