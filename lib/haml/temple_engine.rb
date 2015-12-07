@@ -3,26 +3,26 @@ require 'temple'
 module Haml
   class TempleEngine < Temple::Engine
     define_options(
-      :attr_wrapper         => "'",
-      :autoclose            => %w(area base basefont br col command embed frame
-                                  hr img input isindex keygen link menuitem meta
-                                  param source track wbr),
-      :encoding             => nil,
-      :escape_attrs         => true,
-      :escape_html          => false,
-      :filename             => '(haml)',
-      :format               => :html5,
-      :hyphenate_data_attrs => true,
-      :line                 => 1,
-      :mime_type            => 'text/html',
-      :preserve             => %w(textarea pre code),
-      :remove_whitespace    => false,
-      :suppress_eval        => false,
-      :ugly                 => false,
-      :cdata                => false,
-      :parser_class         => ::Haml::Parser,
-      :compiler_class       => ::Haml::Compiler,
-      :trace                => false
+      attr_wrapper:         "'",
+      autoclose:            %w(area base basefont br col command embed frame
+                               hr img input isindex keygen link menuitem meta
+                               param source track wbr),
+      encoding:             nil,
+      escape_attrs:         true,
+      escape_html:          false,
+      filename:             '(haml)',
+      format:               :html5,
+      hyphenate_data_attrs: true,
+      line:                 1,
+      mime_type:            'text/html',
+      preserve:             %w(textarea pre code),
+      remove_whitespace:    false,
+      suppress_eval:        false,
+      ugly:                 false,
+      cdata:                false,
+      parser_class:         ::Haml::Parser,
+      compiler_class:       ::Haml::Compiler,
+      trace:                false,
     )
 
     use :Parser,   -> { options[:parser_class] }
