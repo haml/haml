@@ -7,6 +7,13 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 ## [HEAD]
 - No changes
 
+## [2.0.2] - 2015-12-12
+
+### Fixed
+- Fix a crash in compiling with CLI
+  [#46](https://github.com/k0kubun/hamlit/pull/46). *Thanks to @walf443*
+- Use default engine options properly in CLI commands
+
 ## [2.0.1] - 2015-11-30
 
 ### Fixed
@@ -457,4 +464,5 @@ Added
 [1.7.2]: https://github.com/k0kubun/hamlit/compare/v1.7.1...v1.7.2
 [2.0.0]: https://github.com/k0kubun/hamlit/compare/v1.7.2...v2.0.0
 [2.0.1]: https://github.com/k0kubun/hamlit/compare/v2.0.0...v2.0.1
+[2.0.2]: https://github.com/k0kubun/hamlit/compare/v2.0.1...v2.0.2
 [HEAD]: https://github.com/k0kubun/hamlit/compare/v2.0.1...HEAD
