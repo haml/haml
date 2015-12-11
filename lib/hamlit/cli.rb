@@ -59,7 +59,7 @@ module Hamlit
     end
 
     def engine_options
-      Hamlit::Engine.options.to_h
+      Hamlit::Engine.options
     end
 
     # Flexible default_task, compatible with haml's CLI
