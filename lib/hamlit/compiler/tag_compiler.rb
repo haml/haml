@@ -61,7 +61,7 @@ module Hamlit
       end
 
       def self_closing?(node)
-        return true if @autoclose.include?(node.value[:name])
+        return true if @autoclose && @autoclose.include?(node.value[:name])
         node.value[:self_closing]
       end
     end
