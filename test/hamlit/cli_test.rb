@@ -11,11 +11,10 @@ describe Hamlit::CLI do
 
     it 'does not crash when compiling a tag' do
       redirect_output do
-        Tempfile.create('hamlit') do |f|
-          f.write('%input{ hash }')
-          f.close
-          Hamlit::CLI.new.temple(f.path)
-        end
+        f = Tempfile.open('hamlit')
+        f.write('%input{ hash }')
+        f.close
+        Hamlit::CLI.new.temple(f.path)
       end
     end
   end
