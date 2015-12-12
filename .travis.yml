@@ -15,8 +15,6 @@ matrix:
     - rvm: 2.2
       env: TASK=test
     - rvm: 2.2
-      env: TASK=bench TEMPLATE=benchmark/dynamic_boolean_attribute.haml
-    - rvm: 2.2
       env: TASK=bench TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
     - rvm: 2.2
       env: TASK=bench TEMPLATE=benchmark/dynamic_attributes/boolean_attribute.haml,benchmark/dynamic_attributes/class_attribute.haml,benchmark/dynamic_attributes/id_attribute.haml,benchmark/dynamic_attributes/data_attribute.haml,benchmark/dynamic_attributes/common_attribute.haml
@@ -31,7 +29,6 @@ matrix:
     - rvm: 2.2
       env: TASK=bench TEMPLATE=test/haml/templates/standard.haml COMPILE=1
   allow_failures:
-    - env: TASK=bench TEMPLATE=benchmark/dynamic_boolean_attribute.haml
     - env: TASK=bench TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
     - env: TASK=bench TEMPLATE=benchmark/dynamic_attributes/boolean_attribute.haml,benchmark/dynamic_attributes/class_attribute.haml,benchmark/dynamic_attributes/id_attribute.haml,benchmark/dynamic_attributes/data_attribute.haml,benchmark/dynamic_attributes/common_attribute.haml
     - env: TASK=bench SLIM_BENCH=1
