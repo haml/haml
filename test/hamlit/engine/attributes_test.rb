@@ -218,6 +218,12 @@ describe Hamlit::Engine do
           %div{ h1, h2 }
         HAML
       end
+      it do
+        assert_haml(<<-'HAML'.unindent)
+          - h = { "class\0with null" => 'is not class' }
+          %div{ h }
+        HAML
+      end
     end
 
     describe 'incompatibility' do

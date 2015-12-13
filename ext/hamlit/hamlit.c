@@ -29,9 +29,9 @@ delete_falsey_values(VALUE values)
 }
 
 static int
-str_eq(VALUE str, const char *cstr)
+str_eq(VALUE str, const char *cstr, long n)
 {
-  return strcmp(RSTRING_PTR(str), cstr) == 0;
+  return RSTRING_LEN(str) == n && memcmp(RSTRING_PTR(str), cstr, n) == 0;
 }
 
 static VALUE
@@ -303,7 +303,7 @@ merge_all_attrs_i(VALUE key, VALUE value, VALUE merged)
   VALUE array;
 
   key = to_s(key);
-  if (str_eq(key, "id") || str_eq(key, "class") || str_eq(key, "data")) {
+  if (str_eq(key, "id", 2) || str_eq(key, "class", 5) || str_eq(key, "data", 4)) {
     array = rb_hash_aref(merged, key);
     if (NIL_P(array)) {
       array = rb_ary_new2(1);
@@ -333,7 +333,7 @@ int
 is_boolean_attribute(VALUE key)
 {
   VALUE boolean_attributes;
-  if (str_eq(rb_str_substr(key, 0, 5), "data-")) return 1;
+  if (str_eq(rb_str_substr(key, 0, 5), "data-", 5)) return 1;
 
   boolean_attributes = rb_const_get(mAttributeBuilder, id_boolean_attributes);
   return RTEST(rb_ary_includes(boolean_attributes, key));
@@ -412,11 +412,11 @@ hamlit_build(VALUE escape_attrs, VALUE quote, VALUE format, VALUE object_ref, VA
   for (i = 0; i < RARRAY_LEN(keys); i++) {
     key   = rb_ary_entry(keys, i);
     value = rb_hash_aref(attrs, key);
-    if (str_eq(key, "id")) {
+    if (str_eq(key, "id", 2)) {
       hamlit_build_for_id(escape_attrs, quote, buf, value);
-    } else if (str_eq(key, "class")) {
+    } else if (str_eq(key, "class", 5)) {
       hamlit_build_for_class(escape_attrs, quote, buf, value);
-    } else if (str_eq(key, "data")) {
+    } else if (str_eq(key, "data", 4)) {
       hamlit_build_for_data(escape_attrs, quote, buf, value);
     } else if (is_boolean_attribute(key)) {
       hamlit_build_for_boolean(escape_attrs, quote, format, buf, key, value);
