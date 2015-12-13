@@ -28,12 +28,12 @@ module Hamlit
         StringInterpolation.compile(node.value[:text]).each do |type, value|
           case type
           when :static
-            value = Temple::Utils.escape_html(value) if node.value[:escape_html]
+            value = Hamlit::Utils.escape_html(value) if node.value[:escape_html]
             temple << [:static, value]
           when :dynamic
             if Hamlit::StaticAnalyzer.static?(value)
               value = eval(value).to_s
-              value = Temple::Utils.escape_html(value) if node.value[:escape_html] || node.value[:escape_interpolation]
+              value = Hamlit::Utils.escape_html(value) if node.value[:escape_html] || node.value[:escape_interpolation]
               temple << [:static, value]
             else
               temple << [:escape, node.value[:escape_html] || node.value[:escape_interpolation], [:dynamic, value]]
@@ -46,7 +46,7 @@ module Hamlit
       def static_compile(node)
         str = eval("(#{node.value[:text]}).to_s")
         if node.value[:escape_html]
-          str = Temple::Utils.escape_html(str)
+          str = Hamlit::Utils.escape_html(str)
         elsif node.value[:preserve]
           str = ::Hamlit::HamlHelpers.find_and_preserve(str, %w(textarea pre code))
         end

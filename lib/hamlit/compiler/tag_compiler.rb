@@ -45,12 +45,12 @@ module Hamlit
         StringInterpolation.compile(node.value[:value]).each do |type, value|
           case type
           when :static
-            value = Temple::Utils.escape_html(value) if node.value[:escape_html]
+            value = Hamlit::Utils.escape_html(value) if node.value[:escape_html]
             temple << [:static, value]
           when :dynamic
             if Hamlit::StaticAnalyzer.static?(value)
               value = eval(value).to_s
-              value = Temple::Utils.escape_html(value) if node.value[:escape_html] || node.value[:escape_interpolation]
+              value = Hamlit::Utils.escape_html(value) if node.value[:escape_html] || node.value[:escape_interpolation]
               temple << [:static, value]
             else
               temple << [:escape, node.value[:escape_html] || node.value[:escape_interpolation], [:dynamic, value]]
