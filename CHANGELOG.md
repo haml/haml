@@ -7,6 +7,23 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 ## [HEAD]
 - No changes
 
+## [2.1.0] - 2015-12-14
+
+## Added
+
+- `-I` and `-r` options are added to `hamlit render` command
+  [#37](https://github.com/k0kubun/hamlit/issues/37). *Thanks to @jhurliman*
+
+## Changed
+
+- Dropped obsolete `escape_utils` gem dependency
+  [#48](https://github.com/k0kubun/hamlit/pull/48). *Thanks to @eagletmt*
+
+## Fixed
+
+- Accept NUL character in attribute keys
+  [#49](https://github.com/k0kubun/hamlit/pull/49). *Thanks to @eagletmt*
+
 ## [2.0.2] - 2015-12-12
 
 ### Fixed
