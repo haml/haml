@@ -4,7 +4,10 @@ require 'thor'
 module Hamlit
   class CLI < Thor
     desc 'render HAML', 'Render haml template'
+    option :load_path, type: :string, aliases: %w[-I]
+    option :require, type: :string, aliases: %w[-r]
     def render(file)
+      process_load_options
       code = generate_code(file)
       puts eval(code)
     end
@@ -26,6 +29,18 @@ module Hamlit
     end
 
     private
+
+    def process_load_options
+      if options[:load_path]
+        options[:load_path].split(':').each do |dir|
+          $LOAD_PATH.unshift(dir) unless $LOAD_PATH.include?(dir)
+        end
+      end
+
+      if options[:require]
+        require options[:require]
+      end
+    end
 
     def generate_code(file)
       template = File.read(file)
