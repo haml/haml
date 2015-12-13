@@ -20,7 +20,6 @@ Gem::Specification.new do |spec|
   spec.extensions    = ['ext/hamlit/extconf.rb']
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'escape_utils'
   spec.add_dependency 'temple', '~> 0.7.6'
   spec.add_dependency 'thor'
   spec.add_dependency 'tilt'
