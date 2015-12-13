@@ -5,7 +5,6 @@ require 'hamlit'
 require 'faml'
 require 'thor'
 require 'benchmark/ips'
-require 'hamlit1' if File.exist?('hamlit1')
 require_relative '../benchmark/utils/benchmark_ips_extension'
 
 class Bench < Thor
@@ -28,8 +27,7 @@ class Bench < Thor
     Benchmark.ips do |x|
       x.report("haml v#{Haml::VERSION}") { Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).precompiled }
       x.report("faml v#{Faml::VERSION}") { Faml::Engine.new.call(haml) }
-      x.report("hamlit#{File.exist?('hamlit1') ? '2' : ''} v#{Hamlit::VERSION}") { Hamlit::Engine.new.call(haml) }
-      x.report("hamlit1 v#{Hamlit1::VERSION}") { Hamlit1::Engine.new.call(haml) } if File.exist?('hamlit1')
+      x.report("hamlit v#{Hamlit::VERSION}") { Hamlit::Engine.new.call(haml) }
       x.compare!
     end
   end
@@ -48,13 +46,11 @@ class Bench < Thor
     Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).def_method(object, :haml)
     object.instance_eval "def faml; #{Faml::Engine.new.call(haml)}; end"
     object.instance_eval "def hamlit; #{Hamlit::Engine.new.call(haml)}; end"
-    object.instance_eval "def hamlit1; #{Hamlit1::Engine.new.call(haml)}; end" if File.exist?('hamlit1')
 
     Benchmark.ips do |x|
       x.report("haml v#{Haml::VERSION}") { object.haml }
       x.report("faml v#{Faml::VERSION}") { object.faml }
-      x.report("hamlit#{File.exist?('hamlit1') ? '2' : ''} v#{Hamlit::VERSION}") { object.hamlit }
-      x.report("hamlit1 v#{Hamlit1::VERSION}") { object.hamlit1 } if File.exist?('hamlit1')
+      x.report("hamlit v#{Hamlit::VERSION}") { object.hamlit }
       x.compare!
     end
   end
@@ -68,10 +64,6 @@ class Bench < Thor
     puts Faml::Engine.new.call(haml)
     puts "\n#{?= * 49}\n Hamlit Source: #{file}\n#{?= * 49}"
     puts Hamlit::Engine.new.call(haml)
-    if File.exist?('hamlit1')
-      puts "\n#{?= * 49}\n Hamlit1 Source: #{file}\n#{?= * 49}"
-      puts Hamlit1::Engine.new.call(haml)
-    end
   end
 
   private

@@ -82,7 +82,6 @@ task bench: :compile do
   else
     cmd = ['bin/bench', 'bench', ('-c' if ENV['COMPILE'] == '1'), *ENV['TEMPLATE'].split(',')].compact
   end
-  system('bin/clone')
   exit system(*cmd)
 end
 
