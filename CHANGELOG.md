@@ -4,9 +4,6 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
-## [HEAD]
-- No changes
-
 ## [2.1.0] - 2015-12-14
 
 ## Added
@@ -482,4 +479,4 @@ Added
 [2.0.0]: https://github.com/k0kubun/hamlit/compare/v1.7.2...v2.0.0
 [2.0.1]: https://github.com/k0kubun/hamlit/compare/v2.0.0...v2.0.1
 [2.0.2]: https://github.com/k0kubun/hamlit/compare/v2.0.1...v2.0.2
-[HEAD]: https://github.com/k0kubun/hamlit/compare/v2.0.1...HEAD
+[2.1.0]: https://github.com/k0kubun/hamlit/compare/v2.0.2...v2.1.0
