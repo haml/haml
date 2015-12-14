@@ -8,6 +8,7 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 
 ## Fixed
 
+- Use faster HTML-escape method for compiling
 - Show proper line number for unbalanced brackets error
 
 ## [2.1.0](https://github.com/k0kubun/hamlit/compare/v2.0.2...v2.1.0) - 2015-12-14
