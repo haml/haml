@@ -8,7 +8,7 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 
 ## Fixed
 
-- Show proper line number for unblaced brackets error
+- Show proper line number for unbalanced brackets error
 
 ## [2.1.0] - 2015-12-14
 
