@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.1.1] - 2015-12-15
+
+## Fixed
+
+- Show proper line number for unblaced brackets error
+
 ## [2.1.0] - 2015-12-14
 
 ## Added
