@@ -27,7 +27,19 @@ module Hamlit
     def call(template)
       HamlParser.new(template, HamlOptions.new(@options)).parse
     rescue ::Hamlit::HamlError => e
-      e
+      error_with_lineno(e)
+    end
+
+    private
+
+    def error_with_lineno(error)
+      return error if error.line
+
+      trace = error.backtrace.first
+      return error unless trace
+
+      line = trace.match(/\d+\z/).to_s.to_i
+      HamlSyntaxError.new(error.message, line)
     end
   end
 end

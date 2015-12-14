@@ -15,6 +15,23 @@ describe Hamlit::Engine do
         assert_equal(2, e.line)
       end
     end
+
+    describe 'Hamlit v1 syntax' do
+      it 'returns an error with proper line number' do
+        code = Hamlit::Engine.new.call(<<-HAML.unindent)
+          %span
+          - if true
+            %div{ data: {
+              hello: 'world',
+            } }
+        HAML
+        begin
+          eval code
+        rescue Hamlit::HamlSyntaxError => e
+          assert_equal(3, e.line)
+        end
+      end
+    end
   end
 
   describe 'FilterNotFound' do
