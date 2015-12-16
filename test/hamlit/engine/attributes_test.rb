@@ -9,6 +9,7 @@ describe Hamlit::Engine do
       it { assert_haml(%q|#a{ id: false }|) }
       it { assert_haml(%q|#a{ id: 'b' }|) }
       it { assert_haml(%q|#b{ id: 'a' }|) }
+      it { assert_haml(%q|%a{ 'id' => 60 }|) }
 
       it { assert_haml(%q|#a{ id: 'b' }(id=id)|,       locals: { id: 'c' }) }
       it { assert_haml(%q|#c{ id: a = 'a' }(id=id)|,   locals: { id: 'b' }) }
@@ -54,6 +55,7 @@ describe Hamlit::Engine do
       it { assert_haml(%q|.a{ class: [] }|) }
       it { assert_haml(%q|.a{ class: %w[c b] }|) }
       it { assert_haml(%q|.a.c(class='b')|) }
+      it { assert_haml(%q|%a{ 'class' => 60 }|) }
 
       it { assert_haml(%q|%div{ class: 'b a' }(class=klass)|, locals: { klass: 'b a' }) }
       it { assert_haml(%q|%div(class=klass){ class: 'b a' }|, locals: { klass: 'b a' }) }
@@ -120,6 +122,7 @@ describe Hamlit::Engine do
     it { assert_haml(%q|%a{ data: { nil => 3 } }|) }
     it { assert_haml(%q|%a{ data: 3 }|) }
     it { assert_haml(%q|%a(data=3)|) }
+    it { assert_haml(%q|%a{ 'data-bar' => 60 }|) }
 
     it { assert_haml(%q|%a{ data: { overlay_modal: 'foo' } }|) }
     it { assert_haml(%q|%a{ data: { overlay_modal: true } }|) }
@@ -199,6 +202,8 @@ describe Hamlit::Engine do
 
     it { assert_haml(%q|%a{ hash }|, locals: { hash: { 'data-overlay_modal' => false } }) }
     it { assert_haml(%q|%a{ hash }|, locals: { hash: { 'data-overlay_modal' => true } }) }
+
+    it { assert_haml(%q|%a{ 'disabled' => 60 }|) }
   end
 
   describe 'common attributes' do
@@ -224,6 +229,7 @@ describe Hamlit::Engine do
           %div{ h }
         HAML
       end
+      it { assert_haml(%q|%a{ 'href' => 60 }|) }
     end
 
     describe 'incompatibility' do

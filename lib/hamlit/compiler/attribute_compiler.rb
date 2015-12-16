@@ -61,7 +61,7 @@ module Hamlit
       def compile_id!(temple, key, values)
         build_code = attribute_builder(:id, values)
         if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
-          temple << [:html, :attr, key, [:static, eval(build_code)]]
+          temple << [:html, :attr, key, [:static, eval(build_code).to_s]]
         else
           temple << [:html, :attr, key, [:dynamic, build_code]]
         end
@@ -70,7 +70,7 @@ module Hamlit
       def compile_class!(temple, key, values)
         build_code = attribute_builder(:class, values)
         if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
-          temple << [:html, :attr, key, [:static, eval(build_code)]]
+          temple << [:html, :attr, key, [:static, eval(build_code).to_s]]
         else
           temple << [:html, :attr, key, [:dynamic, build_code]]
         end
@@ -81,7 +81,7 @@ module Hamlit
         build_code = "::Hamlit::AttributeBuilder.build_data(#{args.join(', ')})"
 
         if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
-          temple << [:static, eval(build_code)]
+          temple << [:static, eval(build_code).to_s]
         else
           temple << [:dynamic, build_code]
         end
@@ -95,7 +95,7 @@ module Hamlit
           case value
           when true then temple << [:html, :attr, key, @format == :xhtml ? [:static, key] : [:multi]]
           when false, nil
-          else temple << [:html, :attr, key, [:escape, @escape_attrs, [:static, value]]]
+          else temple << [:html, :attr, key, [:escape, @escape_attrs, [:static, value.to_s]]]
           end
         else
           var = @identity.generate
