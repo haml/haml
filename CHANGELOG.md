@@ -9,6 +9,7 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 ### Added
 
 - Optimize inline script inside a tag
+- Optimize string interpolation recursively
 
 ## [2.1.2](https://github.com/k0kubun/hamlit/compare/v2.1.1...v2.1.2) - 2015-12-16
 

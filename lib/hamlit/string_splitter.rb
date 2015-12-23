@@ -79,7 +79,7 @@ module Hamlit
         when :static
           temple << [:static, content]
         when :dynamic
-          temple << [:dynamic, content]
+          temple << on_dynamic(content)
         end
       end
       temple
