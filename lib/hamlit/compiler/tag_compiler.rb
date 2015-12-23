@@ -1,7 +1,7 @@
 require 'hamlit/parser/haml_util'
 require 'hamlit/attribute_compiler'
 require 'hamlit/static_analyzer'
-require 'hamlit/string_interpolation'
+require 'hamlit/string_splitter'
 
 module Hamlit
   class Compiler
@@ -44,7 +44,7 @@ module Hamlit
 
       def compile_string(node)
         temple = [:multi]
-        StringInterpolation.compile(node.value[:value]).each do |type, value|
+        StringSplitter.compile(node.value[:value]).each do |type, value|
           case type
           when :static
             value = Hamlit::Utils.escape_html(value) if node.value[:escape_html]

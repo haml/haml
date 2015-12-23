@@ -2,7 +2,7 @@ require 'hamlit/attribute_builder'
 require 'hamlit/attribute_parser'
 require 'hamlit/ruby_expression'
 require 'hamlit/static_analyzer'
-require 'hamlit/string_interpolation'
+require 'hamlit/string_splitter'
 
 module Hamlit
   class AttributeCompiler
@@ -113,7 +113,7 @@ module Hamlit
       case
       when type == :dynamic && RubyExpression.string_literal?(exp)
         value_temple = [:multi]
-        StringInterpolation.compile(exp).each do |type, v|
+        StringSplitter.compile(exp).each do |type, v|
           case type
           when :static
             value_temple << [:escape, @escape_attrs, [:static, v]]

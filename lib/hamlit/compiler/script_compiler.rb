@@ -1,6 +1,6 @@
 require 'hamlit/ruby_expression'
 require 'hamlit/static_analyzer'
-require 'hamlit/string_interpolation'
+require 'hamlit/string_splitter'
 
 module Hamlit
   class Compiler
@@ -25,7 +25,7 @@ module Hamlit
       # String-interpolated plain text must be compiled with this method
       def string_compile(node)
         temple = [:multi]
-        StringInterpolation.compile(node.value[:text]).each do |type, value|
+        StringSplitter.compile(node.value[:text]).each do |type, value|
           case type
           when :static
             value = Hamlit::Utils.escape_html(value) if node.value[:escape_html]

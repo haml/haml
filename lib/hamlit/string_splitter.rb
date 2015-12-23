@@ -1,6 +1,6 @@
 require 'ripper'
 
-module Hamlit::StringInterpolation
+module Hamlit::StringSplitter
   class << self
     # `code` param must be valid string literal
     def compile(code)

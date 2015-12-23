@@ -1,7 +1,7 @@
-describe Hamlit::StringInterpolation do
+describe Hamlit::StringSplitter do
   describe '.compile' do
     def assert_compile(expected, code)
-      actual = Hamlit::StringInterpolation.compile(code)
+      actual = Hamlit::StringSplitter.compile(code)
       assert_equal expected, actual
     end
 
@@ -27,19 +27,19 @@ describe Hamlit::StringInterpolation do
     describe 'invalid argument' do
       it 'raises internal error' do
         assert_raises Hamlit::InternalError do
-          Hamlit::StringInterpolation.compile('1')
+          Hamlit::StringSplitter.compile('1')
         end
       end
 
       it 'raises internal error' do
         assert_raises Hamlit::InternalError do
-          Hamlit::StringInterpolation.compile('[]')
+          Hamlit::StringSplitter.compile('[]')
         end
       end
 
       it 'raises internal error' do
         assert_raises Hamlit::InternalError do
-          Hamlit::StringInterpolation.compile('"]')
+          Hamlit::StringSplitter.compile('"]')
         end
       end
     end
