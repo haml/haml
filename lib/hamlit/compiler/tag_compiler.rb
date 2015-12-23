@@ -27,8 +27,11 @@ module Hamlit
         when node.value[:value].nil? && self_closing?(node)
           nil
         when node.value[:parse]
-          return compile_string(node) if RubyExpression.string_literal?(node.value[:value])
-          return [:static, eval(node.value[:value]).to_s] if StaticAnalyzer.static?(node.value[:value])
+          return compile_string(node) if node.value[:escape_interpolation]
+          if RubyExpression.string_literal?(node.value[:value]) || StaticAnalyzer.static?(node.value[:value])
+            # Optimized in other filters: StringSplitter or StaticAnalyzer
+            return [:escape, node.value[:escape_html], [:dynamic, node.value[:value]]]
+          end
 
           var = @identity.generate
           [:multi,
@@ -42,6 +45,7 @@ module Hamlit
         end
       end
 
+      # We should handle interpolation here to escape only interpolated values.
       def compile_string(node)
         temple = [:multi]
         StringSplitter.compile(node.value[:value]).each do |type, value|
