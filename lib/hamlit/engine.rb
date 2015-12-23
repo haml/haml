@@ -3,6 +3,7 @@ require 'hamlit/parser'
 require 'hamlit/compiler'
 require 'hamlit/escapable'
 require 'hamlit/html'
+require 'hamlit/static_analyzer'
 
 module Hamlit
   class Engine < Temple::Engine
@@ -21,6 +22,7 @@ module Hamlit
     use Parser
     use Compiler
     use HTML
+    use StaticAnalyzer
     use Escapable
     filter :ControlFlow
     filter :MultiFlattener

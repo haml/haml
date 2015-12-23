@@ -44,7 +44,7 @@ module Hamlit
       end
 
       def static_compile(node)
-        str = eval("(#{node.value[:text]}).to_s")
+        str = eval(node.value[:text]).to_s
         if node.value[:escape_html]
           str = Hamlit::Utils.escape_html(str)
         elsif node.value[:preserve]

@@ -1,7 +1,7 @@
 require 'hamlit/ruby_expression'
 
 module Hamlit
-  class StaticAnalyzer
+  class StaticAnalyzer < Temple::Filter
     STATIC_TOKENS = %i[
       on_tstring_beg on_tstring_end on_tstring_content
       on_embexpr_beg on_embexpr_end
@@ -25,11 +25,11 @@ module Hamlit
       =>
     ].freeze
 
-    def self.static?(exp)
-      return false if exp.nil? || exp.strip.empty?
-      return false if RubyExpression.syntax_error?(exp)
+    def self.static?(code)
+      return false if code.nil? || code.strip.empty?
+      return false if RubyExpression.syntax_error?(code)
 
-      Ripper.lex(exp).each do |(_, col), token, str|
+      Ripper.lex(code).each do |(_, col), token, str|
         case token
         when *STATIC_TOKENS
           # noop
@@ -44,6 +44,14 @@ module Hamlit
         end
       end
       true
+    end
+
+    def on_dynamic(code)
+      if StaticAnalyzer.static?(code)
+        [:static, eval(code).to_s]
+      else
+        [:dynamic, code]
+      end
     end
   end
 end

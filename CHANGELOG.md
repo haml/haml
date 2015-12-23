@@ -4,33 +4,39 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## master
+
+### Added
+
+- Optimize inline script inside a tag
+
 ## [2.1.2](https://github.com/k0kubun/hamlit/compare/v2.1.1...v2.1.2) - 2015-12-16
 
-## Fixed
+### Fixed
 
 - Fix rendering failure for static integer
   [#50](https://github.com/k0kubun/hamlit/pull/50). *Thanks to @yatmsu*
 
 ## [2.1.1](https://github.com/k0kubun/hamlit/compare/v2.1.0...v2.1.1) - 2015-12-15
 
-## Fixed
+### Fixed
 
 - Use faster HTML-escape method for compiling
 - Show proper line number for unbalanced brackets error
 
 ## [2.1.0](https://github.com/k0kubun/hamlit/compare/v2.0.2...v2.1.0) - 2015-12-14
 
-## Added
+### Added
 
 - `-I` and `-r` options are added to `hamlit render` command
   [#37](https://github.com/k0kubun/hamlit/issues/37). *Thanks to @jhurliman*
 
-## Changed
+### Changed
 
 - Dropped obsolete `escape_utils` gem dependency
   [#48](https://github.com/k0kubun/hamlit/pull/48). *Thanks to @eagletmt*
 
-## Fixed
+### Fixed
 
 - Accept NUL character in attribute keys
   [#49](https://github.com/k0kubun/hamlit/pull/49). *Thanks to @eagletmt*
