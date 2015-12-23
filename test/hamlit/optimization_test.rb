@@ -14,6 +14,14 @@ describe 'optimization' do
       assert_equal true, compiled_code(haml).include?(%|value='jruby9000|)
     end
 
+    it 'renders static script statically' do
+      haml = <<-HAML.unindent
+        %span
+          1
+      HAML
+      assert_equal true, compiled_code(haml).include?(%q|<span>\n1\n</span>|)
+    end
+
     it 'renders inline static script statically' do
       haml = %|%span= 1|
       assert_equal true, compiled_code(haml).include?(%|<span>1</span>|)
