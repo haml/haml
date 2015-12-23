@@ -32,6 +32,11 @@ describe 'optimization' do
       assert_equal true, compiled_code(haml).include?(%|<span>jruby9000|)
     end
 
+    it 'optimizes script' do
+      haml = %q|= "jruby#{ "#{9000}" }#{dynamic}"|
+      assert_equal true, compiled_code(haml).include?(%|jruby9000|)
+    end
+
     it 'detects a static part recursively' do
       haml = %q|%input{ value: "#{ "hello#{ hello }" }" }|
       assert_equal true, compiled_code(haml).include?(%|value='hello|)

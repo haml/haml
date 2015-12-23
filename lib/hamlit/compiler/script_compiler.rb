@@ -10,10 +10,14 @@ module Hamlit
       end
 
       def compile(node, &block)
+        no_children = node.children.empty?
         case
-        when node.children.empty? && RubyExpression.string_literal?(node.value[:text])
+        when no_children && node.value[:escape_interpolation]
           string_compile(node)
-        when node.children.empty? && StaticAnalyzer.static?(node.value[:text])
+        when no_children && RubyExpression.string_literal?(node.value[:text])
+          # Optimized in other filter: StringSplitter
+          [:multi, [:escape, node.value[:escape_html], [:dynamic, node.value[:text]]], [:newline]]
+        when no_children && StaticAnalyzer.static?(node.value[:text])
           static_compile(node)
         else
           dynamic_compile(node, &block)
@@ -23,6 +27,7 @@ module Hamlit
       private
 
       # String-interpolated plain text must be compiled with this method
+      # because we have to escape only interpolated values.
       def string_compile(node)
         temple = [:multi]
         StringSplitter.compile(node.value[:text]).each do |type, value|
