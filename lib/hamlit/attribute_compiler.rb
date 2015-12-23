@@ -118,11 +118,7 @@ module Hamlit
           when :static
             value_temple << [:escape, @escape_attrs, [:static, v]]
           when :dynamic
-            if Hamlit::StaticAnalyzer.static?(v)
-              value_temple << [:escape, @escape_attrs, [:static, eval(v).to_s]]
-            else
-              value_temple << [:escape, @escape_attrs, [:dynamic, v]]
-            end
+            value_temple << [:escape, @escape_attrs, [:dynamic, v]]
           end
         end
         temple << [:html, :attr, key, value_temple]
