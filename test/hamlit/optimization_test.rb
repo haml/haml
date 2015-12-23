@@ -9,14 +9,6 @@ describe 'optimization' do
       assert_equal true, compiled_code(haml).include?(%|href='1'|)
     end
 
-    it 'renders a static part of string interpolation statically' do
-      haml = %q|%input{ value: "jruby#{9000}#{dynamic}" }|
-      assert_equal true, compiled_code(haml).include?(%|value='jruby9000|)
-
-      haml = %q|%span= "jruby#{9000}#{dynamic}"|
-      assert_equal true, compiled_code(haml).include?(%|<span>jruby9000|)
-    end
-
     it 'renders static script statically' do
       haml = <<-HAML.unindent
         %span
@@ -28,6 +20,16 @@ describe 'optimization' do
     it 'renders inline static script statically' do
       haml = %|%span= 1|
       assert_equal true, compiled_code(haml).include?(%|<span>1</span>|)
+    end
+  end
+
+  describe 'string interpolation' do
+    it 'renders a static part of string literal statically' do
+      haml = %q|%input{ value: "jruby#{9000}#{dynamic}" }|
+      assert_equal true, compiled_code(haml).include?(%|value='jruby9000|)
+
+      haml = %q|%span= "jruby#{9000}#{dynamic}"|
+      assert_equal true, compiled_code(haml).include?(%|<span>jruby9000|)
     end
   end
 end

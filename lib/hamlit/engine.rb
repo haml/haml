@@ -3,6 +3,7 @@ require 'hamlit/parser'
 require 'hamlit/compiler'
 require 'hamlit/escapable'
 require 'hamlit/html'
+require 'hamlit/string_splitter'
 require 'hamlit/static_analyzer'
 
 module Hamlit
@@ -22,6 +23,7 @@ module Hamlit
     use Parser
     use Compiler
     use HTML
+    use StringSplitter
     use StaticAnalyzer
     use Escapable
     filter :ControlFlow

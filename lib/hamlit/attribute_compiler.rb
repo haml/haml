@@ -2,7 +2,6 @@ require 'hamlit/attribute_builder'
 require 'hamlit/attribute_parser'
 require 'hamlit/ruby_expression'
 require 'hamlit/static_analyzer'
-require 'hamlit/string_splitter'
 
 module Hamlit
   class AttributeCompiler
@@ -108,23 +107,7 @@ module Hamlit
     end
 
     def compile_common!(temple, key, values)
-      type, exp = values.last
-
-      case
-      when type == :dynamic && RubyExpression.string_literal?(exp)
-        value_temple = [:multi]
-        StringSplitter.compile(exp).each do |type, v|
-          case type
-          when :static
-            value_temple << [:escape, @escape_attrs, [:static, v]]
-          when :dynamic
-            value_temple << [:escape, @escape_attrs, [:dynamic, v]]
-          end
-        end
-        temple << [:html, :attr, key, value_temple]
-      else
-        temple << [:html, :attr, key, [:escape, @escape_attrs, [type, exp]]]
-      end
+      temple << [:html, :attr, key, [:escape, @escape_attrs, values.last]]
     end
 
     def attribute_builder(type, values)
