@@ -1,5 +1,5 @@
 require 'hamlit/parser/haml_util'
-require 'hamlit/compiler/attribute_compiler'
+require 'hamlit/attribute_compiler'
 require 'hamlit/string_interpolation'
 
 module Hamlit
