@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
-## master
+## [2.2.0](https://github.com/k0kubun/hamlit/compare/v2.1.2...v2.2.0) - 2015-12-24
 
 ### Added
 
