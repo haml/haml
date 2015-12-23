@@ -111,8 +111,6 @@ module Hamlit
       type, exp = values.last
 
       case
-      when type == :dynamic && StaticAnalyzer.static?(exp)
-        temple << [:html, :attr, key, [:escape, @escape_attrs, [:static, eval(exp).to_s]]]
       when type == :dynamic && RubyExpression.string_literal?(exp)
         value_temple = [:multi]
         StringInterpolation.compile(exp).each do |type, v|
