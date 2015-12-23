@@ -27,11 +27,9 @@ module Hamlit
         when node.value[:value].nil? && self_closing?(node)
           nil
         when node.value[:parse]
-          return compile_string(node) if node.value[:escape_interpolation]
-          if RubyExpression.string_literal?(node.value[:value]) || StaticAnalyzer.static?(node.value[:value])
-            # Optimized in other filters: StringSplitter or StaticAnalyzer
-            return [:escape, node.value[:escape_html], [:dynamic, node.value[:value]]]
-          end
+          return compile_interpolated_plain(node) if node.value[:escape_interpolation]
+          return delegate_optimization(node) if RubyExpression.string_literal?(node.value[:value])
+          return delegate_optimization(node) if StaticAnalyzer.static?(node.value[:value])
 
           var = @identity.generate
           [:multi,
@@ -45,16 +43,23 @@ module Hamlit
         end
       end
 
+      # :dynamic is optimized in other filters: StringSplitter or StaticAnalyzer
+      def delegate_optimization(node)
+        [:multi,
+         [:escape, node.value[:escape_html], [:dynamic, node.value[:value]]],
+         [:newline],
+        ]
+      end
+
       # We should handle interpolation here to escape only interpolated values.
-      def compile_string(node)
+      def compile_interpolated_plain(node)
         temple = [:multi]
         StringSplitter.compile(node.value[:value]).each do |type, value|
           case type
           when :static
-            value = Hamlit::Utils.escape_html(value) if node.value[:escape_html]
             temple << [:static, value]
           when :dynamic
-            temple << [:escape, node.value[:escape_html] || node.value[:escape_interpolation], [:dynamic, value]]
+            temple << [:escape, node.value[:escape_interpolation], [:dynamic, value]]
           end
         end
         temple << [:newline]

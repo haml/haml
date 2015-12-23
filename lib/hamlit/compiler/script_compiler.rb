@@ -13,10 +13,9 @@ module Hamlit
         no_children = node.children.empty?
         case
         when no_children && node.value[:escape_interpolation]
-          string_compile(node)
+          compile_interpolated_plain(node)
         when no_children && RubyExpression.string_literal?(node.value[:text])
-          # Optimized in other filter: StringSplitter
-          [:multi, [:escape, node.value[:escape_html], [:dynamic, node.value[:text]]], [:newline]]
+          delegate_optimization(node)
         when no_children && StaticAnalyzer.static?(node.value[:text])
           static_compile(node)
         else
@@ -28,24 +27,25 @@ module Hamlit
 
       # String-interpolated plain text must be compiled with this method
       # because we have to escape only interpolated values.
-      def string_compile(node)
+      def compile_interpolated_plain(node)
         temple = [:multi]
         StringSplitter.compile(node.value[:text]).each do |type, value|
           case type
           when :static
-            value = Hamlit::Utils.escape_html(value) if node.value[:escape_html]
             temple << [:static, value]
           when :dynamic
-            if Hamlit::StaticAnalyzer.static?(value)
-              value = eval(value).to_s
-              value = Hamlit::Utils.escape_html(value) if node.value[:escape_html] || node.value[:escape_interpolation]
-              temple << [:static, value]
-            else
-              temple << [:escape, node.value[:escape_html] || node.value[:escape_interpolation], [:dynamic, value]]
-            end
+            temple << [:escape, node.value[:escape_interpolation], [:dynamic, value]]
           end
         end
         temple << [:newline]
+      end
+
+      # :dynamic is optimized in other filter: StringSplitter
+      def delegate_optimization(node)
+        [:multi,
+         [:escape, node.value[:escape_html], [:dynamic, node.value[:text]]],
+         [:newline],
+        ]
       end
 
       def static_compile(node)
