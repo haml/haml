@@ -13,5 +13,10 @@ describe 'optimization' do
       haml = %q|%input{ value: "jruby#{9000}#{dynamic}" }|
       assert_equal true, compiled_code(haml).include?(%|value='jruby9000|)
     end
+
+    it 'renders inline static script statically' do
+      haml = %|%span= 1|
+      assert_equal true, compiled_code(haml).include?(%|<span>1</span>|)
+    end
   end
 end

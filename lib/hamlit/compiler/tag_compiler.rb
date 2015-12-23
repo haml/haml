@@ -1,5 +1,6 @@
 require 'hamlit/parser/haml_util'
 require 'hamlit/attribute_compiler'
+require 'hamlit/static_analyzer'
 require 'hamlit/string_interpolation'
 
 module Hamlit
@@ -27,6 +28,7 @@ module Hamlit
           nil
         when node.value[:parse]
           return compile_string(node) if RubyExpression.string_literal?(node.value[:value])
+          return [:static, eval(node.value[:value]).to_s] if StaticAnalyzer.static?(node.value[:value])
 
           var = @identity.generate
           [:multi,
