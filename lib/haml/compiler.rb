@@ -8,7 +8,7 @@ module Haml
       @options     = options
       @output_tabs = 0
       @to_merge    = []
-      @precompiled = ''
+      @precompiled = String.new
       @node        = nil
     end
 
