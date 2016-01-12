@@ -12,12 +12,11 @@ module Hamlit
       private
 
       def compile_with_children(node, &block)
-        temple = [:multi]
-        temple << [:code, node.value[:text]]
-        temple << [:newline]
-        temple << yield(node)
-        temple << [:code, 'end']
-        temple
+        [:multi,
+         [:block, node.value[:text],
+          [:multi, [:newline], yield(node)],
+         ],
+        ]
       end
     end
   end
