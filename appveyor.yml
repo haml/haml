@@ -1,0 +1,43 @@
+---
+
+version: "{build}"
+
+branches:
+  only:
+    - master
+
+install:
+  - set PATH=C:\Ruby%ruby_version%\bin;%PATH%
+  - echo %PATH%
+
+  - ruby --version
+  - where ruby
+
+  - gem update --system --no-document
+  - gem --version
+  - where gem
+
+  - gem install bundler --no-document
+  - bundler --version
+  - where bundler
+
+  - bundle install --jobs 3 --retry 3
+
+build_script:
+  - bundle exec rake compile
+
+test_script:
+  - bundle exec rake test
+
+environment:
+  matrix:
+    - ruby_version: 200-x64
+    - ruby_version: 21-x64
+    - ruby_version: '22'
+    - ruby_version: 22-x64
+
+matrix:
+  allow_failures:
+    - ruby_version: 200-x64
+
+  fast_finish: true
