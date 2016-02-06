@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gemspec
 
 # maintain compatibility against master
-gem 'haml', github: 'haml/haml'
+gem 'haml', git: 'https://github.com/haml/haml'
 
 gem 'benchmark-ips', '2.3.0'
 gem 'minitest-line'
