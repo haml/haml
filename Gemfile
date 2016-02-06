@@ -16,6 +16,7 @@ end
 
 is_windows = RUBY_PLATFORM =~ /mswin|mingw|bccwin|wince/
 if RUBY_VERSION >= '2.1.0' && !is_windows
+  gem 'faml'
   gem 'lineprof'
   gem 'stackprof'
 end
