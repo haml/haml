@@ -1,7 +1,13 @@
+# LESS support is deprecated since it requires therubyracer.gem,
+# which is hard to maintain.
+#
+# It's not supported in Sprockets 3.0+ too.
+# https://github.com/sstephenson/sprockets/pull/547
 module Hamlit
   class Filters
     class Less < TiltBase
       def compile(node)
+        warn "[DEPRECATED] Hamlit's LESS support is deprecated and will be removed in Hamlit 3.0."
         require 'tilt/less' if explicit_require?
         temple = [:multi]
         temple << [:static, "<style>\n".freeze]
