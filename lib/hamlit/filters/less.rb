@@ -7,7 +7,6 @@ module Hamlit
   class Filters
     class Less < TiltBase
       def compile(node)
-        warn "[DEPRECATED] Hamlit's LESS support is deprecated and will be removed in Hamlit 3.0."
         require 'tilt/less' if explicit_require?
         temple = [:multi]
         temple << [:static, "<style>\n".freeze]
