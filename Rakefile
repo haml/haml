@@ -1,5 +1,21 @@
 require 'bundler/setup'
 require 'bundler/gem_tasks'
+
+#
+# Prepend DevKit into compilation phase
+#
+if Gem.win_platform?
+  desc 'Activates DevKit'
+  task :devkit do
+    begin
+      require 'devkit'
+    rescue LoadError
+      abort 'Failed to load DevKit required for compilation'
+    end
+  end
+  task compile: :devkit
+end
+
 require 'rake/testtask'
 require 'rake/extensiontask'
 
