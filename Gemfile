@@ -3,9 +3,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in hamlit.gemspec
 gemspec
 
-# maintain compatibility against master
-gem 'haml', git: 'https://github.com/haml/haml'
-
 gem 'benchmark-ips', '2.3.0'
 gem 'minitest-line'
 gem 'pry-byebug'
