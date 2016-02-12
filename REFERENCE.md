@@ -1023,7 +1023,7 @@ might compile to:
 
 #### Gotchas
 
-Haml uses an overly simplistic regular expression to indentify string
+Haml uses an overly simplistic regular expression to identify string
 interpolation rather than a full-blown Ruby parser. This is fast and works for
 most code but you may have errors with code like the following:
 
