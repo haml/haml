@@ -7,8 +7,7 @@ gem 'benchmark-ips', '2.3.0'
 gem 'minitest-line'
 gem 'pry-byebug'
 
-is_windows = RUBY_PLATFORM =~ /mswin|mingw|bccwin|wince/
-if RUBY_VERSION >= '2.1.0' && !is_windows
+if RUBY_PLATFORM !~ /mswin|mingw|bccwin|wince/
   gem 'faml'
   gem 'lineprof'
   gem 'stackprof'

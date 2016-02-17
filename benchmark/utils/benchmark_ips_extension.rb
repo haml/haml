@@ -16,7 +16,7 @@ module Benchmark
           end
         end
       end
-      Entry.send(:prepend, EntryExtension)
+      Entry.prepend(EntryExtension)
     end
   end
 
