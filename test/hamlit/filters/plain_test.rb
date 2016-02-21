@@ -2,15 +2,24 @@ describe Hamlit::Filters do
   include RenderHelper
 
   describe '#compile' do
-    it 'renders plain filter' do
+    it 'does not escape content without interpolation' do
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
-        あ
-        い
+        <script>
+      HTML
+        :plain
+          <script>
+      HAML
+    end
+
+    it 'escapes only interpolated content' do
+      assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+        <script>
+        &lt;script&gt;
 
       HTML
         :plain
-          あ
-          #{'い'}
+          <script>
+          #{'<script>'}
       HAML
     end
   end

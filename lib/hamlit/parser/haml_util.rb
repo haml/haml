@@ -199,6 +199,8 @@ MSG
     end
 
     # Original Haml::Util.unescape_interpolation
+    # ex) slow_unescape_interpolation('foo#{bar}baz"', escape_html: true)
+    #   #=> "\"foo\#{::Hamlit::HamlHelpers.html_escape((bar))}baz\\\"\""
     def slow_unescape_interpolation(str, escape_html = nil)
       res = ''
       rest = ::Hamlit::HamlUtil.handle_interpolation str.dump do |scan|
@@ -223,7 +225,10 @@ MSG
       res + rest
     end
 
-    # Customized Haml::Util.unescape_interpolation to handle escape by Hamlit
+    # Customized Haml::Util.unescape_interpolation to handle escape by Hamlit.
+    # It wraps double quotes to given `str` with escaping `"`.
+    #
+    # ex) unescape_interpolation('foo#{bar}baz"') #=> "\"foo\#{bar}baz\\\"\""
     def unescape_interpolation(str)
       res = ''
       rest = ::Hamlit::HamlUtil.handle_interpolation str.dump do |scan|

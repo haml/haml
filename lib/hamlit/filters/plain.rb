@@ -1,15 +1,26 @@
+require 'hamlit/string_splitter'
+
 module Hamlit
   class Filters
     class Plain < Base
       def compile(node)
-        text = node.value[:text].rstrip
-        if ::Hamlit::HamlUtil.contains_interpolation?(text)
-          # FIXME: Confirm whether this is correct or not
-          text << "\n".freeze
-          text = ::Hamlit::HamlUtil.slow_unescape_interpolation(text)
-          [:escape, true, [:dynamic, text]]
-        else
-          [:static, text]
+        text = node.value[:text]
+        text = text.rstrip unless ::Hamlit::HamlUtil.contains_interpolation?(text) # for compatibility
+        [:multi, *compile_plain(text)]
+      end
+
+      private
+
+      def compile_plain(text)
+        string_literal = ::Hamlit::HamlUtil.unescape_interpolation(text)
+        StringSplitter.compile(string_literal).map do |temple|
+          type, str = temple
+          case type
+          when :dynamic
+            [:escape, true, [:dynamic, str]]
+          else
+            temple
+          end
         end
       end
     end
