@@ -111,7 +111,7 @@ Contributions are welcomed. It'd be good to see
 to learn Temple which is a template engine framework used in Hamlit.
 
 ```bash
-$ git clone https://github.com/k0kubun/hamlit
+$ git clone --recursive https://github.com/k0kubun/hamlit
 $ cd hamlit
 $ bundle install
 
