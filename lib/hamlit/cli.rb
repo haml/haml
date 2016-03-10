@@ -28,6 +28,11 @@ module Hamlit
       pp generate_ast(file)
     end
 
+    desc 'version', 'Show the used hamlit version'
+    def version
+      puts Hamlit::VERSION
+    end
+
     private
 
     def process_load_options
