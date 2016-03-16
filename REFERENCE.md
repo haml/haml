@@ -74,7 +74,7 @@ for full features in original implementation.
 
 ### No pretty mode
 Haml has :pretty mode and :ugly mode. :pretty mode is used on development and indented beautifully.
-On production environemnt, :ugly mode is used and Hamlit currently supports only this mode.
+On production environment, :ugly mode is used and Hamlit currently supports only this mode.
 
 So you'll see difference rendering result on development environment, but it'll be the same on production.
 
