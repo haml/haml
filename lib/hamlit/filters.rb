@@ -21,6 +21,13 @@ module Hamlit
     class << self
       attr_reader :registered
 
+      def remove_filter(name)
+        registered.delete(name.to_s.downcase.to_sym)
+        if constants.map(&:to_s).include?(name.to_s)
+          remove_const name.to_sym
+        end
+      end
+
       private
 
       def register(name, compiler)
