@@ -29,7 +29,7 @@ module Hamlit
     end
 
     register :coffee,       Coffee
-    register :coffeescript, Coffee
+    register :coffeescript, CoffeeScript
     register :css,          Css
     register :erb,          Erb
     register :escaped,      Escaped

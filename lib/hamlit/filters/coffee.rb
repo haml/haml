@@ -10,5 +10,7 @@ module Hamlit
         temple
       end
     end
+
+    CoffeeScript = Coffee
   end
 end
