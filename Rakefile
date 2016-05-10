@@ -88,7 +88,7 @@ namespace :test do
   end
 end
 
-Rake::ExtensionTask.new('hamlit') do |ext|
+Rake::ExtensionTask.new(:hamlit) do |ext|
   ext.lib_dir = 'lib/hamlit'
 end
 
