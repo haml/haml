@@ -1,7 +1,10 @@
+require 'hamlit/helpers'
+
 # Currently this Hamlit::Helpers depends on
 # ActionView internal implementation. (not desired)
 module Hamlit
   module RailsHelpers
+    include Helpers
     extend self
 
     DEFAULT_PRESERVE_TAGS = %w[textarea pre code].freeze
@@ -23,10 +26,7 @@ module Hamlit
 
     def preserve(input = nil, &block)
       return preserve(capture_haml(&block)) if block
-      s = input.to_s.chomp("\n")
-      s.gsub!(/\n/, '&#x000A;')
-      s.delete!("\r")
-      s
+      super
     end
 
     def surround(front, back = front, &block)

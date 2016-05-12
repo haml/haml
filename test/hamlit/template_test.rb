@@ -14,6 +14,11 @@ describe Hamlit::Template do
     assert_equal %Q|<p>hello world</p>\n|, result
   end
 
+  it 'has preserve method' do
+    result = compile_template(:haml, %q|= preserve "hello\nworld"|).render(Object.new, {})
+    assert_equal %Q|hello&amp;#x000A;world\n|, result
+  end
+
   describe 'escape_attrs' do
     it 'escapes attrs by default' do
       result = compile_template(:haml, %q|%div{ data: '<script>' }|).render(Object.new, {})

@@ -62,6 +62,7 @@ for full features in original implementation.
   - [ ] :textile
   - [ ] Custom Filters
 - [ ] Helper Methods
+  - [x] preserve
   - [x] surround
   - [x] precede
   - [x] succeed
