@@ -47,7 +47,7 @@ with C extension.
 
 ## Usage
 
-See [REFERENCE.md](REFERENCE.md) for detail features of Hamlit.
+Hamlit currently supports Ruby 2.1 and higher. See [REFERENCE.md](REFERENCE.md) for detail features of Hamlit.
 
 ### Rails
 
