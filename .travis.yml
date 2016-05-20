@@ -7,7 +7,7 @@ script:
   - "bundle exec rake $TASK"
 matrix:
   include:
-    - rvm: 2.1.9
+    - rvm: 2.1.10
       env: TASK=test
     - rvm: 2.2.5
       env: TASK=test
