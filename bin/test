@@ -16,7 +16,7 @@ function test_with() {
     bundle install
   fi
   ruby -v
-  rake test
+  bundle exec rake test
 }
 
 for version in ${VERSIONS[@]}; do
