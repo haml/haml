@@ -7,7 +7,7 @@ $CFLAGS   << ' -Wall -Wextra'
 $srcs = %w[hamlit.c]
 Dir[File.join(houdini_dir, '*.c')].each do |path|
   src = File.basename(path)
-  if /mswin|mingw/ =~ RUBY_PLATFORM
+  if /mswin|mingw|cygwin|bccwin/ =~ RUBY_PLATFORM
     FileUtils.cp(path, src)
   else
     FileUtils.ln_s(path, src, force: true)
