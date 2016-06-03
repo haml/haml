@@ -7,12 +7,10 @@ $CFLAGS   << ' -Wall -Wextra'
 $srcs = %w[hamlit.c]
 Dir[File.join(houdini_dir, '*.c')].each do |path|
   src = File.basename(path)
-  begin
-    FileUtils.ln_s(path, src, force: true)
-  rescue NotImplementedError
-    # For the error on windows:
-    # symlink() function is unimplemented on this machine (NotImplementedError)
+  if /mswin|mingw/ =~ RUBY_PLATFORM
     FileUtils.cp(path, src)
+  else
+    FileUtils.ln_s(path, src, force: true)
   end
   $srcs << src
 end
