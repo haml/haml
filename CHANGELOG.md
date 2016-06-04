@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.5.0](https://github.com/k0kubun/hamlit/compare/v2.4.2...v2.5.0) - 2016-06-04
+
+### Changed
+
+- Don't escape the result of `preserve` helper in Rails
+
 ## [2.4.2](https://github.com/k0kubun/hamlit/compare/v2.4.1...v2.4.2) - 2016-06-04
 
 ### Fixed
@@ -15,6 +21,7 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 ### Fixed
 
 - Fix C extension builder to work with Ruby 2.3 on Windows
+  [#69](https://github.com/k0kubun/hamlit/issues/69). *Thanks to @francesco-loreti*
 
 ## [2.4.0](https://github.com/k0kubun/hamlit/compare/v2.3.1...v2.4.0) - 2016-05-13
 
