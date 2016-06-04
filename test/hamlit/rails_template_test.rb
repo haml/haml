@@ -91,10 +91,14 @@ describe Hamlit::RailsTemplate do
   end
 
   specify 'preserve' do
-    assert_equal %q|Foo&amp;#x000A;Bar|, render(<<-'HAML'.unindent)
+    assert_equal %q|Foo&#x000A;Bar|, render(<<-'HAML'.unindent)
       = preserve do
         Foo
         Bar
+    HAML
+    assert_equal %q|<div />|, render(<<-'HAML'.unindent)
+      = preserve do
+        <div />
     HAML
   end
 

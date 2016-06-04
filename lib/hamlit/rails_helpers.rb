@@ -26,7 +26,7 @@ module Hamlit
 
     def preserve(input = nil, &block)
       return preserve(capture_haml(&block)) if block
-      super
+      super.html_safe
     end
 
     def surround(front, back = front, &block)
