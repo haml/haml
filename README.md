@@ -54,7 +54,6 @@ Hamlit currently supports Ruby 2.1 and higher. See [REFERENCE.md](REFERENCE.md) 
 Add this line to your application's Gemfile or just replace `gem "haml"` with `gem "hamlit"`.
 It enables rendering by Hamlit for \*.haml automatically.
 
-Stable
 ```rb
 gem 'hamlit'
 ```
