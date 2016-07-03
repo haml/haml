@@ -58,10 +58,6 @@ Stable
 ```rb
 gem 'hamlit'
 ```
-Latest
-```rb
-gem 'hamlit', github: 'k0kubun/hamlit', submodules: true
-```
 
 If you want to use view generator, consider using [hamlit-rails](https://github.com/mfung/hamlit-rails).
 
@@ -107,6 +103,13 @@ $ hamlit render in.haml
 ```
 
 ## Contributing
+
+### Test latest version
+
+```rb
+# Gemfile
+gem 'hamlit', github: 'k0kubun/hamlit', submodules: true
+```
 
 ### Development
 
