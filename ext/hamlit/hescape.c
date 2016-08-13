@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "hescape.h"
 
-static const uint8_t *ESCAPED_STRING[] = {
+static const char *ESCAPED_STRING[] = {
   "",
   "&quot;",
   "&amp;",
@@ -43,13 +44,14 @@ static const char HTML_ESCAPE_TABLE[] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-static uint8_t*
-ensure_allocated(uint8_t *buf, size_t size, size_t *asize)
+static char*
+ensure_allocated(char *buf, size_t size, size_t *asize)
 {
+  size_t new_size;
+
   if (size < *asize)
     return buf;
 
-  size_t new_size;
   if (*asize == 0) {
     new_size = size;
   } else {
@@ -68,20 +70,20 @@ ensure_allocated(uint8_t *buf, size_t size, size_t *asize)
 }
 
 size_t
-hesc_escape_html(uint8_t **dest, const uint8_t *buf, size_t size)
+hesc_escape_html(char **dest, const char *buf, size_t size)
 {
   size_t asize = 0, esc_i, esize = 0, i = 0, rbuf_end = 0;
-  const uint8_t *esc;
-  uint8_t *rbuf = NULL;
+  const char *esc;
+  char *rbuf = NULL;
 
   while (i < size) {
     // Loop here to skip non-escaped characters fast.
-    while (i < size && (esc_i = HTML_ESCAPE_TABLE[buf[i]]) == 0)
+    while (i < size && (esc_i = HTML_ESCAPE_TABLE[(int)buf[i]]) == 0)
       i++;
 
-    if (esc_i) {
+    if (i < size && esc_i) {
       esc = ESCAPED_STRING[esc_i];
-      rbuf = ensure_allocated(rbuf, sizeof(uint8_t) * (size + esize + ESC_LEN(esc_i) + 1), &asize);
+      rbuf = ensure_allocated(rbuf, sizeof(char) * (size + esize + ESC_LEN(esc_i) + 1), &asize);
 
       // Copy pending characters and escaped string.
       memmove(rbuf + rbuf_end, buf + (rbuf_end - esize), i - (rbuf_end - esize));
@@ -94,7 +96,7 @@ hesc_escape_html(uint8_t **dest, const uint8_t *buf, size_t size)
 
   if (rbuf_end == 0) {
     // Return given buf and size if there are no escaped characters.
-    *dest = (uint8_t *)buf;
+    *dest = (char *)buf;
     return size;
   } else {
     // Copy pending characters including NULL character.

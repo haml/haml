@@ -1,6 +1,6 @@
 #include <ruby.h>
 #include <ruby/encoding.h>
-#include "houdini.h"
+#include "hescape.h"
 #include "string.h"
 
 VALUE mAttributeBuilder, mObjectRef;
@@ -58,13 +58,14 @@ hyphenate(VALUE str)
 static VALUE
 escape_html(VALUE str)
 {
-  gh_buf buf = GH_BUF_INIT;
-
+  char *buf;
+  unsigned int size;
   Check_Type(str, T_STRING);
 
-  if (houdini_escape_html0(&buf, (const uint8_t *)RSTRING_PTR(str), RSTRING_LEN(str), 0)) {
-    str = rb_enc_str_new(buf.ptr, buf.size, rb_utf8_encoding());
-    gh_buf_free(&buf);
+  size = hesc_escape_html(&buf, RSTRING_PTR(str), RSTRING_LEN(str));
+  if (size > RSTRING_LEN(str)) {
+    str = rb_enc_str_new(buf, size, rb_utf8_encoding());
+    free((void *)buf);
   }
 
   return str;
