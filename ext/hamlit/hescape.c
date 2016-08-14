@@ -78,7 +78,7 @@ hesc_escape_html(char **dest, const char *buf, size_t size)
 
   while (i < size) {
     // Loop here to skip non-escaped characters fast.
-    while (i < size && (esc_i = HTML_ESCAPE_TABLE[(int)buf[i]]) == 0)
+    while (i < size && (esc_i = HTML_ESCAPE_TABLE[(unsigned char)buf[i]]) == 0)
       i++;
 
     if (i < size && esc_i) {
