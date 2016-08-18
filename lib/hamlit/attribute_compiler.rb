@@ -93,7 +93,7 @@ module Hamlit
         case value
         when true then temple << [:html, :attr, key, @format == :xhtml ? [:static, key] : [:multi]]
         when false, nil
-        else temple << [:html, :attr, key, [:escape, @escape_attrs, [:static, value.to_s]]]
+        else temple << [:html, :attr, key, [:fescape, @escape_attrs, [:static, value.to_s]]]
         end
       else
         var = @identity.generate
@@ -101,13 +101,13 @@ module Hamlit
           :case, "(#{var} = (#{exp}))",
           ['true', [:html, :attr, key, @format == :xhtml ? [:static, key] : [:multi]]],
           ['false, nil', [:multi]],
-          [:else, [:multi, [:static, " #{key}=#{@quote}"], [:escape, @escape_attrs, [:dynamic, var]], [:static, @quote]]],
+          [:else, [:multi, [:static, " #{key}=#{@quote}"], [:fescape, @escape_attrs, [:dynamic, var]], [:static, @quote]]],
         ]
       end
     end
 
     def compile_common!(temple, key, values)
-      temple << [:html, :attr, key, [:escape, @escape_attrs, values.last]]
+      temple << [:html, :attr, key, [:fescape, @escape_attrs, values.last]]
     end
 
     def attribute_builder(type, values)

@@ -27,8 +27,22 @@ describe Hamlit::RailsTemplate do
     assert_equal %Q|<a href='&lt;script&gt;alert(&quot;a&quot;);&lt;/script&gt;'></a>\n|, render(<<-HAML.unindent)
       %a{ href: '<script>alert("a");</script>' }
     HAML
-    assert_equal %Q|<a href='<script>'></a>\n|, render(<<-HAML.unindent)
+    assert_equal %Q|<a href='&lt;script&gt;'></a>\n|, render(<<-HAML.unindent)
       %a{ href: '<script>'.html_safe }
+    HAML
+  end
+
+  it 'forces to escape html_safe attributes' do
+    assert_equal <<-'HTML'.unindent, render(<<-HAML.unindent)
+      <meta content='&#39;&quot;'>
+      <meta content='&#39;&quot;'>
+      <meta content='&#39;&quot;'>
+    HTML
+      %meta{ content: %{'"}.html_safe }
+      - val = %{'"}.html_safe
+      %meta{ content: val }
+      - hash = { content: val }
+      %meta{ hash }
     HAML
   end
 
