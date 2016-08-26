@@ -13,6 +13,7 @@ require 'hamlit/filters/preserve'
 require 'hamlit/filters/ruby'
 require 'hamlit/filters/sass'
 require 'hamlit/filters/scss'
+require 'hamlit/filters/cdata'
 
 module Hamlit
   class Filters
@@ -48,6 +49,7 @@ module Hamlit
     register :ruby,         Ruby
     register :sass,         Sass
     register :scss,         Scss
+    register :cdata,        Cdata
 
     def initialize(options = {})
       @options = options
