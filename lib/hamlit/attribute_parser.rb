@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hamlit/ruby_expression'
 
 module Hamlit
@@ -28,8 +29,8 @@ module Hamlit
 
     def wrap_bracket(text)
       text = text.strip
-      return text if text[0] == '{'.freeze
-      '{' << text << '}'.freeze
+      return text if text[0] == '{'
+      "{#{text}}"
     end
 
     def parse_key!(tokens)
@@ -38,10 +39,10 @@ module Hamlit
       when :on_sp
         parse_key!(tokens)
       when :on_label
-        str.tr(':'.freeze, ''.freeze)
+        str.tr(':', '')
       when :on_symbeg
         _, _, key = tokens.shift
-        assert_type!(tokens.shift, :on_tstring_end) if str != ':'.freeze
+        assert_type!(tokens.shift, :on_tstring_end) if str != ':'
         skip_until_hash_rocket!(tokens)
         key
       when :on_tstring_beg
@@ -64,7 +65,7 @@ module Hamlit
     def skip_until_hash_rocket!(tokens)
       until tokens.empty?
         _, type, str = tokens.shift
-        break if type == :on_op && str == '=>'.freeze
+        break if type == :on_op && str == '=>'
       end
     end
 

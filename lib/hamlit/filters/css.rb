@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hamlit
   class Filters
     class Css < TextBase
@@ -14,17 +15,17 @@ module Hamlit
 
       def compile_html(node)
         temple = [:multi]
-        temple << [:static, "<style>\n".freeze]
-        compile_text!(temple, node, '  '.freeze)
-        temple << [:static, "\n</style>".freeze]
+        temple << [:static, "<style>\n"]
+        compile_text!(temple, node, '  ')
+        temple << [:static, "\n</style>"]
         temple
       end
 
       def compile_xhtml(node)
         temple = [:multi]
-        temple << [:static, "<style type='text/css'>\n  /*<![CDATA[*/\n".freeze]
-        compile_text!(temple, node, '    '.freeze)
-        temple << [:static, "\n  /*]]>*/\n</style>".freeze]
+        temple << [:static, "<style type='text/css'>\n  /*<![CDATA[*/\n"]
+        compile_text!(temple, node, '    ')
+        temple << [:static, "\n  /*]]>*/\n</style>"]
         temple
       end
     end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hamlit/ruby_expression'
 
 module Hamlit

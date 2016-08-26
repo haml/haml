@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hamlit/hamlit'
 require 'hamlit/object_ref'
 require 'hamlit/utils'

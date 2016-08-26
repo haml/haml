@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hamlit/parser/haml_util'
 require 'hamlit/attribute_compiler'
 require 'hamlit/static_analyzer'
@@ -35,7 +36,7 @@ module Hamlit
           [:multi,
            [:code, "#{var} = (#{node.value[:value]}"],
            [:newline],
-           [:code, ')'.freeze],
+           [:code, ')'],
            [:escape, node.value[:escape_html], [:dynamic, var]]
           ]
         else

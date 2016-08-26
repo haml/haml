@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hamlit/ruby_expression'
 require 'hamlit/static_analyzer'
 require 'hamlit/string_splitter'
@@ -69,7 +70,7 @@ module Hamlit
           [:multi,
            [:code, "#{var} = (#{node.value[:text]}"],
            [:newline],
-           [:code, ')'.freeze],
+           [:code, ')'],
           ]
         else
           [:multi,
@@ -84,7 +85,7 @@ module Hamlit
         if !node.value[:escape_html] && node.value[:preserve]
           result = find_and_preserve(result)
         else
-          result = '(' << result << ').to_s'.freeze
+          result = "(#{result}).to_s"
         end
         [:escape, node.value[:escape_html], [:dynamic, result]]
       end

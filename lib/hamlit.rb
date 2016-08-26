@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hamlit/engine'
 require 'hamlit/error'
 require 'hamlit/version'
