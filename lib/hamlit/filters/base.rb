@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hamlit/parser/haml_util'
 
 module Hamlit

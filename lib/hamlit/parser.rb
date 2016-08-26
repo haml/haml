@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Hamlit::Parser uses original Haml::Parser to generate Haml AST.
 # hamlit/parser/haml_* are modules originally in haml gem.
 

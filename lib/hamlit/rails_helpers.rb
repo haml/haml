@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hamlit/helpers'
 
 # Currently this Hamlit::Helpers depends on

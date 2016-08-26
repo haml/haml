@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hamlit
   class Filters
     class Cdata < TextBase
@@ -9,9 +10,9 @@ module Hamlit
 
       def compile_cdata(node)
         temple = [:multi]
-        temple << [:static, "<![CDATA[\n".freeze]
-        compile_text!(temple, node, '    '.freeze)
-        temple << [:static, "\n]]>".freeze]
+        temple << [:static, "<![CDATA[\n"]
+        compile_text!(temple, node, '    ')
+        temple << [:static, "\n]]>"]
         temple
       end
     end

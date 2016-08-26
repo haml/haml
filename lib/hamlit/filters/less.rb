@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # LESS support is deprecated since it requires therubyracer.gem,
 # which is hard to maintain.
 #
@@ -9,9 +10,9 @@ module Hamlit
       def compile(node)
         require 'tilt/less' if explicit_require?
         temple = [:multi]
-        temple << [:static, "<style>\n".freeze]
+        temple << [:static, "<style>\n"]
         temple << compile_with_tilt(node, 'less', indent_width: 2)
-        temple << [:static, "</style>".freeze]
+        temple << [:static, '</style>']
         temple
       end
     end

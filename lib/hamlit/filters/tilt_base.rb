@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'tilt'
 
 module Hamlit
@@ -6,7 +7,7 @@ module Hamlit
       def self.render(name, source, indent_width: 0)
         text = ::Tilt["t.#{name}"].new { source }.render
         return text if indent_width == 0
-        text.gsub!(/^/, ' '.freeze * indent_width)
+        text.gsub!(/^/, ' ' * indent_width)
       end
 
       def explicit_require?

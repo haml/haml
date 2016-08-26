@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hamlit
   class HTML < Temple::HTML::Fast
     DEPRECATED_FORMATS = %i[html4 html5].freeze

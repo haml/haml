@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hamlit/attribute_builder'
 require 'hamlit/attribute_parser'
 require 'hamlit/ruby_expression'
@@ -41,11 +42,11 @@ module Hamlit
         values.select! { |_, exp| exp != nil }
 
         case key
-        when 'id'.freeze
+        when 'id'
           compile_id!(temple, key, values)
-        when 'class'.freeze
+        when 'class'
           compile_class!(temple, key, values)
-        when 'data'.freeze
+        when 'data'
           compile_data!(temple, key, values)
         when *AttributeBuilder::BOOLEAN_ATTRIBUTES, /\Adata-/
           compile_boolean!(temple, key, values)

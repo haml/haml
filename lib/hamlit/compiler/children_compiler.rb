@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hamlit
   class Compiler
     class ChildrenCompiler
@@ -101,7 +102,7 @@ module Hamlit
         when :script
           node.children.empty? && !nuke_inner_whitespace?(node)
         when :filter
-          !%w[ruby].freeze.include?(node.value[:name])
+          !%w[ruby].include?(node.value[:name])
         else
           false
         end

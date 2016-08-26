@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hamlit/compiler/children_compiler'
 require 'hamlit/compiler/comment_compiler'
 require 'hamlit/compiler/doctype_compiler'

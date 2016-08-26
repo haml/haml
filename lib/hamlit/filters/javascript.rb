@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hamlit
   class Filters
     class Javascript < TextBase
@@ -14,17 +15,17 @@ module Hamlit
 
       def compile_html(node)
         temple = [:multi]
-        temple << [:static, "<script>\n".freeze]
-        compile_text!(temple, node, '  '.freeze)
-        temple << [:static, "\n</script>".freeze]
+        temple << [:static, "<script>\n"]
+        compile_text!(temple, node, '  ')
+        temple << [:static, "\n</script>"]
         temple
       end
 
       def compile_xhtml(node)
         temple = [:multi]
-        temple << [:static, "<script type='text/javascript'>\n  //<![CDATA[\n".freeze]
-        compile_text!(temple, node, '    '.freeze)
-        temple << [:static, "\n  //]]>\n</script>".freeze]
+        temple << [:static, "<script type='text/javascript'>\n  //<![CDATA[\n"]
+        compile_text!(temple, node, '    ')
+        temple << [:static, "\n  //]]>\n</script>"]
         temple
       end
     end
