@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.6.2](https://github.com/k0kubun/hamlit/compare/v2.6.1...v2.6.2) - 2016-08-27
+
+### Added
+
+- Add cdata filter
+  [#84](https://github.com/k0kubun/hamlit/issues/84). *Thanks to @shmargum*
+- Minimize string allocation on template comipilation using `# frozen_string_literal: true`
+
 ## [2.6.1](https://github.com/k0kubun/hamlit/compare/v2.6.0...v2.6.1) - 2016-08-18
 
 ### Fixed
