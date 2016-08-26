@@ -283,11 +283,11 @@ HAML
   end
 
   def test_haml_tag_name_and_attribute_classes_merging_with_id
-    assert_equal("<p class='bar foo' id='some_id'></p>\n", render("- haml_tag 'p#some_id.foo', :class => 'bar'"))
+    assert_equal("<p class='foo bar' id='some_id'></p>\n", render("- haml_tag 'p#some_id.foo', :class => 'bar'"))
   end
 
   def test_haml_tag_name_and_attribute_classes_merging
-    assert_equal("<p class='bar foo'></p>\n", render("- haml_tag 'p.foo', :class => 'bar'"))
+    assert_equal("<p class='foo bar'></p>\n", render("- haml_tag 'p.foo', :class => 'bar'"))
   end
 
   def test_haml_tag_name_merges_id_and_attribute_id
@@ -308,7 +308,7 @@ HAML
 
   def test_haml_tag_with_class_array
     assert_equal("<p class='a b'>foo</p>\n", render("- haml_tag :p, 'foo', :class => %w[a b]"))
-    assert_equal("<p class='a b c d'>foo</p>\n", render("- haml_tag 'p.c.d', 'foo', :class => %w[a b]"))
+    assert_equal("<p class='c d a b'>foo</p>\n", render("- haml_tag 'p.c.d', 'foo', :class => %w[a b]"))
   end
 
   def test_haml_tag_with_id_array

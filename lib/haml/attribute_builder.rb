@@ -125,7 +125,7 @@ module Haml
         elsif key == 'class'
           merged_class = filter_and_join(from, ' ')
           if to && merged_class
-            merged_class = (merged_class.split(' ') | to.split(' ')).sort.join(' ')
+            merged_class = (to.split(' ') | merged_class.split(' ')).join(' ')
           elsif to || merged_class
             merged_class ||= to
           end
