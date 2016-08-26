@@ -10,7 +10,7 @@ module Hamlit
       def compile_cdata(node)
         temple = [:multi]
         temple << [:static, "<![CDATA[\n".freeze]
-        compile_text!(temple, node, '  '.freeze)
+        compile_text!(temple, node, '    '.freeze)
         temple << [:static, "\n]]>".freeze]
         temple
       end

@@ -5,7 +5,7 @@ describe Hamlit::Filters do
     it 'renders cdata' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
         <![CDATA[
-          foo bar
+            foo bar
         ]]>
       HTML
         :cdata
@@ -16,7 +16,7 @@ describe Hamlit::Filters do
     it 'parses string interpolation' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
         <![CDATA[
-          foo <&> bar
+            foo <&> bar
         ]]>
       HTML
         :cdata

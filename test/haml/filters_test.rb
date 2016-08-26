@@ -226,7 +226,7 @@ class CSSFilterTest < Haml::TestCase
 end
 
 class CDATAFilterTest < Haml::TestCase
-  test "should wrap output in CDATA tag" do; skip
+  test "should wrap output in CDATA tag" do
     html = "<![CDATA[\n    foo\n]]>\n"
     haml = ":cdata\n  foo"
     assert_equal(html, render(haml))
