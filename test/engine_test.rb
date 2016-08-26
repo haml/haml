@@ -163,14 +163,14 @@ class EngineTest < Haml::TestCase
 
   def test_class_attr_with_array
     assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => %w[a b]} foo")) # basic
-    assert_equal("<p class='a b css'>foo</p>\n", render("%p.css{:class => %w[a b]} foo")) # merge with css
-    assert_equal("<p class='b css'>foo</p>\n", render("%p.css{:class => %w[css b]} foo")) # merge uniquely
+    assert_equal("<p class='css a b'>foo</p>\n", render("%p.css{:class => %w[a b]} foo")) # merge with css
+    assert_equal("<p class='css b'>foo</p>\n", render("%p.css{:class => %w[b css]} foo")) # merge uniquely
     assert_equal("<p class='a b c d'>foo</p>\n", render("%p{:class => [%w[a b], %w[c d]]} foo")) # flatten
     assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => [:a, :b] } foo")) # stringify
     assert_equal("<p>foo</p>\n", render("%p{:class => [nil, false] } foo")) # strip falsey
     assert_equal("<p class='a'>foo</p>\n", render("%p{:class => :a} foo")) # single stringify
     assert_equal("<p>foo</p>\n", render("%p{:class => false} foo")) # single falsey
-    assert_equal("<p class='a b html'>foo</p>\n", render("%p(class='html'){:class => %w[a b]} foo")) # html attrs
+    assert_equal("<p class='html a b'>foo</p>\n", render("%p(class='html'){:class => %w[a b]} foo")) # html attrs
   end
 
   def test_id_attr_with_array
@@ -206,7 +206,7 @@ HAML
   def test_attributes_with_to_s
     assert_equal(<<HTML, render(<<HAML))
 <p id='foo_2'></p>
-<p class='2 foo'></p>
+<p class='foo 2'></p>
 <p blaz='2'></p>
 <p 2='2'></p>
 HTML
@@ -1159,7 +1159,7 @@ HAML
   def test_correct_parsing_with_brackets
     assert_equal("<p class='foo'>{tada} foo</p>\n", render("%p{:class => 'foo'} {tada} foo"))
     assert_equal("<p class='foo'>deep {nested { things }}</p>\n", render("%p{:class => 'foo'} deep {nested { things }}"))
-    assert_equal("<p class='bar foo'>{a { d</p>\n", render("%p{{:class => 'foo'}, :class => 'bar'} {a { d"))
+    assert_equal("<p class='foo bar'>{a { d</p>\n", render("%p{{:class => 'foo'}, :class => 'bar'} {a { d"))
     assert_equal("<p foo='bar'>a}</p>\n", render("%p{:foo => 'bar'} a}"))
 
     foo = []
@@ -1195,8 +1195,8 @@ HAML
   def test_nil_class_with_syntactic_class
     assert_equal("<p class='foo'>nil</p>\n", render("%p.foo{:class => nil} nil"))
     assert_equal("<p class='bar foo'>nil</p>\n", render("%p.bar.foo{:class => nil} nil"))
-    assert_equal("<p class='bar foo'>nil</p>\n", render("%p.foo{{:class => 'bar'}, :class => nil} nil"))
-    assert_equal("<p class='bar foo'>nil</p>\n", render("%p.foo{{:class => nil}, :class => 'bar'} nil"))
+    assert_equal("<p class='foo bar'>nil</p>\n", render("%p.foo{{:class => 'bar'}, :class => nil} nil"))
+    assert_equal("<p class='foo bar'>nil</p>\n", render("%p.foo{{:class => nil}, :class => 'bar'} nil"))
   end
 
   def test_locals
@@ -1675,15 +1675,15 @@ HAML
   end
 
   def test_new_attribute_classes
-    assert_equal("<div class='bar foo'></div>\n", render(".foo(class='bar')"))
-    assert_equal("<div class='bar baz foo'></div>\n", render(".foo{:class => 'bar'}(class='baz')"))
-    assert_equal("<div class='bar baz foo'></div>\n", render(".foo(class='baz'){:class => 'bar'}"))
+    assert_equal("<div class='foo bar'></div>\n", render(".foo(class='bar')"))
+    assert_equal("<div class='foo baz bar'></div>\n", render(".foo{:class => 'bar'}(class='baz')"))
+    assert_equal("<div class='foo bar baz'></div>\n", render(".foo(class='bar'){:class => 'baz'}"))
     foo = User.new(42)
-    assert_equal("<div class='bar baz foo struct_user' id='struct_user_42'></div>\n",
-      render(".foo(class='baz'){:class => 'bar'}[foo]", :locals => {:foo => foo}))
-    assert_equal("<div class='bar baz foo struct_user' id='struct_user_42'></div>\n",
+    assert_equal("<div class='foo bar baz struct_user' id='struct_user_42'></div>\n",
+      render(".foo(class='bar'){:class => 'baz'}[foo]", :locals => {:foo => foo}))
+    assert_equal("<div class='foo baz bar struct_user' id='struct_user_42'></div>\n",
       render(".foo[foo](class='baz'){:class => 'bar'}", :locals => {:foo => foo}))
-    assert_equal("<div class='bar baz foo struct_user' id='struct_user_42'></div>\n",
+    assert_equal("<div class='foo baz bar struct_user' id='struct_user_42'></div>\n",
       render(".foo[foo]{:class => 'bar'}(class='baz')", :locals => {:foo => foo}))
   end
 
