@@ -115,7 +115,7 @@ class FiltersTest < Haml::TestCase
     end
   end
 
-  test "interpolated code should be escaped if escape_html is set" do; skip
+  test "interpolated code should be escaped if escape_html is set" do
     assert_haml_ugly(":plain\n  \#{'<script>evil</script>'}")
   end
 
