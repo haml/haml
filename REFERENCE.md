@@ -45,7 +45,7 @@ for full features in original implementation.
   - [x] Escaping HTML: &=
   - [x] Unescaping HTML: !=
 - [x] Filters
-  - [ ] :cdata
+  - [x] :cdata
   - [x] :coffee
   - [x] :css
   - [x] :erb
