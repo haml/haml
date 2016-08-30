@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.7.0](https://github.com/k0kubun/hamlit/compare/v2.6.2...v2.7.0) - 2016-08-31
+
+### Changed
+
+- Don't escape interpolated content in plain filter
+  [#87](https://github.com/k0kubun/hamlit/pull/87). *Thanks to @shmargum*
+
 ## [2.6.2](https://github.com/k0kubun/hamlit/compare/v2.6.1...v2.6.2) - 2016-08-27
 
 ### Added
