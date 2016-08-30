@@ -11,7 +11,7 @@ describe Hamlit::Filters do
       HAML
     end
 
-    it 'escapes only interpolated content' do
+    it 'does not escape interpolated content' do
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         <script>
         <script>
