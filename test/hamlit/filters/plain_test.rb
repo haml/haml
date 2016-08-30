@@ -14,7 +14,7 @@ describe Hamlit::Filters do
     it 'escapes only interpolated content' do
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         <script>
-        &lt;script&gt;
+        <script>
 
       HTML
         :plain

@@ -18,7 +18,7 @@ module Hamlit
           type, str = temple
           case type
           when :dynamic
-            [:escape, true, [:dynamic, str]]
+            [:escape, false, [:dynamic, str]]
           else
             temple
           end
