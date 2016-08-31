@@ -4,6 +4,9 @@ require 'thor'
 
 module Hamlit
   class CLI < Thor
+    class_option :escape_html, type: :boolean, default: true
+    class_option :escape_attrs, type: :boolean, default: true
+
     desc 'render HAML', 'Render haml template'
     option :load_path, type: :string, aliases: %w[-I]
     option :require, type: :string, aliases: %w[-r]
@@ -65,7 +68,7 @@ module Hamlit
           end
         end_src
       else
-        Hamlit::Engine.new.call(template)
+        Hamlit::Engine.new(engine_options).call(template)
       end
     end
 
@@ -80,7 +83,10 @@ module Hamlit
     end
 
     def engine_options
-      Hamlit::Engine.options
+      Hamlit::Engine.options.to_h.merge(
+        escape_attrs: options[:escape_attrs],
+        escape_html:  options[:escape_html],
+      )
     end
 
     # Flexible default_task, compatible with haml's CLI
