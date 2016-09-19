@@ -144,4 +144,8 @@ describe Hamlit::RailsTemplate do
     assert_equal %Q|<hr>\n|, render(%q|= ::TosSafeObject.new|)
     assert_equal %Q|&lt;hr&gt;\n|, render(%q|= ::TosUnsafeObject.new|)
   end
+
+  specify 'encoding' do
+    assert_equal Encoding.default_external, render('Test').encoding
+  end
 end

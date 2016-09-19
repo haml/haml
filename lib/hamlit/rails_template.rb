@@ -8,7 +8,7 @@ require 'hamlit/parser/haml_util'
 module Hamlit
   RailsTemplate = Temple::Templates::Rails.create(
     Hamlit::Engine,
-    generator:     Temple::Generators::RailsOutputBuffer,
+    generator:     Temple::Generators::RailsOutputBuffer.new(buffer_class: 'ActionView::OutputBuffer'),
     register_as:   :haml,
     use_html_safe: true,
     streaming:     true,
