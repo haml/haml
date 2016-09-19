@@ -8,10 +8,11 @@ require 'hamlit/parser/haml_util'
 module Hamlit
   RailsTemplate = Temple::Templates::Rails.create(
     Hamlit::Engine,
-    generator:     Temple::Generators::RailsOutputBuffer.new(buffer_class: 'ActionView::OutputBuffer'),
+    generator:     Temple::Generators::RailsOutputBuffer,
     register_as:   :haml,
     use_html_safe: true,
     streaming:     true,
+    buffer_class:  'ActionView::OutputBuffer',
   )
 
   # https://github.com/haml/haml/blob/4.0.7/lib/haml/template.rb
