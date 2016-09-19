@@ -11,6 +11,7 @@ require 'hamlit/static_analyzer'
 module Hamlit
   class Engine < Temple::Engine
     define_options(
+      :buffer_class,
       generator:    Temple::Generators::ArrayBuffer,
       format:       :html,
       attr_quote:   "'",
