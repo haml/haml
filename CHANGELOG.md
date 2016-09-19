@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.7.1](https://github.com/k0kubun/hamlit/compare/v2.7.0...v2.7.1) - 2016-09-19
+
+### Fixed
+
+- Fix Rails handler to use `ActionView::OutputBuffer` instead of `ActionView::SafeBuffer` to justify encoding
+  [#89](https://github.com/k0kubun/hamlit/pull/89). *Thanks to @akelmanson*
+
 ## [2.7.0](https://github.com/k0kubun/hamlit/compare/v2.6.2...v2.7.0) - 2016-08-31
 
 ### Changed
