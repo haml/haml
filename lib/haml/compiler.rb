@@ -61,13 +61,13 @@ END
       "#{preamble}#{locals_code(local_names)}#{precompiled}#{postamble}"
     end
 
-    private
-
     # Returns the string used as the return value of the precompiled method.
     # This method exists so it can be monkeypatched to return modified values.
     def precompiled_method_return_value
       "_erbout"
     end
+
+    private
 
     def locals_code(names)
       names = names.keys if Hash === names
