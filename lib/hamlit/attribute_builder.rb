@@ -9,5 +9,5 @@ module Hamlit::AttributeBuilder
                        defer reversed ismap seamless muted required
                        autofocus novalidate formnovalidate open pubdate
                        itemscope allowfullscreen default inert sortable
-                       truespeed typemustmatch].freeze
+                       truespeed typemustmatch download].freeze
 end
