@@ -8,12 +8,20 @@ require 'hamlit/parser/haml_util'
 module Hamlit
   class RailsTemplate
     def call(template)
-      Engine.new(
+      options = {
         generator:     Temple::Generators::RailsOutputBuffer,
         use_html_safe: true,
         streaming:     true,
         buffer_class:  'ActionView::OutputBuffer',
-      ).call(template.source)
+      }
+
+      # https://github.com/haml/haml/blob/4.0.7/lib/haml/template/plugin.rb#L19-L20
+      # https://github.com/haml/haml/blob/4.0.7/lib/haml/options.rb#L228
+      if template.respond_to?(:type) && template.type == 'text/xml'
+        options.merge!(format: :xhtml)
+      end
+
+      Engine.new(options).call(template.source)
     end
   end
   ActionView::Template.register_template_handler(:haml, RailsTemplate.new)
