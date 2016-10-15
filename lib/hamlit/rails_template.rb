@@ -6,14 +6,17 @@ require 'hamlit/parser/haml_helpers'
 require 'hamlit/parser/haml_util'
 
 module Hamlit
-  RailsTemplate = Temple::Templates::Rails.create(
-    Hamlit::Engine,
-    generator:     Temple::Generators::RailsOutputBuffer,
-    register_as:   :haml,
-    use_html_safe: true,
-    streaming:     true,
-    buffer_class:  'ActionView::OutputBuffer',
-  )
+  class RailsTemplate
+    def call(template)
+      Engine.new(
+        generator:     Temple::Generators::RailsOutputBuffer,
+        use_html_safe: true,
+        streaming:     true,
+        buffer_class:  'ActionView::OutputBuffer',
+      ).call(template.source)
+    end
+  end
+  ActionView::Template.register_template_handler(:haml, RailsTemplate.new)
 
   # https://github.com/haml/haml/blob/4.0.7/lib/haml/template.rb
   module HamlHelpers
