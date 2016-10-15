@@ -148,4 +148,14 @@ describe Hamlit::RailsTemplate do
   specify 'encoding' do
     assert_equal Encoding.default_external, render('Test').encoding
   end
+
+  specify '.set_options' do
+    original = Hamlit::RailsTemplate.options[:use_html_safe]
+    begin
+      Hamlit::RailsTemplate.set_options(use_html_safe: !original)
+      assert_equal !original, Hamlit::RailsTemplate.options[:use_html_safe]
+    ensure
+      Hamlit::RailsTemplate.set_options(use_html_safe: original)
+    end
+  end
 end
