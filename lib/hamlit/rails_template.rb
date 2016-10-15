@@ -7,18 +7,29 @@ require 'hamlit/parser/haml_util'
 
 module Hamlit
   class RailsTemplate
+    # Compatible with: https://github.com/judofyr/temple/blob/v0.7.7/lib/temple/mixins/options.rb#L15-L24
+    class << self
+      def options
+        @options ||= {
+          generator:     Temple::Generators::RailsOutputBuffer,
+          use_html_safe: true,
+          streaming:     true,
+          buffer_class:  'ActionView::OutputBuffer',
+        }
+      end
+
+      def set_options(opts)
+        options.update(opts)
+      end
+    end
+
     def call(template)
-      options = {
-        generator:     Temple::Generators::RailsOutputBuffer,
-        use_html_safe: true,
-        streaming:     true,
-        buffer_class:  'ActionView::OutputBuffer',
-      }
+      options = RailsTemplate.options
 
       # https://github.com/haml/haml/blob/4.0.7/lib/haml/template/plugin.rb#L19-L20
       # https://github.com/haml/haml/blob/4.0.7/lib/haml/options.rb#L228
       if template.respond_to?(:type) && template.type == 'text/xml'
-        options.merge!(format: :xhtml)
+        options = options.merge(format: :xhtml)
       end
 
       Engine.new(options).call(template.source)
