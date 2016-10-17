@@ -190,8 +190,12 @@ module Haml
 
     def attributes(class_id, obj_ref, *attributes_hashes)
       attributes = class_id
-      attributes_hashes.each do |old|
-        self.class.merge_attrs(attributes, Hash[old.map {|k, v| [k.to_s, v]}])
+      if (attributes.blank? and attributes_hashes.size == 1)
+        attributes = Hash.new(attributes_hashes.first.map {|k, v| [k.to_s, v]})
+      else
+        attributes_hashes.each do |old|
+          self.class.merge_attrs(attributes, Hash[old.map {|k, v| [k.to_s, v]}])
+        end
       end
       self.class.merge_attrs(attributes, parse_object_ref(obj_ref)) if obj_ref
       Compiler.build_attributes(
