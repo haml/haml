@@ -1,4 +1,4 @@
-# Haml
+# Haml [![Build Status](https://secure.travis-ci.org/nex3/haml.png)](http://travis-ci.org/nex3/haml) [![Dependency Status](https://gemnasium.com/nex3/haml.png)](https://gemnasium.com/nex3/haml)
 
 [![Gem Version](https://badge.fury.io/rb/haml.svg)](http://rubygems.org/gems/haml)
 [![Build Status](https://travis-ci.org/haml/haml.svg?branch=master)](http://travis-ci.org/haml/haml)
