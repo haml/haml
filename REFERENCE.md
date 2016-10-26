@@ -10,16 +10,16 @@ See [Haml's tutorial](http://haml.info/tutorial.html) if you are not familiar wi
 See [Haml's reference](http://haml.info/docs/yardoc/file.REFERENCE.html)
 for full features in original implementation.
 
-- [x] Using Haml
+- [ ] Using Haml
   - [x] Rails XSS Protection
   - [x] Ruby Module
   - [x] Options
   - [ ] Encodings
 - [x] Plain Text
   - [x] Escaping: \
-- [x] HTML Elements
+- [ ] HTML Elements
   - [x] Element Name: %
-  - [x] Attributes: `
+  - [ ] Attributes: `
      - [x] :class and :id Attributes
      - [x] HTML-style Attributes: ()
      - [x] Ruby 1.9-style Hashes
@@ -44,7 +44,7 @@ for full features in original implementation.
   - [x] Ruby Interpolation: #{}
   - [x] Escaping HTML: &=
   - [x] Unescaping HTML: !=
-- [x] Filters
+- [ ] Filters
   - [x] :cdata
   - [x] :coffee
   - [x] :css
@@ -61,7 +61,7 @@ for full features in original implementation.
   - [x] :scss
   - [ ] :textile
   - [ ] Custom Filters
-- [ ] Helper Methods
+- [x] Helper Methods
   - [x] preserve
   - [x] surround
   - [x] precede
