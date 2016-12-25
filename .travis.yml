@@ -2,6 +2,7 @@ sudo: false
 language: ruby
 cache: bundler
 rvm:
+  - 2.4.0
   - 2.3.0
   - 2.2.5
   - 2.1
@@ -19,6 +20,12 @@ matrix:
       gemfile: test/gemfiles/Gemfile.rails-5.0.x
     - rvm: 2.1
       gemfile: test/gemfiles/Gemfile.rails-5.0.x
+    - rvm: 2.4.0
+      gemfile: test/gemfiles/Gemfile.rails-4.0.x
+    - rvm: 2.4.0
+      gemfile: test/gemfiles/Gemfile.rails-4.1.x
+    - rvm: 2.4.0
+      gemfile: test/gemfiles/Gemfile.rails-4.2.x
   allow_failures:
     - rvm: jruby
     - rvm: rbx-2
