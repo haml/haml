@@ -9,6 +9,5 @@ gem 'pry-byebug'
 
 if RUBY_PLATFORM !~ /mswin|mingw|bccwin|wince/
   gem 'faml'
-  gem 'lineprof'
   gem 'stackprof'
 end
