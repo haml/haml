@@ -13,6 +13,8 @@ matrix:
       env: TASK=test
     - rvm: 2.3.1
       env: TASK=test
+    - rvm: 2.4.0
+      env: TASK=test
     - rvm: ruby-head
       env: TASK=test
     - rvm: 2.3.1
