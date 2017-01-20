@@ -10,8 +10,6 @@ rvm:
   - 2.2.6
   - 2.3.3
   - 2.4.0
-  - jruby
-  - rbx-19mode
 gemfile:
   - test/gemfiles/Gemfile.rails-3.0.x
   - test/gemfiles/Gemfile.rails-3.1.x
