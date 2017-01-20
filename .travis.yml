@@ -21,16 +21,11 @@ gemfile:
   - test/gemfiles/Gemfile.rails-4.2.x
   - test/gemfiles/Gemfile.rails-5.0.x
 matrix:
+  # Don't kill Travis: just test against the latest 4.x on JRuby and Rubinius.
+  include:
+    - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-4.2.x }
+    - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-4.2.x }
   exclude:
-    # Don't kill Travis: just test against the latest version on JRuby and Rubinius.
-    - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-3.0.x }
-    - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-3.1.x }
-    - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
-
-    - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-3.0.x }
-    - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-3.1.x }
-    - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-3.2.x }
-
     # Rails 4+ doesn't run on Ruby 1.8
     - { rvm: 1.8.7, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
     - { rvm: 1.8.7, gemfile: test/gemfiles/Gemfile.rails-4.1.x }
@@ -43,8 +38,8 @@ matrix:
     - { rvm: 2.1.10, gemfile: test/gemfiles/Gemfile.rails-5.0.x }
 
   allow_failures:
-    - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
-    - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
+    - { rvm: jruby, gemfile: test/gemfiles/Gemfile.rails-4.2.x }
+    - { rvm: rbx-19mode, gemfile: test/gemfiles/Gemfile.rails-4.2.x }
 
 branches:
   only:
