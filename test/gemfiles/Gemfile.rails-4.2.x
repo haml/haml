@@ -8,4 +8,6 @@ else
   gem 'mime-types', '2.99'
 end
 
+gem "nokogiri", RUBY_VERSION < "2.1" ? "~> 1.6.0" : ">= 1.7"
+
 gemspec :path => '../..'
