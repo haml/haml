@@ -3,9 +3,9 @@ language: ruby
 cache: bundler
 rvm:
   - 2.4.0
-  - 2.3.0
-  - 2.2.5
-  - 2.1
+  - 2.3.1
+  - 2.2.6
+  - 2.1.10
   - 2.0.0
   - jruby
   - rbx-2
@@ -18,7 +18,7 @@ matrix:
   exclude:
     - rvm: 2.0.0
       gemfile: test/gemfiles/Gemfile.rails-5.0.x
-    - rvm: 2.1
+    - rvm: 2.1.10
       gemfile: test/gemfiles/Gemfile.rails-5.0.x
     - rvm: 2.4.0
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
