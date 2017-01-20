@@ -238,9 +238,10 @@ MSG
     def def_static_method(klass, name, args, *vars)
       erb = vars.pop
       info = caller_info
+      erb_object = (defined?(Erubis::TinyEruby) && Erubis::TinyEruby || ERB).new(erb)
       powerset(vars).each do |set|
         context = StaticConditionalContext.new(set).instance_eval {binding}
-        method_content = (defined?(Erubis::TinyEruby) && Erubis::TinyEruby || ERB).new(erb).result(context)
+        method_content = erb_object.result(context)
 
         klass.class_eval(<<METHOD, info[0], info[1])
           def #{static_method_name(name, *vars.map {|v| set.include?(v)})}(#{args.join(', ')})
