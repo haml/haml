@@ -87,7 +87,7 @@ module ActionView
       end
     end
 
-    if ActionPack::VERSION::MAJOR == 4
+    if (ActionPack::VERSION::MAJOR == 5) || (ActionPack::VERSION::MAJOR == 4)
       module Tags
         class TextArea
           include HamlSupport

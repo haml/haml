@@ -160,7 +160,7 @@ HAML
   # Rails >= 3.2.3 adds a newline after opening textarea tags.
   def self.rails_text_area_helpers_emit_a_newline?
     major, minor, tiny = ActionPack::VERSION::MAJOR, ActionPack::VERSION::MINOR, ActionPack::VERSION::TINY
-    major == 4 || ((major == 3) && (minor >= 2) && (tiny >= 3))
+    (major == 5) || (major == 4) || ((major == 3) && (minor >= 2) && (tiny >= 3))
   end
 
   def text_area_content_regex
