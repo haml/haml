@@ -175,9 +175,8 @@ Haml currently supports Ruby 2.0.0 and higher, so please make sure your changes 
 
 ### Current Maintainers
 
-* [Norman Clarke](https://github.com/norman)
-* [Matt Wildig](https://github.com/mattwildig)
 * [Akira Matsuda](https://github.com/amatsuda)
+* [Matt Wildig](https://github.com/mattwildig)
 * [Tee Parham](https://github.com/teeparham)
 
 ### Alumni
@@ -188,6 +187,8 @@ but still consults on language issues.
 
 [Natalie Weizenbaum](http://nex-3.com) was for many years the primary developer
 and architect of the "modern" Ruby implementation of Haml.
+
+[Norman Clarke](http://github.com/norman) was the primary maintainer of Haml from 2012 to 2016.
 
 ## License
 
