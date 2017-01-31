@@ -8,13 +8,13 @@ module Haml
       @options     = Options.wrap(options)
       @output_tabs = 0
       @to_merge    = []
-      @precompiled = ''
+      @temple      = [:multi]
       @node        = nil
     end
 
     def call(node)
       compile(node)
-      [:code, @precompiled]
+      @temple
     end
 
     def compile(node)
@@ -268,7 +268,7 @@ module Haml
       flush_merged_text
       return if can_suppress && @options.suppress_eval?
       newline = (text == "end") ? ";" : "\n"
-      @precompiled << "#{resolve_newlines}#{text}#{newline}"
+      @temple << [:code, "#{resolve_newlines}#{text}#{newline}"]
       @output_line = @output_line + text.count("\n") + newline.count("\n")
     end
 
@@ -311,12 +311,11 @@ module Haml
       str = @to_merge.join
 
       unless str.empty?
-        @precompiled <<
-          if @options.ugly
-            "_hamlout.buffer << \"#{str}\";"
-          else
-            "_hamlout.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"
-          end
+        if @options.ugly
+          @temple << [:code, "_hamlout.buffer << \"#{str}\";"]
+        else
+          @temple << [:code, "_hamlout.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"]
+        end
       end
       @to_merge = []
       @dont_tab_up_next_text = false
@@ -352,7 +351,7 @@ module Haml
       yield
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
       format_script_method = "_hamlout.format_script(haml_temp,#{args.join(',')});"
-      @precompiled << "_hamlout.buffer << #{no_format ? "haml_temp.to_s;" : format_script_method}"
+      @temple << [:code, "_hamlout.buffer << #{no_format ? "haml_temp.to_s;" : format_script_method}"]
       concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace] || @options.ugly
     end
 
