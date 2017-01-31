@@ -700,7 +700,7 @@ MESSAGE
         min_tabs = min_tabs > tabs ? tabs : min_tabs
       end
 
-      text.each_with_object('') do |line, str|
+      text.each_with_object(String.new) do |line, str|
         str << line.slice(min_tabs, line.length)
       end
     end
