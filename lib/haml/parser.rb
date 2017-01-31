@@ -89,9 +89,7 @@ module Haml
     CLASS_KEY = 'class'.freeze
 
     def initialize(options)
-      @options = options
-      @options = Options.new(options) unless options.is_a?(Options)
-
+      @options = Options.wrap(options)
       # Record the indent levels of "if" statements to validate the subsequent
       # elsif and else statements are indented at the appropriate level.
       @script_level_stack = []

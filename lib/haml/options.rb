@@ -51,6 +51,14 @@ module Haml
       @buffer_option_keys
     end
 
+    def self.wrap(options)
+      if options.is_a?(Options)
+        options
+      else
+        Options.new(options)
+      end
+    end
+
     # The character that should wrap element attributes. This defaults to `'`
     # (an apostrophe). Characters of this type within the attributes will be
     # escaped (e.g. by replacing them with `&apos;`) if the character is an

@@ -5,8 +5,7 @@ module Haml
     attr_accessor :options
 
     def initialize(options)
-      @options     = options
-      @options     = Options.new(options) unless options.is_a?(Options)
+      @options     = Options.wrap(options)
       @output_tabs = 0
       @to_merge    = []
       @precompiled = ''
