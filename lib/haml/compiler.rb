@@ -292,31 +292,41 @@ module Haml
     def flush_merged_text
       return if @to_merge.empty?
 
-      mtabs = 0
-      @to_merge.map! do |type, val, tabs|
-        case type
-        when :text
-          mtabs += tabs
-          inspect_obj(val)[1...-1]
-        when :script
-          if mtabs != 0 && !@options.ugly
-            val = "_hamlout.adjust_tabs(#{mtabs}); " + val
+      if @options.ugly
+        @to_merge.each do |type, val, tabs|
+          case type
+          when :text
+            @temple << [:static, val]
+          when :script
+            @temple << [:dynamic, val]
+          else
+            raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
           end
-          mtabs = 0
-          "\#{#{val}}"
-        else
-          raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
         end
-      end
-      str = @to_merge.join
+      else
+        mtabs = 0
+        @to_merge.map! do |type, val, tabs|
+          case type
+          when :text
+            mtabs += tabs
+            inspect_obj(val)[1...-1]
+          when :script
+            if mtabs != 0 && !@options.ugly
+              val = "_hamlout.adjust_tabs(#{mtabs}); " + val
+            end
+            mtabs = 0
+            "\#{#{val}}"
+          else
+            raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
+          end
+        end
+        str = @to_merge.join
 
-      unless str.empty?
-        if @options.ugly
-          @temple << [:code, "_hamlout.buffer << \"#{str}\";"]
-        else
+        unless str.empty?
           @temple << [:code, "_hamlout.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"]
         end
       end
+
       @to_merge = []
       @dont_tab_up_next_text = false
     end
