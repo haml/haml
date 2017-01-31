@@ -361,7 +361,7 @@ module Haml
       yield
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
       format_script_method = "_hamlout.format_script(haml_temp,#{args.join(',')});"
-      @temple << [:code, "_hamlout.buffer << #{no_format ? "haml_temp.to_s;" : format_script_method}"]
+      @temple << [:dynamic, no_format ? "haml_temp.to_s;" : format_script_method]
       concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace] || @options.ugly
     end
 
