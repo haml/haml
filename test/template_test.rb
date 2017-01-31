@@ -123,7 +123,7 @@ class TemplateTest < Haml::TestCase
 
     content_to_render = "%h1 This is part of the broken view.\n= render_something do |thing|\n  = thing.empty do\n    = 'test'"
     result = render(content_to_render, :ugly => true)
-    expected_result = "<h1>This is part of the broken view.</h1>\n"
+    expected_result = "<h1>This is part of the broken view.</h1>\n\n\n"
     assert_equal(expected_result, result)
   end
 

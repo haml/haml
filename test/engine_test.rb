@@ -560,7 +560,7 @@ HAML
   end
 
   def test_equals_block_with_ugly
-    assert_equal("foo\n", render(<<HAML, :ugly => true))
+    assert_equal("foo\n\n", render(<<HAML, :ugly => true))
 = capture_haml do
   foo
 HAML
@@ -1069,6 +1069,16 @@ HTML
 %p= "foo"
 %p= "bar" if false
 HAML
+  end
+
+  def test_script_adds_newline_in_ugly_with_block
+    scope = Object.new
+    def scope.foo
+      "Hello"
+    end
+    haml = "= foo do\n  .ignored\nEnd\n"
+    html = "Hello\nEnd\n"
+    assert_equal(html, render(haml, :scope => scope, :ugly => true))
   end
 
   # Options tests

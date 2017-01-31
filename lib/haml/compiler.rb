@@ -353,7 +353,7 @@ module Haml
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
       format_script_method = "_hamlout.format_script(haml_temp,#{args.join(',')});"
       @precompiled << "_hamlout.buffer << #{no_format ? "haml_temp.to_s;" : format_script_method}"
-      concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace] || @options.ugly
+      concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
     end
 
     def push_generated_script(text)
