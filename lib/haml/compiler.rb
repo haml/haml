@@ -14,7 +14,7 @@ module Haml
 
     def call(node)
       compile(node)
-      @precompiled
+      [:code, @precompiled]
     end
 
     def compile(node)
