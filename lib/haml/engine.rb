@@ -7,6 +7,7 @@ require 'haml/helpers'
 require 'haml/buffer'
 require 'haml/filters'
 require 'haml/error'
+require 'haml/temple_engine'
 
 module Haml
   # This is the frontend for using Haml programmatically.
@@ -35,9 +36,6 @@ module Haml
     # @return [String]
     attr_accessor :indentation
 
-    attr_accessor :compiler
-    attr_accessor :parser
-
     # Tilt currently depends on these moved methods, provide a stable API
     def_delegators :compiler, :precompiled, :precompiled_method_return_value
 
@@ -58,12 +56,13 @@ module Haml
         raise Haml::Error.new(msg, line)
       end
 
-      initialize_encoding options[:encoding]
+      @temple_engine = TempleEngine.new(options)
+      @temple_engine.compile(@template)
+    end
 
-      @parser   = @options.parser_class.new(@template, @options)
-      @compiler = @options.compiler_class.new(@options)
-
-      @compiler.compile(@parser.parse)
+    # Deprecated API for backword compatibility
+    def compiler
+      @temple_engine
     end
 
     # Processes the template and returns the result as a string.
@@ -123,7 +122,7 @@ module Haml
       scope_object.extend(Haml::Helpers)
       scope_object.instance_variable_set(:@haml_buffer, buffer)
       begin
-        eval(@compiler.precompiled_with_return_value, scope, @options.filename, @options.line)
+        eval(@temple_engine.precompiled_with_return_value, scope, @options.filename, @options.line)
       rescue ::SyntaxError => e
         raise SyntaxError, e.message
       end
@@ -167,7 +166,7 @@ module Haml
 
       begin
         eval("Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {};" <<
-             compiler.precompiled_with_ambles(local_names) << "}\n", scope, @options.filename, @options.line)
+             @temple_engine.precompiled_with_ambles(local_names) << "}\n", scope, @options.filename, @options.line)
       rescue ::SyntaxError => e
         raise SyntaxError, e.message
       end
@@ -214,17 +213,11 @@ module Haml
     def def_method(object, name, *local_names)
       method = object.is_a?(Module) ? :module_eval : :instance_eval
 
-      object.send(method, "def #{name}(_haml_locals = {}); #{compiler.precompiled_with_ambles(local_names)}; end",
+      object.send(method, "def #{name}(_haml_locals = {}); #{@temple_engine.precompiled_with_ambles(local_names)}; end",
                   @options.filename, @options.line)
     end
 
     private
-
-    def initialize_encoding(given_value)
-      unless given_value
-        @options.encoding = Encoding.default_internal || @template.encoding
-      end
-    end
 
     def set_locals(locals, scope, scope_object)
       scope_object.instance_variable_set :@_haml_locals, locals

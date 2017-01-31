@@ -5,11 +5,16 @@ module Haml
     attr_accessor :options
 
     def initialize(options)
-      @options     = options
+      @options     = Options.wrap(options)
       @output_tabs = 0
       @to_merge    = []
       @precompiled = ''
       @node        = nil
+    end
+
+    def call(node)
+      compile(node)
+      @precompiled
     end
 
     def compile(node)
@@ -23,62 +28,7 @@ module Haml
       @node = parent
     end
 
-    # The source code that is evaluated to produce the Haml document.
-    #
-    # This is automatically converted to the correct encoding
-    # (see {file:REFERENCE.md#encodings the `:encoding` option}).
-    #
-    # @return [String]
-    def precompiled
-      encoding = Encoding.find(@options.encoding)
-      return @precompiled.force_encoding(encoding) if encoding == Encoding::ASCII_8BIT
-      return @precompiled.encode(encoding)
-    end
-
-    def precompiled_with_return_value
-      "#{precompiled};#{precompiled_method_return_value}"
-    end
-
-    # Returns the precompiled string with the preamble and postamble.
-    #
-    # Initializes to ActionView::OutputBuffer when available; this is necessary
-    # to avoid ordering issues with partial layouts in Rails. If not available,
-    # initializes to nil.
-    def precompiled_with_ambles(local_names)
-      preamble = <<END.tr!("\n", ';')
-begin
-extend Haml::Helpers
-_hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{options.for_buffer.inspect})
-_erbout = _hamlout.buffer
-@output_buffer = output_buffer ||= ActionView::OutputBuffer.new rescue nil
-END
-      postamble = <<END.tr!("\n", ';')
-#{precompiled_method_return_value}
-ensure
-@haml_buffer = @haml_buffer.upper if @haml_buffer
-end
-END
-      "#{preamble}#{locals_code(local_names)}#{precompiled}#{postamble}"
-    end
-
-    # Returns the string used as the return value of the precompiled method.
-    # This method exists so it can be monkeypatched to return modified values.
-    def precompiled_method_return_value
-      "_erbout"
-    end
-
     private
-
-    def locals_code(names)
-      names = names.keys if Hash === names
-
-      names.each_with_object('') do |name, code|
-        # Can't use || because someone might explicitly pass in false with a symbol
-        sym_local = "_haml_locals[#{inspect_obj(name.to_sym)}]"
-        str_local = "_haml_locals[#{inspect_obj(name.to_s)}]"
-        code << "#{name} = #{sym_local}.nil? ? #{str_local} : #{sym_local};"
-      end
-    end
 
     def compile_root
       @dont_indent_next_line = @dont_tab_up_next_text = false

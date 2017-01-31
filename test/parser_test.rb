@@ -165,8 +165,8 @@ module Haml
 
     def parse(haml, options = nil)
       options ||= Options.new
-      parser = Parser.new(haml, options)
-      parser.parse
+      parser = Parser.new(options)
+      parser.call(haml)
     end
   end
 end

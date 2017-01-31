@@ -88,14 +88,16 @@ module Haml
     ID_KEY    = 'id'.freeze
     CLASS_KEY = 'class'.freeze
 
-    def initialize(template, options)
-      @options            = options
+    def initialize(options)
+      @options = Options.wrap(options)
       # Record the indent levels of "if" statements to validate the subsequent
       # elsif and else statements are indented at the appropriate level.
       @script_level_stack = []
       @template_index     = 0
       @template_tabs      = 0
+    end
 
+    def call(template)
       match = template.rstrip.scan(/(([ \t]+)?(.*?))(?:\Z|\r\n|\r|\n)/m)
       # discard the last match which is always blank
       match.pop
@@ -104,9 +106,7 @@ module Haml
       end
       # Append special end-of-document marker
       @template << Line.new(nil, '-#', '-#', @template.size, self, true)
-    end
 
-    def parse
       @root = @parent = ParseNode.new(:root)
       @flat = false
       @filter_buffer = nil
