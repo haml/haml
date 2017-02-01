@@ -8,13 +8,13 @@ module Haml
       @options     = Options.wrap(options)
       @output_tabs = 0
       @to_merge    = []
-      @precompiled = ''
+      @temple      = [:multi]
       @node        = nil
     end
 
     def call(node)
       compile(node)
-      @precompiled
+      @temple
     end
 
     def compile(node)
@@ -268,7 +268,7 @@ module Haml
       flush_merged_text
       return if can_suppress && @options.suppress_eval?
       newline = (text == "end") ? ";" : "\n"
-      @precompiled << "#{resolve_newlines}#{text}#{newline}"
+      @temple << [:code, "#{resolve_newlines}#{text}#{newline}"]
       @output_line = @output_line + text.count("\n") + newline.count("\n")
     end
 
@@ -292,32 +292,41 @@ module Haml
     def flush_merged_text
       return if @to_merge.empty?
 
-      mtabs = 0
-      @to_merge.map! do |type, val, tabs|
-        case type
-        when :text
-          mtabs += tabs
-          inspect_obj(val)[1...-1]
-        when :script
-          if mtabs != 0 && !@options.ugly
-            val = "_hamlout.adjust_tabs(#{mtabs}); " + val
+      if @options.ugly
+        @to_merge.each do |type, val, tabs|
+          case type
+          when :text
+            @temple << [:static, val]
+          when :script
+            @temple << [:dynamic, val]
+          else
+            raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
           end
-          mtabs = 0
-          "\#{#{val}}"
-        else
-          raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
+        end
+      else
+        mtabs = 0
+        @to_merge.map! do |type, val, tabs|
+          case type
+          when :text
+            mtabs += tabs
+            inspect_obj(val)[1...-1]
+          when :script
+            if mtabs != 0 && !@options.ugly
+              val = "_hamlout.adjust_tabs(#{mtabs}); " + val
+            end
+            mtabs = 0
+            "\#{#{val}}"
+          else
+            raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
+          end
+        end
+        str = @to_merge.join
+
+        unless str.empty?
+          @temple << [:code, "_hamlout.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"]
         end
       end
-      str = @to_merge.join
 
-      unless str.empty?
-        @precompiled <<
-          if @options.ugly
-            "_hamlout.buffer << \"#{str}\";"
-          else
-            "_hamlout.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"
-          end
-      end
       @to_merge = []
       @dont_tab_up_next_text = false
     end
@@ -352,7 +361,7 @@ module Haml
       yield
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
       format_script_method = "_hamlout.format_script(haml_temp,#{args.join(',')});"
-      @precompiled << "_hamlout.buffer << #{no_format ? "haml_temp.to_s;" : format_script_method}"
+      @temple << [:dynamic, no_format ? "haml_temp.to_s;" : format_script_method]
       concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace] || @options.ugly
     end
 

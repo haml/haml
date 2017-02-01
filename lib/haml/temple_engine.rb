@@ -1,4 +1,5 @@
 require 'temple'
+require 'haml/generator'
 
 module Haml
   class TempleEngine < Temple::Engine
@@ -27,6 +28,8 @@ module Haml
 
     use :Parser,   -> { options[:parser_class] }
     use :Compiler, -> { options[:compiler_class] }
+    filter :StaticMerger
+    use Generator
 
     def compile(template)
       initialize_encoding(template, options[:encoding])
