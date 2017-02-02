@@ -361,7 +361,6 @@ module Haml
 
       preserve_tag = @options.preserve.include?(tag_name)
       nuke_inner_whitespace ||= preserve_tag
-      preserve_tag = false if @options.ugly
       escape_html = (action == '&' || (action != '!' && @options.escape_html))
 
       case action
