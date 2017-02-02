@@ -15,7 +15,7 @@
    Speed
      Make tags with dynamic attributes pre-render as much as possible
      Including the attribute name where doable
-   :ugly + :html improvements
+   :html improvements
      Ignore closing tags where we can
        http://code.google.com/speed/articles/optimizing-html.html
        Requires Haml parsing refactor

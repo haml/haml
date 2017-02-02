@@ -77,7 +77,7 @@ task :profile do
   require 'haml'
   file = File.read(File.expand_path("../#{file}", __FILE__))
   obj = Object.new
-  Haml::Engine.new(file, :ugly => true).def_method(obj, :render)
+  Haml::Engine.new(file).def_method(obj, :render)
   result = RubyProf.profile { times.times { obj.render } }
 
   RubyProf.const_get("#{(ENV['OUTPUT'] || 'Flat').capitalize}Printer").new(result).print
