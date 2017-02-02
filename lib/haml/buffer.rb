@@ -130,59 +130,13 @@ module Haml
 
     # the number of arguments here is insane, but passing in an options hash instead of named arguments
     # causes a significant performance regression
-    def format_script(result, preserve_script, in_tag, preserve_tag, escape_html, nuke_inner_whitespace, interpolated, ugly)
+    def format_script(result, preserve_script, in_tag, preserve_tag, escape_html, nuke_inner_whitespace, interpolated)
       result_name = escape_html ? html_escape(result.to_s) : result.to_s
 
-      if ugly
         result = nuke_inner_whitespace ? result_name.strip : result_name
         result = preserve(result, preserve_script, preserve_tag)
         fix_textareas!(result) if toplevel? && result.include?('<textarea')
         return result
-      end
-
-      # If we're interpolated,
-      # then the custom tabulation is handled in #push_text.
-      # The easiest way to avoid it here is to reset @tabulation.
-      if interpolated
-        old_tabulation = @tabulation
-        @tabulation = 0
-      end
-
-      in_tag_no_nuke = in_tag && !nuke_inner_whitespace
-      preserved_no_nuke = in_tag_no_nuke && preserve_tag
-      tabulation = !preserved_no_nuke && @real_tabs
-
-      result = nuke_inner_whitespace ? result_name.strip : result_name.rstrip
-      result = preserve(result, preserve_script, preserve_tag)
-
-      has_newline = !preserved_no_nuke && result.include?("\n")
-
-      if in_tag_no_nuke && (preserve_tag || !has_newline)
-        @real_tabs -= 1
-        @tabulation = old_tabulation if interpolated
-        return result
-      end
-
-      unless preserved_no_nuke
-        # Precompiled tabulation may be wrong
-        result = "#{tabs}#{result}" if !interpolated && !in_tag && @tabulation > 0
-
-        if has_newline
-          result.gsub! "\n", "\n#{tabs(tabulation)}"
-
-          # Add tabulation if it wasn't precompiled
-          result = "#{tabs(tabulation)}#{result}" if in_tag_no_nuke
-        end
-
-        fix_textareas!(result) if toplevel? && result.include?('<textarea')
-
-        if in_tag_no_nuke
-          result = "\n#{result}\n#{tabs(tabulation-1)}"
-          @real_tabs -= 1
-        end
-        @tabulation = old_tabulation if interpolated
-        result
-      end
     end
 
     def attributes(class_id, obj_ref, *attributes_hashes)
