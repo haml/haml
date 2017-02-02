@@ -1,7 +1,7 @@
 require 'action_view'
 
 module Haml
-  class ErubiTemplateHandler < ActionView::Template::Handlers::Erubi
+  class ErubiTemplateHandler < ActionView::Template::Handlers::ERB::Erubi
 
     def initialize(*args, &blk)
       @newline_pending = 0
