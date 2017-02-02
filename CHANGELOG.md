@@ -20,6 +20,7 @@
 * Add `haml_tag_if` to render a block, conditionally wrapped in another element (Matt Wildig)
 * The `haml` command's debug option (`-d`) no longer executes the Haml code, but
   rather checks the generated Ruby syntax for errors.
+* Support Rails 5.1 Erubi template handler.
 * Add temple gem as dependency and create `Haml::TempleEngine` class.
   Some methods in `Haml::Compiler` are migrated to `Haml::TempleEngine`. (Takashi Kokubun)
 * Drop parser accessor from `Haml::Engine`. (Takashi Kokubun)

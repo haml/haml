@@ -11,8 +11,13 @@ if defined?(ActiveSupport)
     ActiveSupport.on_load(:action_view) do
       require "haml/template"
 
-      require "haml/helpers/safe_erubis_template"
-      Haml::Filters::Erb.template_class = Haml::SafeErubisTemplate
+      if defined? Erubi
+        require "haml/helpers/safe_erubi_template"
+        Haml::Filters::Erb.template_class = Haml::SafeErubiTemplate
+      else
+        require "haml/helpers/safe_erubis_template"
+        Haml::Filters::Erb.template_class = Haml::SafeErubisTemplate
+      end
     end
   end
 end
