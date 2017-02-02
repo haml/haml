@@ -133,10 +133,10 @@ module Haml
     def format_script(result, preserve_script, in_tag, preserve_tag, escape_html, nuke_inner_whitespace, interpolated)
       result_name = escape_html ? html_escape(result.to_s) : result.to_s
 
-        result = nuke_inner_whitespace ? result_name.strip : result_name
-        result = preserve(result, preserve_script, preserve_tag)
-        fix_textareas!(result) if toplevel? && result.include?('<textarea')
-        return result
+      result = nuke_inner_whitespace ? result_name.strip : result_name
+      result = preserve(result, preserve_script, preserve_tag)
+      fix_textareas!(result) if toplevel? && result.include?('<textarea')
+      result
     end
 
     def attributes(class_id, obj_ref, *attributes_hashes)
