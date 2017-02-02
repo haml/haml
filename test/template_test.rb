@@ -88,14 +88,14 @@ class TemplateTest < Haml::TestCase
     end
 
     content_to_render = "%h1 This is part of the broken view.\n= render_something do |thing|\n  = thing.empty do\n    = 'test'"
-    result = render(content_to_render, :ugly => true)
+    result = render(content_to_render)
     expected_result = "<h1>This is part of the broken view.</h1>\n"
     assert_equal(expected_result, result)
   end
 
   def test_simple_rendering_with_ugly
     content_to_render = "%p test\n= capture { 'foo' }"
-    result = render(content_to_render, :ugly => true)
+    result = render(content_to_render)
     expected_result = "<p>test</p>\nfoo\n"
     assert_equal(expected_result, result)
   end
@@ -149,7 +149,7 @@ class TemplateTest < Haml::TestCase
   end
 
   def test_with_output_buffer_with_ugly
-    assert_equal(<<HTML, render(<<HAML, :ugly => true))
+    assert_equal(<<HTML, render(<<HAML))
 <p>
 foo
 baz

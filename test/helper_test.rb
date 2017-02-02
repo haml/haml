@@ -379,7 +379,7 @@ HAML
   end
 
   def test_haml_tag_with_ugly
-    assert_equal(<<HTML, render(<<HAML, :ugly => true))
+    assert_equal(<<HTML, render(<<HAML))
 <p>
 <strong>Hi!</strong>
 </p>
