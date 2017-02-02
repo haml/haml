@@ -7,17 +7,15 @@ if defined?(ActiveSupport)
   end
 
   require 'haml/template/options'
-  ActiveSupport.on_load(:before_initialize) do
-    ActiveSupport.on_load(:action_view) do
-      require "haml/template"
+  ActiveSupport.on_load(:action_view) do
+    require "haml/template"
 
-      if defined? Erubi
-        require "haml/helpers/safe_erubi_template"
-        Haml::Filters::Erb.template_class = Haml::SafeErubiTemplate
-      else
-        require "haml/helpers/safe_erubis_template"
-        Haml::Filters::Erb.template_class = Haml::SafeErubisTemplate
-      end
+    if defined? Erubi
+      require "haml/helpers/safe_erubi_template"
+      Haml::Filters::Erb.template_class = Haml::SafeErubiTemplate
+    else
+      require "haml/helpers/safe_erubis_template"
+      Haml::Filters::Erb.template_class = Haml::SafeErubisTemplate
     end
   end
 end
