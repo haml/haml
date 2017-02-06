@@ -47,7 +47,7 @@ require 'faml'
 require 'hamlit'
 
 class SlimBenchmarks
-  def initialize(slow)
+  def initialize
     @benches    = []
 
     @erb_code  = File.read(File.dirname(__FILE__) + '/view.erb')
@@ -91,4 +91,4 @@ class SlimBenchmarks
   end
 end
 
-SlimBenchmarks.new(ENV['slow']).run
+SlimBenchmarks.new.run
