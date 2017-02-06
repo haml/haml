@@ -313,7 +313,7 @@ module Haml
             mtabs += tabs
             inspect_obj(val)[1...-1]
           when :script
-            if mtabs != 0 && !@options.ugly
+            if mtabs != 0
               val = "_hamlout.adjust_tabs(#{mtabs}); " + val
             end
             mtabs = 0
