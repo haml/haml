@@ -1,5 +1,4 @@
 require 'haml/template/options'
-require 'haml/engine'
 if defined?(ActiveSupport)
   ActiveSupport.on_load(:action_view) do
     require 'haml/helpers/action_view_mods'
