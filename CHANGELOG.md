@@ -24,6 +24,7 @@
 * Add temple gem as dependency and create `Haml::TempleEngine` class.
   Some methods in `Haml::Compiler` are migrated to `Haml::TempleEngine`. (Takashi Kokubun)
 * Drop parser accessor from `Haml::Engine`. (Takashi Kokubun)
+* Don't ignore unexpected exceptions on initializing `ActionView::OutputBuffer`. (Takashi Kokubun)
 
 ## 4.0.7
 

@@ -12,7 +12,10 @@ module Haml
         options[:mime_type] = template.mime_type
       end
       options[:filename] = template.identifier
-      Haml::Engine.new(template.source, options).compiler.precompiled_with_ambles([])
+      Haml::Engine.new(template.source, options).compiler.precompiled_with_ambles(
+        [],
+        after_preamble: '@output_buffer = output_buffer ||= ActionView::OutputBuffer.new if defined?(ActionView::OutputBuffer)',
+      )
     end
 
     def self.call(template)
