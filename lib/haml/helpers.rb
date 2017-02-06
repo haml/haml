@@ -496,7 +496,7 @@ MESSAGE
       attrs.keys.each {|key| attrs[key.to_s] = attrs.delete(key)} unless attrs.empty?
       name, attrs = merge_name_and_attributes(name.to_s, attrs)
 
-      attributes = Haml::Compiler.build_attributes(haml_buffer.html?,
+      attributes = Haml::AttributeBuilder.build_attributes(haml_buffer.html?,
         haml_buffer.options[:attr_wrapper],
         haml_buffer.options[:escape_attrs],
         haml_buffer.options[:hyphenate_data_attrs],
