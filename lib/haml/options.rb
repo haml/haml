@@ -4,29 +4,6 @@ module Haml
   # learn how to set the options.
   class Options
 
-    @defaults = {
-      :attr_wrapper         => "'",
-      :autoclose            => %w(area base basefont br col command embed frame
-                                  hr img input isindex keygen link menuitem meta
-                                  param source track wbr),
-      :encoding             => "UTF-8",
-      :escape_attrs         => true,
-      :escape_html          => false,
-      :filename             => '(haml)',
-      :format               => :html5,
-      :hyphenate_data_attrs => true,
-      :line                 => 1,
-      :mime_type            => 'text/html',
-      :preserve             => %w(textarea pre code),
-      :remove_whitespace    => false,
-      :suppress_eval        => false,
-      :ugly                 => false,
-      :cdata                => false,
-      :parser_class         => ::Haml::Parser,
-      :compiler_class       => ::Haml::Compiler,
-      :trace                => false
-    }
-
     @valid_formats = [:html4, :html5, :xhtml]
 
     @buffer_option_keys = [:autoclose, :preserve, :attr_wrapper, :ugly, :format,
@@ -35,7 +12,7 @@ module Haml
     # The default option values.
     # @return Hash
     def self.defaults
-      @defaults
+      @defaults ||= Haml::TempleEngine.options.to_hash.merge(encoding: 'UTF-8')
     end
 
     # An array of valid values for the `:format` option.
