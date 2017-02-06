@@ -378,6 +378,18 @@ HAML
     assert_equal("<p>foo</p>\n<p>bar</p>\n<p>baz</p>\n<p>boom</p>\n", render("%p foo\r%p bar\r\n%p baz\n\r%p boom"))
   end
 
+  def test_newline_in_attr_value_should_be_escaped
+    test_string = "test\nhoge\r\npoyo"
+    assert_equal("<input value='test&#x000A;hoge&#x000A;poyo'>\n",
+                 render("%input{:value => test_string}", :locals => {:test_string => test_string}))
+  end
+
+  def test_newline_at_the_end_of_attr_value_should_not_be_removed
+    test_string = "test\r\n\r\n"
+    assert_equal("<input value='test&#x000A;&#x000A;'>\n",
+                 render("%input{:value => test_string}", :locals => {:test_string => test_string}))
+  end
+
   def test_textareas
     assert_equal("<textarea>Foo&#x000A;  bar&#x000A;   baz</textarea>\n",
                  render('%textarea= "Foo\n  bar\n   baz"'))
