@@ -295,7 +295,7 @@ module Haml
       return if @to_merge.empty?
 
       if @options.ugly
-        @to_merge.each do |type, val, tabs|
+        @to_merge.each do |type, val|
           case type
           when :text
             @temple << [:static, val]
