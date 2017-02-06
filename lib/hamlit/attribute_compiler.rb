@@ -30,7 +30,7 @@ module Hamlit
       attrs = node.value[:attributes_hashes]
       attrs.unshift(node.value[:attributes].inspect) if node.value[:attributes] != {}
 
-      args = [@escape_attrs, @quote, @format].map(&:inspect).push(node.value[:object_ref]) + attrs
+      args = [@escape_attrs.inspect, "#{@quote.inspect}.freeze", @format.inspect].push(node.value[:object_ref]) + attrs
       [:html, :attrs, [:dynamic, "::Hamlit::AttributeBuilder.build(#{args.join(', ')})"]]
     end
 
@@ -76,7 +76,7 @@ module Hamlit
     end
 
     def compile_data!(temple, key, values)
-      args = [@escape_attrs.inspect, @quote.inspect, values.map { |v| literal_for(v) }]
+      args = [@escape_attrs.inspect, "#{@quote.inspect}.freeze", values.map { |v| literal_for(v) }]
       build_code = "::Hamlit::AttributeBuilder.build_data(#{args.join(', ')})"
 
       if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
@@ -118,7 +118,7 @@ module Hamlit
 
     def literal_for(value)
       type, exp = value
-      type == :static ? exp.inspect : exp
+      type == :static ? "#{exp.inspect}.freeze" : exp
     end
   end
 end
