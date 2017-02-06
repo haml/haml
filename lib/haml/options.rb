@@ -28,7 +28,8 @@ module Haml
       @buffer_option_keys
     end
 
-    # @return Hash
+    # Returns a subset of defaults: those that {Haml::Buffer} cares about.
+    # @return [{Symbol => Object}] The options hash
     def self.buffer_defaults
       @buffer_defaults ||= buffer_option_keys.inject({}) do |hash, key|
         hash.merge(key => defaults[key])
@@ -251,7 +252,7 @@ module Haml
       @encoding = "UTF-8" if @encoding.upcase == "US-ASCII"
     end
 
-    # Returns a subset of options: those that {Haml::Buffer} cares about.
+    # Returns a non-default subset of options: those that {Haml::Buffer} cares about.
     # All of the values here are such that when `#inspect` is called on the hash,
     # it can be `Kernel#eval`ed to get the same result back.
     #
@@ -260,7 +261,10 @@ module Haml
     # @return [{Symbol => Object}] The options hash
     def for_buffer
       self.class.buffer_option_keys.inject({}) do |hash, key|
-        hash[key] = send(key)
+        value = public_send(key)
+        if self.class.buffer_defaults[key] != value
+          hash[key] = value
+        end
         hash
       end
     end

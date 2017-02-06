@@ -94,7 +94,7 @@ module Haml
     def initialize(upper = nil, options = {})
       @active     = true
       @upper      = upper
-      @options    = options
+      @options    = Options.buffer_defaults.merge(options)
       @buffer     = new_encoded_string
       @tabulation = 0
 
