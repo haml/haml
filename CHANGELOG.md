@@ -23,7 +23,8 @@
 * Support Rails 5.1 Erubi template handler.
 * Add temple gem as dependency and create `Haml::TempleEngine` class.
   Some methods in `Haml::Compiler` are migrated to `Haml::TempleEngine`. (Takashi Kokubun)
-* Drop parser accessor from `Haml::Engine`. (Takashi Kokubun)
+* Drop parser/compiler accessor from `Haml::Engine`. Modify `Haml::Engine#initialize` options
+  or `Haml::Template.options` instead. (Takashi Kokubun)
 * Don't ignore unexpected exceptions on initializing `ActionView::OutputBuffer`. (Takashi Kokubun)
 
 ## 4.0.7
