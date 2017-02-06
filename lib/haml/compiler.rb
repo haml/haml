@@ -103,7 +103,7 @@ module Haml
         object_ref = :nil
         parse = false
         value = t[:parse] ? nil : t[:value]
-        attributes_hashes = {}
+        attributes_hashes = []
         preserve_script = false
       else
         object_ref = t[:object_ref]
