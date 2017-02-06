@@ -14,7 +14,7 @@ module Haml
       options[:filename] = template.identifier
       Haml::Engine.new(template.source, options).compiler.precompiled_with_ambles(
         [],
-        after_preamble: '@output_buffer = output_buffer ||= ActionView::OutputBuffer.new rescue nil',
+        after_preamble: '@output_buffer = output_buffer ||= ActionView::OutputBuffer.new if defined?(ActionView::OutputBuffer)',
       )
     end
 
