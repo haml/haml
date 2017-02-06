@@ -28,6 +28,13 @@ module Haml
       @buffer_option_keys
     end
 
+    # @return Hash
+    def self.buffer_defaults
+      @buffer_defaults ||= buffer_option_keys.inject({}) do |hash, key|
+        hash.merge(key => defaults[key])
+      end
+    end
+
     def self.wrap(options)
       if options.is_a?(Options)
         options
