@@ -47,8 +47,9 @@ require 'faml'
 require 'hamlit'
 
 class SlimBenchmarks
-  def initialize
-    @benches    = []
+  def initialize(only_haml)
+    @only_haml = only_haml
+    @benches   = []
 
     @erb_code  = File.read(File.dirname(__FILE__) + '/view.erb')
     @haml_code = File.read(File.dirname(__FILE__) + '/view.haml')
@@ -70,8 +71,8 @@ class SlimBenchmarks
       def run_hamlit; #{Hamlit::Engine.new.call @haml_code}; end
     }
 
-    bench("erubis v#{Erubis::VERSION}") { context.run_erubis }
-    bench("slim v#{Slim::VERSION}")     { context.run_slim_ugly }
+    bench("erubis v#{Erubis::VERSION}") { context.run_erubis }    unless @only_haml
+    bench("slim v#{Slim::VERSION}")     { context.run_slim_ugly } unless @only_haml
     bench("haml v#{Haml::VERSION}")     { context.run_haml_ugly }
     bench("faml v#{Faml::VERSION}")     { context.run_faml }
     bench("hamlit v#{Hamlit::VERSION}") { context.run_hamlit }
@@ -91,4 +92,4 @@ class SlimBenchmarks
   end
 end
 
-SlimBenchmarks.new.run
+SlimBenchmarks.new(ENV['ONLY_HAML'] == '1').run
