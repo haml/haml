@@ -80,7 +80,7 @@ class PrettyEngineTest < Haml::TestCase
     "- case 1\n\n- when 1\n  - raise 'foo'"                => ["foo", 4],
   }
 
-  User = Struct.new('User', :id)
+  PrettyUser = Struct.new('PrettyUser', :id)
   class CustomHamlClass < Struct.new(:id)
     def haml_object_ref
       "my_thing"
@@ -1304,14 +1304,14 @@ HAML
   end
 
   def test_object_ref_with_nil_id
-    user = User.new
-    assert_equal("<p class='struct_user' id='struct_user_new'>New User</p>\n",
+    user = PrettyUser.new
+    assert_equal("<p class='struct_pretty_user' id='struct_pretty_user_new'>New User</p>\n",
                  render("%p[user] New User", :locals => {:user => user}))
   end
 
   def test_object_ref_before_attrs
-    user = User.new 42
-    assert_equal("<p class='struct_user' id='struct_user_42' style='width: 100px;'>New User</p>\n",
+    user = PrettyUser.new 42
+    assert_equal("<p class='struct_pretty_user' id='struct_pretty_user_42' style='width: 100px;'>New User</p>\n",
                  render("%p[user]{:style => 'width: 100px;'} New User", :locals => {:user => user}))
   end
 
@@ -1646,14 +1646,14 @@ HAML
     assert_equal("<div id='foo_bar'></div>\n", render("#foo(id='bar')"))
     assert_equal("<div id='foo_baz_bar'></div>\n", render("#foo{:id => 'bar'}(id='baz')"))
     assert_equal("<div id='foo_baz_bar'></div>\n", render("#foo(id='baz'){:id => 'bar'}"))
-    foo = User.new(42)
-    assert_equal("<div class='struct_user' id='foo_baz_bar_struct_user_42'></div>\n",
+    foo = PrettyUser.new(42)
+    assert_equal("<div class='struct_pretty_user' id='foo_baz_bar_struct_pretty_user_42'></div>\n",
       render("#foo(id='baz'){:id => 'bar'}[foo]", :locals => {:foo => foo}))
-    assert_equal("<div class='struct_user' id='foo_baz_bar_struct_user_42'></div>\n",
+    assert_equal("<div class='struct_pretty_user' id='foo_baz_bar_struct_pretty_user_42'></div>\n",
       render("#foo(id='baz')[foo]{:id => 'bar'}", :locals => {:foo => foo}))
-    assert_equal("<div class='struct_user' id='foo_baz_bar_struct_user_42'></div>\n",
+    assert_equal("<div class='struct_pretty_user' id='foo_baz_bar_struct_pretty_user_42'></div>\n",
       render("#foo[foo](id='baz'){:id => 'bar'}", :locals => {:foo => foo}))
-    assert_equal("<div class='struct_user' id='foo_baz_bar_struct_user_42'></div>\n",
+    assert_equal("<div class='struct_pretty_user' id='foo_baz_bar_struct_pretty_user_42'></div>\n",
       render("#foo[foo]{:id => 'bar'}(id='baz')", :locals => {:foo => foo}))
   end
 
@@ -1661,12 +1661,12 @@ HAML
     assert_equal("<div class='bar foo'></div>\n", render(".foo(class='bar')"))
     assert_equal("<div class='bar baz foo'></div>\n", render(".foo{:class => 'bar'}(class='baz')"))
     assert_equal("<div class='bar baz foo'></div>\n", render(".foo(class='baz'){:class => 'bar'}"))
-    foo = User.new(42)
-    assert_equal("<div class='bar baz foo struct_user' id='struct_user_42'></div>\n",
+    foo = PrettyUser.new(42)
+    assert_equal("<div class='bar baz foo struct_pretty_user' id='struct_pretty_user_42'></div>\n",
       render(".foo(class='baz'){:class => 'bar'}[foo]", :locals => {:foo => foo}))
-    assert_equal("<div class='bar baz foo struct_user' id='struct_user_42'></div>\n",
+    assert_equal("<div class='bar baz foo struct_pretty_user' id='struct_pretty_user_42'></div>\n",
       render(".foo[foo](class='baz'){:class => 'bar'}", :locals => {:foo => foo}))
-    assert_equal("<div class='bar baz foo struct_user' id='struct_user_42'></div>\n",
+    assert_equal("<div class='bar baz foo struct_pretty_user' id='struct_pretty_user_42'></div>\n",
       render(".foo[foo]{:class => 'bar'}(class='baz')", :locals => {:foo => foo}))
   end
 
