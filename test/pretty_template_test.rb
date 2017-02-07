@@ -4,7 +4,7 @@ require 'mocks/article'
 require 'action_pack/version'
 require 'template_test_helper'
 
-class TemplateTest < Haml::TestCase
+class PrettyTemplateTest < Haml::TestCase
   TEMPLATES = %w{          very_basic        standard    helpers
     whitespace_handling    original_engine   list        helpful
     silent_script          tag_parsing       just_stuff  partials
@@ -41,13 +41,12 @@ class TemplateTest < Haml::TestCase
 
   def load_result(name)
     @result = ''
-    File.new(File.dirname(__FILE__) + "/results/#{name}.xhtml").each_line { |l| @result += l }
+    File.new(File.dirname(__FILE__) + "/pretty_results/#{name}.xhtml").each_line { |l| @result += l }
     @result
   end
 
   def assert_renders_correctly(name, &render_method)
     old_options = Haml::Template.options.dup
-    Haml::Template.options[:ugly] = true
     Haml::Template.options[:escape_html] = false
     render_method ||= proc { |n| @base.render(:file => n) }
 
@@ -102,14 +101,14 @@ class TemplateTest < Haml::TestCase
 
   def test_templates_should_render_correctly_with_render_proc
     assert_renders_correctly("standard") do |name|
-      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), ugly: true, format: :xhtml)
+      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
       engine.render_proc(@base).call
     end
   end
 
   def test_templates_should_render_correctly_with_def_method
     assert_renders_correctly("standard") do |name|
-      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), ugly: true, format: :xhtml)
+      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
       engine.def_method(@base, "render_standard")
       @base.render_standard
     end
