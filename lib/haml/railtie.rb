@@ -27,8 +27,11 @@ module Haml
       if defined?(::Sass::Rails::SassTemplate) && app.config.assets.enabled
         require "haml/sass_rails_filter"
       end
-      Haml::Options.buffer_defaults[:escape_html] = true
-      Haml::Options.buffer_defaults[:ugly] = true
+      Haml::Options.buffer_defaults.keys.each do |key|
+        if Haml::Template.options.key?(key)
+          Haml::Options.buffer_defaults[key] = Haml::Template.options[key]
+        end
+      end
     end
   end
 end
