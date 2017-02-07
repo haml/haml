@@ -13,7 +13,7 @@ end
 
 module Haml::Helpers
   def test_partial(name, locals = {})
-    Haml::Engine.new(File.read(File.join(TemplateTest::TEMPLATE_PATH, "_#{name}.haml"))).render(self, locals)
+    Haml::Engine.new(File.read(File.join(TemplateTest::TEMPLATE_PATH, "_#{name}.haml")), Haml::Template.options).render(self, locals)
   end
 end
 
@@ -82,6 +82,7 @@ class TemplateTest < Haml::TestCase
 
   def assert_renders_correctly(name, &render_method)
     old_options = Haml::Template.options.dup
+    Haml::Template.options[:ugly] = true
     Haml::Template.options[:escape_html] = false
     render_method ||= proc { |n| @base.render(:file => n) }
 
@@ -136,14 +137,14 @@ class TemplateTest < Haml::TestCase
 
   def test_templates_should_render_correctly_with_render_proc
     assert_renders_correctly("standard") do |name|
-      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
+      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), ugly: true, format: :xhtml)
       engine.render_proc(@base).call
     end
   end
 
   def test_templates_should_render_correctly_with_def_method
     assert_renders_correctly("standard") do |name|
-      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
+      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), ugly: true, format: :xhtml)
       engine.def_method(@base, "render_standard")
       @base.render_standard
     end
