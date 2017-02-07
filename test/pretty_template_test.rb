@@ -3,42 +3,7 @@ require 'mocks/article'
 
 require 'action_pack/version'
 
-module Haml::Filters::Test
-  include Haml::Filters::Base
-
-  def render(text)
-    "TESTING HAHAHAHA!"
-  end
-end
-
-module Haml::Helpers
-  def test_partial(name, locals = {})
-    Haml::Engine.new(File.read(File.join(TemplateTest::TEMPLATE_PATH, "_#{name}.haml"))).render(self, locals)
-  end
-end
-
-class Egocentic
-  def method_missing(*args)
-    self
-  end
-end
-
-class DummyController
-  attr_accessor :logger
-  def initialize
-    @logger = Egocentic.new
-  end
-
-  def self.controller_path
-    ''
-  end
-
-  def controller_path
-    ''
-  end
-end
-
-class TemplateTest < Haml::TestCase
+class PrettyTemplateTest < Haml::TestCase
   TEMPLATE_PATH = File.join(File.dirname(__FILE__), "templates")
   TEMPLATES = %w{          very_basic        standard    helpers
     whitespace_handling    original_engine   list        helpful
@@ -76,7 +41,7 @@ class TemplateTest < Haml::TestCase
 
   def load_result(name)
     @result = ''
-    File.new(File.dirname(__FILE__) + "/results/#{name}.xhtml").each_line { |l| @result += l }
+    File.new(File.dirname(__FILE__) + "/pretty_results/#{name}.xhtml").each_line { |l| @result += l }
     @result
   end
 
