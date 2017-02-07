@@ -2,44 +2,9 @@ require 'test_helper'
 require 'mocks/article'
 
 require 'action_pack/version'
-
-module Haml::Filters::Test
-  include Haml::Filters::Base
-
-  def render(text)
-    "TESTING HAHAHAHA!"
-  end
-end
-
-module Haml::Helpers
-  def test_partial(name, locals = {})
-    Haml::Engine.new(File.read(File.join(TemplateTest::TEMPLATE_PATH, "_#{name}.haml")), Haml::Template.options).render(self, locals)
-  end
-end
-
-class Egocentic
-  def method_missing(*args)
-    self
-  end
-end
-
-class DummyController
-  attr_accessor :logger
-  def initialize
-    @logger = Egocentic.new
-  end
-
-  def self.controller_path
-    ''
-  end
-
-  def controller_path
-    ''
-  end
-end
+require 'template_test_helper'
 
 class TemplateTest < Haml::TestCase
-  TEMPLATE_PATH = File.join(File.dirname(__FILE__), "templates")
   TEMPLATES = %w{          very_basic        standard    helpers
     whitespace_handling    original_engine   list        helpful
     silent_script          tag_parsing       just_stuff  partials
@@ -56,7 +21,7 @@ class TemplateTest < Haml::TestCase
   def create_base
     vars = { 'article' => Article.new, 'foo' => 'value one' }
 
-    base = ActionView::Base.new(TEMPLATE_PATH, vars)
+    base = ActionView::Base.new(TemplateTestHelper::TEMPLATE_PATH, vars)
 
     # This is needed by RJS in (at least) Rails 3
     base.instance_variable_set(:@template, base)
