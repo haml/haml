@@ -239,7 +239,7 @@ module Haml
         from[CLASS_KEY] ||= to[CLASS_KEY]
       end
 
-      from.keys.each do |key|
+      from.each_key do |key|
         next unless from[key].kind_of?(Hash) || to[key].kind_of?(Hash)
 
         from_data = from.delete(key)
