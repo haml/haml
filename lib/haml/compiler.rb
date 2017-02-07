@@ -137,17 +137,9 @@ module Haml
         @dont_indent_next_line = dont_indent_next_line
         return if tag_closed
       else
-        if attributes_hashes.empty?
-          attributes_hashes = ''
-        elsif attributes_hashes.size == 1
-          attributes_hashes = ", #{attributes_hashes.first}"
-        else
-          attributes_hashes = ", #{attributes_hashes.join(", ")}"
-        end
-
         push_merged_text "<#{t[:name]}", 0, !t[:nuke_outer_whitespace]
         push_generated_script(
-          "_hamlout.attributes(#{inspect_obj(t[:attributes])}, #{object_ref}#{attributes_hashes})")
+          "_hamlout.attributes(#{inspect_obj(t[:attributes])}, #{object_ref},#{attributes_hashes.join(',')})")
         concat_merged_text(
           if t[:self_closing] && @options.xhtml?
             " />#{"\n" unless t[:nuke_outer_whitespace]}"
