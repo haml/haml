@@ -543,7 +543,7 @@ MESSAGE
 
       haml_internal_concat_raw tag
       tab_up
-      block.call
+      yield
       tab_down
       haml_internal_concat_raw end_tag
 
