@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 module Haml
   # Ruby code generator, which is a limited version of Temple::Generator.
   # Limit methods since Haml doesn't need most of them.
@@ -17,7 +16,7 @@ module Haml
     end
 
     def on_static(text)
-      concat(options[:freeze_static] ? "#{text.inspect}.freeze" : text.inspect)
+      concat(options[:freeze_static] ? "#{Util.inspect_obj(text)}.freeze" : Util.inspect_obj(text))
     end
 
     def on_dynamic(code)

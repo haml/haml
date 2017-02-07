@@ -353,7 +353,7 @@ module Haml
 
       unless block_given?
         format_script_method = "_hamlout.format_script((#{text}\n),#{args.join(',')});"
-        push_generated_script(no_format ? "#{text}\n" : format_script_method)
+        push_generated_script(no_format ? "(#{text}).to_s\n" : format_script_method)
         concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
         return
       end
