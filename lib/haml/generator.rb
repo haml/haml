@@ -17,7 +17,7 @@ module Haml
     end
 
     def on_static(text)
-      concat(options[:freeze_static] ? "#{text.inspect}.freeze" : text.inspect)
+      concat(options[:freeze_static] ? "#{Util.inspect_obj(text)}.freeze" : Util.inspect_obj(text))
     end
 
     def on_dynamic(code)
