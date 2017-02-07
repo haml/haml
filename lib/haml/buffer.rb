@@ -4,10 +4,6 @@ module Haml
   # It's called from within the precompiled code,
   # and helps reduce the amount of processing done within `instance_eval`ed code.
   class Buffer
-    ID_KEY    = 'id'.freeze
-    CLASS_KEY = 'class'.freeze
-    DATA_KEY  = 'data'.freeze
-
     include Haml::Helpers
     include Haml::Util
 
@@ -192,9 +188,9 @@ module Haml
     def attributes(class_id, obj_ref, *attributes_hashes)
       attributes = class_id
       attributes_hashes.each do |old|
-        self.class.merge_attrs(attributes, Hash[old.map {|k, v| [k.to_s, v]}])
+        AttributeBuilder.merge_attrs(attributes, Hash[old.map {|k, v| [k.to_s, v]}])
       end
-      self.class.merge_attrs(attributes, parse_object_ref(obj_ref)) if obj_ref
+      AttributeBuilder.merge_attrs(attributes, parse_object_ref(obj_ref)) if obj_ref
       AttributeBuilder.build_attributes(
         html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:hyphenate_data_attrs], attributes)
     end
@@ -208,53 +204,6 @@ module Haml
       end
 
       buffer << buffer.slice!(capture_position..-1).rstrip
-    end
-
-    # Merges two attribute hashes.
-    # This is the same as `to.merge!(from)`,
-    # except that it merges id, class, and data attributes.
-    #
-    # ids are concatenated with `"_"`,
-    # and classes are concatenated with `" "`.
-    # data hashes are simply merged.
-    #
-    # Destructively modifies both `to` and `from`.
-    #
-    # @param to [{String => String}] The attribute hash to merge into
-    # @param from [{String => #to_s}] The attribute hash to merge from
-    # @return [{String => String}] `to`, after being merged
-    def self.merge_attrs(to, from)
-      from[ID_KEY] = AttributeBuilder.filter_and_join(from[ID_KEY], '_') if from[ID_KEY]
-      if to[ID_KEY] && from[ID_KEY]
-        to[ID_KEY] << "_#{from.delete(ID_KEY)}"
-      elsif to[ID_KEY] || from[ID_KEY]
-        from[ID_KEY] ||= to[ID_KEY]
-      end
-
-      from[CLASS_KEY] = AttributeBuilder.filter_and_join(from[CLASS_KEY], ' ') if from[CLASS_KEY]
-      if to[CLASS_KEY] && from[CLASS_KEY]
-        # Make sure we don't duplicate class names
-        from[CLASS_KEY] = (from[CLASS_KEY].to_s.split(' ') | to[CLASS_KEY].split(' ')).sort.join(' ')
-      elsif to[CLASS_KEY] || from[CLASS_KEY]
-        from[CLASS_KEY] ||= to[CLASS_KEY]
-      end
-
-      from.keys.each do |key|
-        next unless from[key].kind_of?(Hash) || to[key].kind_of?(Hash)
-
-        from_data = from.delete(key)
-        # forces to_data & from_data into a hash
-        from_data = { nil => from_data } if from_data && !from_data.is_a?(Hash)
-        to[key] = { nil => to[key] } if to[key] && !to[key].is_a?(Hash)
-
-        if from_data && !to[key]
-          to[key] = from_data
-        elsif from_data && to[key]
-          to[key].merge! from_data
-        end
-      end
-
-      to.merge!(from)
     end
 
     private
@@ -326,7 +275,7 @@ module Haml
         id = "#{ prefix }_#{ id }"
       end
 
-      {ID_KEY => id, CLASS_KEY => class_name}
+      { 'id'.freeze => id, 'class'.freeze => class_name }
     end
 
     # Changes a word from camel case to underscores.

@@ -1,5 +1,9 @@
 module Haml
   module AttributeBuilder
+    ID_KEY    = 'id'.freeze
+    CLASS_KEY = 'class'.freeze
+    DATA_KEY  = 'data'.freeze
+
     class << self
       def build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
           # @TODO this is an absolutely ridiculous amount of arguments. At least
@@ -72,6 +76,53 @@ module Haml
           value = value ? value.to_s : nil
         end
         !value.nil? && !value.empty? && value
+      end
+
+      # Merges two attribute hashes.
+      # This is the same as `to.merge!(from)`,
+      # except that it merges id, class, and data attributes.
+      #
+      # ids are concatenated with `"_"`,
+      # and classes are concatenated with `" "`.
+      # data hashes are simply merged.
+      #
+      # Destructively modifies both `to` and `from`.
+      #
+      # @param to [{String => String}] The attribute hash to merge into
+      # @param from [{String => #to_s}] The attribute hash to merge from
+      # @return [{String => String}] `to`, after being merged
+      def merge_attrs(to, from)
+        from[ID_KEY] = filter_and_join(from[ID_KEY], '_') if from[ID_KEY]
+        if to[ID_KEY] && from[ID_KEY]
+          to[ID_KEY] << "_#{from.delete(ID_KEY)}"
+        elsif to[ID_KEY] || from[ID_KEY]
+          from[ID_KEY] ||= to[ID_KEY]
+        end
+
+        from[CLASS_KEY] = filter_and_join(from[CLASS_KEY], ' ') if from[CLASS_KEY]
+        if to[CLASS_KEY] && from[CLASS_KEY]
+          # Make sure we don't duplicate class names
+          from[CLASS_KEY] = (from[CLASS_KEY].to_s.split(' ') | to[CLASS_KEY].split(' ')).sort.join(' ')
+        elsif to[CLASS_KEY] || from[CLASS_KEY]
+          from[CLASS_KEY] ||= to[CLASS_KEY]
+        end
+
+        from.keys.each do |key|
+          next unless from[key].kind_of?(Hash) || to[key].kind_of?(Hash)
+
+          from_data = from.delete(key)
+          # forces to_data & from_data into a hash
+          from_data = { nil => from_data } if from_data && !from_data.is_a?(Hash)
+          to[key] = { nil => to[key] } if to[key] && !to[key].is_a?(Hash)
+
+          if from_data && !to[key]
+            to[key] = from_data
+          elsif from_data && to[key]
+            to[key].merge! from_data
+          end
+        end
+
+        to.merge!(from)
       end
 
       private

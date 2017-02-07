@@ -651,7 +651,7 @@ MESSAGE
       # skip merging if no ids or classes found in name
       return name, attributes_hash unless name =~ /^(.+?)?([\.#].*)$/
 
-      return $1 || "div", Buffer.merge_attrs(
+      return $1 || "div", AttributeBuilder.merge_attrs(
         Haml::Parser.parse_class_and_id($2), attributes_hash)
     end
 
