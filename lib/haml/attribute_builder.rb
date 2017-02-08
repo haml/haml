@@ -86,7 +86,7 @@ module Haml
       #
       # Destructively modifies `to`.
       #
-      # @param to [{String => String}] The attribute hash to merge into
+      # @param to [{String => #to_s}] The attribute hash to merge into
       # @param from [{String => #to_s}] The attribute hash to merge from
       # @return [{String => String}] `to`, after being merged
       def merge_attrs(to, from)
