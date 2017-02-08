@@ -86,41 +86,48 @@ module Haml
       #
       # Destructively modifies `to`.
       #
-      # @param to [{String => #to_s}] The attribute hash to merge into
-      # @param from [{String => #to_s}] The attribute hash to merge from
-      # @return [{String => String}] `to`, after being merged
+      # @param to [{String => String,Hash}] The attribute hash to merge into
+      # @param from [{String => Object}] The attribute hash to merge from
+      # @return [{String => String,Hash}] `to`, after being merged
       def merge_attrs(to, from)
-        from.each do |key, from_value|
-          if from_value.kind_of?(Hash) || to[key].kind_of?(Hash)
-            # forces to_data & from_data into a hash
-            from_value = { nil => from_value } if !from_value.is_a?(Hash)
-            to[key] = { nil => to[key] } if !to[key].is_a?(Hash)
-            to[key].merge!(from_value)
-          elsif key == 'id'
-            from_value = filter_and_join(from_value, '_')
-            if to['id'] && from_value
-              from_value = "#{to['id']}_#{from_value}"
-            elsif to['id'] || from_value
-              from_value ||= to['id']
-            end
-            to['id'] = from_value
-          elsif key == 'class'
-            from_value = filter_and_join(from_value, ' ')
-            if to['class'] && from_value
-              # Make sure we don't duplicate class names
-              from_value = (from_value.split(' ') | to['class'].split(' ')).sort.join(' ')
-            elsif to['class'] || from_value
-              from_value ||= to['class']
-            end
-            to['class'] = from_value
-          else
-            to[key] = from_value
-          end
+        from.keys.each do |key|
+          to[key] = merge_value(key, to[key], from[key])
         end
         to
       end
 
       private
+
+      # Merge values for Haml attributes. No destructive operation.
+      #
+      # @param to [String,Hash]
+      # @param from [Object]
+      # @return [String,Hash]
+      def merge_value(key, to, from)
+        if from.kind_of?(Hash) || to.kind_of?(Hash)
+          from = { nil => from } if !from.is_a?(Hash)
+          to   = { nil => to }   if !to.is_a?(Hash)
+          to.merge(from)
+        elsif key == 'id'
+          merged_id = filter_and_join(from, '_')
+          if to && merged_id
+            merged_id = "#{to}_#{merged_id}"
+          elsif to || merged_id
+            merged_id ||= to
+          end
+          merged_id
+        elsif key == 'class'
+          merged_class = filter_and_join(from, ' ')
+          if to && merged_class
+            merged_class = (merged_class.split(' ') | to.split(' ')).sort.join(' ')
+          elsif to || merged_class
+            merged_class ||= to
+          end
+          merged_class
+        else
+          from
+        end
+      end
 
       def build_data_keys(data_hash, hyphenate, attr_name="data")
         Hash[data_hash.map do |name, value|
