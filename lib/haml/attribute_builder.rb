@@ -66,7 +66,7 @@ module Haml
         return '' if (value.respond_to?(:empty?) && value.empty?)
 
         if value.is_a?(Array)
-          value.flatten!
+          value = value.flatten
           value.map! {|item| item ? item.to_s : nil}
           value.compact!
           value = value.join(separator)
@@ -84,7 +84,7 @@ module Haml
       # and classes are concatenated with `" "`.
       # data hashes are simply merged.
       #
-      # Destructively modifies both `to` and `from`.
+      # Destructively modifies `to`.
       #
       # @param to [{String => String}] The attribute hash to merge into
       # @param from [{String => #to_s}] The attribute hash to merge from
