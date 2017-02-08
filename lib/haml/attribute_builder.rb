@@ -91,7 +91,7 @@ module Haml
       # @return [{String => String}] `to`, after being merged
       def merge_attrs(to, from)
         from.each do |key, from_value|
-          if from[key].kind_of?(Hash) || to[key].kind_of?(Hash)
+          if from_value.kind_of?(Hash) || to[key].kind_of?(Hash)
             # forces to_data & from_data into a hash
             from_value = { nil => from_value } if !from_value.is_a?(Hash)
             to[key] = { nil => to[key] } if !to[key].is_a?(Hash)
@@ -102,22 +102,22 @@ module Haml
               to[key].merge!(from_value)
             end
           elsif key == 'id'
-            from_id = filter_and_join(from['id'], '_')
-            if to['id'] && from_id
-              from_id = "#{to['id']}_#{from_id}"
-            elsif to['id'] || from_id
-              from_id ||= to['id']
+            from_value = filter_and_join(from_value, '_')
+            if to['id'] && from_value
+              from_value = "#{to['id']}_#{from_value}"
+            elsif to['id'] || from_value
+              from_value ||= to['id']
             end
-            to['id'] = from_id
+            to['id'] = from_value
           elsif key == 'class'
-            from_class = filter_and_join(from['class'], ' ')
-            if to['class'] && from_class
+            from_value = filter_and_join(from_value, ' ')
+            if to['class'] && from_value
               # Make sure we don't duplicate class names
-              from_class = (from_class.split(' ') | to['class'].split(' ')).sort.join(' ')
-            elsif to['class'] || from_class
-              from_class ||= to['class']
+              from_value = (from_value.split(' ') | to['class'].split(' ')).sort.join(' ')
+            elsif to['class'] || from_value
+              from_value ||= to['class']
             end
-            to['class'] = from_class
+            to['class'] = from_value
           else
             to[key] = from_value
           end
