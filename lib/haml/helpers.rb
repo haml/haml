@@ -594,7 +594,7 @@ MESSAGE
     end
 
     # Characters that need to be escaped to HTML entities from user input
-    HTML_ESCAPE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#039;' }
+    HTML_ESCAPE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#39;' }
 
     HTML_ESCAPE_REGEX = /['"><&]/
 
