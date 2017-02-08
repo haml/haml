@@ -90,17 +90,16 @@ module Haml
       # @param from [{String => #to_s}] The attribute hash to merge from
       # @return [{String => String}] `to`, after being merged
       def merge_attrs(to, from)
-        from.keys.each do |key|
+        from.each do |key, from_value|
           if from[key].kind_of?(Hash) || to[key].kind_of?(Hash)
-            from_data = from[key]
             # forces to_data & from_data into a hash
-            from_data = { nil => from_data } if !from_data.is_a?(Hash)
+            from_value = { nil => from_value } if !from_value.is_a?(Hash)
             to[key] = { nil => to[key] } if !to[key].is_a?(Hash)
 
-            if from_data && !to[key]
-              to[key] = from_data
-            elsif from_data && to[key]
-              to[key].merge! from_data
+            if from_value && !to[key]
+              to[key] = from_value
+            elsif from_value && to[key]
+              to[key].merge!(from_value)
             end
           elsif key == 'id'
             from_id = filter_and_join(from['id'], '_')
@@ -120,7 +119,7 @@ module Haml
             end
             to['class'] = from_class
           else
-            to[key] = from[key]
+            to[key] = from_value
           end
         end
         to
