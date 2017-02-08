@@ -401,13 +401,13 @@ module Haml
 
       if attributes_hashes[:new]
         static_attributes, attributes_hash = attributes_hashes[:new]
-        AttributeBuilder.merge_attrs(attributes, static_attributes) if static_attributes
+        AttributeBuilder.merge_attributes(attributes, static_attributes) if static_attributes
         attributes_list << attributes_hash
       end
 
       if attributes_hashes[:old]
         static_attributes = parse_static_hash(attributes_hashes[:old])
-        AttributeBuilder.merge_attrs(attributes, static_attributes) if static_attributes
+        AttributeBuilder.merge_attributes(attributes, static_attributes) if static_attributes
         attributes_list << attributes_hashes[:old] unless static_attributes || @options.suppress_eval
       end
 
