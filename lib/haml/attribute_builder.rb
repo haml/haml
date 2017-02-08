@@ -61,6 +61,7 @@ module Haml
         result.join
       end
 
+      # @return [String, nil]
       def filter_and_join(value, separator)
         return '' if (value.respond_to?(:empty?) && value.empty?)
 
@@ -89,21 +90,6 @@ module Haml
       # @param from [{String => #to_s}] The attribute hash to merge from
       # @return [{String => String}] `to`, after being merged
       def merge_attrs(to, from)
-        from['id'] = filter_and_join(from['id'], '_') if from['id']
-        if to['id'] && from['id']
-          to['id'] << "_#{from['id']}"
-        elsif to['id'] || from['id']
-          from['id'] ||= to['id']
-        end
-
-        from['class'] = filter_and_join(from['class'], ' ') if from['class']
-        if to['class'] && from['class']
-          # Make sure we don't duplicate class names
-          from['class'] = (from['class'].to_s.split(' ') | to['class'].split(' ')).sort.join(' ')
-        elsif to['class'] || from['class']
-          from['class'] ||= to['class']
-        end
-
         from.keys.each do |key|
           if from[key].kind_of?(Hash) || to[key].kind_of?(Hash)
             from_data = from[key]
@@ -117,9 +103,25 @@ module Haml
               to[key].merge! from_data
             end
           else
-            unless key == 'id' && to['id'] && from['id']
-              to[key] = from[key]
+            case key
+            when 'id'
+              from['id'] = filter_and_join(from['id'], '_')
+              if to['id'] && from['id']
+                from['id'] = "#{to['id']}_#{from['id']}"
+              elsif to['id'] || from['id']
+                from['id'] ||= to['id']
+              end
+            when 'class'
+              from['class'] = filter_and_join(from['class'], ' ')
+              if to['class'] && from['class']
+                # Make sure we don't duplicate class names
+                from['class'] = (from['class'].to_s.split(' ') | to['class'].split(' ')).sort.join(' ')
+              elsif to['class'] || from['class']
+                from['class'] ||= to['class']
+              end
             end
+
+            to[key] = from[key]
           end
         end
 
