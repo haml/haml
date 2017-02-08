@@ -612,7 +612,7 @@ MESSAGE
       text.gsub(HTML_ESCAPE_REGEX, HTML_ESCAPE)
     end
 
-    HTML_ESCAPE_ONCE_REGEX = /[\"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
+    HTML_ESCAPE_ONCE_REGEX = /['"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
 
     # Escapes HTML entities in `text`, but without escaping an ampersand
     # that is already part of an escaped entity.
