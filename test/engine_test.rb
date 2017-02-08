@@ -970,8 +970,6 @@ HAML
                  render(".atlantis{:style => 'ugly&stupid'} foo"))
     assert_equal("<p class='atlantis' style='ugly&amp;stupid'>foo</p>\n",
                 render("%p.atlantis{:style => 'ugly&stupid'}= 'foo'"))
-    assert_equal("<p class='atlantis' style='ugly&#x000A;stupid'></p>\n",
-                render("%p.atlantis{:style => \"ugly\\nstupid\"}"))
   end
 
   def test_dynamic_attributes_should_be_escaped
@@ -981,8 +979,6 @@ HAML
                  render("%p{:width => nil, :src => '&foo.png', :alt => String.new} foo"))
     assert_equal("<div alt='' src='&amp;foo.png'>foo</div>\n",
                  render("%div{:width => nil, :src => '&foo.png', :alt => String.new}= 'foo'"))
-    assert_equal("<img alt='' src='foo&#x000A;.png'>\n",
-                 render("%img{:width => nil, :src => \"foo\\n.png\", :alt => String.new}"))
   end
 
   def test_string_double_equals_should_be_esaped
@@ -1148,7 +1144,6 @@ HAML
   def test_attrs_parsed_correctly
     assert_equal("<p boom=>biddly='bar =&gt; baz'></p>\n", render("%p{'boom=>biddly' => 'bar => baz'}"))
     assert_equal("<p foo,bar='baz, qux'></p>\n", render("%p{'foo,bar' => 'baz, qux'}"))
-    assert_equal("<p escaped='quo&#x000A;te'></p>\n", render("%p{ :escaped => \"quo\\nte\"}"))
     assert_equal("<p escaped='quo4te'></p>\n", render("%p{ :escaped => \"quo\#{2 + 2}te\"}"))
   end
 
