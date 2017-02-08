@@ -105,22 +105,21 @@ module Haml
         end
 
         from.keys.each do |key|
-          if !from[key].kind_of?(Hash) && !to[key].kind_of?(Hash)
+          if from[key].kind_of?(Hash) || to[key].kind_of?(Hash)
+            from_data = from[key]
+            # forces to_data & from_data into a hash
+            from_data = { nil => from_data } if from_data && !from_data.is_a?(Hash)
+            to[key] = { nil => to[key] } if to[key] && !to[key].is_a?(Hash)
+
+            if from_data && !to[key]
+              to[key] = from_data
+            elsif from_data && to[key]
+              to[key].merge! from_data
+            end
+          else
             unless key == 'id' && to['id'] && from['id']
               to[key] = from[key]
             end
-            next
-          end
-
-          from_data = from[key]
-          # forces to_data & from_data into a hash
-          from_data = { nil => from_data } if from_data && !from_data.is_a?(Hash)
-          to[key] = { nil => to[key] } if to[key] && !to[key].is_a?(Hash)
-
-          if from_data && !to[key]
-            to[key] = from_data
-          elsif from_data && to[key]
-            to[key].merge! from_data
           end
         end
 
