@@ -693,7 +693,7 @@ HAML
   end
 
   def test_escape_attrs_always
-    assert_equal(<<HTML, render(<<HAML, :escape_attrs => :always))
+    assert_equal(<<HTML, render(<<HAML, :escape_attrs => true))
 <div class='&quot;&amp;lt;&amp;gt;&amp;amp;&quot;' id='foo'>
 bar
 </div>
