@@ -696,7 +696,7 @@ HAML
 
   def test_escape_attrs_always
     assert_equal(<<HTML, render(<<HAML, :escape_attrs => :always))
-<div class='"&amp;lt;&amp;gt;&amp;amp;"' id='foo'>
+<div class='&quot;&amp;lt;&amp;gt;&amp;amp;&quot;' id='foo'>
   bar
 </div>
 HTML
@@ -817,7 +817,7 @@ HAML
     assert_equal("<a href='#'>Foo</a>\n",
       render('%a(href="#") #{"Foo"}'))
 
-    assert_equal("<a href='#\"'></a>\n", render('%a(href="#\\"")'))
+    assert_equal("<a href='#&quot;'></a>\n", render('%a(href="#\\"")'))
   end
 
   def test_case_assigned_to_var
@@ -1128,9 +1128,9 @@ HAML
 
   def test_attr_wrapper
     assert_equal("<p strange=*attrs*></p>\n", render("%p{ :strange => 'attrs'}", :attr_wrapper => '*'))
-    assert_equal("<p escaped='quo\"te'></p>\n", render("%p{ :escaped => 'quo\"te'}", :attr_wrapper => '"'))
+    assert_equal("<p escaped=\"quo&quot;te\"></p>\n", render("%p{ :escaped => 'quo\"te'}", :attr_wrapper => '"'))
     assert_equal("<p escaped=\"quo&#039;te\"></p>\n", render("%p{ :escaped => 'quo\\'te'}", :attr_wrapper => '"'))
-    assert_equal("<p escaped='q&#039;uo\"te'></p>\n", render("%p{ :escaped => 'q\\'uo\"te'}", :attr_wrapper => '"'))
+    assert_equal("<p escaped=\"q&#039;uo&quot;te\"></p>\n", render("%p{ :escaped => 'q\\'uo\"te'}", :attr_wrapper => '"'))
     assert_equal("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n", render("!!! XML", :attr_wrapper => '"', :format => :xhtml))
   end
 
@@ -1527,7 +1527,7 @@ HAML
       render("%div{:data => {:one_plus_one => 1+1}}",
         :hyphenate_data_attrs => false))
 
-    assert_equal("<div data-foo='Here&#039;s a \"quoteful\" string.'></div>\n",
+    assert_equal("<div data-foo='Here&#039;s a &quot;quoteful&quot; string.'></div>\n",
       render(%{%div{:data => {:foo => %{Here's a "quoteful" string.}}}},
         :hyphenate_data_attrs => false)) #'
   end
@@ -1690,9 +1690,9 @@ HAML
 
   def test_new_attribute_parsing
     assert_equal("<a a2='b2'>bar</a>\n", render("%a(a2=b2) bar", :locals => {:b2 => 'b2'}))
-    assert_equal(%Q{<a a='foo"bar'>bar</a>\n}, render(%q{%a(a="#{'foo"bar'}") bar})) #'
+    assert_equal(%Q{<a a='foo&quot;bar'>bar</a>\n}, render(%q{%a(a="#{'foo"bar'}") bar})) #'
     assert_equal(%Q{<a a='foo&#039;bar'>bar</a>\n}, render(%q{%a(a="#{"foo'bar"}") bar})) #'
-    assert_equal(%Q{<a a='foo"bar'>bar</a>\n}, render(%q{%a(a='foo"bar') bar}))
+    assert_equal(%Q{<a a='foo&quot;bar'>bar</a>\n}, render(%q{%a(a='foo"bar') bar}))
     assert_equal(%Q{<a a='foo&#039;bar'>bar</a>\n}, render(%q{%a(a="foo'bar") bar}))
     assert_equal("<a a:b='foo'>bar</a>\n", render("%a(a:b='foo') bar"))
     assert_equal("<a a='foo' b='bar'>bar</a>\n", render("%a(a = 'foo' b = 'bar') bar"))
@@ -1703,8 +1703,8 @@ HAML
   end
 
   def test_new_attribute_escaping
-    assert_equal(%Q{<a a='foo " bar'>bar</a>\n}, render(%q{%a(a="foo \" bar") bar}))
-    assert_equal(%Q{<a a='foo \\" bar'>bar</a>\n}, render(%q{%a(a="foo \\\\\" bar") bar}))
+    assert_equal(%Q{<a a='foo &quot; bar'>bar</a>\n}, render(%q{%a(a="foo \" bar") bar}))
+    assert_equal(%Q{<a a='foo \\&quot; bar'>bar</a>\n}, render(%q{%a(a="foo \\\\\" bar") bar}))
 
     assert_equal(%Q{<a a='foo &#039; bar'>bar</a>\n}, render(%q{%a(a='foo \' bar') bar}))
     assert_equal(%Q{<a a='foo \\&#039; bar'>bar</a>\n}, render(%q{%a(a='foo \\\\\' bar') bar}))
