@@ -1743,6 +1743,8 @@ HAML
     locals = {:b => 'b', :d => 'd'}
     assert_equal("<p a='b' c='d'></p>\n", render("%p{:a => b}(c=d)", :locals => locals))
     assert_equal("<p a='b' c='d'></p>\n", render("%p(a=b){:c => d}", :locals => locals))
+
+    assert_equal("<p id='b_d'></p>\n<p id='b_d'></p>\n", render("%p(id=b){id:d}\n%p(id=b){id:d}", locals: locals))
   end
 
   # Ruby Multiline
