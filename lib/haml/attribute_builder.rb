@@ -1,8 +1,6 @@
+# frozen_string_literal: true
 module Haml
   module AttributeBuilder
-    ID_KEY    = 'id'.freeze
-    CLASS_KEY = 'class'.freeze
-
     class << self
       def build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
           # @TODO this is an absolutely ridiculous amount of arguments. At least
@@ -91,19 +89,19 @@ module Haml
       # @param from [{String => #to_s}] The attribute hash to merge from
       # @return [{String => String}] `to`, after being merged
       def merge_attrs(to, from)
-        from[ID_KEY] = filter_and_join(from[ID_KEY], '_') if from[ID_KEY]
-        if to[ID_KEY] && from[ID_KEY]
-          to[ID_KEY] << "_#{from.delete(ID_KEY)}"
-        elsif to[ID_KEY] || from[ID_KEY]
-          from[ID_KEY] ||= to[ID_KEY]
+        from['id'] = filter_and_join(from['id'], '_') if from['id']
+        if to['id'] && from['id']
+          to['id'] << "_#{from.delete('id')}"
+        elsif to['id'] || from['id']
+          from['id'] ||= to['id']
         end
 
-        from[CLASS_KEY] = filter_and_join(from[CLASS_KEY], ' ') if from[CLASS_KEY]
-        if to[CLASS_KEY] && from[CLASS_KEY]
+        from['class'] = filter_and_join(from['class'], ' ') if from['class']
+        if to['class'] && from['class']
           # Make sure we don't duplicate class names
-          from[CLASS_KEY] = (from[CLASS_KEY].to_s.split(' ') | to[CLASS_KEY].split(' ')).sort.join(' ')
-        elsif to[CLASS_KEY] || from[CLASS_KEY]
-          from[CLASS_KEY] ||= to[CLASS_KEY]
+          from['class'] = (from['class'].to_s.split(' ') | to['class'].split(' ')).sort.join(' ')
+        elsif to['class'] || from['class']
+          from['class'] ||= to['class']
         end
 
         from.keys.each do |key|
