@@ -3,9 +3,9 @@ module Haml
   module AttributeBuilder
     class << self
       def build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
-          # @TODO this is an absolutely ridiculous amount of arguments. At least
+        # @TODO this is an absolutely ridiculous amount of arguments. At least
         # some of this needs to be moved into an instance method.
-        join_char        = hyphenate_data_attrs ? '-' : '_'
+        join_char = hyphenate_data_attrs ? '-' : '_'
 
         attributes.each do |key, value|
           if value.is_a?(Hash)
