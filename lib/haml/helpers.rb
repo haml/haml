@@ -1,3 +1,5 @@
+require 'erb'
+
 module Haml
   # This module contains various helpful methods to make it easier to do various tasks.
   # {Haml::Helpers} is automatically included in the context
@@ -608,8 +610,7 @@ MESSAGE
     # @param text [String] The string to sanitize
     # @return [String] The sanitized string
     def html_escape(text)
-      text = text.to_s
-      text.gsub(HTML_ESCAPE_REGEX, HTML_ESCAPE)
+      ERB::Util.html_escape(text)
     end
 
     HTML_ESCAPE_ONCE_REGEX = /['"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
