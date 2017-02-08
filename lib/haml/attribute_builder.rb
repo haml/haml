@@ -31,9 +31,9 @@ module Haml
 
           escaped =
             if escape_attrs == :once
-              Haml::Helpers.escape_once(value.to_s)
+              Haml::Helpers.escape_once(value)
             elsif escape_attrs
-              Haml::Helpers.html_escape(value.to_s)
+              Haml::Helpers.html_escape(value)
             else
               value.to_s
             end
