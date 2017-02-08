@@ -2,7 +2,6 @@ module Haml
   module AttributeBuilder
     ID_KEY    = 'id'.freeze
     CLASS_KEY = 'class'.freeze
-    DATA_KEY  = 'data'.freeze
 
     class << self
       def build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
