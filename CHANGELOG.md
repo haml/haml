@@ -21,6 +21,8 @@
 * The `haml` command's debug option (`-d`) no longer executes the Haml code, but
   rather checks the generated Ruby syntax for errors.
 * Support Rails 5.1 Erubi template handler.
+* Drop dynamic quotes support and always escape `'` for `escape_html`/`escape_attrs` instead.
+  Also, escaped results are slightly changed and always unified to the same characters. (Takashi Kokubun)
 * Add temple gem as dependency and create `Haml::TempleEngine` class.
   Some methods in `Haml::Compiler` are migrated to `Haml::TempleEngine`. (Takashi Kokubun)
 * Drop parser/compiler accessor from `Haml::Engine`. Modify `Haml::Engine#initialize` options
