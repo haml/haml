@@ -91,7 +91,7 @@ module Haml
       def merge_attrs(to, from)
         from['id'] = filter_and_join(from['id'], '_') if from['id']
         if to['id'] && from['id']
-          to['id'] << "_#{from.delete('id')}"
+          to['id'] << "_#{from['id']}"
         elsif to['id'] || from['id']
           from['id'] ||= to['id']
         end
@@ -105,9 +105,14 @@ module Haml
         end
 
         from.keys.each do |key|
-          next unless from[key].kind_of?(Hash) || to[key].kind_of?(Hash)
+          if !from[key].kind_of?(Hash) && !to[key].kind_of?(Hash)
+            unless key == 'id' && to['id'] && from['id']
+              to[key] = from[key]
+            end
+            next
+          end
 
-          from_data = from.delete(key)
+          from_data = from[key]
           # forces to_data & from_data into a hash
           from_data = { nil => from_data } if from_data && !from_data.is_a?(Hash)
           to[key] = { nil => to[key] } if to[key] && !to[key].is_a?(Hash)
@@ -119,7 +124,7 @@ module Haml
           end
         end
 
-        to.merge!(from)
+        to
       end
 
       private
