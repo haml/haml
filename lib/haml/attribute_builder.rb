@@ -102,29 +102,27 @@ module Haml
             elsif from_data && to[key]
               to[key].merge! from_data
             end
-          else
-            case key
-            when 'id'
-              from['id'] = filter_and_join(from['id'], '_')
-              if to['id'] && from['id']
-                from['id'] = "#{to['id']}_#{from['id']}"
-              elsif to['id'] || from['id']
-                from['id'] ||= to['id']
-              end
-            when 'class'
-              from['class'] = filter_and_join(from['class'], ' ')
-              if to['class'] && from['class']
-                # Make sure we don't duplicate class names
-                from['class'] = (from['class'].to_s.split(' ') | to['class'].split(' ')).sort.join(' ')
-              elsif to['class'] || from['class']
-                from['class'] ||= to['class']
-              end
+          elsif key == 'id'
+            from_id = filter_and_join(from['id'], '_')
+            if to['id'] && from_id
+              from_id = "#{to['id']}_#{from_id}"
+            elsif to['id'] || from_id
+              from_id ||= to['id']
             end
-
+            to['id'] = from_id
+          elsif key == 'class'
+            from_class = filter_and_join(from['class'], ' ')
+            if to['class'] && from_class
+              # Make sure we don't duplicate class names
+              from_class = (from_class.split(' ') | to['class'].split(' ')).sort.join(' ')
+            elsif to['class'] || from_class
+              from_class ||= to['class']
+            end
+            to['class'] = from_class
+          else
             to[key] = from[key]
           end
         end
-
         to
       end
 
