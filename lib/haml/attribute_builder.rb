@@ -95,12 +95,7 @@ module Haml
             # forces to_data & from_data into a hash
             from_value = { nil => from_value } if !from_value.is_a?(Hash)
             to[key] = { nil => to[key] } if !to[key].is_a?(Hash)
-
-            if from_value && !to[key]
-              to[key] = from_value
-            elsif from_value && to[key]
-              to[key].merge!(from_value)
-            end
+            to[key].merge!(from_value)
           elsif key == 'id'
             from_value = filter_and_join(from_value, '_')
             if to['id'] && from_value
