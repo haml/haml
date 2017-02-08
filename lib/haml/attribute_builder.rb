@@ -5,8 +5,6 @@ module Haml
       def build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
           # @TODO this is an absolutely ridiculous amount of arguments. At least
         # some of this needs to be moved into an instance method.
-        quote_escape     = attr_wrapper == '"' ? "&#x0022;" : "&#x0027;"
-        other_quote_char = attr_wrapper == '"' ? "'" : '"'
         join_char        = hyphenate_data_attrs ? '-' : '_'
 
         attributes.each do |key, value|
@@ -40,21 +38,7 @@ module Haml
               value.to_s
             end
           value = Haml::Helpers.preserve(escaped)
-          if escape_attrs
-            # We want to decide whether or not to escape quotes
-            value.gsub!(/&quot;|&#x0022;/, '"')
-            this_attr_wrapper = attr_wrapper
-            if value.include? attr_wrapper
-              if value.include? other_quote_char
-                value.gsub!(attr_wrapper, quote_escape)
-              else
-                this_attr_wrapper = other_quote_char
-              end
-            end
-          else
-            this_attr_wrapper = attr_wrapper
-          end
-          " #{attr}=#{this_attr_wrapper}#{value}#{this_attr_wrapper}"
+          " #{attr}=#{attr_wrapper}#{value}#{attr_wrapper}"
         end
         result.compact!
         result.sort!

@@ -1,3 +1,5 @@
+require 'erb'
+
 module Haml
   # This module contains various helpful methods to make it easier to do various tasks.
   # {Haml::Helpers} is automatically included in the context
@@ -594,9 +596,9 @@ MESSAGE
     end
 
     # Characters that need to be escaped to HTML entities from user input
-    HTML_ESCAPE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#039;' }
+    HTML_ESCAPE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#39;' }
 
-    HTML_ESCAPE_REGEX = /[\"><&]/
+    HTML_ESCAPE_REGEX = /['"><&]/
 
     # Returns a copy of `text` with ampersands, angle brackets and quotes
     # escaped into HTML entities.
@@ -608,11 +610,10 @@ MESSAGE
     # @param text [String] The string to sanitize
     # @return [String] The sanitized string
     def html_escape(text)
-      text = text.to_s
-      text.gsub(HTML_ESCAPE_REGEX, HTML_ESCAPE)
+      ERB::Util.html_escape(text)
     end
 
-    HTML_ESCAPE_ONCE_REGEX = /[\"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
+    HTML_ESCAPE_ONCE_REGEX = /['"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
 
     # Escapes HTML entities in `text`, but without escaping an ampersand
     # that is already part of an escaped entity.
