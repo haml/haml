@@ -1,6 +1,6 @@
 module Haml
   module Helpers
-    module ActionViewBaseExtension
+    module ActionViewMods
       def render(*args, &block)
         options = args.first
 
@@ -29,7 +29,7 @@ module Haml
         end
       end
     end
-    ActionView::Base.send(:prepend, ActionViewBaseExtension)
+    ActionView::Base.send(:prepend, ActionViewMods)
   end
 end
 
