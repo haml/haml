@@ -3,8 +3,9 @@ require 'haml/attribute_parser'
 module Haml
   class AttributeCompiler
     # @param type [Symbol] :static or :dynamic
+    # @param key [String]
     # @param value [String] Actual string value for :static type, value's Ruby literal for :dynamic type.
-    class AttributeValue < Struct.new(:type, :value)
+    class AttributeValue < Struct.new(:type, :key, :value)
       # @return [String] A Ruby literal of value.
       def to_literal
         case type
@@ -13,6 +14,12 @@ module Haml
         when :dynamic
           value
         end
+      end
+
+      # Key's substring before a hyphen. This is necessary because values with the same
+      # base_key can conflict by Haml::AttributeBuidler#build_data_keys.
+      def base_key
+        key.split('-', 2).first
       end
     end
 
@@ -43,42 +50,70 @@ module Haml
         end
         hash
       end
+      attribute_values   = build_attribute_values(attributes, parsed_hashes)
+      values_by_base_key = attribute_values.group_by(&:base_key)
 
-      values_by_key = build_attribute_values_by_key(attributes, parsed_hashes)
-      sorted_keys   = values_by_key.keys.sort
-      [:multi, *sorted_keys.map { |k| compile_attribute(k, values_by_key[k]) }]
+      [:multi, *values_by_base_key.keys.sort.map { |base_key|
+        compile_attribute_values(values_by_base_key[base_key])
+      }]
     end
 
     private
 
-    # Builds { key => attribute values } hash from static attributes and dynamic attributes_hashes.
-    # The order of attribute values are the same as Haml::Buffer#attributes's merge order.
+    # Returns array of AttributeValue instnces from static attributes and dynamic attributes_hashes. For each key,
+    # the values' order in returned value is preserved in the same order as Haml::Buffer#attributes's merge order.
     #
     # @param attributes [{ String => String }]
     # @param parsed_hashes [{ String => String }]
-    # @return [{ String => Array<AttributeValue> }]
-    def build_attribute_values_by_key(attributes, parsed_hashes)
-      Hash.new { |h, k| h[k] = [] }.tap do |values_by_key|
-        attributes.each do |attr, static_value|
-          values_by_key[attr] << AttributeValue.new(:static, static_value)
+    # @return [Array<AttributeValue>]
+    def build_attribute_values(attributes, parsed_hashes)
+      [].tap do |attribute_values|
+        attributes.each do |key, static_value|
+          attribute_values << AttributeValue.new(:static, key, static_value)
         end
         parsed_hashes.each do |parsed_hash|
-          parsed_hash.each do |attr, dynamic_value|
-            values_by_key[attr] << AttributeValue.new(:dynamic, dynamic_value)
+          parsed_hash.each do |key, dynamic_value|
+            attribute_values << AttributeValue.new(:dynamic, key, dynamic_value)
           end
         end
       end
     end
 
-    # Compiles one attribute to Temple expression for rendering " key='value'".
+    # Compiles attribute values with the same base_key to Temple expression.
+    #
+    # @param base_values [Array<AttributeValue>] `base_key`'s results are the same. `key`'s result may differ.
+    # @return [Array] Temple expression
+    def compile_attribute_values(base_values)
+      if base_values.map(&:key).uniq.size == 1
+        return compile_attribute(base_values.first.key, base_values)
+      end
+
+      hash_content = base_values.group_by(&:key).map do |key, values|
+        "#{frozen_string(key)} => #{merged_value(key, values)}"
+      end.join(', ')
+      [:dynamic, "_hamlout.attributes({ #{hash_content} }, nil)"]
+    end
+
+    # @param key [String]
+    # @param values [Array<AttributeValue>]
+    # @return [String]
+    def merged_value(key, values)
+      "::Haml::AttributeBuilder.merge_values(#{frozen_string(key)}, #{values.map(&:to_literal).join(', ')})"
+    end
+
+    # @param str [String]
+    # @return [String]
+    def frozen_string(str)
+      "#{Haml::Util.inspect_obj(str)}.freeze"
+    end
+
+    # Compiles attribute values for one key to Temple expression that generates ` key='value'`.
     #
     # @param key [String]
     # @param values [Array<AttributeValue>]
     # @return [Array] Temple expression
     def compile_attribute(key, values)
-      code = "_hamlout.attributes({ #{Haml::Util.inspect_obj(key)}.freeze => "\
-        "::Haml::AttributeBuilder.merge_values(#{Haml::Util.inspect_obj(key)}.freeze, #{values.map(&:to_literal).join(', ')}) }, nil)"
-      [:dynamic, code]
+      [:dynamic, "_hamlout.attributes({ #{frozen_string(key)} => #{merged_value(key, values)} }, nil)"]
     end
   end
 end
