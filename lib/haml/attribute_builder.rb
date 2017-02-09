@@ -84,7 +84,7 @@ module Haml
 
       # Merge values for Haml attributes. No destructive operation.
       #
-      # @param to [String,Hash]
+      # @param to [String,Hash,nil]
       # @param from [Object]
       # @return [String,Hash]
       def merge_value(key, to, from)
