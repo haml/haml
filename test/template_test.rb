@@ -312,4 +312,12 @@ HTML
   Test
 HAML
   end
+
+  class ::TosUnsafeObject; def to_s; '<hr>'; end; end
+  class ::TosSafeObject; def to_s; '<hr>'.html_safe; end; end
+
+  def test_object_that_returns_safe_buffer
+    assert_equal("<hr>\n", render('= ::TosSafeObject.new', escape_html: true))
+    assert_equal("&lt;hr&gt;\n", render('= ::TosUnsafeObject.new', escape_html: true))
+  end
 end
