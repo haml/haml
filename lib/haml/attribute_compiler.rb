@@ -81,15 +81,21 @@ module Haml
 
     # Compiles attribute values with the same base_key to Temple expression.
     #
-    # @param base_values [Array<AttributeValue>] `base_key`'s results are the same. `key`'s result may differ.
+    # @param values [Array<AttributeValue>] `base_key`'s results are the same. `key`'s result may differ.
     # @return [Array] Temple expression
-    def compile_attribute_values(base_values)
-      if base_values.map(&:key).uniq.size == 1
-        return compile_attribute(base_values.first.key, base_values)
+    def compile_attribute_values(values)
+      if values.map(&:key).uniq.size == 1
+        compile_attribute(values.first.key, values)
+      else
+        runtime_build(values)
       end
+    end
 
-      hash_content = base_values.group_by(&:key).map do |key, values|
-        "#{frozen_string(key)} => #{merged_value(key, values)}"
+    # @param values [Array<AttributeValue>]
+    # @return [Array] Temple expression
+    def runtime_build(values)
+      hash_content = values.group_by(&:key).map do |key, values_for_key|
+        "#{frozen_string(key)} => #{merged_value(key, values_for_key)}"
       end.join(', ')
       [:dynamic, "_hamlout.attributes({ #{hash_content} }, nil)"]
     end
@@ -117,7 +123,7 @@ module Haml
     # @param values [Array<AttributeValue>]
     # @return [Array] Temple expression
     def compile_attribute(key, values)
-      [:dynamic, "_hamlout.attributes({ #{frozen_string(key)} => #{merged_value(key, values)} }, nil)"]
+      runtime_build(values)
     end
   end
 end
