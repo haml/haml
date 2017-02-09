@@ -131,27 +131,26 @@ module Haml
     # @return [Array] Temple expression
     def compile_attribute(key, values)
       case key
-      when 'id'
-        compile_id_attribute(values)
-      when 'class'
-        runtime_build(values)
+      when 'id', 'class'
+        compile_id_or_class_attribute(key, values)
       else
         compile_common_attribute(key, values)
       end
     end
 
+    # @param id_or_class [String] "id" or "class"
     # @param values [Array<AttributeValue>]
     # @return [Array] Temple expression
-    def compile_id_attribute(values)
+    def compile_id_or_class_attribute(id_or_class, values)
       var = unique_name
       [:multi,
-       [:code, "#{var} = (#{merged_value('id', values)})"],
+       [:code, "#{var} = (#{merged_value(id_or_class, values)})"],
        [:case, var,
-        ['Hash, Array', runtime_build([AttributeValue.new(:dynamic, 'id', var)])],
-        ['true', true_value('id')],
+        ['Hash, Array', runtime_build([AttributeValue.new(:dynamic, id_or_class, var)])],
+        ['true', true_value(id_or_class)],
         ['false, nil', [:multi]],
         [:else, [:multi,
-                 [:static, " id=#{@attr_wrapper}"],
+                 [:static, " #{id_or_class}=#{@attr_wrapper}"],
                  [:escape, @escape_attrs, [:dynamic, var]],
                  [:static, @attr_wrapper]],
         ]
