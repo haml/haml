@@ -98,7 +98,11 @@ module Haml
     # @param values [Array<AttributeValue>]
     # @return [String]
     def merged_value(key, values)
-      "::Haml::AttributeBuilder.merge_values(#{frozen_string(key)}, #{values.map(&:to_literal).join(', ')})"
+      if values.size == 1
+        values.first.to_literal
+      else
+        "::Haml::AttributeBuilder.merge_values(#{frozen_string(key)}, #{values.map(&:to_literal).join(', ')})"
+      end
     end
 
     # @param str [String]
