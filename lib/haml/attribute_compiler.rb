@@ -38,6 +38,7 @@ module Haml
       @is_html = [:html4, :html5].include?(options[:format])
       @attr_wrapper = options[:attr_wrapper]
       @escape_attrs = options[:escape_attrs]
+      @hyphenate_data_attrs = options[:hyphenate_data_attrs]
     end
 
     # Returns Temple expression to render attributes.
@@ -107,6 +108,21 @@ module Haml
       [:dynamic, "_hamlout.attributes({ #{hash_content} }, nil)"]
     end
 
+    # Renders attribute values statically.
+    #
+    # @param values [Array<AttributeValue>]
+    # @return [Array] Temple expression
+    def static_build(values)
+      hash_content = values.group_by(&:key).map do |key, values_for_key|
+        "#{frozen_string(key)} => #{merged_value(key, values_for_key)}"
+      end.join(', ')
+
+      arguments = [@is_html, @attr_wrapper, @escape_attrs, @hyphenate_data_attrs]
+      code = "::Haml::AttributeBuilder.build_attributes"\
+        "(#{arguments.map { |a| Haml::Util.inspect_obj(a) }.join(', ')}, { #{hash_content} })"
+      [:static, eval(code).to_s]
+    end
+
     # @param key [String]
     # @param values [Array<AttributeValue>]
     # @return [String]
@@ -130,6 +146,10 @@ module Haml
     # @param values [Array<AttributeValue>]
     # @return [Array] Temple expression
     def compile_attribute(key, values)
+      if values.all? { |v| Temple::Filters::StaticAnalyzer.static?(v.to_literal) }
+        return static_build(values)
+      end
+
       case key
       when 'id', 'class'
         compile_id_or_class_attribute(key, values)
