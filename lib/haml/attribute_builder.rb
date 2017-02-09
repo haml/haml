@@ -29,7 +29,7 @@ module Haml
             next
           end
 
-          escaped =
+          value =
             if escape_attrs == :once
               Haml::Helpers.escape_once(value)
             elsif escape_attrs
@@ -37,7 +37,6 @@ module Haml
             else
               value.to_s
             end
-          value = Haml::Helpers.preserve(escaped)
           " #{attr}=#{attr_wrapper}#{value}#{attr_wrapper}"
         end
         result.compact!
