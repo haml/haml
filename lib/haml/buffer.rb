@@ -188,9 +188,9 @@ module Haml
     def attributes(class_id, obj_ref, *attributes_hashes)
       attributes = class_id
       attributes_hashes.each do |old|
-        AttributeBuilder.merge_attributes(attributes, Hash[old.map {|k, v| [k.to_s, v]}])
+        AttributeBuilder.merge_attributes!(attributes, Hash[old.map {|k, v| [k.to_s, v]}])
       end
-      AttributeBuilder.merge_attributes(attributes, parse_object_ref(obj_ref)) if obj_ref
+      AttributeBuilder.merge_attributes!(attributes, parse_object_ref(obj_ref)) if obj_ref
       AttributeBuilder.build_attributes(
         html?, @options[:attr_wrapper], @options[:escape_attrs], @options[:hyphenate_data_attrs], attributes)
     end

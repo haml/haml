@@ -73,7 +73,7 @@ module Haml
       # @param to [{String => String,Hash}] The attribute hash to merge into
       # @param from [{String => Object}] The attribute hash to merge from
       # @return [{String => String,Hash}] `to`, after being merged
-      def merge_attributes(to, from)
+      def merge_attributes!(to, from)
         from.keys.each do |key|
           to[key] = merge_value(key, to[key], from[key])
         end
