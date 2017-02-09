@@ -1,5 +1,6 @@
 require 'haml/attribute_builder'
 require 'haml/attribute_compiler'
+require 'haml/temple_line_counter'
 
 module Haml
   class Compiler
@@ -13,7 +14,6 @@ module Haml
       @to_merge    = []
       @temple      = [:multi]
       @node        = nil
-      @generator   = Generator.new # to count newlines in generated code
       @attribute_compiler = AttributeCompiler.new
     end
 
@@ -294,7 +294,7 @@ module Haml
       newlines = resolve_newlines
       @to_merge << [:temple, [:code, newlines]] unless newlines.empty?
       @to_merge << [:temple, temple]
-      @output_line += @generator.call(temple).count("\n")
+      @output_line += TempleLineCounter.count_lines(temple)
     end
 
     def flush_merged_text
