@@ -131,15 +131,34 @@ module Haml
     # @return [Array] Temple expression
     def compile_attribute(key, values)
       case key
-      when 'id', 'class'
+      when 'id'
+        compile_id_attribute(values)
+      when 'class'
         runtime_build(values)
       else
         compile_common_attribute(key, values)
       end
     end
 
-    # Compiles attribute for keys except "id" and "class".
-    #
+    # @param values [Array<AttributeValue>]
+    # @return [Array] Temple expression
+    def compile_id_attribute(values)
+      var = unique_name
+      [:multi,
+       [:code, "#{var} = (#{merged_value('id', values)})"],
+       [:case, var,
+        ['Hash, Array', runtime_build([AttributeValue.new(:dynamic, 'id', var)])],
+        ['true', true_value('id')],
+        ['false, nil', [:multi]],
+        [:else, [:multi,
+                 [:static, " id=#{@attr_wrapper}"],
+                 [:escape, @escape_attrs, [:dynamic, var]],
+                 [:static, @attr_wrapper]],
+        ]
+       ],
+      ]
+    end
+
     # @param key [String] Not "id" or "class"
     # @param values [Array<AttributeValue>]
     # @return [Array] Temple expression
