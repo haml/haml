@@ -104,13 +104,12 @@ class EngineTest < Haml::TestCase
 
   def render(text, options = {}, &block)
     options = use_test_tracing(options)
-    options = options.merge(ugly: true)
     super
   end
 
   def engine(text, options = {})
     options = use_test_tracing(options)
-    Haml::Engine.new(text, options.merge(ugly: true))
+    Haml::Engine.new(text, options)
   end
 
   def setup
@@ -1435,8 +1434,8 @@ HAML
   end
 
   def test_auto_preserve
-    assert_equal("<pre>foo\nbar</pre>\n", render('%pre="foo\nbar"', ugly: true))
-    assert_equal("<pre>foo\nbar</pre>\n", render("%pre\n  foo\n  bar", ugly: true))
+    assert_equal("<pre>foo\nbar</pre>\n", render('%pre="foo\nbar"'))
+    assert_equal("<pre>foo\nbar</pre>\n", render("%pre\n  foo\n  bar"))
   end
 
   def test_xhtml_output_option

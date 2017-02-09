@@ -102,14 +102,14 @@ class TemplateTest < Haml::TestCase
 
   def test_templates_should_render_correctly_with_render_proc
     assert_renders_correctly("standard") do |name|
-      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), ugly: true, format: :xhtml)
+      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), format: :xhtml)
       engine.render_proc(@base).call
     end
   end
 
   def test_templates_should_render_correctly_with_def_method
     assert_renders_correctly("standard") do |name|
-      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), ugly: true, format: :xhtml)
+      engine = Haml::Engine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), format: :xhtml)
       engine.def_method(@base, "render_standard")
       @base.render_standard
     end
