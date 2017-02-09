@@ -379,10 +379,10 @@ HAML
   end
 
   def test_textareas
-    assert_equal("<textarea>Foo\n  bar\n   baz</textarea>\n",
+    assert_equal("<textarea>Foo&#x000A;  bar&#x000A;   baz</textarea>\n",
                  render('%textarea= "Foo\n  bar\n   baz"'))
 
-    assert_equal("<pre>Foo\n  bar\n   baz</pre>\n",
+    assert_equal("<pre>Foo&#x000A;  bar&#x000A;   baz</pre>\n",
                  render('%pre= "Foo\n  bar\n   baz"'))
 
     assert_equal("<textarea>#{'a' * 100}</textarea>\n",
@@ -951,7 +951,7 @@ HAML
   end
 
   def test_ampersand_equals_should_escape_before_preserve
-    assert_equal("<textarea>foo\nbar</textarea>\n", render('%textarea&= "foo\nbar"', :escape_html => false))
+    assert_equal("<textarea>foo&#x000A;bar</textarea>\n", render('%textarea&= "foo\nbar"', :escape_html => false))
   end
 
   def test_bang_equals_should_not_escape
@@ -1434,7 +1434,7 @@ HAML
   end
 
   def test_auto_preserve
-    assert_equal("<pre>foo\nbar</pre>\n", render('%pre="foo\nbar"'))
+    assert_equal("<pre>foo&#x000A;bar</pre>\n", render('%pre="foo\nbar"'))
     assert_equal("<pre>foo\nbar</pre>\n", render("%pre\n  foo\n  bar"))
   end
 
