@@ -67,7 +67,7 @@ class FiltersTest < Haml::TestCase
   end
 
   test "should respect escaped newlines and interpolation" do
-    html = "\\n\n"
+    html = "\\n\n\n"
     haml = ":plain\n  \\n\#{""}"
     assert_equal(html, render(haml))
   end
@@ -118,7 +118,7 @@ class FiltersTest < Haml::TestCase
   end
 
   test "interpolated code should be escaped if escape_html is set" do
-    assert_equal "&lt;script&gt;evil&lt;/script&gt;\n",
+    assert_equal "&lt;script&gt;evil&lt;/script&gt;\n\n",
                  render(":plain\n  \#{'<script>evil</script>'}", :escape_html => true)
   end
 

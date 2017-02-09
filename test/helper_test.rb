@@ -79,13 +79,13 @@ HAML
   end
 
   def test_list_of_should_render_correctly
-    assert_equal("<li>1</li>\n<li>2</li>\n", render("= list_of([1, 2]) do |i|\n  = i"))
-    assert_equal("<li>[1]</li>\n", render("= list_of([[1]]) do |i|\n  = i.inspect"))
-    assert_equal("<li>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>\n",
+    assert_equal("<li>1</li>\n<li>2</li>", render("= list_of([1, 2]) do |i|\n  = i"))
+    assert_equal("<li>[1]</li>", render("= list_of([[1]]) do |i|\n  = i.inspect"))
+    assert_equal("<li>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>",
       render("= list_of(['Fee', 'Fi', 'Fo', 'Fum']) do |title|\n  %h1= title\n  %p A word!"))
-    assert_equal("<li c='3'>1</li>\n<li c='3'>2</li>\n", render("= list_of([1, 2], {:c => 3}) do |i|\n  = i"))
-    assert_equal("<li c='3'>[1]</li>\n", render("= list_of([[1]], {:c => 3}) do |i|\n  = i.inspect"))
-    assert_equal("<li c='3'>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>\n",
+    assert_equal("<li c='3'>1</li>\n<li c='3'>2</li>", render("= list_of([1, 2], {:c => 3}) do |i|\n  = i"))
+    assert_equal("<li c='3'>[1]</li>", render("= list_of([[1]], {:c => 3}) do |i|\n  = i.inspect"))
+    assert_equal("<li c='3'>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>",
       render("= list_of(['Fee', 'Fi', 'Fo', 'Fum'], {:c => 3}) do |title|\n  %h1= title\n  %p A word!"))
   end
 
@@ -95,15 +95,15 @@ HAML
   end
 
   def test_tabs
-    assert_equal("foo\n  bar\nbaz\n", render("foo\n- tab_up\nbar\n- tab_down\nbaz"))
-    assert_equal("          <p>tabbed</p>\n", render("- buffer.tabulation=5\n%p tabbed"))
+    assert_equal("foo\nbar\nbaz\n", render("foo\n- tab_up\nbar\n- tab_down\nbaz"))
+    assert_equal("<p>tabbed</p>\n", render("- buffer.tabulation=5\n%p tabbed"))
   end
 
   def test_with_tabs
     assert_equal(<<HTML, render(<<HAML))
 Foo
-    Bar
-    Baz
+Bar
+Baz
 Baz
 HTML
 Foo
@@ -368,9 +368,9 @@ HAML
   def test_haml_concat_with_multiline_string
     assert_equal(<<HTML, render(<<HAML))
 <p>
-  foo
-  bar
-  baz
+foo
+bar
+baz
 </p>
 HTML
 %p
@@ -381,7 +381,7 @@ HAML
   def test_haml_tag_with_ugly
     assert_equal(<<HTML, render(<<HAML))
 <p>
-<strong>Hi!</strong>
+  <strong>Hi!</strong>
 </p>
 HTML
 - haml_tag :p do
@@ -392,7 +392,7 @@ HAML
   def test_haml_tag_if_positive
     assert_equal(<<HTML, render(<<HAML))
 <div class='conditional'>
-  <p>A para</p>
+<p>A para</p>
 </div>
 HTML
 - haml_tag_if true, '.conditional' do
@@ -403,7 +403,7 @@ HAML
   def test_haml_tag_if_positive_with_attributes
     assert_equal(<<HTML, render(<<HAML))
 <div class='conditional' foo='bar'>
-  <p>A para</p>
+<p>A para</p>
 </div>
 HTML
 - haml_tag_if true, '.conditional',  {:foo => 'bar'} do
@@ -522,7 +522,7 @@ HAML
   end
 
   def test_preserve_with_block
-    assert_equal("<pre>Foo&#x000A;Bar</pre>&#x000A;Foo&#x000A;Bar\n",
+    assert_equal("<pre>Foo&#x000A;Bar</pre>&#x000A;Foo&#x000A;Bar",
                  render("= preserve do\n  %pre\n    Foo\n    Bar\n  Foo\n  Bar"))
   end
 
