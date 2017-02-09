@@ -12,6 +12,16 @@ class TempleLineCounterTest < Haml::TestCase
      [:static, "foo\nbar\nbaz"],
      [:dynamic, "foo\nbar\nbaz"],
     ],
+    [:case,
+     ["'a\nb', false", [:static, "hello\n"]],
+     [:else, [:code, "raise 'error\n'"]],
+    ],
+    [:escape, true, [:dynamic, "foo\nbar"]],
+    [:escape, :once, [:dynamic, "foo\nbar"]],
+    [:escape, false, [:dynamic, "foo\nbar"]],
+    [:escape, true, [:static, "foo\nbar"]],
+    [:escape, :once, [:static, "foo\nbar"]],
+    [:escape, false, [:dynamic, "foo\nbar"]],
   ]
 
   def test_count_lines

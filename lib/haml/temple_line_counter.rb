@@ -13,6 +13,13 @@ module Haml
         args.first.count("\n")
       when :static
         0 # It has not real newline "\n" but escaped "\\n".
+      when :case
+        arg, *cases = args
+        arg.count("\n") + cases.map do |cond, e|
+          (cond == :else ? 0 : cond.count("\n")) + count_lines(e)
+        end.reduce(:+)
+      when :escape
+        count_lines(args[1])
       else
         raise UnexpectedExpression.new("[HAML BUG] Unexpected Temple expression '#{type}' is given!")
       end

@@ -14,7 +14,7 @@ module Haml
       @to_merge    = []
       @temple      = [:multi]
       @node        = nil
-      @attribute_compiler = AttributeCompiler.new
+      @attribute_compiler = AttributeCompiler.new(options)
     end
 
     def call(node)

@@ -33,6 +33,13 @@ module Haml
       "_hamlout.attributes(#{Haml::Util.inspect_obj(attributes)}, #{object_ref},#{attributes_hashes.join(', ')})"
     end
 
+    # @param options [Haml::Options]
+    def initialize(options)
+      @is_html = [:html4, :html5].include?(options[:format])
+      @attr_wrapper = options[:attr_wrapper]
+      @escape_attrs = options[:escape_attrs]
+    end
+
     # Returns Temple expression to render attributes.
     #
     # @param attributes [Hash]
@@ -123,7 +130,47 @@ module Haml
     # @param values [Array<AttributeValue>]
     # @return [Array] Temple expression
     def compile_attribute(key, values)
-      runtime_build(values)
+      case key
+      when 'id', 'class'
+        runtime_build(values)
+      else
+        compile_common_attribute(key, values)
+      end
+    end
+
+    # Compiles attribute for keys except "id" and "class".
+    #
+    # @param key [String] Not "id" or "class"
+    # @param values [Array<AttributeValue>]
+    # @return [Array] Temple expression
+    def compile_common_attribute(key, values)
+      var = unique_name
+      [:multi,
+       [:code, "#{var} = (#{merged_value(key, values)})"],
+       [:case, var,
+        ['Hash', runtime_build([AttributeValue.new(:dynamic, key, var)])],
+        ['true', true_value(key)],
+        ['false, nil', [:multi]],
+        [:else, [:multi,
+                 [:static, " #{key}=#{@attr_wrapper}"],
+                 [:escape, @escape_attrs, [:dynamic, var]],
+                 [:static, @attr_wrapper]],
+        ]
+       ],
+      ]
+    end
+
+    def true_value(key)
+      if @is_html
+        [:static, " #{key}"]
+      else
+        [:static, " #{key}=#{@attr_wrapper}#{key}#{@attr_wrapper}"]
+      end
+    end
+
+    def unique_name
+      @unique_name ||= 0
+      "_haml_attribute_compiler#{@unique_name += 1}"
     end
   end
 end
