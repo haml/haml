@@ -28,6 +28,7 @@ module Haml
 
     use :Parser,   -> { options[:parser_class] }
     use :Compiler, -> { options[:compiler_class] }
+    filter :MultiFlattener
     filter :StaticMerger
     use Generator
 

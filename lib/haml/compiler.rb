@@ -1,4 +1,5 @@
 require 'haml/attribute_builder'
+require 'haml/attribute_compiler'
 
 module Haml
   class Compiler
@@ -13,6 +14,7 @@ module Haml
       @temple      = [:multi]
       @node        = nil
       @generator   = Generator.new # to count newlines in generated code
+      @attribute_compiler = AttributeCompiler.new
     end
 
     def call(node)
@@ -139,14 +141,11 @@ module Haml
         return if tag_closed
       else
         push_merged_text "<#{t[:name]}", 0, !t[:nuke_outer_whitespace]
-
-        rendering_script = "_hamlout.attributes(#{inspect_obj(t[:attributes])}, #{object_ref},#{attributes_hashes.join(',')})"
         if @options.ugly
-          push_temple([:dynamic, rendering_script])
+          push_temple(@attribute_compiler.compile(t[:attributes], object_ref, attributes_hashes))
         else
-          push_generated_script(rendering_script)
+          push_generated_script(AttributeCompiler.runtime_build(t[:attributes], object_ref, attributes_hashes))
         end
-
         concat_merged_text(
           if t[:self_closing] && @options.xhtml?
             " />#{"\n" unless t[:nuke_outer_whitespace]}"

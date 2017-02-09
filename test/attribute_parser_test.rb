@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'haml/attribute_parser'
 
 class AttributeParserTeset < Haml::TestCase
   describe '.parse' do
