@@ -131,7 +131,7 @@ module Haml
     # the number of arguments here is insane, but passing in an options hash instead of named arguments
     # causes a significant performance regression
     def format_script(result, preserve_script, in_tag, preserve_tag, escape_html, nuke_inner_whitespace, interpolated, ugly)
-      result_name = escape_html ? html_escape(result) : result.to_s
+      result_name = escape_html ? html_escape(result.to_s) : result.to_s
 
       if ugly
         result = nuke_inner_whitespace ? result_name.strip : result_name
