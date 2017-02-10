@@ -122,7 +122,7 @@ module Haml
       assert_equal(3, node.children.size)
     end
 
-    # see #830. Strictly speaking the pipe here is not neccesary, but there
+    # see #830. Strictly speaking the pipe here is not necessary, but there
     # shouldn't be an error if it is there.
     test "multiline Ruby with extra trailing pipe doesn't raise error" do
       haml = "%p= foo bar, |\n  baz"

@@ -6,7 +6,7 @@
 
 To improve performance, Haml defaults to {Haml::Options#ugly "ugly" mode} in
 Rails apps running in production. Ugly mode is when whitespace is stripped out,
-and this *can* cause issues occassionally. 
+and this *can* cause issues occasionally.
 
 If you are using Rails, you can change the default behaviour by creating a config/initializers/haml.rb file and
 adding in the following line.
