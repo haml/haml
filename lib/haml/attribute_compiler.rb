@@ -167,7 +167,6 @@ module Haml
        [:code, "#{var} = (#{merged_value(id_or_class, values)})"],
        [:case, var,
         ['Hash, Array', runtime_build([AttributeValue.new(:dynamic, id_or_class, var)])],
-        ['true', true_value(id_or_class)],
         ['false, nil', [:multi]],
         [:else, [:multi,
                  [:static, " #{id_or_class}=#{@attr_wrapper}"],
