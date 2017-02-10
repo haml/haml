@@ -3,11 +3,11 @@ language: ruby
 cache: bundler
 rvm:
   - 2.4.0
-  - 2.3.1
+  - 2.3.3
   - 2.2.6
   - 2.1.10
   - 2.0.0
-  - jruby
+  - jruby-9.1.7.0
   - rbx-2
 gemfile:
   - test/gemfiles/Gemfile.rails-4.0.x
@@ -27,7 +27,7 @@ matrix:
     - rvm: 2.4.0
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
   allow_failures:
-    - rvm: jruby
+    - rvm: jruby-9.1.7.0
     - rvm: rbx-2
   fast_finish: true
 script: "bundle exec rake submodules test"
