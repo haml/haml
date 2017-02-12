@@ -29,6 +29,8 @@
 * Drop parser/compiler accessor from `Haml::Engine`. Modify `Haml::Engine#initialize` options
   or `Haml::Template.options` instead. (Takashi Kokubun)
 * Don't ignore unexpected exceptions on initializing `ActionView::OutputBuffer`. (Takashi Kokubun)
+* Analyze attribute values by Ripper and render static attributes beforehand. (Takashi Kokubun)
+* Optimize attribute rendering about 3x faster. (Takashi Kokubun)
 
 ## 4.0.7
 
