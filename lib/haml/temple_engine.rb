@@ -1,4 +1,5 @@
 require 'temple'
+require 'haml/escapable'
 require 'haml/generator'
 
 module Haml
@@ -28,6 +29,9 @@ module Haml
 
     use :Parser,   -> { options[:parser_class] }
     use :Compiler, -> { options[:compiler_class] }
+    use Escapable
+    filter :ControlFlow
+    filter :MultiFlattener
     filter :StaticMerger
     use Generator
 

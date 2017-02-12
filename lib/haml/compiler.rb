@@ -1,4 +1,6 @@
 require 'haml/attribute_builder'
+require 'haml/attribute_compiler'
+require 'haml/temple_line_counter'
 
 module Haml
   class Compiler
@@ -12,6 +14,7 @@ module Haml
       @to_merge    = []
       @temple      = [:multi]
       @node        = nil
+      @attribute_compiler = AttributeCompiler.new(options)
     end
 
     def call(node)
@@ -138,8 +141,11 @@ module Haml
         return if tag_closed
       else
         push_merged_text "<#{t[:name]}", 0, !t[:nuke_outer_whitespace]
-        push_generated_script(
-          "_hamlout.attributes(#{inspect_obj(t[:attributes])}, #{object_ref},#{attributes_hashes.join(',')})")
+        if @options.ugly
+          push_temple(@attribute_compiler.compile(t[:attributes], object_ref, attributes_hashes))
+        else
+          push_generated_script(AttributeCompiler.runtime_build(t[:attributes], object_ref, attributes_hashes))
+        end
         concat_merged_text(
           if t[:self_closing] && @options.xhtml?
             " />#{"\n" unless t[:nuke_outer_whitespace]}"
@@ -283,6 +289,14 @@ module Haml
       push_merged_text("#{text}\n", tab_change)
     end
 
+    # This method is only supported for `@options.ugly` case.
+    def push_temple(temple)
+      newlines = resolve_newlines
+      @to_merge << [:temple, [:code, newlines]] unless newlines.empty?
+      @to_merge << [:temple, temple]
+      @output_line += TempleLineCounter.count_lines(temple)
+    end
+
     def flush_merged_text
       return if @to_merge.empty?
 
@@ -293,6 +307,8 @@ module Haml
             @temple << [:static, val]
           when :script
             @temple << [:dynamic, val]
+          when :temple
+            @temple << val
           else
             raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
           end

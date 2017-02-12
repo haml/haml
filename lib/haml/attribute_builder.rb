@@ -79,9 +79,20 @@ module Haml
         to
       end
 
+      # Merge multiple values to one attribute value. No destructive operation.
+      #
+      # @param key [String]
+      # @param values [Array<Object>]
+      # @return [String,Hash]
+      def merge_values(key, *values)
+        values.inject(nil) do |to, from|
+          merge_value(key, to, from)
+        end
+      end
+
       private
 
-      # Merge values for Haml attributes. No destructive operation.
+      # Merge a couple of values to one attribute value. No destructive operation.
       #
       # @param to [String,Hash,nil]
       # @param from [Object]
