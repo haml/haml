@@ -146,7 +146,7 @@ module Haml
     # @param values [Array<AttributeValue>]
     # @return [Array] Temple expression
     def compile_attribute(key, values)
-      if values.all? { |v| Temple::Filters::StaticAnalyzer.static?(v.to_literal) }
+      if values.all? { |v| Temple::StaticAnalyzer.static?(v.to_literal) }
         return static_build(values)
       end
 

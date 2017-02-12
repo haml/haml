@@ -10,12 +10,12 @@ module Haml
 
     class << self
       def available?
-        defined?(Ripper) && defined?(Temple::Filters::StaticAnalyzer::SyntaxChecker)
+        defined?(Ripper) && Temple::StaticAnalyzer.available?
       end
 
       def parse(text)
         exp = wrap_bracket(text)
-        return if Temple::Filters::StaticAnalyzer::SyntaxChecker.syntax_error?(exp)
+        return if Temple::StaticAnalyzer.syntax_error?(exp)
 
         hash = {}
         tokens = Ripper.lex(exp)[1..-2] || []
