@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.8.0](https://github.com/k0kubun/hamlit/compare/v2.7.5...v2.8.0) - 2017-02-12
+
+### Changed
+
+- Support Temple >= 0.8.0 and change to use StaticAnalyzer in Temple
+- Optimize attribute building code a little
+
 ## [2.7.5](https://github.com/k0kubun/hamlit/compare/v2.7.4...v2.7.5) - 2016-10-15
 
 ### Fixed
