@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require 'hamlit/ruby_expression'
-require 'hamlit/static_analyzer'
 require 'hamlit/string_splitter'
 
 module Hamlit
@@ -17,7 +16,7 @@ module Hamlit
           compile_interpolated_plain(node)
         when no_children && RubyExpression.string_literal?(node.value[:text])
           delegate_optimization(node)
-        when no_children && StaticAnalyzer.static?(node.value[:text])
+        when no_children && Temple::StaticAnalyzer.static?(node.value[:text])
           static_compile(node)
         else
           dynamic_compile(node, &block)

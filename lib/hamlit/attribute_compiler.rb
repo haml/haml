@@ -2,7 +2,6 @@
 require 'hamlit/attribute_builder'
 require 'hamlit/attribute_parser'
 require 'hamlit/ruby_expression'
-require 'hamlit/static_analyzer'
 
 module Hamlit
   class AttributeCompiler
@@ -59,7 +58,7 @@ module Hamlit
 
     def compile_id!(temple, key, values)
       build_code = attribute_builder(:id, values)
-      if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
+      if values.all? { |type, exp| type == :static || Temple::StaticAnalyzer.static?(exp) }
         temple << [:html, :attr, key, [:static, eval(build_code).to_s]]
       else
         temple << [:html, :attr, key, [:dynamic, build_code]]
@@ -68,7 +67,7 @@ module Hamlit
 
     def compile_class!(temple, key, values)
       build_code = attribute_builder(:class, values)
-      if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
+      if values.all? { |type, exp| type == :static || Temple::StaticAnalyzer.static?(exp) }
         temple << [:html, :attr, key, [:static, eval(build_code).to_s]]
       else
         temple << [:html, :attr, key, [:dynamic, build_code]]
@@ -79,7 +78,7 @@ module Hamlit
       args = [@escape_attrs.inspect, "#{@quote.inspect}.freeze", values.map { |v| literal_for(v) }]
       build_code = "::Hamlit::AttributeBuilder.build_data(#{args.join(', ')})"
 
-      if values.all? { |type, exp| type == :static || StaticAnalyzer.static?(exp) }
+      if values.all? { |type, exp| type == :static || Temple::StaticAnalyzer.static?(exp) }
         temple << [:static, eval(build_code).to_s]
       else
         temple << [:dynamic, build_code]
@@ -89,7 +88,7 @@ module Hamlit
     def compile_boolean!(temple, key, values)
       exp = literal_for(values.last)
 
-      if StaticAnalyzer.static?(exp)
+      if Temple::StaticAnalyzer.static?(exp)
         value = eval(exp)
         case value
         when true then temple << [:html, :attr, key, @format == :xhtml ? [:static, key] : [:multi]]

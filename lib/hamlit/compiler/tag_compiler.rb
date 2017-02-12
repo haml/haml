@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require 'hamlit/parser/haml_util'
 require 'hamlit/attribute_compiler'
-require 'hamlit/static_analyzer'
 require 'hamlit/string_splitter'
 
 module Hamlit
@@ -30,7 +29,7 @@ module Hamlit
         when node.value[:parse]
           return compile_interpolated_plain(node) if node.value[:escape_interpolation]
           return delegate_optimization(node) if RubyExpression.string_literal?(node.value[:value])
-          return delegate_optimization(node) if StaticAnalyzer.static?(node.value[:value])
+          return delegate_optimization(node) if Temple::StaticAnalyzer.static?(node.value[:value])
 
           var = @identity.generate
           [:multi,
