@@ -120,42 +120,22 @@ module Haml
         t[:attributes].merge!({"data-trace" => @options.filename.split('/views').last << ":" << @node.line.to_s})
       end
 
-      # Check if we can render the tag directly to text and not process it in the buffer
-      if (object_ref == :nil) && attributes_hashes.empty? && !preserve_script
-        tag_closed = !block_given? && !t[:self_closing] && !parse
+      push_merged_text "<#{t[:name]}", 0
+      push_temple(@attribute_compiler.compile(t[:attributes], object_ref, attributes_hashes))
+      concat_merged_text(
+        if t[:self_closing] && @options.xhtml?
+          " />#{"\n" unless t[:nuke_outer_whitespace]}"
+        else
+          ">#{"\n" unless (t[:self_closing] && @options.html?) ? t[:nuke_outer_whitespace] : (!block_given? || t[:preserve_tag] || t[:nuke_inner_whitespace])}"
+        end)
 
-        open_tag = prerender_tag(t[:name], t[:self_closing], t[:attributes])
-        if tag_closed
-          open_tag << "#{value}</#{t[:name]}>"
-          open_tag << "\n" unless t[:nuke_outer_whitespace]
-        elsif !(parse || t[:nuke_inner_whitespace] ||
-            (t[:self_closing] && t[:nuke_outer_whitespace]))
-          open_tag << "\n"
-        end
-
-        push_merged_text(open_tag,
-          tag_closed || t[:self_closing] || t[:nuke_inner_whitespace] ? 0 : 1)
-
-        @dont_indent_next_line = dont_indent_next_line
-        return if tag_closed
-      else
-        push_merged_text "<#{t[:name]}", 0
-        push_temple(@attribute_compiler.compile(t[:attributes], object_ref, attributes_hashes))
-        concat_merged_text(
-          if t[:self_closing] && @options.xhtml?
-            " />#{"\n" unless t[:nuke_outer_whitespace]}"
-          else
-            ">#{"\n" unless (t[:self_closing] && @options.html?) ? t[:nuke_outer_whitespace] : (!block_given? || t[:preserve_tag] || t[:nuke_inner_whitespace])}"
-          end)
-
-        if value && !parse
-          concat_merged_text("#{value}</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
-        elsif !t[:nuke_inner_whitespace] && !t[:self_closing]
-          @to_merge << [:text, '', 1]
-        end
-
-        @dont_indent_next_line = dont_indent_next_line
+      if value && !parse
+        concat_merged_text("#{value}</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+      elsif !t[:nuke_inner_whitespace] && !t[:self_closing]
+        @to_merge << [:text, '', 1]
       end
+
+      @dont_indent_next_line = dont_indent_next_line
 
       return if t[:self_closing]
 
