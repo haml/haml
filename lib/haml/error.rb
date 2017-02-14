@@ -59,5 +59,5 @@ END
   # except in that it's a subclass of {Haml::Error}.
   class SyntaxError < Error; end
 
-  class InvalidAttributeNameError < Error; end
+  class InvalidAttributeNameError < SyntaxError; end
 end
