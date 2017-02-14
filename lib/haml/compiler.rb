@@ -328,12 +328,6 @@ module Haml
       @output_line += text.count("\n")
     end
 
-    def prerender_tag(name, self_close, attributes)
-      attributes_string = AttributeBuilder.build_attributes(
-        @options.html?, @options.attr_wrapper, @options.escape_attrs, @options.hyphenate_data_attrs, attributes)
-      "<#{name}#{attributes_string}#{self_close && @options.xhtml? ? ' /' : ''}>"
-    end
-
     def resolve_newlines
       diff = @node.line - @output_line
       return "" if diff <= 0
