@@ -20,7 +20,6 @@ module Haml
       preserve:             %w(textarea pre code),
       remove_whitespace:    false,
       suppress_eval:        false,
-      ugly:                 false,
       cdata:                false,
       parser_class:         ::Haml::Parser,
       compiler_class:       ::Haml::Compiler,

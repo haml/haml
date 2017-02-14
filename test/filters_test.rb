@@ -67,7 +67,7 @@ class FiltersTest < Haml::TestCase
   end
 
   test "should respect escaped newlines and interpolation" do
-    html = "\\n\n"
+    html = "\\n\n\n"
     haml = ":plain\n  \\n\#{""}"
     assert_equal(html, render(haml))
   end
@@ -76,9 +76,9 @@ class FiltersTest < Haml::TestCase
     assert_equal("\n", render(':plain'))
   end
 
-  test "should be compatible with ugly mode" do
+  test ":plain with content" do
     expectation = "foo\n"
-    assert_equal(expectation, render(":plain\n  foo", :ugly => true))
+    assert_equal(expectation, render(":plain\n  foo"))
   end
 
   test "should pass options to Tilt filters that precompile" do
@@ -118,7 +118,7 @@ class FiltersTest < Haml::TestCase
   end
 
   test "interpolated code should be escaped if escape_html is set" do
-    assert_equal "&lt;script&gt;evil&lt;/script&gt;\n",
+    assert_equal "&lt;script&gt;evil&lt;/script&gt;\n\n",
                  render(":plain\n  \#{'<script>evil</script>'}", :escape_html => true)
   end
 

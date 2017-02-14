@@ -134,18 +134,13 @@ module Haml
         end
 
         push_merged_text(open_tag,
-          tag_closed || t[:self_closing] || t[:nuke_inner_whitespace] ? 0 : 1,
-          !t[:nuke_outer_whitespace])
+          tag_closed || t[:self_closing] || t[:nuke_inner_whitespace] ? 0 : 1)
 
         @dont_indent_next_line = dont_indent_next_line
         return if tag_closed
       else
-        push_merged_text "<#{t[:name]}", 0, !t[:nuke_outer_whitespace]
-        if @options.ugly
-          push_temple(@attribute_compiler.compile(t[:attributes], object_ref, attributes_hashes))
-        else
-          push_generated_script(AttributeCompiler.runtime_build(t[:attributes], object_ref, attributes_hashes))
-        end
+        push_merged_text "<#{t[:name]}", 0
+        push_temple(@attribute_compiler.compile(t[:attributes], object_ref, attributes_hashes))
         concat_merged_text(
           if t[:self_closing] && @options.xhtml?
             " />#{"\n" unless t[:nuke_outer_whitespace]}"
@@ -170,7 +165,7 @@ module Haml
         @output_tabs -= 1 unless t[:nuke_inner_whitespace]
         rstrip_buffer! if t[:nuke_inner_whitespace]
         push_merged_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}",
-          t[:nuke_inner_whitespace] ? 0 : -1, !t[:nuke_inner_whitespace])
+          t[:nuke_inner_whitespace] ? 0 : -1)
         @dont_indent_next_line = t[:nuke_outer_whitespace]
         return
       end
@@ -195,10 +190,10 @@ module Haml
         if @node.value[:parse]
           push_script(@node.value[:text], :in_tag => true, :nuke_inner_whitespace => true)
         else
-          push_merged_text(@node.value[:text], 0, false)
+          push_merged_text(@node.value[:text], 0)
         end
 
-        push_merged_text(" #{close}\n", 0, false)
+        push_merged_text(" #{close}\n", 0)
         return
       end
 
@@ -274,8 +269,7 @@ module Haml
 
     # Adds `text` to `@buffer` with appropriate tabulation
     # without parsing it.
-    def push_merged_text(text, tab_change = 0, indent = true)
-      text = !indent || @dont_indent_next_line || @options.ugly ? text : "#{'  ' * @output_tabs}#{text}"
+    def push_merged_text(text, tab_change = 0)
       @to_merge << [:text, text, tab_change]
       @dont_indent_next_line = false
     end
@@ -300,40 +294,16 @@ module Haml
     def flush_merged_text
       return if @to_merge.empty?
 
-      if @options.ugly
-        @to_merge.each do |type, val|
-          case type
-          when :text
-            @temple << [:static, val]
-          when :script
-            @temple << [:dynamic, val]
-          when :temple
-            @temple << val
-          else
-            raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
-          end
-        end
-      else
-        mtabs = 0
-        @to_merge.map! do |type, val, tabs|
-          case type
-          when :text
-            mtabs += tabs
-            inspect_obj(val)[1...-1]
-          when :script
-            if mtabs != 0
-              val = "_hamlout.adjust_tabs(#{mtabs}); " + val
-            end
-            mtabs = 0
-            "\#{#{val}}"
-          else
-            raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
-          end
-        end
-        str = @to_merge.join
-
-        unless str.empty?
-          @temple << [:code, "_hamlout.push_text(\"#{str}\", #{mtabs}, #{@dont_tab_up_next_text.inspect});"]
+      @to_merge.each do |type, val|
+        case type
+        when :text
+          @temple << [:static, val]
+        when :script
+          @temple << [:dynamic, val]
+        when :temple
+          @temple << val
+        else
+          raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
         end
       end
 
@@ -351,10 +321,9 @@ module Haml
 
       args = [:preserve_script, :in_tag, :preserve_tag, :escape_html, :nuke_inner_whitespace]
       args.map! {|name| !!opts[name]}
-      args << !block_given? << @options.ugly
+      args << !block_given?
 
-      no_format = @options.ugly &&
-        !(opts[:preserve_script] || opts[:preserve_tag] || opts[:escape_html])
+      no_format = !(opts[:preserve_script] || opts[:preserve_tag] || opts[:escape_html])
 
       # Prerender tabulation unless we're in a tag
       push_merged_text '' unless opts[:in_tag]
@@ -372,7 +341,6 @@ module Haml
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
       format_script_method = "_hamlout.format_script(haml_temp,#{args.join(',')});"
       @temple << [:dynamic, no_format ? "haml_temp.to_s;" : format_script_method]
-      concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace] || @options.ugly
     end
 
     def push_generated_script(text)

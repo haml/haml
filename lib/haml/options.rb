@@ -6,7 +6,7 @@ module Haml
 
     @valid_formats = [:html4, :html5, :xhtml]
 
-    @buffer_option_keys = [:autoclose, :preserve, :attr_wrapper, :ugly, :format,
+    @buffer_option_keys = [:autoclose, :preserve, :attr_wrapper, :format,
       :encoding, :escape_html, :escape_attrs, :hyphenate_data_attrs, :cdata]
 
     # The default option values.
@@ -139,13 +139,6 @@ module Haml
     # Defaults to `false`.
     attr_accessor :suppress_eval
 
-    # If set to `true`, Haml makes no attempt to properly indent or format the
-    # HTML output. This significantly improves rendering performance but makes
-    # viewing the source unpleasant.
-    #
-    # Defaults to `true` in Rails production  mode, and `false` everywhere else.
-    attr_accessor :ugly
-
     # Whether to include CDATA sections around javascript and css blocks when
     # using the `:javascript` or `:css` filters.
     #
@@ -189,8 +182,7 @@ module Haml
       send "#{key}=", value
     end
 
-    [:escape_attrs, :hyphenate_data_attrs, :remove_whitespace, :suppress_eval,
-      :ugly].each do |method|
+    [:escape_attrs, :hyphenate_data_attrs, :remove_whitespace, :suppress_eval].each do |method|
       class_eval(<<-END)
         def #{method}?
           !! @#{method}
@@ -242,7 +234,6 @@ module Haml
     end
 
     def remove_whitespace=(value)
-      @ugly = true if value
       @remove_whitespace = value
     end
 

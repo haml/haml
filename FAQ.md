@@ -2,19 +2,6 @@
 
 ## Haml
 
-### Why is my markup indented properly in development mode, but not in production? {#q-indentation-in-production}
-
-To improve performance, Haml defaults to {Haml::Options#ugly "ugly" mode} in
-Rails apps running in production. Ugly mode is when whitespace is stripped out,
-and this *can* cause issues occasionally.
-
-If you are using Rails, you can change the default behaviour by creating a config/initializers/haml.rb file and
-adding in the following line.
-
-    Haml::Template.options[:ugly] = true
-
-Or, you can pass in false, if you want your production mode to run all pretty like.
-
 ### How do I put a punctuation mark after an element, like "`I like <strong>cake</strong>!`"? {#q-punctuation}
 
 Expressing the structure of a document

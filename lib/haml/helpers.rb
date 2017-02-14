@@ -386,8 +386,7 @@ MESSAGE
           captured = (value.is_a?(String) ? value : nil)
         end
 
-        return nil if captured.nil?
-        return (haml_buffer.options[:ugly] ? captured : prettify(captured))
+        captured
       end
     ensure
       haml_buffer.capture_position = nil
@@ -414,7 +413,7 @@ MESSAGE
     # @param newline [Boolean] Whether to add a newline after the text
     # @param indent [Boolean] Whether to add indentation to the first line
     def haml_internal_concat(text = "", newline = true, indent = true)
-      if haml_buffer.options[:ugly] || haml_buffer.tabulation == 0
+      if haml_buffer.tabulation == 0
         haml_buffer.buffer << "#{text}#{"\n" if newline}"
       else
         haml_buffer.buffer << %[#{haml_indent if indent}#{text.to_s.gsub("\n", "\n#{haml_indent}")}#{"\n" if newline}]
@@ -688,22 +687,6 @@ MESSAGE
       #double assignment is to avoid warnings
       _erbout = _erbout = _hamlout.buffer
       proc { |*args| proc.call(*args) }
-    end
-
-    def prettify(text)
-      text = text.split(/^/)
-      text.delete('')
-
-      min_tabs = nil
-      text.each do |line|
-        tabs = line.index(/[^ ]/) || line.length
-        min_tabs ||= tabs
-        min_tabs = min_tabs > tabs ? tabs : min_tabs
-      end
-
-      text.each_with_object('') do |line, str|
-        str << line.slice(min_tabs, line.length)
-      end
     end
   end
 end

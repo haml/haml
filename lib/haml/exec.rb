@@ -211,11 +211,6 @@ END
           @options[:output] = StringIO.new
         end
 
-        opts.on('-t', '--style NAME',
-                'Output style. Can be indented (default) or ugly.') do |name|
-          @options[:for_engine][:ugly] = true if name.to_sym == :ugly
-        end
-
         opts.on('-f', '--format NAME',
                 'Output format. Can be html5 (default), xhtml, or html4.') do |name|
           @options[:for_engine][:format] = name.to_sym

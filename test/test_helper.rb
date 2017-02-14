@@ -39,7 +39,6 @@ $VERBOSE = true
 require 'haml'
 require 'haml/template'
 
-Haml::Template.options[:ugly]   = false
 Haml::Template.options[:format] = :xhtml
 
 BASE_TEST_CLASS = if defined?(Minitest::Test)
