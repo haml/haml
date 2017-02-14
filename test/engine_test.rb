@@ -444,6 +444,7 @@ SOURCE
 
   def test_nil_option
     assert_equal("<p foo='bar'></p>\n", render('%p{:foo => "bar"}', :attr_wrapper => nil))
+    assert_equal("<p foo='bar'></p>\n", render('%p{foo: "bar"}', :attr_wrapper => nil))
   end
 
   def test_comment_with_crazy_nesting
