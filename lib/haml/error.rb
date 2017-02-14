@@ -58,4 +58,6 @@ END
   # It's not particularly interesting,
   # except in that it's a subclass of {Haml::Error}.
   class SyntaxError < Error; end
+
+  class InvalidAttributeNameError < Error; end
 end

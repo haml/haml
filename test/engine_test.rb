@@ -2066,6 +2066,15 @@ HAML
     assert_equal "<p class='hello' data-trace='foo:1'></p>", result
   end
 
+  def test_unsafe_attribute_name_raises_invalid_attribute_name_error
+    assert_raises(Haml::InvalidAttributeNameError) do
+      render(<<-HAML)
+- params = { 'x /><script>alert(1);</script><div x' => 'hello' }
+%div{ data: params }
+      HAML
+    end
+  end
+
   private
 
   def assert_valid_encoding_comment(comment)
