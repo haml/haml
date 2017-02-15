@@ -1142,7 +1142,6 @@ HAML
   end
 
   def test_attrs_parsed_correctly
-    assert_equal("<p boom=>biddly='bar =&gt; baz'></p>\n", render("%p{'boom=>biddly' => 'bar => baz'}"))
     assert_equal("<p foo,bar='baz, qux'></p>\n", render("%p{'foo,bar' => 'baz, qux'}"))
     assert_equal("<p escaped='quo4te'></p>\n", render("%p{ :escaped => \"quo\#{2 + 2}te\"}"))
   end
@@ -2064,6 +2063,23 @@ HAML
   def test_tracing
     result = render('%p{:class => "hello"}', :trace => true, :filename => 'foo').strip
     assert_equal "<p class='hello' data-trace='foo:1'></p>", result
+  end
+
+  def test_unsafe_dynamic_attribute_name_raises_invalid_attribute_name_error
+    assert_raises(Haml::InvalidAttributeNameError) do
+      render(<<-HAML)
+- params = { 'x /><script>alert(1);</script><div x' => 'hello' }
+%div{ data: params }
+      HAML
+    end
+  end
+
+  def test_unsafe_static_attribute_name_raises_invalid_attribute_name_error
+    assert_raises(Haml::InvalidAttributeNameError) do
+      render(<<-HAML)
+%div{ 'x /><script>alert(1);</script><div x' => 'hello' }
+      HAML
+    end
   end
 
   private

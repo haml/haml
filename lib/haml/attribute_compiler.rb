@@ -58,9 +58,10 @@ module Haml
         end
         hash
       end
-      attribute_values   = build_attribute_values(attributes, parsed_hashes)
-      values_by_base_key = attribute_values.group_by(&:base_key)
+      attribute_values = build_attribute_values(attributes, parsed_hashes)
+      AttributeBuilder.verify_attribute_names!(attribute_values.map(&:key))
 
+      values_by_base_key = attribute_values.group_by(&:base_key)
       [:multi, *values_by_base_key.keys.sort.map { |base_key|
         compile_attribute_values(values_by_base_key[base_key])
       }]

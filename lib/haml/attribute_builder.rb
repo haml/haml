@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 module Haml
   module AttributeBuilder
+    # https://html.spec.whatwg.org/multipage/syntax.html#attributes-2
+    INVALID_ATTRIBUTE_NAME_REGEX = /[ \0"'>\/=]/
+
     class << self
       def build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
         # @TODO this is an absolutely ridiculous amount of arguments. At least
@@ -12,6 +15,7 @@ module Haml
             data_attributes = attributes.delete(key)
             data_attributes = flatten_data_attributes(data_attributes, '', join_char)
             data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs, key)
+            verify_attribute_names!(data_attributes.keys)
             attributes = data_attributes.merge(attributes)
           end
         end
@@ -87,6 +91,14 @@ module Haml
       def merge_values(key, *values)
         values.inject(nil) do |to, from|
           merge_value(key, to, from)
+        end
+      end
+
+      def verify_attribute_names!(attribute_names)
+        attribute_names.each do |attribute_name|
+          if attribute_name =~ INVALID_ATTRIBUTE_NAME_REGEX
+            raise InvalidAttributeNameError.new("Invalid attribute name '#{attribute_name}' was rendered")
+          end
         end
       end
 
