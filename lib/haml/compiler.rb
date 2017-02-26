@@ -231,7 +231,6 @@ module Haml
       @to_merge << [:text, text]
     end
 
-    # This method is only supported for `@options.ugly` case.
     def push_temple(temple)
       newlines = resolve_newlines
       @to_merge << [:temple, [:code, newlines]] unless newlines.empty?

@@ -47,7 +47,6 @@ class TemplateTest < Haml::TestCase
 
   def assert_renders_correctly(name, &render_method)
     old_options = Haml::Template.options.dup
-    Haml::Template.options[:ugly] = true
     Haml::Template.options[:escape_html] = false
     render_method ||= proc { |n| @base.render(:file => n) }
 
@@ -77,7 +76,7 @@ class TemplateTest < Haml::TestCase
     end
   end
 
-  def test_render_method_returning_null_with_ugly
+  def test_render_method_returning_null
     @base.instance_eval do
       def empty
         nil
@@ -93,7 +92,7 @@ class TemplateTest < Haml::TestCase
     assert_equal(expected_result, result)
   end
 
-  def test_simple_rendering_with_ugly
+  def test_simple_rendering
     content_to_render = "%p test\n= capture { 'foo' }"
     result = render(content_to_render)
     expected_result = "<p>test</p>\nfoo\n"
@@ -148,7 +147,7 @@ class TemplateTest < Haml::TestCase
     Haml::Template.options = old_options
   end
 
-  def test_with_output_buffer_with_ugly
+  def test_with_output_buffer
     assert_equal(<<HTML, render(<<HAML))
 <p>
 foo

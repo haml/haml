@@ -345,7 +345,7 @@ HAML
     assert_equal(hash, {:color => 'red'})
   end
 
-  def test_ugly_semi_prerendered_tags
+  def test_semi_prerendered_tags
     assert_equal(<<HTML, render(<<HAML))
 <p a='2'></p>
 <p a='2'>foo</p>
@@ -562,14 +562,14 @@ HAML
 HAML
   end
 
-  def test_equals_block_with_ugly
+  def test_equals_block
     assert_equal("foo\n", render(<<HAML))
 = capture_haml do
   foo
 HAML
   end
 
-  def test_plain_equals_with_ugly
+  def test_plain_equals
     assert_equal("foo\nbar\n", render(<<HAML))
 = "foo"
 bar
@@ -1408,7 +1408,7 @@ HAML
     end
   end
 
-  def test_ugly_true
+  def test_spacing_inside_tag
     assert_equal("<div id='outer'>\n<div id='inner'>\n<p>hello world</p>\n</div>\n</div>\n",
                  render("#outer\n  #inner\n    %p hello world"))
 
