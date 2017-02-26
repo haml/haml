@@ -108,7 +108,7 @@ module Haml
 
       push_merged_text "<#{t[:name]}"
       push_temple(@attribute_compiler.compile(t[:attributes], object_ref, attributes_hashes))
-      concat_merged_text(
+      push_merged_text(
         if t[:self_closing] && @options.xhtml?
           " />#{"\n" unless t[:nuke_outer_whitespace]}"
         else
@@ -116,7 +116,7 @@ module Haml
         end)
 
       if value && !parse
-        concat_merged_text("#{value}</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+        push_merged_text("#{value}</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
       elsif !t[:nuke_inner_whitespace] && !t[:self_closing]
         @to_merge << [:text, '']
       end
@@ -132,7 +132,7 @@ module Haml
 
       if parse
         push_script(value, t.merge(:in_tag => true))
-        concat_merged_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+        push_merged_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
       end
     end
 
@@ -225,13 +225,8 @@ module Haml
       @output_line = @output_line + text.count("\n") + newline.count("\n")
     end
 
-    # Adds `text` to `@buffer` without parsing it.
+    # Adds `text` to `@buffer`.
     def push_merged_text(text)
-      @to_merge << [:text, text]
-    end
-
-    # Concatenate `text` to `@buffer`.
-    def concat_merged_text(text)
       @to_merge << [:text, text]
     end
 
@@ -283,7 +278,7 @@ module Haml
       unless block_given?
         format_script_method = "_hamlout.format_script((#{text}\n),#{args.join(',')});"
         push_generated_script(no_format ? "(#{text}\n).to_s" : format_script_method)
-        concat_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
+        push_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
         return
       end
 
