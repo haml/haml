@@ -36,7 +36,7 @@ module Haml
     private
 
     def compile_root
-      @dont_indent_next_line = @dont_tab_up_next_text = false
+      @dont_tab_up_next_text = false
       @output_line = 1
       yield if block_given?
       flush_merged_text
@@ -72,7 +72,6 @@ module Haml
       if block_given?
         # Store these values because for conditional statements,
         # we want to restore them for each branch
-        @node.value[:dont_indent_next_line] = @dont_indent_next_line
         @node.value[:dont_tab_up_next_text] = @dont_tab_up_next_text
         yield
         push_silent("end", :can_suppress) unless @node.value[:dont_push_end]
@@ -85,7 +84,6 @@ module Haml
         # Don't restore dont_* for end because it isn't a conditional branch.
       elsif Parser::MID_BLOCK_KEYWORDS.include?(keyword)
         # Restore dont_* for this conditional branch
-        @dont_indent_next_line = @node.parent.value[:dont_indent_next_line]
         @dont_tab_up_next_text = @node.parent.value[:dont_tab_up_next_text]
       end
     end
@@ -97,10 +95,6 @@ module Haml
 
       # Get rid of whitespace outside of the tag if we need to
       rstrip_buffer! if t[:nuke_outer_whitespace]
-
-      dont_indent_next_line =
-        (t[:nuke_outer_whitespace] && !block_given?) ||
-        (t[:nuke_inner_whitespace] && block_given?)
 
       if @options.suppress_eval
         object_ref = :nil
@@ -135,8 +129,6 @@ module Haml
         @to_merge << [:text, '']
       end
 
-      @dont_indent_next_line = dont_indent_next_line
-
       return if t[:self_closing]
 
       if value.nil?
@@ -145,7 +137,6 @@ module Haml
         @output_tabs -= 1 unless t[:nuke_inner_whitespace]
         rstrip_buffer! if t[:nuke_inner_whitespace]
         push_merged_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
-        @dont_indent_next_line = t[:nuke_outer_whitespace]
         return
       end
 
@@ -250,7 +241,6 @@ module Haml
     # without parsing it.
     def push_merged_text(text)
       @to_merge << [:text, text]
-      @dont_indent_next_line = false
     end
 
     # Concatenate `text` to `@buffer` without tabulation.
