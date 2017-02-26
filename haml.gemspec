@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
   spec.name        = 'haml'
   spec.summary     = "An elegant, structured (X)HTML/XML templating engine."
   spec.version     = Haml::VERSION
-  spec.authors     = ['Natalie Weizenbaum', 'Hampton Catlin', 'Norman Clarke']
+  spec.authors     = ['Natalie Weizenbaum', 'Hampton Catlin', 'Norman Clarke', 'Akira Matsuda']
   spec.email       = ['haml@googlegroups.com', 'norman@njclarke.com']
 
   readmes          = Dir['*'].reject{ |x| x =~ /(^|[^.a-z])[a-z]+/ || x == "TODO" }
