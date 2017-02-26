@@ -10,7 +10,6 @@ module Haml
 
     def initialize(options)
       @options     = Options.wrap(options)
-      @output_tabs = 0
       @to_merge    = []
       @temple      = [:multi]
       @node        = nil
@@ -125,9 +124,7 @@ module Haml
       return if t[:self_closing]
 
       if value.nil?
-        @output_tabs += 1 unless t[:nuke_inner_whitespace]
         yield if block_given?
-        @output_tabs -= 1 unless t[:nuke_inner_whitespace]
         rstrip_buffer! if t[:nuke_inner_whitespace]
         push_merged_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
         return
@@ -161,9 +158,7 @@ module Haml
       end
 
       push_text(open)
-      @output_tabs += 1
       yield if block_given?
-      @output_tabs -= 1
       push_text(close)
     end
 
@@ -230,13 +225,12 @@ module Haml
       @output_line = @output_line + text.count("\n") + newline.count("\n")
     end
 
-    # Adds `text` to `@buffer` with appropriate tabulation
-    # without parsing it.
+    # Adds `text` to `@buffer` without parsing it.
     def push_merged_text(text)
       @to_merge << [:text, text]
     end
 
-    # Concatenate `text` to `@buffer` without tabulation.
+    # Concatenate `text` to `@buffer`.
     def concat_merged_text(text)
       @to_merge << [:text, text]
     end
@@ -285,9 +279,6 @@ module Haml
       args << !block_given?
 
       no_format = !(opts[:preserve_script] || opts[:preserve_tag] || opts[:escape_html])
-
-      # Prerender tabulation unless we're in a tag
-      push_merged_text '' unless opts[:in_tag]
 
       unless block_given?
         format_script_method = "_hamlout.format_script((#{text}\n),#{args.join(',')});"
