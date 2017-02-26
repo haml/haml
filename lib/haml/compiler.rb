@@ -41,7 +41,7 @@ module Haml
     end
 
     def compile_plain
-      push_text @node.value[:text]
+      push_text("#{@node.value[:text]}\n")
     end
 
     def nuke_inner_whitespace?(node)
@@ -106,17 +106,18 @@ module Haml
         t[:attributes].merge!({"data-trace" => @options.filename.split('/views').last << ":" << @node.line.to_s})
       end
 
-      push_merged_text "<#{t[:name]}"
+      push_text("<#{t[:name]}")
       push_temple(@attribute_compiler.compile(t[:attributes], object_ref, attributes_hashes))
-      push_merged_text(
+      push_text(
         if t[:self_closing] && @options.xhtml?
           " />#{"\n" unless t[:nuke_outer_whitespace]}"
         else
           ">#{"\n" unless (t[:self_closing] && @options.html?) ? t[:nuke_outer_whitespace] : (!block_given? || t[:preserve_tag] || t[:nuke_inner_whitespace])}"
-        end)
+        end
+      )
 
       if value && !parse
-        push_merged_text("#{value}</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+        push_text("#{value}</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
       elsif !t[:nuke_inner_whitespace] && !t[:self_closing]
         @to_merge << [:text, '']
       end
@@ -126,13 +127,13 @@ module Haml
       if value.nil?
         yield if block_given?
         rstrip_buffer! if t[:nuke_inner_whitespace]
-        push_merged_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+        push_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
         return
       end
 
       if parse
         push_script(value, t.merge(:in_tag => true))
-        push_merged_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+        push_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
       end
     end
 
@@ -145,26 +146,26 @@ module Haml
       close = "#{'<!--' if revealed}#{'<![endif]' if condition}-->"
 
       unless block_given?
-        push_merged_text("#{open} ")
+        push_text("#{open} ")
 
         if @node.value[:parse]
           push_script(@node.value[:text], :in_tag => true, :nuke_inner_whitespace => true)
         else
-          push_merged_text(@node.value[:text])
+          push_text(@node.value[:text])
         end
 
-        push_merged_text(" #{close}\n")
+        push_text(" #{close}\n")
         return
       end
 
-      push_text(open)
+      push_text("#{open}\n")
       yield if block_given?
-      push_text(close)
+      push_text("#{close}\n")
     end
 
     def compile_doctype
       doctype = text_for_doctype
-      push_text doctype if doctype
+      push_text("#{doctype}\n") if doctype
     end
 
     def compile_filter
@@ -226,12 +227,8 @@ module Haml
     end
 
     # Adds `text` to `@buffer`.
-    def push_merged_text(text)
-      @to_merge << [:text, text]
-    end
-
     def push_text(text)
-      push_merged_text("#{text}\n")
+      @to_merge << [:text, text]
     end
 
     # This method is only supported for `@options.ugly` case.
@@ -278,7 +275,7 @@ module Haml
       unless block_given?
         format_script_method = "_hamlout.format_script((#{text}\n),#{args.join(',')});"
         push_generated_script(no_format ? "(#{text}\n).to_s" : format_script_method)
-        push_merged_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
+        push_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
         return
       end
 

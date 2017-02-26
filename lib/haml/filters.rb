@@ -183,7 +183,7 @@ RUBY
 
           rendered = Haml::Helpers::find_and_preserve(filter.render_with_options(text, compiler.options), compiler.options[:preserve])
           rendered.rstrip!
-          push_text(rendered)
+          push_text("#{rendered}\n")
         end
       end
     end
