@@ -36,7 +36,6 @@ module Haml
     private
 
     def compile_root
-      @dont_tab_up_next_text = false
       @output_line = 1
       yield if block_given?
       flush_merged_text
@@ -70,9 +69,6 @@ module Haml
       keyword = @node.value[:keyword]
 
       if block_given?
-        # Store these values because for conditional statements,
-        # we want to restore them for each branch
-        @node.value[:dont_tab_up_next_text] = @dont_tab_up_next_text
         yield
         push_silent("end", :can_suppress) unless @node.value[:dont_push_end]
       elsif keyword == "end"
@@ -82,9 +78,6 @@ module Haml
           @node.parent.value[:dont_push_end] = true
         end
         # Don't restore dont_* for end because it isn't a conditional branch.
-      elsif Parser::MID_BLOCK_KEYWORDS.include?(keyword)
-        # Restore dont_* for this conditional branch
-        @dont_tab_up_next_text = @node.parent.value[:dont_tab_up_next_text]
       end
     end
 
@@ -277,7 +270,6 @@ module Haml
       end
 
       @to_merge = []
-      @dont_tab_up_next_text = false
     end
 
     # Causes `text` to be evaluated in the context of
@@ -330,7 +322,6 @@ module Haml
       last = @to_merge[index]
       if last.nil?
         push_silent("_hamlout.rstrip!", false)
-        @dont_tab_up_next_text = true
         return
       end
 
