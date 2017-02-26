@@ -120,7 +120,7 @@ module Haml
         t[:attributes].merge!({"data-trace" => @options.filename.split('/views').last << ":" << @node.line.to_s})
       end
 
-      push_merged_text "<#{t[:name]}", 0
+      push_merged_text "<#{t[:name]}"
       push_temple(@attribute_compiler.compile(t[:attributes], object_ref, attributes_hashes))
       concat_merged_text(
         if t[:self_closing] && @options.xhtml?
@@ -132,7 +132,7 @@ module Haml
       if value && !parse
         concat_merged_text("#{value}</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
       elsif !t[:nuke_inner_whitespace] && !t[:self_closing]
-        @to_merge << [:text, '', 1]
+        @to_merge << [:text, '']
       end
 
       @dont_indent_next_line = dont_indent_next_line
@@ -144,8 +144,7 @@ module Haml
         yield if block_given?
         @output_tabs -= 1 unless t[:nuke_inner_whitespace]
         rstrip_buffer! if t[:nuke_inner_whitespace]
-        push_merged_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}",
-          t[:nuke_inner_whitespace] ? 0 : -1)
+        push_merged_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
         @dont_indent_next_line = t[:nuke_outer_whitespace]
         return
       end
@@ -170,18 +169,18 @@ module Haml
         if @node.value[:parse]
           push_script(@node.value[:text], :in_tag => true, :nuke_inner_whitespace => true)
         else
-          push_merged_text(@node.value[:text], 0)
+          push_merged_text(@node.value[:text])
         end
 
-        push_merged_text(" #{close}\n", 0)
+        push_merged_text(" #{close}\n")
         return
       end
 
-      push_text(open, 1)
+      push_text(open)
       @output_tabs += 1
       yield if block_given?
       @output_tabs -= 1
-      push_text(close, -1)
+      push_text(close)
     end
 
     def compile_doctype
@@ -249,18 +248,18 @@ module Haml
 
     # Adds `text` to `@buffer` with appropriate tabulation
     # without parsing it.
-    def push_merged_text(text, tab_change = 0)
-      @to_merge << [:text, text, tab_change]
+    def push_merged_text(text)
+      @to_merge << [:text, text]
       @dont_indent_next_line = false
     end
 
     # Concatenate `text` to `@buffer` without tabulation.
     def concat_merged_text(text)
-      @to_merge << [:text, text, 0]
+      @to_merge << [:text, text]
     end
 
-    def push_text(text, tab_change = 0)
-      push_merged_text("#{text}\n", tab_change)
+    def push_text(text)
+      push_merged_text("#{text}\n")
     end
 
     # This method is only supported for `@options.ugly` case.
