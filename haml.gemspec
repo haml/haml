@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   readmes          = Dir['*'].reject{ |x| x =~ /(^|[^.a-z])[a-z]+/ || x == "TODO" }
   spec.executables = ['haml']
-  spec.files       = Dir['lib/**/*', 'bin/*', 'test/**/*', 'extra/**/*',
+  spec.files       = Dir['lib/**/*', 'bin/*', 'test/**/*',
                          'Rakefile', '.yardopts'] + readmes
   spec.homepage    = 'http://haml.info/'
   spec.has_rdoc    = false
