@@ -232,9 +232,10 @@ module Haml
     end
 
     def push_temple(temple)
+      flush_merged_text
       newlines = resolve_newlines
-      @to_merge << [:temple, [:code, newlines]] unless newlines.empty?
-      @to_merge << [:temple, temple]
+      @temple << [:code, newlines] unless newlines.empty?
+      @temple << temple
       @output_line += TempleLineCounter.count_lines(temple)
     end
 
@@ -247,8 +248,6 @@ module Haml
           @temple << [:static, val]
         when :script
           @temple << [:dynamic, val]
-        when :temple
-          @temple << val
         else
           raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
         end
