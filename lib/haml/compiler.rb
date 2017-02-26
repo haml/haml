@@ -118,8 +118,6 @@ module Haml
 
       if value && !parse
         push_text("#{value}</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
-      elsif !t[:nuke_inner_whitespace] && !t[:self_closing]
-        @to_merge << [:text, '']
       end
 
       return if t[:self_closing]
