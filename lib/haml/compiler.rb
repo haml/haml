@@ -277,9 +277,19 @@ module Haml
     end
 
     def build_script_formatter(text, opts)
-      args = [:preserve_script, :preserve_tag, :escape_html, :nuke_inner_whitespace]
-      args.map! {|name| !!opts[name]}
-      "_hamlout.format_script(#{text},#{args.join(',')});"
+      text = "(#{text}).to_s"
+      if opts[:escape_html]
+        text = "::Haml::Helpers.html_escape(#{text})"
+      end
+      if opts[:nuke_inner_whitespace]
+        text = "(#{text}).strip"
+      end
+      if opts[:preserve_tag]
+        text = "::Haml::Helpers.preserve(#{text})"
+      elsif opts[:preserve_script]
+        text = "::Haml::Helpers.find_and_preserve(#{text}, _hamlout.options[:preserve])"
+      end
+      "_hamlout.fix_textareas!(#{text});"
     end
 
     def push_generated_script(text)
