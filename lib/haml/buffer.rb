@@ -191,7 +191,7 @@ module Haml
     end
 
     def new_encoded_string
-      "".encode(Encoding.find(options[:encoding]))
+      "".encode(options[:encoding])
     end
 
     @@tab_cache = {}
