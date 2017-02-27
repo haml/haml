@@ -69,7 +69,7 @@ module Haml
 
     private
 
-    # Returns array of AttributeValue instnces from static attributes and dynamic attributes_hashes. For each key,
+    # Returns array of AttributeValue instances from static attributes and dynamic attributes_hashes. For each key,
     # the values' order in returned value is preserved in the same order as Haml::Buffer#attributes's merge order.
     #
     # @param attributes [{ String => String }]
