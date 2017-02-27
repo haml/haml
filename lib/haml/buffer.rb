@@ -128,17 +128,6 @@ module Haml
       @real_tabs += tab_change
     end
 
-    # the number of arguments here is insane, but passing in an options hash instead of named arguments
-    # causes a significant performance regression
-    def format_script(result, preserve_script, preserve_tag, escape_html, nuke_inner_whitespace)
-      result_name = escape_html ? html_escape(result.to_s) : result.to_s
-
-      result = nuke_inner_whitespace ? result_name.strip : result_name
-      result = preserve(result, preserve_script, preserve_tag)
-      fix_textareas!(result) if toplevel? && result.include?('<textarea')
-      result
-    end
-
     def attributes(class_id, obj_ref, *attributes_hashes)
       attributes = class_id
       attributes_hashes.each do |old|
@@ -160,14 +149,6 @@ module Haml
       buffer << buffer.slice!(capture_position..-1).rstrip
     end
 
-    private
-
-    def preserve(result, preserve_script, preserve_tag)
-      return Haml::Helpers.preserve(result) if preserve_tag
-      return Haml::Helpers.find_and_preserve(result, options[:preserve]) if preserve_script
-      result
-    end
-
     # Works like #{find_and_preserve}, but allows the first newline after a
     # preserved opening tag to remain unencoded, and then outdents the content.
     # This change was motivated primarily by the change in Rails 3.2.3 to emit
@@ -177,6 +158,8 @@ module Haml
     # @since Haml 4.0.1
     # @private
     def fix_textareas!(input)
+      return input unless toplevel? && input.include?('<textarea'.freeze)
+
       pattern = /<(textarea)([^>]*)>(\n|&#x000A;)(.*?)<\/textarea>/im
       input.gsub!(pattern) do |s|
         match = pattern.match(s)
@@ -188,7 +171,10 @@ module Haml
         end
         "<#{match[1]}#{match[2]}>\n#{content}</#{match[1]}>"
       end
+      input
     end
+
+    private
 
     def new_encoded_string
       "".encode(options[:encoding])

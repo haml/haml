@@ -261,14 +261,10 @@ module Haml
     def push_script(text, opts = {})
       return if @options.suppress_eval?
 
-      args = [:preserve_script, :preserve_tag, :escape_html, :nuke_inner_whitespace]
-      args.map! {|name| !!opts[name]}
-
       no_format = !(opts[:preserve_script] || opts[:preserve_tag] || opts[:escape_html])
 
       unless block_given?
-        format_script_method = "_hamlout.format_script((#{text}\n),#{args.join(',')});"
-        push_generated_script(no_format ? "(#{text}\n).to_s" : format_script_method)
+        push_generated_script(no_format ? "(#{text}\n).to_s" : build_script_formatter("(#{text}\n)", opts))
         push_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
         return
       end
@@ -277,8 +273,23 @@ module Haml
       push_silent "haml_temp = #{text}"
       yield
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
-      format_script_method = "_hamlout.format_script(haml_temp,#{args.join(',')});"
-      @temple << [:dynamic, no_format ? "haml_temp.to_s;" : format_script_method]
+      @temple << [:dynamic, no_format ? 'haml_temp.to_s;' : build_script_formatter('haml_temp', opts)]
+    end
+
+    def build_script_formatter(text, opts)
+      text = "(#{text}).to_s"
+      if opts[:escape_html]
+        text = "::Haml::Helpers.html_escape(#{text})"
+      end
+      if opts[:nuke_inner_whitespace]
+        text = "(#{text}).strip"
+      end
+      if opts[:preserve_tag]
+        text = "::Haml::Helpers.preserve(#{text})"
+      elsif opts[:preserve_script]
+        text = "::Haml::Helpers.find_and_preserve(#{text}, _hamlout.options[:preserve])"
+      end
+      "_hamlout.fix_textareas!(#{text});"
     end
 
     def push_generated_script(text)
