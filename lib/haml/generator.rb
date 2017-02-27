@@ -27,6 +27,10 @@ module Haml
       exp
     end
 
+    def on_newline
+      "\n"
+    end
+
     private
 
     def concat(str)

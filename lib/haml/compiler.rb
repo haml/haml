@@ -231,8 +231,7 @@ module Haml
 
     def push_temple(temple)
       flush_merged_text
-      newlines = resolve_newlines
-      @temple << [:code, newlines] unless newlines.empty?
+      @temple.concat([[:newline]] * resolve_newlines.count("\n"))
       @temple << temple
       @output_line += TempleLineCounter.count_lines(temple)
     end
