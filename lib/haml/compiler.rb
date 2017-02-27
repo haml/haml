@@ -261,9 +261,8 @@ module Haml
     def push_script(text, opts = {})
       return if @options.suppress_eval?
 
-      args = [:preserve_script, :in_tag, :preserve_tag, :escape_html, :nuke_inner_whitespace]
+      args = [:preserve_script, :preserve_tag, :escape_html, :nuke_inner_whitespace]
       args.map! {|name| !!opts[name]}
-      args << !block_given?
 
       no_format = !(opts[:preserve_script] || opts[:preserve_tag] || opts[:escape_html])
 
