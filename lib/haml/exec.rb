@@ -292,8 +292,8 @@ END
         begin
 
           if @options[:parse]
-            parser = ::Haml::Parser.new(template, ::Haml::Options.new(@options))
-            pp parser.parse
+            parser = ::Haml::Parser.new(::Haml::Options.new(@options))
+            pp parser.call(template)
             return
           end
 
