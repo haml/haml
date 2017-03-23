@@ -30,6 +30,10 @@ matrix:
     - { rvm: 1.8.7, gemfile: test/gemfiles/Gemfile.rails-4.2.x }
     - { rvm: 1.8.7, gemfile: test/gemfiles/Gemfile.rails-5.0.x }
 
+    # Rails 4.0 and 4.1 doesn't run on Ruby 2.4
+    - { rvm: 2.4.0, gemfile: test/gemfiles/Gemfile.rails-4.0.x }
+    - { rvm: 2.4.0, gemfile: test/gemfiles/Gemfile.rails-4.1.x }
+
     # Rails 5 requires Ruby 2.2.2+
     - { rvm: 1.9.3, gemfile: test/gemfiles/Gemfile.rails-5.0.x }
     - { rvm: 2.0.0, gemfile: test/gemfiles/Gemfile.rails-5.0.x }
