@@ -27,6 +27,8 @@ $VERBOSE = true
 require 'haml'
 require 'haml/template'
 
+TestApp.initialize!
+
 Haml::Template.options[:ugly]   = false
 Haml::Template.options[:format] = :xhtml
 
