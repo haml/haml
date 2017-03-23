@@ -14,6 +14,7 @@ require 'nokogiri'
 
 require 'rails'
 class TestApp < Rails::Application
+#   config.eager_load = false
   config.root = ""
 end
 Rails.application = TestApp
