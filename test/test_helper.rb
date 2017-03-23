@@ -26,6 +26,7 @@ if defined?(I18n.enforce_available_locales)
 end
 
 class TestApp < Rails::Application
+#   config.eager_load = false
   config.root = ""
 end
 Rails.application = TestApp
