@@ -13,7 +13,7 @@ module Haml
       Haml::Options.buffer_option_keys.each do |key|
         assert_equal(
           Haml::Options.defaults[key],
-          Haml::Options.buffer_defaults[key],
+          Haml::Options.buffer_defaults[key], "key: #{key}"
         )
       end
     end
