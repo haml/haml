@@ -25,12 +25,6 @@ module Haml
           Haml::Filters::Erb.template_class = Haml::SafeErubisTemplate
         end
       end
-
-      Haml::Options.buffer_defaults.keys.each do |key|
-        if Haml::Template.options.key?(key)
-          Haml::Options.buffer_defaults[key] = Haml::Template.options[key]
-        end
-      end
     end
   end
 end
