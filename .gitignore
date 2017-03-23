@@ -1,6 +1,7 @@
 /.yardoc
 /coverage
 /doc
+/log
 /pkg
 /test/rails
 /test/gemfiles/*.lock
