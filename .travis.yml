@@ -3,7 +3,7 @@ dist: trusty
 language: ruby
 cache: bundler
 rvm:
-  - 2.4.0
+  - 2.4.1
   - 2.3.3
   - 2.2.6
   - 2.1.10
@@ -21,11 +21,11 @@ matrix:
       gemfile: test/gemfiles/Gemfile.rails-5.0.x
     - rvm: 2.1.10
       gemfile: test/gemfiles/Gemfile.rails-5.0.x
-    - rvm: 2.4.0
+    - rvm: 2.4.1
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.4.0
+    - rvm: 2.4.1
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.4.0
+    - rvm: 2.4.1
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
   allow_failures:
     - rvm: jruby-9.1.8.0
