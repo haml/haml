@@ -6,11 +6,20 @@ module Haml
   module Template
     extend self
 
-    @options = {}
+    class Options < Hash
+      def []=(key, value)
+        super
+        if Haml::Options.buffer_defaults.key?(key)
+          Haml::Options.buffer_defaults[key] = value
+        end
+      end
+    end
+
+    @options = ::Haml::Template::Options.new
     # The options hash for Haml when used within Rails.
     # See {file:REFERENCE.md#options the Haml options documentation}.
     #
-    # @return [{Symbol => Object}]
+    # @return [Haml::Template::Options<Symbol => Object>]
     attr_accessor :options
   end
 end
