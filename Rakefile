@@ -7,7 +7,8 @@ task :default => :test
 #FIXME: Redefining :test task to run each test in isolated process.
 # Remove this task when we finished changing escape_html option to be true by default.
 task :test do
-  Dir.glob('test/**/*_test.rb').all? do |file|
+  test_files = Dir.glob('test/**/*_test.rb').reject { |f| f.start_with?('test/gemfiles/vendor/bundle') }
+  test_files.all? do |file|
     sh(Gem.ruby, '-w', '-I/lib', '-Itest', file)
   end || raise('Failures')
 end
