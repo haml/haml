@@ -325,6 +325,9 @@ merge_all_attrs(VALUE hashes)
 
   for (i = 0; i < RARRAY_LEN(hashes); i++) {
     hash = rb_ary_entry(hashes, i);
+    if (!RB_TYPE_P(hash, T_HASH)) {
+      rb_raise(rb_eArgError, "Non-hash object is given to attributes!");
+    }
     rb_hash_foreach(hash, merge_all_attrs_i, merged);
   }
   return merged;

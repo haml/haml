@@ -107,6 +107,12 @@ describe Hamlit::Engine do
           %span{ h1, h2, h3, g: 'h', i: 'j' }
         HAML
       end
+
+      it 'does not crash when nil is given' do
+        assert_raises ArgumentError do
+          render_hamlit("%div{ nil }")
+        end
+      end
     end
 
     describe 'joinable attributes' do
