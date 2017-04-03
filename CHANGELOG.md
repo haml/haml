@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.8.1](https://github.com/k0kubun/hamlit/compare/v2.8.0...v2.8.1) - 2017-04-03
+
+### Fixed
+
+- Fix SEGV caused by nil in old attributes
+  [#101](https://github.com/k0kubun/hamlit/issues/101). *Thanks to @FND*
+
+### Fixed
+
 ## [2.8.0](https://github.com/k0kubun/hamlit/compare/v2.7.5...v2.8.0) - 2017-02-12
 
 ### Changed
