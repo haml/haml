@@ -9,13 +9,17 @@ module Haml
     class UnexpectedKeyError < StandardError; end
 
     class << self
+      # @return [Boolean] - return true if AttributeParser.parse can be used.
       def available?
         defined?(Ripper) && Temple::StaticAnalyzer.available?
       end
 
+      # @param  [String] text - old attributes literal or hash literal generated from new attributes.
+      # @return [Hash<String, String>,nil] - Return parsed attribute Hash whose values are Ruby literals.
+      # Return nil if argument is not a single Hash literal.
       def parse(text)
         exp = wrap_bracket(text)
-        return if Temple::StaticAnalyzer.syntax_error?(exp)
+        return nil unless hash_literal?(exp)
 
         hash = {}
         tokens = Ripper.lex(exp)[1..-2] || []
@@ -30,10 +34,17 @@ module Haml
 
       private
 
+      # Wrap `{` and `}` to unify operation for both old/new attributes. Old attributes lack that.
       def wrap_bracket(text)
         text = text.strip
         return text if text =~ /\A{.*}\z/
         "{#{text}}"
+      end
+
+      def hash_literal?(text)
+        return false if Temple::StaticAnalyzer.syntax_error?(text)
+        sym, body = Ripper.sexp(text)
+        sym == :program && body.size == 1 && body[0][0] == :hash
       end
 
       def parse_key!(tokens)

@@ -23,6 +23,11 @@ class AttributeParserTeset < Haml::TestCase
         it { assert_parse(nil, '{}.merge({})') }
       end
 
+      describe 'non single hash' do
+        it { assert_parse(nil, '{ a: 0 };{}') }
+        it { assert_parse(nil, '{ a: 0 }[nil] = {}') }
+      end
+
       describe 'dynamic key' do
         it { assert_parse(nil, 'foo => bar') }
         it { assert_parse(nil, '[] => bar') }
