@@ -554,7 +554,7 @@ module Haml
       attributes = {}
       return attributes if list.empty?
 
-      list.scan(/([#.])([-:_a-zA-Z0-9]+)/) do |type, property|
+      list.scan(/([#.])([-:_a-zA-Z0-9@]+)/) do |type, property|
         case type
         when '.'
           if attributes[CLASS_KEY]
@@ -593,7 +593,7 @@ module Haml
 
     # Parses a line into tag_name, attributes, attributes_hash, object_ref, action, value
     def parse_tag(text)
-      match = text.scan(/%([-:\w]+)([-:\w.#]*)(.+)?/)[0]
+      match = text.scan(/%([-:\w]+)([-:\w.#@]*)(.+)?/)[0]
       raise SyntaxError.new(Error.message(:invalid_tag, text)) unless match
 
       tag_name, attributes, rest = match
