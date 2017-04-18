@@ -429,7 +429,7 @@ module Haml
       end
 
       if attributes_hashes[:old]
-        static_attributes = parse_static_hash(attributes_hashes[:old][1...-1])
+        static_attributes = parse_static_hash(attributes_hashes[:old])
         AttributeBuilder.merge_attributes!(attributes, static_attributes) if static_attributes
         dynamic_attributes.old = attributes_hashes[:old] unless static_attributes || @options.suppress_eval
       end
@@ -569,10 +569,16 @@ module Haml
       attributes
     end
 
+    # This method doesn't use Haml::AttributeParser because currently it depends on Ripper and Rubinius doesn't provide it.
+    # Ideally this logic should be placed in Haml::AttributeParser instead of here and this method should use it.
+    #
+    # @param  [String] text - Hash literal or text inside old attributes
+    # @return [Hash,nil] - Return nil if text is not static Hash literal
     def parse_static_hash(text)
       attributes = {}
       return attributes if text.empty?
 
+      text = text[1...-1] # strip brackets
       scanner = StringScanner.new(text)
       scanner.scan(/\s+/)
       until scanner.eos?
