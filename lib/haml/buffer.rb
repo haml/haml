@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Haml
   # This class is used only internally. It holds the buffer of HTML that
   # is eventually output as the resulting document.

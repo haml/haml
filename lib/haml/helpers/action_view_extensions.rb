@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Haml
   module Helpers
     @@action_view_defined = true

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # We keep options in its own self-contained file
 # so that we can load it independently in Rails 3,
 # where the full template stuff is lazy-loaded.

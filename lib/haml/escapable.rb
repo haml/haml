@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Haml
   # Like Temple::Filters::Escapable, but with support for escaping by
   # Haml::Herlpers.html_escape and Haml::Herlpers.escape_once.

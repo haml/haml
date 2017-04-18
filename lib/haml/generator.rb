@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Haml
   # Ruby code generator, which is a limited version of Temple::Generator.
   # Limit methods since Haml doesn't need most of them.

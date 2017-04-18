@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Haml
   module Helpers
     # This module overrides Haml helpers to work properly

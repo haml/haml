@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'haml/version'
 
 # The module that contains everything Haml-related:

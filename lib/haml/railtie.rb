@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'haml/template/options'
 
 # check for a compatible Rails version when Haml is loaded
