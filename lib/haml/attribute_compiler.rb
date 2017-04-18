@@ -27,10 +27,10 @@ module Haml
     #
     # @param attributes [Hash]
     # @param object_ref [String,:nil]
-    # @param attributes_hashes [Array<String>]
+    # @param dynamic_attributes [DynamicAttributes]
     # @return [String] Attributes rendering code
-    def self.runtime_build(attributes, object_ref, attributes_hashes)
-      "_hamlout.attributes(#{Haml::Util.inspect_obj(attributes)}, #{object_ref},#{attributes_hashes.join(', ')})"
+    def self.runtime_build(attributes, object_ref, dynamic_attributes)
+      "_hamlout.attributes(#{Haml::Util.inspect_obj(attributes)}, #{object_ref},#{dynamic_attributes.to_literal})"
     end
 
     # @param options [Haml::Options]
@@ -45,16 +45,16 @@ module Haml
     #
     # @param attributes [Hash]
     # @param object_ref [String,:nil]
-    # @param attributes_hashes [Array<String>]
+    # @param dynamic_attributes [DynamicAttributes]
     # @return [Array] Temple expression
-    def compile(attributes, object_ref, attributes_hashes)
+    def compile(attributes, object_ref, dynamic_attributes)
       if object_ref != :nil || !AttributeParser.available?
-        return [:dynamic, AttributeCompiler.runtime_build(attributes, object_ref, attributes_hashes)]
+        return [:dynamic, AttributeCompiler.runtime_build(attributes, object_ref, dynamic_attributes)]
       end
 
-      parsed_hashes = attributes_hashes.map do |attribute_hash|
+      parsed_hashes = [dynamic_attributes.new, dynamic_attributes.old].compact.map do |attribute_hash|
         unless (hash = AttributeParser.parse(attribute_hash))
-          return [:dynamic, AttributeCompiler.runtime_build(attributes, object_ref, attributes_hashes)]
+          return [:dynamic, AttributeCompiler.runtime_build(attributes, object_ref, dynamic_attributes)]
         end
         hash
       end
@@ -69,7 +69,7 @@ module Haml
 
     private
 
-    # Returns array of AttributeValue instances from static attributes and dynamic attributes_hashes. For each key,
+    # Returns array of AttributeValue instances from static attributes and dynamic_attributes. For each key,
     # the values' order in returned value is preserved in the same order as Haml::Buffer#attributes's merge order.
     #
     # @param attributes [{ String => String }]

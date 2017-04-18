@@ -92,13 +92,13 @@ module Haml
         object_ref = :nil
         parse = false
         value = t[:parse] ? nil : t[:value]
-        attributes_hashes = []
+        dynamic_attributes = Haml::Parser::DynamicAttributes.new
         preserve_script = false
       else
         object_ref = t[:object_ref]
         parse = t[:parse]
         value = t[:value]
-        attributes_hashes = t[:attributes_hashes]
+        dynamic_attributes = t[:dynamic_attributes]
         preserve_script = t[:preserve_script]
       end
 
@@ -107,7 +107,7 @@ module Haml
       end
 
       push_text("<#{t[:name]}")
-      push_temple(@attribute_compiler.compile(t[:attributes], object_ref, attributes_hashes))
+      push_temple(@attribute_compiler.compile(t[:attributes], object_ref, dynamic_attributes))
       push_text(
         if t[:self_closing] && @options.xhtml?
           " />#{"\n" unless t[:nuke_outer_whitespace]}"
