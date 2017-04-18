@@ -13,6 +13,8 @@ module Haml
     TYPE = 1
     TEXT = 2
 
+    IGNORED_TYPES = %i[on_sp on_ignored_nl]
+
     class << self
       # @return [Boolean] - return true if AttributeParser.parse can be used.
       def available?
@@ -46,7 +48,7 @@ module Haml
       # @param [Array] tokens - Ripper tokens. Scanned tokens will be destructively removed from this argument.
       # @return [String] - attribute name in String
       def shift_key!(tokens)
-        while !tokens.empty? && tokens.first[TYPE] == :on_sp
+        while !tokens.empty? && IGNORED_TYPES.include?(tokens.first[TYPE])
           tokens.shift # ignore spaces
         end
 
@@ -128,7 +130,7 @@ module Haml
             open_tokens[:paren] += 1
           when :on_rparen
             open_tokens[:paren] -= 1
-          when :on_sp
+          when *IGNORED_TYPES
             next if attr_tokens.empty?
           end
 

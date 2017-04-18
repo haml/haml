@@ -65,6 +65,10 @@ class AttributeParserTeset < Haml::TestCase
         it { assert_parse(nil, '%Q[f#{o}o] => bar ') }
       end
 
+      describe 'multi lines' do
+        it { assert_parse({ 'a' => 'b', 'c' => 'd' }, "{a: b,\nc: d}") }
+      end
+
       if RUBY_VERSION >= '2.2.0'
         describe '"foo": bar' do
           it { assert_parse({ 'foo' => '()' }, '{"foo":()}') }
