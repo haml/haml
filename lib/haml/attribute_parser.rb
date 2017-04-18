@@ -32,7 +32,7 @@ module Haml
 
       def wrap_bracket(text)
         text = text.strip
-        return text if text[0] == '{'
+        return text if text =~ /\A{.*}\z/
         "{#{text}}"
       end
 

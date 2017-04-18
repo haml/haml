@@ -20,6 +20,7 @@ class AttributeParserTeset < Haml::TestCase
         it { assert_parse(nil, 'hash, foo: bar') }
         it { assert_parse(nil, ' {hash} ') }
         it { assert_parse(nil, ' { hash, foo: bar } ') }
+        it { assert_parse(nil, '{}.merge({})') }
       end
 
       describe 'dynamic key' do

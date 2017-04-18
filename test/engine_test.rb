@@ -1555,6 +1555,12 @@ HAML
 HAML
   end
 
+  def test_hash_method_call_in_attributes
+    assert_equal(%Q{<a foo='bar' hoge='fuga'></a>\n}, render(<<-HAML))
+- hash = {:hoge => :fuga}
+%a{{foo: 'bar'}.merge(hash)}
+HAML
+  end
 
   def test_html5_data_attributes_with_nested_hash
     assert_equal("<div data-a-b='c'></div>\n", render(<<-HAML))
