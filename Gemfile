@@ -1,6 +1,8 @@
 source "https://rubygems.org"
 gemspec
 
+gem "pry"
+
 group :docs do
   gem "yard", "~> 0.8.0"
   gem "kramdown"
