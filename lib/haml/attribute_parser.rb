@@ -14,15 +14,14 @@ module Haml
         defined?(Ripper) && Temple::StaticAnalyzer.available?
       end
 
-      # @param  [String] text - old attributes literal or hash literal generated from new attributes.
-      # @return [Hash<String, String>,nil] - Return parsed attribute Hash whose values are Ruby literals.
-      # Return nil if argument is not a single Hash literal.
-      def parse(text)
-        exp = wrap_bracket(text)
+      # @param  [String] exp - Old attributes literal or Hash literal generated from new attributes.
+      # @return [Hash<String, String>,nil] - Return parsed attribute Hash whose values are Ruby literals, or return nil if argument is not a single Hash literal.
+      def parse(exp)
+        exp = exp.strip
         return nil unless hash_literal?(exp)
 
         hash = {}
-        tokens = Ripper.lex(exp)[1..-2] || []
+        tokens = Ripper.lex(exp)[1...-1] || []
         each_attr(tokens) do |attr_tokens|
           key = parse_key!(attr_tokens)
           hash[key] = attr_tokens.map(&:last).join.strip
@@ -34,16 +33,9 @@ module Haml
 
       private
 
-      # Wrap `{` and `}` to unify operation for both old/new attributes. Old attributes lack that.
-      def wrap_bracket(text)
-        text = text.strip
-        return text if text =~ /\A{.*}\z/
-        "{#{text}}"
-      end
-
-      def hash_literal?(text)
-        return false if Temple::StaticAnalyzer.syntax_error?(text)
-        sym, body = Ripper.sexp(text)
+      def hash_literal?(exp)
+        return false if Temple::StaticAnalyzer.syntax_error?(exp)
+        sym, body = Ripper.sexp(exp)
         sym == :program && body.size == 1 && body[0][0] == :hash
       end
 
