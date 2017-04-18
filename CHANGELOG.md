@@ -21,6 +21,7 @@
 * The `haml` command's debug option (`-d`) no longer executes the Haml code, but
   rather checks the generated Ruby syntax for errors.
 * Support Rails 5.1 Erubi template handler.
+* Support Sprockets 3. Thanks [Sam Davies](https://github.com/samphilipd) and [Jeremy Venezia](https://github.com/jvenezia).
 * Raise `Haml::InvalidAttributeNameError` when attribute name includes invalid characters. (Takashi Kokubun)
 * Drop dynamic quotes support and always escape `'` for `escape_html`/`escape_attrs` instead.
   Also, escaped results are slightly changed and always unified to the same characters. (Takashi Kokubun)
