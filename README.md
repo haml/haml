@@ -77,7 +77,7 @@ In fact, when you're using the `<div>` tag, it becomes _even easier_. Because
 `<div>` is such a common element, a tag without a name defaults to a div. So
 
 ~~~haml
-#foo Hello!
+# foo Hello!
 ~~~
 
 becomes
