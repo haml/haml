@@ -18,6 +18,7 @@
   to the source Haml file from which it was generated. Thanks [Alex Babkin](https://github.com/ababkin).
 * Fix #@foo and #$foo style interpolation that was not working in html_safe mode. (Akira Matsuda)
 * Add `haml_tag_if` to render a block, conditionally wrapped in another element (Matt Wildig)
+* Escape Ruby script interpolated in filters. (Matt Wildig)
 * The `haml` command's debug option (`-d`) no longer executes the Haml code, but
   rather checks the generated Ruby syntax for errors.
 * Support Rails 5.1 Erubi template handler.
