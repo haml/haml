@@ -15,8 +15,13 @@ gemfile:
   - test/gemfiles/Gemfile.rails-4.1.x
   - test/gemfiles/Gemfile.rails-4.2.x
   - test/gemfiles/Gemfile.rails-5.0.x
+  - test/gemfiles/Gemfile.rails-5.1.x
 matrix:
   exclude:
+    - rvm: 2.0.0
+      gemfile: test/gemfiles/Gemfile.rails-5.1.x
+    - rvm: 2.1.10
+      gemfile: test/gemfiles/Gemfile.rails-5.1.x
     - rvm: 2.0.0
       gemfile: test/gemfiles/Gemfile.rails-5.0.x
     - rvm: 2.1.10
