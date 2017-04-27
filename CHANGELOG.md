@@ -3,7 +3,7 @@
 ## 5.0.0
 
 Released on April 26, 2017
-([diff](https://github.com/haml/haml/compare/4.0.7...5.0.0)).
+([diff](https://github.com/haml/haml/compare/4.0.7...v5.0.0)).
 
 * Haml now requires Ruby 2.0.0 or above.
 * Rails 3 is no longer supported, matching the official
