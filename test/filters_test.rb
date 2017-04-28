@@ -138,11 +138,6 @@ class ErbFilterTest < Haml::TestCase
     assert_equal(html, render(haml, :scope => scope))
   end
 
-  test "should use Rails's XSS safety features" do
-    assert_equal("&lt;img&gt;\n", render(":erb\n  <%= '<img>' %>"))
-    assert_equal("<img>\n", render(":erb\n  <%= '<img>'.html_safe %>"))
-  end
-
 end
 
 class JavascriptFilterTest < Haml::TestCase
