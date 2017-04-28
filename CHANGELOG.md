@@ -15,6 +15,9 @@ Breaking Changes
   rather checks the generated Ruby syntax for errors.
 * Drop parser/compiler accessor from `Haml::Engine`. Modify `Haml::Engine#initialize` options
   or `Haml::Template.options` instead. (Takashi Kokubun)
+* Drop dynamic quotes support and always escape `'` for `escape_html`/`escape_attrs` instead.
+  Also, escaped results are slightly changed and always unified to the same characters. (Takashi Kokubun)
+* Don't preserve newlines in attributes. (Takashi Kokubun)
 
 Added
 
@@ -23,8 +26,11 @@ Added
 * Add `haml_tag_if` to render a block, conditionally wrapped in another element (Matt Wildig)
 * Support Rails 5.1 Erubi template handler.
 * Support Sprockets 3. Thanks [Sam Davies](https://github.com/samphilipd) and [Jeremy Venezia](https://github.com/jvenezia).
+* General performance and memory usage improvements. (Akira Matsuda)
 * Analyze attribute values by Ripper and render static attributes beforehand. (Takashi Kokubun)
 * Optimize attribute rendering about 3x faster. (Takashi Kokubun)
+* Add temple gem as dependency and create `Haml::TempleEngine` class.
+  Some methods in `Haml::Compiler` are migrated to `Haml::TempleEngine`. (Takashi Kokubun)
 
 Fixed
 
@@ -34,17 +40,11 @@ Fixed
   some circumstances. See the [commit message](https://github.com/haml/haml/tree/e475b015d3171fb4c4f140db304f7970c787d6e3)
   for detailed info. (Matt Wildig)
 * Make escape_once respect hexadecimal references. (Matt Wildig)
-* General performance and memory usage improvements. (Akira Matsuda)
 * Don't treat the 'data' attribute specially when merging attribute hashes. (Matt Wildig and Norman Clarke)
 * Fix #@foo and #$foo style interpolation that was not working in html_safe mode. (Akira Matsuda)
 * Escape Ruby script interpolated in filters. (Matt Wildig)
 * Allow `@` as tag's class name. Thanks [Joe Bartlett](https://github.com/redoPop).
 * Raise `Haml::InvalidAttributeNameError` when attribute name includes invalid characters. (Takashi Kokubun)
-* Drop dynamic quotes support and always escape `'` for `escape_html`/`escape_attrs` instead.
-  Also, escaped results are slightly changed and always unified to the same characters. (Takashi Kokubun)
-* Don't preserve newlines in attributes. (Takashi Kokubun)
-* Add temple gem as dependency and create `Haml::TempleEngine` class.
-  Some methods in `Haml::Compiler` are migrated to `Haml::TempleEngine`. (Takashi Kokubun)
 * Don't ignore unexpected exceptions on initializing `ActionView::OutputBuffer`. (Takashi Kokubun)
 
 ## 4.0.7
