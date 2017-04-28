@@ -164,6 +164,9 @@ module Haml
     # the path will be the full path.
     attr_accessor :trace
 
+    # Key is filter name in String and value is Class to use. Defaults to {}.
+    attr_accessor :filters
+
     def initialize(values = {}, &block)
       defaults.each {|k, v| instance_variable_set :"@#{k}", v}
       values.each {|k, v| send("#{k}=", v) if defaults.has_key?(k) && !v.nil?}

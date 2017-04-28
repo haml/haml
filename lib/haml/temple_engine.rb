@@ -25,6 +25,7 @@ module Haml
       parser_class:         ::Haml::Parser,
       compiler_class:       ::Haml::Compiler,
       trace:                false,
+      filters:              {},
     )
 
     use :Parser,   -> { options[:parser_class] }

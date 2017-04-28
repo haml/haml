@@ -126,14 +126,14 @@ end
 
 class ErbFilterTest < Haml::TestCase
   test "multiline expressions should work" do
-    html = "foobarbaz\n"
+    html = "foobarbaz\n\n"
     haml = %Q{:erb\n  <%= "foo" +\n      "bar" +\n      "baz" %>}
     assert_equal(html, render(haml))
   end
 
   test "should evaluate in the same context as Haml" do
     haml  = ":erb\n  <%= foo %>"
-    html  = "bar\n"
+    html  = "bar\n\n"
     scope = Object.new.instance_eval {foo = "bar"; nil if foo; binding}
     assert_equal(html, render(haml, :scope => scope))
   end
