@@ -18,6 +18,14 @@ Breaking Changes
 * Drop dynamic quotes support and always escape `'` for `escape_html`/`escape_attrs` instead.
   Also, escaped results are slightly changed and always unified to the same characters. (Takashi Kokubun)
 * Don't preserve newlines in attributes. (Takashi Kokubun)
+* HTML escape interpolated code in filters.
+  [#770](https://github.com/haml/haml/pull/770)
+  (Matt Wildig)
+
+        :javascript
+          #{JSON.generate(foo: "bar")}
+        Haml 4 output: {"foo":"bar"}
+        Haml 5 output: {&quot;foo&quot;:&quot;bar&quot;}
 
 Added
 
