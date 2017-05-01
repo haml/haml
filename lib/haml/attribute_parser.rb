@@ -131,6 +131,10 @@ module Haml
             open_tokens[:paren] += 1
           when :on_rparen
             open_tokens[:paren] -= 1
+          when :on_embexpr_beg
+            open_tokens[:embexpr] += 1
+          when :on_embexpr_end
+            open_tokens[:embexpr] -= 1
           when *IGNORED_TYPES
             next if attr_tokens.empty?
           end

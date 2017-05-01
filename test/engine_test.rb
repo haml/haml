@@ -151,6 +151,13 @@ class EngineTest < Haml::TestCase
     assert_equal("<p class='3'>foo</p>", render("%p{:class => 1+2} foo").chomp)
   end
 
+  def test_attributes_with_interpolation
+    assert_equal("<iframe id='test' src='http://www.google.com/abc/'></iframe>\n", render(<<-'HAML'))
+- base_url = "http://www.google.com"
+%iframe#test{src: "#{File.join base_url, '/abc/'}"}
+    HAML
+  end
+
   def test_class_attr_with_array
     assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => %w[a b]} foo")) # basic
     assert_equal("<p class='a b css'>foo</p>\n", render("%p.css{:class => %w[a b]} foo")) # merge with css

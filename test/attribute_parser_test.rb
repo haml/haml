@@ -65,6 +65,10 @@ class AttributeParserTeset < Haml::TestCase
         it { assert_parse(nil, '%Q[f#{o}o] => bar ') }
       end
 
+      describe 'string interpolation' do
+        it { assert_parse({ 'foo' => %q["#{bar baz, '/abc/'}"] }, %q[{foo: "#{bar baz, '/abc/'}"}]) }
+      end
+
       describe 'multi lines' do
         it { assert_parse({ 'a' => 'b', 'c' => 'd' }, "{a: b,\nc: d}") }
       end
