@@ -178,6 +178,7 @@ Haml currently supports Ruby 2.0.0 and higher, so please make sure your changes 
 * [Akira Matsuda](https://github.com/amatsuda)
 * [Matt Wildig](https://github.com/mattwildig)
 * [Tee Parham](https://github.com/teeparham)
+* [Takashi Kokubun](https://github.com/k0kubun)
 
 ### Alumni
 
