@@ -50,7 +50,6 @@ Fixed
 * Make escape_once respect hexadecimal references. (Matt Wildig)
 * Don't treat the 'data' attribute specially when merging attribute hashes. (Matt Wildig and Norman Clarke)
 * Fix #@foo and #$foo style interpolation that was not working in html_safe mode. (Akira Matsuda)
-* Escape Ruby script interpolated in filters. (Matt Wildig)
 * Allow `@` as tag's class name. Thanks [Joe Bartlett](https://github.com/redoPop).
 * Raise `Haml::InvalidAttributeNameError` when attribute name includes invalid characters. (Takashi Kokubun)
 * Don't ignore unexpected exceptions on initializing `ActionView::OutputBuffer`. (Takashi Kokubun)
