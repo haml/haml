@@ -10,8 +10,9 @@ Gem::Specification.new do |spec|
 
   readmes          = Dir['*'].reject{ |x| x =~ /(^|[^.a-z])[a-z]+/ || x == "TODO" }
   spec.executables = ['haml']
-  spec.files       = Dir['lib/**/*', 'bin/*', 'test/**/*',
-                         'Rakefile', '.yardopts'] + readmes
+  spec.files       = `git ls-files -z`.split("\x0").reject do |f|
+    f.match(%r{\Atest/})
+  end
   spec.homepage    = 'http://haml.info/'
   spec.has_rdoc    = false
   spec.test_files  = Dir["test/**/*_test.rb"]
