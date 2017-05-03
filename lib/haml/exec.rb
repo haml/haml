@@ -301,6 +301,11 @@ END
           engine = ::Haml::Engine.new(template, @options[:for_engine])
 
           if @options[:check_syntax]
+            error = validate_ruby(engine.precompiled)
+            if error
+              puts error.message.split("\n").first
+              exit 1
+            end
             puts "Syntax OK"
             return
           end
@@ -333,7 +338,7 @@ END
 
       def validate_ruby(code)
         begin
-          eval("BEGIN {return nil}; #{code}")
+          eval("BEGIN {return nil}; #{code}", binding, @options[:filename])
         rescue ::SyntaxError # Not to be confused with Haml::SyntaxError
           $!
         end
