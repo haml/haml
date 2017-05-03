@@ -1,6 +1,9 @@
 # Haml Changelog
 
-## 5.0.1 (Unreleased)
+## 5.0.1
+
+Released on May 3, 2017
+([diff](https://github.com/haml/haml/compare/v5.0.0...v5.0.1)).
 
 * Fix parsing attributes including string interpolation. [#917](https://github.com/haml/haml/pull/917) [#921](https://github.com/haml/haml/issues/921)
 * Stop distributing test files in gem package and allow installing on Windows.
