@@ -4,13 +4,19 @@ require "bundler/gem_tasks"
 
 task :default => :test
 
-#FIXME: Redefining :test task to run each test in isolated process.
+# FIXME: Redefining :test task to run test/options_test.rb in isolated process since it depends on whether Rails is loaded or not.
 # Remove this task when we finished changing escape_html option to be true by default.
-task :test do
-  test_files = Dir.glob('test/**/*_test.rb').reject { |f| f.start_with?('test/gemfiles/vendor/bundle') }
-  test_files.all? do |file|
-    sh(Gem.ruby, '-w', '-I/lib', '-Itest', file)
-  end || raise('Failures')
+isolated_test = Rake::TestTask.new do |t|
+  t.libs << 'test'
+  t.test_files = %w[test/options_test.rb]
+  t.warning = true
+  t.verbose = true
+end
+Rake::TestTask.new do |t|
+  t.libs << 'test'
+  t.test_files = Dir['test/*_test.rb'] + Dir['test/haml-spec/*_test.rb'] - isolated_test.file_list
+  t.warning = true
+  t.verbose = true
 end
 
 CLEAN.replace %w(pkg doc coverage .yardoc test/haml vendor)
