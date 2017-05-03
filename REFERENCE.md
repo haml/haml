@@ -1144,9 +1144,9 @@ Surrounds the filtered text with CDATA tags.
 
 ### `:coffee` {#coffee-filter}
 
-Compiles the filtered text to Javascript using Coffeescript. You can also
-reference this filter as `:coffeescript`. This filter is implemented using
-Tilt.
+Compiles the filtered text to JavaScript in `<script>` tag using CoffeeScript.
+You can also reference this filter as `:coffeescript`. This filter is
+implemented using Tilt.
 
 ### `:css` {#css-filter}
 
@@ -1174,7 +1174,7 @@ option} to control when CDATA tags are added.
 
 ### `:less` {#less-filter}
 
-Parses the filtered text with [Less](http://lesscss.org/) to produce CSS output.
+Parses the filtered text with [Less](http://lesscss.org/) to produce CSS output in `<style>` tag.
 This filter is implemented using Tilt.
 
 ### `:markdown` {#markdown-filter}
@@ -1217,12 +1217,13 @@ template.
 ### `:sass` {#sass-filter}
 
 Parses the filtered text with [Sass](http://sass-lang.com/) to produce CSS
-output. This filter is implemented using Tilt.
+output in `<style>` tag. This filter is implemented using Tilt.
 
 ### `:scss` {#scss-filter}
 
 Parses the filtered text with Sass like the `:sass` filter, but uses the newer
-SCSS syntax to produce CSS output. This filter is implemented using Tilt.
+SCSS syntax to produce CSS output in `<style>` tag. This filter is implemented
+using Tilt.
 
 ### `:textile` {#textile-filter}
 
