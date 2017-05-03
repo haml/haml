@@ -2,7 +2,7 @@
 
 ## 5.0.1 (Unreleased)
 
-* Fix parsing attributes including string interpolation [#917](https://github.com/haml/haml/pull/971) [#921](https://github.com/haml/haml/issues/921).
+* Fix parsing attributes including string interpolation. [#917](https://github.com/haml/haml/pull/917) [#921](https://github.com/haml/haml/issues/921)
 * Stop distributing test files in gem package and allow installing on Windows.
 
 ## 5.0.0
