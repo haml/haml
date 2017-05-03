@@ -4,6 +4,7 @@
 
 * Fix parsing attributes including string interpolation. [#917](https://github.com/haml/haml/pull/917) [#921](https://github.com/haml/haml/issues/921)
 * Stop distributing test files in gem package and allow installing on Windows.
+* Use ActionView's Erubi/Erubis handler for erb filter only on ActionView. [#914](https://github.com/haml/haml/pull/914)
 
 ## 5.0.0
 
