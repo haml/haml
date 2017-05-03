@@ -250,6 +250,16 @@ HAML
     assert_equal("Foo & Bar &amp; Baz\n", render('Foo #{Haml::Util.html_safe("&")} Bar #{"&"} Baz', :action_view))
   end
 
+  def test_xss_protection_with_erb_filter
+    if defined?(Haml::SafeErubiTemplate)
+      assert_equal("&lt;img&gt;\n\n", render(":erb\n  <%= '<img>' %>", :action_view))
+      assert_equal("<img>\n\n", render(":erb\n  <%= '<img>'.html_safe %>", :action_view))
+    else # For Haml::SafeErubisTemplate
+      assert_equal("&lt;img&gt;\n", render(":erb\n  <%= '<img>' %>", :action_view))
+      assert_equal("<img>\n", render(":erb\n  <%= '<img>'.html_safe %>", :action_view))
+    end
+  end
+
   def test_rendered_string_is_html_safe
     assert(render("Foo").html_safe?)
   end
