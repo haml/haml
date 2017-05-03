@@ -73,12 +73,6 @@ for full features in original implementation.
 
 ## Limitations
 
-### No pretty mode
-Haml has :pretty mode and :ugly mode. :pretty mode is used on development and indented beautifully.
-On production environment, :ugly mode is used and Hamlit currently supports only this mode.
-
-So you'll see difference rendering result on development environment, but it'll be the same on production.
-
 ### No Haml buffer
 Hamlit uses `Array` as buffer for performance. So you can't touch Haml::Buffer from template when using Hamlit.
 
