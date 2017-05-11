@@ -668,7 +668,7 @@ module Haml
       return attributes_hash, rest, last_line
     end
 
-    # @return [Array<Hash,String,nil>] - [static_attributs (Hash), dynamic_attributes (nil or String starting with `{` and ending with `}`)]
+    # @return [Array<Hash,String,nil>] - [static_attributes (Hash), dynamic_attributes (nil or String starting with `{` and ending with `}`)]
     # @return [String] rest
     # @return [Integer] last_line
     def parse_new_attributes(text)
