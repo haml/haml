@@ -128,6 +128,11 @@ class TemplateTest < Haml::TestCase
     assert_equal("Catlin", render("= @author").chomp)
   end
 
+  def test_precompiled_binary_frozen_string_works
+    engine = ::Haml::Engine.new("foo", :encoding=>'BINARY')
+    assert_equal("foo", ::Haml::Engine.new("foo", :encoding=>'BINARY').render(self, {}).chomp)
+  end
+
   def test_instance_variables_should_work_inside_attributes
     @base.instance_eval("@author = 'hcatlin'")
     assert_equal("<p class='hcatlin'>foo</p>", render("%p{:class => @author} foo").chomp)
