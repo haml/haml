@@ -253,6 +253,16 @@ RUBY
         "<![CDATA[#{text}\n]]>"
       end
     end
+    
+    # A PHP Filter for Haml. This simply wraps code inside <?php ?> tags.     
+    module PHP
+      include Base
+
+      def render(text)
+          "<?php #{text.rstrip.gsub("\n", "\n    ")}?>"
+      end
+
+    end
 
     # Works the same as {Plain}, but HTML-escapes the text before placing it in
     # the document.
