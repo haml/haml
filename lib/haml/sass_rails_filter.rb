@@ -6,7 +6,7 @@ module Haml
     class SassRailsTemplate < ::Sass::Rails::SassTemplate
       if Gem::Version.new(Sprockets::VERSION) >= Gem::Version.new('3.0.0')
         def render(scope=Object.new, locals={}, &block)
-          environment = ::Sprockets::Railtie.build_environment(Rails.application)
+          environment = ::Sprockets::Railtie.build_environment(::Rails.application)
           scope = environment.context_class.new(
             environment: environment,
             filename: "/",
