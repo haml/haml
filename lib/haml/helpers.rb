@@ -206,7 +206,7 @@ MESSAGE
 
         if result.count("\n") > 1
           result.gsub!("\n", "\n  ")
-          result = "\n  #{result.strip!}\n"
+          result = "\n  #{result.strip}\n"
         else
           result.strip!
         end
