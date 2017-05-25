@@ -83,6 +83,8 @@ HAML
     assert_equal("<li>[1]</li>", render("= list_of([[1]]) do |i|\n  = i.inspect"))
     assert_equal("<li>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>",
       render("= list_of(['Fee', 'Fi', 'Fo', 'Fum']) do |title|\n  %h1= title\n  %p A word!"))
+    assert_equal("<li>\n  <f>a\n  \n  a</f>\n</li>\n<li>\n  <f>a\n  \n  a</f>\n</li>",
+      render("= list_of(['Fee', 'Fi']) do |title|\n  %f>= \"a\\n\\na\""))
     assert_equal("<li c='3'>1</li>\n<li c='3'>2</li>", render("= list_of([1, 2], {:c => 3}) do |i|\n  = i"))
     assert_equal("<li c='3'>[1]</li>", render("= list_of([[1]], {:c => 3}) do |i|\n  = i.inspect"))
     assert_equal("<li c='3'>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>",
