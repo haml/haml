@@ -40,7 +40,7 @@ require 'context'
 
 require 'benchmark/ips'
 require 'tilt'
-require 'erubis'
+require 'erubi'
 require 'erb'
 require 'haml'
 require 'faml'
@@ -65,13 +65,13 @@ class SlimBenchmarks
 
     haml_ugly.def_method(context, :run_haml_ugly)
     context.instance_eval %{
-      def run_erubis; #{Erubis::Eruby.new(@erb_code).src}; end
+      def run_erubi; #{Erubi::Engine.new(@erb_code).src}; end
       def run_slim_ugly; #{Slim::Engine.new.call @slim_code}; end
       def run_faml; #{Faml::Engine.new.call @haml_code}; end
       def run_hamlit; #{Hamlit::Engine.new.call @haml_code}; end
     }
 
-    bench("erubis v#{Erubis::VERSION}") { context.run_erubis }    unless @only_haml
+    bench("erubi v#{Erubi::VERSION}")   { context.run_erubi }     unless @only_haml
     bench("slim v#{Slim::VERSION}")     { context.run_slim_ugly } unless @only_haml
     bench("haml v#{Haml::VERSION}")     { context.run_haml_ugly }
     bench("faml v#{Faml::VERSION}")     { context.run_faml }
