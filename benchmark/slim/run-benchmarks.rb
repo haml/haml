@@ -59,10 +59,9 @@ class SlimBenchmarks
   end
 
   def init_compiled_benches
-    haml_ugly   = Haml::Engine.new(@haml_code, format: :html5, ugly: true, escape_html: true)
+    context = Context.new
 
-    context  = Context.new
-
+    haml_ugly = Haml::Engine.new(@haml_code, format: :html5, escape_html: true)
     haml_ugly.def_method(context, :run_haml_ugly)
     context.instance_eval %{
       def run_erubi; #{Erubi::Engine.new(@erb_code).src}; end

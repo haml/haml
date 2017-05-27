@@ -33,7 +33,7 @@ module RenderHelper
   def render_haml(haml, options = {})
     options = options.dup
     locals  = options.delete(:locals) || {}
-    haml_options = { escape_html: true, escape_attrs: true, ugly: true }
+    haml_options = { escape_html: true, escape_attrs: true }
     Haml::Engine.new(haml, haml_options.merge(options)).render(Object.new, locals)
   end
 
@@ -62,7 +62,7 @@ class Haml::TestCase < BASE_TEST_CLASS
   end
 
   def assert_haml_ugly(text, options = {}, base = nil)
-    haml_base = { ugly: true, escape_html: true, escape_attrs: true }
+    haml_base = { escape_html: true, escape_attrs: true }
     hamlit_base = { escape_html: true }
     scope  = options.delete(:scope)  || Object.new
     locals = options.delete(:locals) || {}

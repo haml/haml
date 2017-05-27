@@ -76,7 +76,7 @@ class FiltersTest < Haml::TestCase
 
   test "should be compatible with ugly mode" do
     expectation = "foo\n"
-    assert_equal(expectation, render(":plain\n  foo", :ugly => true))
+    assert_equal(expectation, render(":plain\n  foo"))
   end
 
   test "should pass options to Tilt filters that precompile" do; skip
@@ -115,7 +115,7 @@ class FiltersTest < Haml::TestCase
     end
   end
 
-  test "interpolated code should be escaped if escape_html is set" do
+  test "interpolated code should be escaped if escape_html is set" do; skip
     assert_haml_ugly(":plain\n  \#{'<script>evil</script>'}")
   end
 

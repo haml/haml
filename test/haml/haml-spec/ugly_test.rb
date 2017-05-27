@@ -7,7 +7,7 @@ require 'minitest/autorun'
 # This is a spec converted by haml-spec.
 # See: https://github.com/haml/haml-spec
 class UglyTest < MiniTest::Test
-  HAML_DEFAULT_OPTIONS = { ugly: true, escape_html: true, escape_attrs: true }.freeze
+  HAML_DEFAULT_OPTIONS = { escape_html: true, escape_attrs: true }.freeze
   HAMLIT_DEFAULT_OPTIONS = { escape_html: true }.freeze
 
   def self.haml_result(haml, options, locals)
