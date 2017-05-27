@@ -30,11 +30,6 @@ As written in [limitations](REFERENCE.md#limitations), Hamlit drops some not-so-
 works on runtime. With the optimized language design, we can reduce the string concatenation
 to build attributes.
 
-#### Temple optimizers
-Hamlit is built with [Temple](https://github.com/judofyr/temple), which is a framework to build
-template engines and also used in Slim. By using the framework and its optimizers, Hamlit can
-reduce string allocation and concatenation easily.
-
 #### Static analyzer
 Hamlit analyzes Ruby expressions with Ripper and render it on compilation if the expression
 is static. And Hamlit can also compile string literal with string interpolation to reduce
