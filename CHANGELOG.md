@@ -20,6 +20,7 @@ Breaking Changes
 * Rails 3 is no longer supported, matching the official
   [Maintenance Policy for Ruby on Rails](http://weblog.rubyonrails.org/2013/2/24/maintenance-policy-for-ruby-on-rails/).
   (Tee Parham)
+* Remove `:ugly` option ([#894](https://github.com/haml/haml/pull/894))
 * The `haml` command's debug option (`-d`) no longer executes the Haml code, but
   rather checks the generated Ruby syntax for errors.
 * Drop parser/compiler accessor from `Haml::Engine`. Modify `Haml::Engine#initialize` options
