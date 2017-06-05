@@ -215,6 +215,7 @@ RUBY
 
         text = text.rstrip
         text.gsub!("\n", "\n#{indent}")
+        text.gsub!("</", "<\\/")
 
         %!<script#{type}>\n#{"  //<![CDATA[\n" if options[:cdata]}#{indent}#{text}\n#{"  //]]>\n" if options[:cdata]}</script>!
       end
