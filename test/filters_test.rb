@@ -186,6 +186,14 @@ class JavascriptFilterTest < Haml::TestCase
   end
 end
 
+class BabelFilterTest < Haml::TestCase
+  test "should compile JavaScript in ES6" do
+    html = %Q[<script>\n  "use strict";\n  \n  var foo = 1;\n</script>\n]
+    haml = ":babel\n  const foo = 1;"
+    assert_equal(html, render(haml, format: :html5))
+  end
+end
+
 class CSSFilterTest < Haml::TestCase
   test "should wrap output in CDATA and a CSS tag when output is XHTML" do
     html = "<style type='text/css'>\n  /*<![CDATA[*/\n    foo\n  /*]]>*/\n</style>\n"
