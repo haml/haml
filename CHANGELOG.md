@@ -19,6 +19,7 @@ Breaking Changes
 * Haml now requires Ruby 2.0.0 or above.
 * Rails 3 is no longer supported, matching the official
   [Maintenance Policy for Ruby on Rails](http://weblog.rubyonrails.org/2013/2/24/maintenance-policy-for-ruby-on-rails/).
+  Use Haml 4 if you want to use Rails 3.
   (Tee Parham)
 * Remove `:ugly` option ([#894](https://github.com/haml/haml/pull/894))
 * The `haml` command's debug option (`-d`) no longer executes the Haml code, but
