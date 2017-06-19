@@ -4,11 +4,17 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.8.3](https://github.com/k0kubun/hamlit/compare/v2.8.2...v2.8.3) - 2017-06-19
+
+### Added
+
+- Add `--color` option to `hamlit parse` and `hamlit temple` commands too.
+
 ## [2.8.2](https://github.com/k0kubun/hamlit/compare/v2.8.1...v2.8.2) - 2017-06-19
 
 ### Added
 
-- Add `--no-color` option to disable coloring in `hamlit compile` command
+- Add `--color` option to opt-in coloring in `hamlit compile` command
   [#111](https://github.com/k0kubun/hamlit/issues/111).
 
 ## [2.8.1](https://github.com/k0kubun/hamlit/compare/v2.8.0...v2.8.1) - 2017-04-03
