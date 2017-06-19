@@ -18,8 +18,14 @@ module Hamlit
 
     desc 'compile HAML', 'Show compile result'
     option :actionview, type: :boolean, default: false, aliases: %w[-a]
+    option :color, type: :boolean, default: false, aliases: %w[-c]
     def compile(file)
-      print_code generate_code(file)
+      code = generate_code(file)
+      if options[:color]
+        colored_puts generate_code(file)
+      else
+        puts code
+      end
     end
 
     desc 'temple HAML', 'Show temple intermediate expression'
@@ -95,11 +101,9 @@ module Hamlit
       render(args.first.to_s)
     end
 
-    def print_code(code)
+    def colored_puts(code)
       require 'pry'
       puts Pry.Code(code).highlighted
-    rescue LoadError
-      puts code
     end
 
     # Enable colored pretty printing only for development environment.
