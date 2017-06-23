@@ -56,7 +56,7 @@ module Hamlit
     end
 
     def generate_code(file)
-      template = File.read(file)
+      template = file == '-' ? STDIN.read : File.read(file)
       if options[:actionview]
         require 'action_view'
         require 'action_view/base'
