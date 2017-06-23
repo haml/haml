@@ -55,8 +55,16 @@ module Hamlit
       end
     end
 
+    def read_file(file)
+      if file == '-'
+        STDIN.read
+      else
+        File.read(file)
+      end
+    end
+
     def generate_code(file)
-      template = file == '-' ? STDIN.read : File.read(file)
+      template = read_file(file)
       if options[:actionview]
         require 'action_view'
         require 'action_view/base'
@@ -77,7 +85,7 @@ module Hamlit
     end
 
     def generate_ast(file)
-      template = File.read(file)
+      template = read_file(file)
       Hamlit::Parser.new(engine_options).call(template)
     end
 
