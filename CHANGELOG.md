@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.8.4](https://github.com/k0kubun/hamlit/compare/v2.8.3...v2.8.4) - 2017-06-23
+
+### Added
+
+- Allow filename `-` to read input from STDIN for `hamlit [parse|temple|compile|render]`
+  [#113](https://github.com/k0kubun/hamlit/issues/113). *Thanks to @gfx*
+
 ## [2.8.3](https://github.com/k0kubun/hamlit/compare/v2.8.2...v2.8.3) - 2017-06-19
 
 ### Added
