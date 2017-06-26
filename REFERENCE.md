@@ -215,3 +215,50 @@ Hamlit::RailsTemplate.set_options attr_quote: '"'
 ```rb
 set :haml, { attr_quote: '"' }
 ```
+
+## Creating a custom filter
+
+Currently it doesn't have filter registering interface compatible with Haml.
+But you can easily define and register a filter using Tilt like this.
+
+```rb
+module Hamlit
+  class Filters
+    class Es6 < TiltBase
+      def compile(node)
+        # branch with `@format` here if you want
+        compile_html(node)
+      end
+
+      private
+
+      def compile_html(node)
+        temple = [:multi]
+        temple << [:static, "<script>\n"]
+        temple << compile_with_tilt(node, 'es6', indent_width: 2)
+        temple << [:static, "\n</script>"]
+        temple
+      end
+    end
+
+    register :es6, Es6
+  end
+end
+```
+
+After requiring the script, you can do:
+
+```haml
+:es6
+  const a = 1;
+```
+
+and it's rendered as:
+
+```html
+<script>
+  "use strict";
+
+  var a = 1;
+</script>
+```
