@@ -34,6 +34,10 @@ module Hamlit
 
       Engine.new(options).call(template.source)
     end
+
+    def supports_streaming?
+      RailsTemplate.options[:streaming]
+    end
   end
   ActionView::Template.register_template_handler(:haml, RailsTemplate.new)
 
