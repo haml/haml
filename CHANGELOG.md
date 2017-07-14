@@ -1,5 +1,15 @@
 # Haml Changelog
 
+## 5.0.2 (Unreleased)
+
+([diff](https://github.com/haml/haml/compare/v5.0.1...master)).
+
+* Let `haml -c` fail if generated Ruby code is syntax error. [#880](https://github.com/haml/haml/issues/880) (Takashi Kokubun)
+* Fix `NoMethodError` bug caused with Sprockets 3 and :sass filter. [#930](https://github.com/haml/haml/pull/930) (thanks [Gonzalez Maximiliano](https://github.com/emaxi))
+* Fix `list_of` helper with multi-line content. [#933](https://github.com/haml/haml/pull/933) (thanks [Benoit Larroque](https://github.com/zetaben))
+* Optimize rendering performance by changing timing to fix textareas. [#941](https://github.com/haml/haml/pull/941) (Takashi Kokubun)
+* Fix `TypeError` with empty :ruby filter. [#942](https://github.com/haml/haml/pull/942) (Takashi Kokubun)
+
 ## 5.0.1
 
 Released on May 3, 2017
