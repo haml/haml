@@ -287,11 +287,11 @@ module Haml
         text = "(#{text}).strip"
       end
       if opts[:preserve_tag]
-        text = "::Haml::Helpers.preserve(#{text})"
+        text = "_hamlout.fix_textareas!(::Haml::Helpers.preserve(#{text}))"
       elsif opts[:preserve_script]
-        text = "::Haml::Helpers.find_and_preserve(#{text}, _hamlout.options[:preserve])"
+        text = "_hamlout.fix_textareas!(::Haml::Helpers.find_and_preserve(#{text}, _hamlout.options[:preserve]))"
       end
-      "_hamlout.fix_textareas!(#{text});"
+      "#{text};"
     end
 
     def push_generated_script(text)

@@ -159,7 +159,7 @@ module Haml
     # @since Haml 4.0.1
     # @private
     def fix_textareas!(input)
-      return input unless toplevel? && input.include?('<textarea'.freeze)
+      return input unless input.include?('<textarea'.freeze)
 
       pattern = /<(textarea)([^>]*)>(\n|&#x000A;)(.*?)<\/textarea>/im
       input.gsub!(pattern) do |s|

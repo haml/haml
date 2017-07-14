@@ -58,11 +58,15 @@ module ActionView
         preserve = haml_buffer.options.fetch(:preserve, %w[textarea pre code]).include?(name.to_s)
 
         if block_given? && block_is_haml?(block) && preserve
-          return content_tag_without_haml(name, *args) {preserve(&block)}
+          return content_tag_without_haml(name, *args) do
+            haml_buffer.fix_textareas!(Haml::Helpers.preserve(&block)).html_safe
+          end
         end
 
         content = content_tag_without_haml(name, *args, &block)
-        content = Haml::Helpers.preserve(content) if preserve && content
+        if preserve && content
+          content = haml_buffer.fix_textareas!(Haml::Helpers.preserve(content)).html_safe
+        end
         content
       end
 
