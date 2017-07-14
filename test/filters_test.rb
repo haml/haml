@@ -259,4 +259,10 @@ class RubyFilterTest < Haml::TestCase
     html = "7\n"
     assert_equal(html, render(haml))
   end
+
+  test "can render empty filter" do
+    haml = ":ruby\n%foo"
+    html = "<foo></foo>\n"
+    assert_equal(html, render(haml))
+  end
 end
