@@ -1120,8 +1120,8 @@ is compiled to
       <p>I <strong>really</strong> prefer <em>raspberry</em> jam.</p>
     </div>
 
-Currently, filters ignore the {Haml::Options#escape_html `:escape_html`} option.
-This means that `#{}` interpolation within filters is never HTML-escaped.
+Note that `#{}` interpolation within filters is HTML-escaped if you specify
+{Haml::Options#escape_html `:escape_html`} option.
 
 The functionality of some filters such as Markdown can be provided by many
 different libraries. Usually you don't have to worry about this - you can just
