@@ -15,7 +15,6 @@ Gem::Specification.new do |spec|
   end
   spec.homepage    = 'http://haml.info/'
   spec.has_rdoc    = false
-  spec.test_files  = Dir["test/**/*_test.rb"]
   spec.license     = "MIT"
 
   spec.required_ruby_version = '>= 2.0.0'
