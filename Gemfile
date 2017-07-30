@@ -13,7 +13,7 @@ if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.2.2')
 end
 
 gem 'benchmark-ips', '2.3.0'
-gem 'minitest-line'
+gem 'm'
 gem 'pry-byebug'
 
 if RUBY_PLATFORM !~ /mswin|mingw|bccwin|wince/
