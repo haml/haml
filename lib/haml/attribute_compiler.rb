@@ -64,6 +64,7 @@ module Haml
     private
 
     # Build array of grouped values whose sort order may go back and forth, which is also sorted with key name.
+    # This method needs to group values with the same start because it can be changed in `Haml::AttributeBuidler#build_data_keys`.
     # @param values [Array<Haml::AttributeCompiler::AttributeValue>]
     # @return [Array<Array<Haml::AttributeCompiler::AttributeValue>>]
     def group_values_for_sort(values)

@@ -1757,23 +1757,45 @@ HAML
   def test_attributes_sort_order
     # "," < "-" < "0" < "=" < "a"
     assert_equal(<<-HTML, render(<<-HAML))
-<div a,='1' a-='1' a0='1' a='1' aa='1'></div>
-<div a,='1' a-='1' a0='1' a='1' aa='1'></div>
+<div a,='1' a-='2' a0='3' a='4' aa='5'></div>
+<div a,='1' a-='2' a0='3' a='4' aa='5'></div>
     HTML
-- a = 1
-%div{ a: a, 'a-' => 1, aa: 1, a0: 1, 'a,' => 1 }
-- hash = { a: a, 'a-' => 1, aa: 1, a0: 1, 'a,' => 1 }
+- a = 4
+%div{ a: a, 'a-' => 2, aa: 5, a0: 3, 'a,' => 1 }
+- hash = { a: a, 'a-' => 2, aa: 5, a0: 3, 'a,' => 1 }
 %div{ hash }
     HAML
 
     # (no char) < "," < "-" < "0" < "a"
     assert_equal(<<-HTML, render(<<-HAML))
-<div a a,='1' a-='1' a0='1' aa='1'></div>
-<div a a,='1' a-='1' a0='1' aa='1'></div>
+<div a a,='1' a-='2' a0='3' aa='4'></div>
+<div a a,='1' a-='2' a0='3' aa='4'></div>
     HTML
 - a = true
-%div{ a: a, 'a-' => 1, aa: 1, a0: 1, 'a,' => 1 }
-- hash = { a: a, 'a-' => 1, aa: 1, a0: 1, 'a,' => 1 }
+%div{ a: a, 'a-' => 2, aa: 4, a0: 3, 'a,' => 1 }
+- hash = { a: a, 'a-' => 2, aa: 4, a0: 3, 'a,' => 1 }
+%div{ hash }
+    HAML
+
+    # "," < "-" < "0" (with hyphenation)
+    assert_equal(<<-HTML, render(<<-HAML))
+<div a,='1' a-a='2' a0='3'></div>
+<div a,='1' a-a='2' a0='3'></div>
+    HTML
+- a = { a: 2 }
+%div{ a: a, a0: 3, 'a,' => 1 }
+- hash = { a: a, a0: 3, 'a,' => 1 }
+%div{ hash }
+    HAML
+
+    # "A" < "_" < "a" (with underscoration)
+    assert_equal(<<-HTML, render(<<-HAML, hyphenate_data_attrs: false))
+<div a-aA='1' a-a_a='2' a-aa='3'></div>
+<div a-aA='1' a-a_a='2' a-aa='3'></div>
+    HTML
+- a = { a: { a: 2 } }
+%div{ a: a, 'a-aa' => 3, 'a-aA' => 1 }
+- hash = { a: a, 'a-aa' => 3, 'a-aA' => 1 }
 %div{ hash }
     HAML
   end
