@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 gemspec
 
+gem "m"
 gem "pry"
 
 group :docs do
