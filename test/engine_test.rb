@@ -1754,6 +1754,30 @@ HAML
     assert_equal("<p id='b_d'></p>\n<p id='b_d'></p>\n", render("%p(id=b){id:d}\n%p(id=b){id:d}", locals: locals))
   end
 
+  def test_attributes_sort_order
+    # "," < "-" < "0" < "=" < "a"
+    assert_equal(<<-HTML, render(<<-HAML))
+<div a,='1' a-='1' a0='1' a='1' aa='1'></div>
+<div a,='1' a-='1' a0='1' a='1' aa='1'></div>
+    HTML
+- a = 1
+%div{ a: a, 'a-' => 1, aa: 1, a0: 1, 'a,' => 1 }
+- hash = { a: a, 'a-' => 1, aa: 1, a0: 1, 'a,' => 1 }
+%div{ hash }
+    HAML
+
+    # (no char) < "," < "-" < "0" < "a"
+    assert_equal(<<-HTML, render(<<-HAML))
+<div a a,='1' a-='1' a0='1' aa='1'></div>
+<div a a,='1' a-='1' a0='1' aa='1'></div>
+    HTML
+- a = true
+%div{ a: a, 'a-' => 1, aa: 1, a0: 1, 'a,' => 1 }
+- hash = { a: a, 'a-' => 1, aa: 1, a0: 1, 'a,' => 1 }
+%div{ hash }
+    HAML
+  end
+
   # Ruby Multiline
 
   def test_silent_ruby_multiline

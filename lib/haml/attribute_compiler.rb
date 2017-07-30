@@ -16,12 +16,6 @@ module Haml
           value
         end
       end
-
-      # Key's substring before a hyphen. This is necessary because values with the same
-      # base_key can conflict by Haml::AttributeBuidler#build_data_keys.
-      def base_key
-        key.split('-', 2).first
-      end
     end
 
     # Returns a script to render attributes on runtime.
@@ -62,13 +56,26 @@ module Haml
       attribute_values = build_attribute_values(attributes, parsed_hashes)
       AttributeBuilder.verify_attribute_names!(attribute_values.map(&:key))
 
-      values_by_base_key = attribute_values.group_by(&:base_key)
-      [:multi, *values_by_base_key.keys.sort.map { |base_key|
-        compile_attribute_values(values_by_base_key[base_key])
+      [:multi, *group_values_for_sort(attribute_values).map { |value_group|
+        compile_attribute_values(value_group)
       }]
     end
 
     private
+
+    # Build array of grouped values whose sort order may go back and forth, which is also sorted with key name.
+    # @param values [Array<Haml::AttributeCompiler::AttributeValue>]
+    # @return [Array<Array<Haml::AttributeCompiler::AttributeValue>>]
+    def group_values_for_sort(values)
+      sorted_values = values.sort_by(&:key)
+      [].tap do |value_groups|
+        until sorted_values.empty?
+          key = sorted_values.first.key
+          value_group, sorted_values = sorted_values.partition { |v| v.key.start_with?(key) }
+          value_groups << value_group
+        end
+      end
+    end
 
     # Returns array of AttributeValue instances from static attributes and dynamic_attributes. For each key,
     # the values' order in returned value is preserved in the same order as Haml::Buffer#attributes's merge order.
@@ -89,9 +96,9 @@ module Haml
       end
     end
 
-    # Compiles attribute values with the same base_key to Temple expression.
+    # Compiles attribute values with the similar key to Temple expression.
     #
-    # @param values [Array<AttributeValue>] `base_key`'s results are the same. `key`'s result may differ.
+    # @param values [Array<AttributeValue>] whose `key`s are partially or fully the same from left.
     # @return [Array] Temple expression
     def compile_attribute_values(values)
       if values.map(&:key).uniq.size == 1

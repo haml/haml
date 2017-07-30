@@ -9,6 +9,7 @@
 * Fix `list_of` helper with multi-line content. [#933](https://github.com/haml/haml/pull/933) (thanks [Benoit Larroque](https://github.com/zetaben))
 * Optimize rendering performance by changing timing to fix textareas. [#941](https://github.com/haml/haml/pull/941) (Takashi Kokubun)
 * Fix `TypeError` with empty :ruby filter. [#942](https://github.com/haml/haml/pull/942) (Takashi Kokubun)
+* Fix inconsitent attribute sort order. (Takashi Kokubun)
 
 ## 5.0.1
 
