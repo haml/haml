@@ -3,7 +3,7 @@
 ## 5.0.2
 
 Released on August 1, 2017
-([diff](https://github.com/haml/haml/compare/v5.0.2...v5.0.1)).
+([diff](https://github.com/haml/haml/compare/v5.0.1...v5.0.2)).
 
 * Let `haml -c` fail if generated Ruby code is syntax error. [#880](https://github.com/haml/haml/issues/880) (Takashi Kokubun)
 * Fix `NoMethodError` bug caused with Sprockets 3 and :sass filter. [#930](https://github.com/haml/haml/pull/930) (thanks [Gonzalez Maximiliano](https://github.com/emaxi))
