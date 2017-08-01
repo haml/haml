@@ -16,6 +16,7 @@ gemfile:
   - test/gemfiles/Gemfile.rails-4.2.x
   - test/gemfiles/Gemfile.rails-4.1.x
   - test/gemfiles/Gemfile.rails-4.0.x
+  - test/gemfiles/Gemfile.rails-edge
 matrix:
   exclude:
     - rvm: 2.0.0
@@ -34,5 +35,6 @@ matrix:
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
   allow_failures:
     - rvm: rbx-3
+    - gemfile: test/gemfiles/Gemfile.rails-edge
   fast_finish: true
 script: "bundle exec rake submodules test"
