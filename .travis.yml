@@ -16,7 +16,6 @@ gemfile:
   - test/gemfiles/Gemfile.rails-4.2.x
   - test/gemfiles/Gemfile.rails-4.1.x
   - test/gemfiles/Gemfile.rails-4.0.x
-  - test/gemfiles/Gemfile.rails-edge
 matrix:
   exclude:
     - rvm: 2.0.0
@@ -33,6 +32,9 @@ matrix:
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
     - rvm: 2.4.1
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
+  include:
+    - rvm: 2.4.1
+      gemfile: test/gemfiles/Gemfile.rails-edge
   allow_failures:
     - rvm: rbx-3
     - gemfile: test/gemfiles/Gemfile.rails-edge
