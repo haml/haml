@@ -126,7 +126,7 @@ MSG
     def inspect_obj(obj)
       case obj
       when String
-        %Q!"#{obj.gsub(/[\x00-\x7F]+/) {|s| s.inspect[1...-1]}}"!
+        %Q!"#{obj.gsub(/[\x00-\x7F]+/) {|s| s.dump[1...-1]}}"!
       when Symbol
         ":#{inspect_obj(obj.to_s)}"
       else
