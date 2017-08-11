@@ -309,7 +309,7 @@ RUBY
       end
     end
 
-    # @private                                                                                                   [50/1896]
+    # @private 
     module PHP
       include Base
 
