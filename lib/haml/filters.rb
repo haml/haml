@@ -309,6 +309,16 @@ RUBY
       end
     end
 
+    # @private 
+    module PHP
+      include Base
+
+      def render(text)
+        "<?php\n  %s\n?>" % text.rstrip.gsub("\n", "\n  ")
+      end
+    end
+
+
     # @private
     module TiltFilter
       extend self
