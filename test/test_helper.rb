@@ -12,7 +12,8 @@ if ENV["COVERAGE"]
   SimpleCov.start
 end
 
-require 'bundler/setup'
+require 'bundler'
+Bundler.require(:default)
 require 'minitest/autorun'
 require 'action_pack'
 require 'action_controller'
