@@ -26,7 +26,7 @@ module Haml
           require "haml/sass_rails_filter"
         end
 
-        if defined? ActionView::Template::Handlers::ERB::Erubi
+        if defined?(::Erubi) && const_defined?('ActionView::Template::Handlers::ERB::Erubi')
           require "haml/helpers/safe_erubi_template"
           Haml::Filters::RailsErb.template_class = Haml::SafeErubiTemplate
         else
