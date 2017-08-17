@@ -43,6 +43,5 @@ matrix:
   allow_failures:
     - rvm: rbx-3
     - gemfile: test/gemfiles/Gemfile.rails-edge
-    - gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
   fast_finish: true
 script: "bundle exec rake submodules test"
