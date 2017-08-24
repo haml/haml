@@ -2,7 +2,11 @@ describe Hamlit::AttributeParser do
   describe '.parse' do
     def assert_parse(expected, haml)
       actual = Hamlit::AttributeParser.parse(haml)
-      assert_equal expected, actual
+      if expected.nil?
+        assert_nil actual
+      else
+        assert_equal expected, actual
+      end
     end
 
     it { assert_parse({}, '') }
