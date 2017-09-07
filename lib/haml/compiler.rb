@@ -95,13 +95,11 @@ module Haml
         parse = false
         value = t[:parse] ? nil : t[:value]
         dynamic_attributes = Haml::Parser::DynamicAttributes.new
-        preserve_script = false
       else
         object_ref = t[:object_ref]
         parse = t[:parse]
         value = t[:value]
         dynamic_attributes = t[:dynamic_attributes]
-        preserve_script = t[:preserve_script]
       end
 
       if @options[:trace]
