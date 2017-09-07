@@ -1,8 +1,9 @@
 # Haml Changelog
 
-## 5.0.3 (Unreleased)
+## 5.0.3
 
-([diff](https://github.com/haml/haml/compare/v5.0.2...master)).
+Released on September 7, 2017
+([diff](https://github.com/haml/haml/compare/v5.0.2...v5.0.3)).
 
 * Use `String#dump` instead of `String#inspect` to generate string literal. (Takashi Kokubun)
 * Fix Erubi superclass mismatch error. [#952](https://github.com/haml/haml/pull/952) (thanks [Robin Daugherty](https://github.com/RobinDaugherty))
