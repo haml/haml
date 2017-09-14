@@ -338,7 +338,7 @@ END
 
       def validate_ruby(code)
         begin
-          eval("BEGIN {return nil}; #{code}", binding, @options[:filename])
+          eval("BEGIN {return nil}; #{code}", binding, @options[:filename] || "")
         rescue ::SyntaxError # Not to be confused with Haml::SyntaxError
           $!
         end
