@@ -100,7 +100,7 @@ module Haml
 
         each_balaned_tokens(all_tokens) do |tokens|
           key   = shift_key!(tokens)
-          value = tokens.map(&:last).join.strip
+          value = tokens.map {|t| t[2] }.join.strip
           block.call(key, value)
         end
       end
