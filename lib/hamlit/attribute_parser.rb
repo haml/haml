@@ -18,7 +18,7 @@ module Hamlit
       tokens = Ripper.lex(exp)[1..-2] || []
       each_attr(tokens) do |attr_tokens|
         key = parse_key!(attr_tokens)
-        hash[key] = attr_tokens.map(&:last).join.strip
+        hash[key] = attr_tokens.map { |t| t[2] }.join.strip
       end
       hash
     rescue ParseSkip
