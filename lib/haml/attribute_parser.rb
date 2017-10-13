@@ -98,7 +98,7 @@ module Haml
         all_tokens = Ripper.lex(hash_literal.strip)
         all_tokens = all_tokens[1...-1] || [] # strip tokens for brackets
 
-        each_balaned_tokens(all_tokens) do |tokens|
+        each_balanced_tokens(all_tokens) do |tokens|
           key   = shift_key!(tokens)
           value = tokens.map {|t| t[2] }.join.strip
           block.call(key, value)
@@ -107,7 +107,7 @@ module Haml
 
       # @param [Array] tokens - Ripper tokens
       # @param [Proc] block - that takes balanced Ripper tokens as arguments
-      def each_balaned_tokens(tokens, &block)
+      def each_balanced_tokens(tokens, &block)
         attr_tokens = []
         open_tokens = Hash.new { |h, k| h[k] = 0 }
 
