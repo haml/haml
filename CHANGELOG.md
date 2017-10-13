@@ -1,5 +1,13 @@
 # Haml Changelog
 
+## 5.0.4
+
+Released on October 13, 2017
+([diff](https://github.com/haml/haml/compare/v5.0.3...v5.0.4)).
+
+* Fix `haml -c --stdin` regression in 5.0.2. [#958](https://github.com/haml/haml/pull/958) (thanks [Timo Göllner](https://github.com/TeaMoe))
+* Ruby 2.5 support (it wasn't working due to Ripper API change). (Akira Matsuda)
+
 ## 5.0.3
 
 Released on September 7, 2017
