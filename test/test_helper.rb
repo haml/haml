@@ -13,7 +13,6 @@ if ENV["COVERAGE"]
 end
 
 require 'bundler'
-Bundler.require(:default)
 require 'minitest/autorun'
 require 'action_pack'
 require 'action_controller'
@@ -21,6 +20,7 @@ require 'action_view'
 require 'action_view/base'
 require 'nokogiri'
 require 'rails'
+Bundler.require(:default)
 
 if defined?(I18n.enforce_available_locales)
   I18n.enforce_available_locales = true
