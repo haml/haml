@@ -383,7 +383,7 @@ MESSAGE
 
         captured = haml_buffer.buffer.slice!(position..-1)
 
-        if captured == '' and value != haml_buffer.buffer
+        if captured == ''.freeze and value != haml_buffer.buffer
           captured = (value.is_a?(String) ? value : nil)
         end
 
@@ -641,7 +641,7 @@ MESSAGE
     # @param block [Proc] A Ruby block
     # @return [Boolean] Whether or not `block` is defined directly in a Haml template
     def block_is_haml?(block)
-      eval('!!defined?(_hamlout)', block.binding)
+      eval('!!defined?(_hamlout)'.freeze, block.binding)
     end
 
     private
@@ -704,4 +704,3 @@ class Object
     false
   end
 end
-

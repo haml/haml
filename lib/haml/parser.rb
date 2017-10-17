@@ -559,9 +559,9 @@ module Haml
         case type
         when '.'
           if attributes[CLASS_KEY]
-            attributes[CLASS_KEY] += " "
+            attributes[CLASS_KEY] += " ".freeze
           else
-            attributes[CLASS_KEY] = ""
+            attributes[CLASS_KEY] = "".freeze
           end
           attributes[CLASS_KEY] += property
         when '#'; attributes[ID_KEY] = property
@@ -637,7 +637,7 @@ module Haml
       end
 
       if value.nil?
-        value = ''
+        value = ''.freeze
       else
         value.strip!
       end

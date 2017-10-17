@@ -29,7 +29,7 @@ module Haml
     end
 
     def on_newline
-      "\n"
+      "\n".freeze
     end
 
     private

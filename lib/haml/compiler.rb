@@ -110,14 +110,14 @@ module Haml
       push_temple(@attribute_compiler.compile(t[:attributes], object_ref, dynamic_attributes))
       push_text(
         if t[:self_closing] && @options.xhtml?
-          " />#{"\n" unless t[:nuke_outer_whitespace]}"
+          " />#{"\n".freeze unless t[:nuke_outer_whitespace]}"
         else
-          ">#{"\n" unless (t[:self_closing] && @options.html?) ? t[:nuke_outer_whitespace] : (!block_given? || t[:preserve_tag] || t[:nuke_inner_whitespace])}"
+          ">#{"\n".freeze unless (t[:self_closing] && @options.html?) ? t[:nuke_outer_whitespace] : (!block_given? || t[:preserve_tag] || t[:nuke_inner_whitespace])}"
         end
       )
 
       if value && !parse
-        push_text("#{value}</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+        push_text("#{value}</#{t[:name]}>#{"\n".freeze unless t[:nuke_outer_whitespace]}")
       end
 
       return if t[:self_closing]
@@ -125,13 +125,13 @@ module Haml
       if value.nil?
         yield if block_given?
         rstrip_buffer! if t[:nuke_inner_whitespace]
-        push_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+        push_text("</#{t[:name]}>#{"\n".freeze unless t[:nuke_outer_whitespace]}")
         return
       end
 
       if parse
         push_script(value, t.merge(:in_tag => true))
-        push_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+        push_text("</#{t[:name]}>#{"\n".freeze unless t[:nuke_outer_whitespace]}")
       end
     end
 
@@ -219,9 +219,9 @@ module Haml
     def push_silent(text, can_suppress = false)
       flush_merged_text
       return if can_suppress && @options.suppress_eval?
-      newline = (text == "end") ? ";" : "\n"
+      newline = (text == "end") ? ";" : "\n".freeze
       @temple << [:code, "#{resolve_newlines}#{text}#{newline}"]
-      @output_line = @output_line + text.count("\n") + newline.count("\n")
+      @output_line = @output_line + text.count("\n".freeze) + newline.count("\n".freeze)
     end
 
     # Adds `text` to `@buffer`.
@@ -231,7 +231,7 @@ module Haml
 
     def push_temple(temple)
       flush_merged_text
-      @temple.concat([[:newline]] * resolve_newlines.count("\n"))
+      @temple.concat([[:newline]] * resolve_newlines.count("\n".freeze))
       @temple << temple
       @output_line += TempleLineCounter.count_lines(temple)
     end
@@ -265,6 +265,14 @@ module Haml
 
       unless block_given?
         push_generated_script(no_format ? "(#{text}\n).to_s" : build_script_formatter("(#{text}\n)", opts))
+        # TODO this \n should be able to be frozen but the following tests fails
+        #
+        # bin/rails test test/helper_test.rb:596
+        # bin/rails test test/engine_test.rb:534
+        #
+        # Both appear to be testing outer whitespace nuking but at this point
+        # of the code there is no nuke_outer_whitespace key and the
+        # nuke_inner_whitespace key is false.
         push_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
         return
       end
@@ -294,14 +302,15 @@ module Haml
 
     def push_generated_script(text)
       @to_merge << [:script, resolve_newlines + text]
-      @output_line += text.count("\n")
+      @output_line += text.count("\n".freeze)
     end
 
     def resolve_newlines
       diff = @node.line - @output_line
-      return "" if diff <= 0
+      return "".freeze if diff <= 0
       @output_line = @node.line
-      "\n" * diff
+      return "\n".freeze if diff == 1
+      "\n".freeze * diff
     end
 
     # Get rid of and whitespace at the end of the buffer

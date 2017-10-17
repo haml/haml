@@ -64,9 +64,9 @@ module Haml
         # Get rid of the Unicode BOM if possible
         # Shortcut for UTF-8 which might be the majority case
         if str.encoding == Encoding::UTF_8
-          return str.gsub(/\A\uFEFF/, '')
+          return str.gsub(/\A\uFEFF/, ''.freeze)
         elsif str.encoding.name =~ /^UTF-(16|32)(BE|LE)?$/
-          return str.gsub(Regexp.new("\\A\uFEFF".encode(str.encoding)), '')
+          return str.gsub(Regexp.new("\\A\uFEFF".encode(str.encoding)), ''.freeze)
         else
           return str
         end
