@@ -1,5 +1,7 @@
 # Haml Changelog
 
+* Freeze and cache strings to prevent re-allocation of newlines, empty strings, and common content tags. [#961](https://github.com/haml/haml/pull/961) (thanks [Dillon Welch](https://github.com/oniofchaos))
+
 ## 5.0.4
 
 Released on October 13, 2017
