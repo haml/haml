@@ -6,18 +6,18 @@ require 'haml/generator'
 module Haml
   class TempleEngine < Temple::Engine
     define_options(
-      attr_wrapper:         "'",
+      attr_wrapper:         "'".freeze,
       autoclose:            %w(area base basefont br col command embed frame
                                hr img input isindex keygen link menuitem meta
                                param source track wbr),
       encoding:             nil,
       escape_attrs:         true,
       escape_html:          false,
-      filename:             '(haml)',
+      filename:             '(haml)'.freeze,
       format:               :html5,
       hyphenate_data_attrs: true,
       line:                 1,
-      mime_type:            'text/html',
+      mime_type:            'text/html'.freeze,
       preserve:             %w(textarea pre code),
       remove_whitespace:    false,
       suppress_eval:        false,
@@ -48,7 +48,7 @@ module Haml
     #
     # @return [String]
     def precompiled
-      encoding = Encoding.find(@encoding || '')
+      encoding = Encoding.find(@encoding || ''.freeze)
       return @precompiled.force_encoding(encoding) if encoding == Encoding::ASCII_8BIT
       return @precompiled.encode(encoding)
     end
@@ -63,7 +63,7 @@ module Haml
     # (see {file:REFERENCE.md#encodings the `:encoding` option}).
     #
     # @return [String]
-    def precompiled_with_ambles(local_names, after_preamble: '')
+    def precompiled_with_ambles(local_names, after_preamble: ''.freeze)
       preamble = <<END.tr!("\n".freeze, ';'.freeze)
 begin
 extend Haml::Helpers

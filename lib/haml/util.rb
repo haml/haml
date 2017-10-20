@@ -183,15 +183,15 @@ MSG
     # @return [String] The name of the indentation (e.g. `"12 spaces"`, `"1 tab"`)
     def human_indentation(indentation)
       if !indentation.include?(?\t)
-        noun = 'space'
+        noun = 'space'.freeze
       elsif !indentation.include?(?\s)
-        noun = 'tab'
+        noun = 'tab'.freeze
       else
         return indentation.inspect
       end
 
       singular = indentation.length == 1
-      "#{indentation.length} #{noun}#{'s' unless singular}"
+      "#{indentation.length} #{noun}#{'s'.freeze unless singular}"
     end
 
     def contains_interpolation?(str)
@@ -207,13 +207,13 @@ MSG
         if escapes % 2 == 1
           res << "\##{char}"
         else
-          interpolated = if char == '{'
+          interpolated = if char == '{'.freeze
             balance(scan, ?{, ?}, 1)[0][0...-1]
           else
             scan.scan(/\w+/)
           end
-          content = eval('"' + interpolated + '"')
-          content.prepend(char) if char == '@' || char == '$'
+          content = eval(%("#{interpolated}"))
+          content.prepend(char) if char == '@'.freeze || char == '$'.freeze
           content = "Haml::Helpers.html_escape((#{content}))" if escape_html
 
           res << "\#{#{content}}"

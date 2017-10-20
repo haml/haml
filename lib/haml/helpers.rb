@@ -134,9 +134,9 @@ MESSAGE
     #   @yield The block within which to escape newlines
     def preserve(input = nil, &block)
       return preserve(capture_haml(&block)) if block
-      s = input.to_s.chomp("\n")
-      s.gsub!(/\n/, '&#x000A;')
-      s.delete!("\r")
+      s = input.to_s.chomp("\n".freeze)
+      s.gsub!(/\n/, '&#x000A;'.freeze)
+      s.delete!("\r".freeze)
       s
     end
     alias_method :flatten, :preserve
@@ -204,14 +204,14 @@ MESSAGE
       enum.each_with_object('') do |i, ret|
         result = capture_haml(i, &block)
 
-        if result.count("\n") > 1
-          result.gsub!("\n", "\n  ")
+        if result.count("\n".freeze) > 1
+          result.gsub!("\n".freeze, "\n  ".freeze)
           result = "\n  #{result.strip}\n"
         else
           result.strip!
         end
 
-        ret << "\n" unless ret.empty?
+        ret << "\n".freeze unless ret.empty?
         ret << %Q!<li#{opts_attributes}>#{result}</li>!
       end
     end
@@ -228,9 +228,13 @@ MESSAGE
     #
     # @param lang [String] The value of `xml:lang` and `lang`
     # @return [{#to_s => String}] The attribute hash
-    def html_attrs(lang = 'en-US')
+    def html_attrs(lang = 'en-US'.freeze)
       if haml_buffer.options[:format] == :xhtml
-        {:xmlns => "http://www.w3.org/1999/xhtml", 'xml:lang' => lang, :lang => lang}
+        {
+          :xmlns => "http://www.w3.org/1999/xhtml".freeze,
+          'xml:lang' => lang,
+          :lang => lang
+        }
       else
         {:lang => lang}
       end
@@ -374,7 +378,7 @@ MESSAGE
     # @yield [args] A block of Haml code that will be converted to a string
     # @yieldparam args [Array] `args`
     def capture_haml(*args, &block)
-      buffer = eval('if defined? _hamlout then _hamlout else nil end', block.binding) || haml_buffer
+      buffer = eval('if defined? _hamlout then _hamlout else nil end'.freeze, block.binding) || haml_buffer
       with_haml_buffer(buffer) do
         position = haml_buffer.buffer.length
 
@@ -396,7 +400,7 @@ MESSAGE
     # Outputs text directly to the Haml buffer, with the proper indentation.
     #
     # @param text [#to_s] The text to output
-    def haml_concat(text = "")
+    def haml_concat(text = "".freeze)
       haml_internal_concat text
       ErrorReturn.new("haml_concat")
     end
@@ -413,11 +417,11 @@ MESSAGE
     # @param text [#to_s] The text to output
     # @param newline [Boolean] Whether to add a newline after the text
     # @param indent [Boolean] Whether to add indentation to the first line
-    def haml_internal_concat(text = "", newline = true, indent = true)
+    def haml_internal_concat(text = "".freeze, newline = true, indent = true)
       if haml_buffer.tabulation == 0
-        haml_buffer.buffer << "#{text}#{"\n" if newline}"
+        haml_buffer.buffer << "#{text}#{"\n".freeze if newline}"
       else
-        haml_buffer.buffer << %[#{haml_indent if indent}#{text.to_s.gsub("\n", "\n#{haml_indent}")}#{"\n" if newline}]
+        haml_buffer.buffer << %[#{haml_indent if indent}#{text.to_s.gsub("\n".freeze, "\n#{haml_indent}")}#{"\n".freeze if newline}]
       end
     end
     private :haml_internal_concat
@@ -505,7 +509,7 @@ MESSAGE
         attrs)
 
       if text.nil? && block.nil? && (haml_buffer.options[:autoclose].include?(name) || flags.include?(:/))
-        haml_internal_concat_raw "<#{name}#{attributes}#{' /' if haml_buffer.options[:format] == :xhtml}>"
+        haml_internal_concat_raw "<#{name}#{attributes}#{' /'.freeze if haml_buffer.options[:format] == :xhtml}>"
         return ret
       end
 
@@ -518,7 +522,7 @@ MESSAGE
       end_tag = "</#{name}>"
       if block.nil?
         text = text.to_s
-        if text.include?("\n")
+        if text.include?("\n".freeze)
           haml_internal_concat_raw tag
           tab_up
           haml_internal_concat text
@@ -596,7 +600,13 @@ MESSAGE
     end
 
     # Characters that need to be escaped to HTML entities from user input
-    HTML_ESCAPE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#39;' }
+    HTML_ESCAPE = {
+      '&'.freeze => '&amp;'.freeze,
+      '<'.freeze => '&lt;'.freeze,
+      '>'.freeze => '&gt;'.freeze,
+      '"'.freeze => '&quot;'.freeze,
+      "'".freeze => '&#39;'.freeze
+    }.freeze
 
     HTML_ESCAPE_REGEX = /['"><&]/
 
@@ -652,7 +662,7 @@ MESSAGE
       # skip merging if no ids or classes found in name
       return name, attributes_hash unless name =~ /^(.+?)?([\.#].*)$/
 
-      return $1 || "div", AttributeBuilder.merge_attributes!(
+      return $1 || "div".freeze, AttributeBuilder.merge_attributes!(
         Haml::Parser.parse_class_and_id($2), attributes_hash)
     end
 
