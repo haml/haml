@@ -212,7 +212,7 @@ MSG
           else
             scan.scan(/\w+/)
           end
-          content = eval(%("#{interpolated}"))
+          content = eval("\"#{interpolated}\"")
           content.prepend(char) if char == '@'.freeze || char == '$'.freeze
           content = "Haml::Helpers.html_escape((#{content}))" if escape_html
 
