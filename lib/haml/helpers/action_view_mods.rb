@@ -55,7 +55,9 @@ module ActionView
       def content_tag_with_haml(name, *args, &block)
         return content_tag_without_haml(name, *args, &block) unless is_haml?
 
-        preserve = haml_buffer.options.fetch(:preserve, %w[textarea pre code]).include?(name.to_s)
+        @_content_tag_name_cache ||= {}
+        name_string = @_content_tag_name_cache[name] ||= name.to_s
+        preserve = haml_buffer.options.fetch(:preserve, %w[textarea pre code]).include?(name_string)
 
         if block_given? && block_is_haml?(block) && preserve
           return content_tag_without_haml(name, *args) do

@@ -42,7 +42,7 @@ module Haml
       end
 
       filter = const_set(name, Module.new)
-      filter.extend const_get(options[:extend] || "Plain")
+      filter.extend const_get(options[:extend] || "Plain".freeze)
       filter.extend TiltFilter
       filter.extend PrecompiledTiltFilter if options.has_key? :precompiled
 
@@ -105,7 +105,7 @@ module Haml
       #
       # @param base [Module, Class] The module that this is included in
       def self.included(base)
-        Filters.defined[base.name.split("::").last.downcase] = base
+        Filters.defined[base.name.split("::".freeze).last.downcase] = base
         base.extend(base)
       end
 
@@ -175,7 +175,7 @@ module Haml
             # filter name). Then we need to escape the trailing
             # newline so that the whole filter block doesn't take up
             # too many.
-            text = %[\n#{text.sub(/\n"\Z/, "\\n\"")}]
+            text = %[\n#{text.sub(/\n"\Z/, "\\n\"".freeze)}]
             push_script <<RUBY.rstrip, :escape_html => false
 find_and_preserve(#{filter.inspect}.render_with_options(#{text}, _hamlout.options))
 RUBY
@@ -206,15 +206,15 @@ RUBY
 
       # @see Base#render_with_options
       def render_with_options(text, options)
-        indent = options[:cdata] ? '    ' : '  ' # 4 or 2 spaces
+        indent = options[:cdata] ? '    '.freeze : '  '.freeze # 4 or 2 spaces
         if options[:format] == :html5
-          type = ''
+          type = ''.freeze
         else
           type = " type=#{options[:attr_wrapper]}text/javascript#{options[:attr_wrapper]}"
         end
 
         text = text.rstrip
-        text.gsub!("\n", "\n#{indent}")
+        text.gsub!("\n".freeze, "\n#{indent}")
 
         %!<script#{type}>\n#{"  //<![CDATA[\n" if options[:cdata]}#{indent}#{text}\n#{"  //]]>\n" if options[:cdata]}</script>!
       end
@@ -227,15 +227,15 @@ RUBY
 
       # @see Base#render_with_options
       def render_with_options(text, options)
-        indent = options[:cdata] ? '    ' : '  ' # 4 or 2 spaces
+        indent = options[:cdata] ? '    '.freeze : '  '.freeze # 4 or 2 spaces
         if options[:format] == :html5
-          type = ''
+          type = ''.freeze
         else
           type = " type=#{options[:attr_wrapper]}text/css#{options[:attr_wrapper]}"
         end
 
         text = text.rstrip
-        text.gsub!("\n", "\n#{indent}")
+        text.gsub!("\n".freeze, "\n#{indent}")
 
         %(<style#{type}>\n#{"  /*<![CDATA[*/\n" if options[:cdata]}#{indent}#{text}\n#{"  /*]]>*/\n" if options[:cdata]}</style>)
       end
@@ -249,7 +249,7 @@ RUBY
       def render(text)
         text = "\n#{text}"
         text.rstrip!
-        text.gsub!("\n", "\n    ")
+        text.gsub!("\n".freeze, "\n    ".freeze)
         "<![CDATA[#{text}\n]]>"
       end
     end
@@ -282,9 +282,9 @@ RUBY
       def compile(compiler, text)
         return if compiler.options[:suppress_eval]
         compiler.instance_eval do
-          push_silent "#{<<-FIRST.tr("\n", ';')}#{text}#{<<-LAST.tr("\n", ';')}"
+          push_silent "#{<<-FIRST.tr("\n".freeze, ';'.freeze)}#{text}#{<<-LAST.tr("\n", ';')}"
             begin
-              haml_io = StringIO.new(_hamlout.buffer, 'a')
+              haml_io = StringIO.new(_hamlout.buffer, 'a'.freeze)
           FIRST
             ensure
               haml_io.close
@@ -320,7 +320,7 @@ RUBY
           @template_class = Tilt["t.#{tilt_extension}"] or
             raise Error.new(Error.message(:cant_run_filter, tilt_extension))
         rescue LoadError => e
-          dep = e.message.split('--').last.strip
+          dep = e.message.split('--'.freeze).last.strip
           raise Error.new(Error.message(:gem_install_filter_deps, tilt_extension, dep))
         end
       end

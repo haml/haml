@@ -64,9 +64,9 @@ module Haml
         # Get rid of the Unicode BOM if possible
         # Shortcut for UTF-8 which might be the majority case
         if str.encoding == Encoding::UTF_8
-          return str.gsub(/\A\uFEFF/, '')
+          return str.gsub(/\A\uFEFF/, ''.freeze)
         elsif str.encoding.name =~ /^UTF-(16|32)(BE|LE)?$/
-          return str.gsub(Regexp.new("\\A\uFEFF".encode(str.encoding)), '')
+          return str.gsub(Regexp.new("\\A\uFEFF".encode(str.encoding)), ''.freeze)
         else
           return str
         end
@@ -183,15 +183,15 @@ MSG
     # @return [String] The name of the indentation (e.g. `"12 spaces"`, `"1 tab"`)
     def human_indentation(indentation)
       if !indentation.include?(?\t)
-        noun = 'space'
+        noun = 'space'.freeze
       elsif !indentation.include?(?\s)
-        noun = 'tab'
+        noun = 'tab'.freeze
       else
         return indentation.inspect
       end
 
       singular = indentation.length == 1
-      "#{indentation.length} #{noun}#{'s' unless singular}"
+      "#{indentation.length} #{noun}#{'s'.freeze unless singular}"
     end
 
     def contains_interpolation?(str)
@@ -207,13 +207,13 @@ MSG
         if escapes % 2 == 1
           res << "\##{char}"
         else
-          interpolated = if char == '{'
+          interpolated = if char == '{'.freeze
             balance(scan, ?{, ?}, 1)[0][0...-1]
           else
             scan.scan(/\w+/)
           end
-          content = eval('"' + interpolated + '"')
-          content.prepend(char) if char == '@' || char == '$'
+          content = eval("\"#{interpolated}\"")
+          content.prepend(char) if char == '@'.freeze || char == '$'.freeze
           content = "Haml::Helpers.html_escape((#{content}))" if escape_html
 
           res << "\#{#{content}}"

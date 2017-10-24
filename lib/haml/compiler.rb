@@ -103,21 +103,21 @@ module Haml
       end
 
       if @options[:trace]
-        t[:attributes].merge!({"data-trace" => @options.filename.split('/views').last << ":" << @node.line.to_s})
+        t[:attributes].merge!({"data-trace".freeze => @options.filename.split('/views'.freeze).last << ":".freeze << @node.line.to_s})
       end
 
       push_text("<#{t[:name]}")
       push_temple(@attribute_compiler.compile(t[:attributes], object_ref, dynamic_attributes))
       push_text(
         if t[:self_closing] && @options.xhtml?
-          " />#{"\n" unless t[:nuke_outer_whitespace]}"
+          " />#{"\n".freeze unless t[:nuke_outer_whitespace]}"
         else
-          ">#{"\n" unless (t[:self_closing] && @options.html?) ? t[:nuke_outer_whitespace] : (!block_given? || t[:preserve_tag] || t[:nuke_inner_whitespace])}"
+          ">#{"\n".freeze unless (t[:self_closing] && @options.html?) ? t[:nuke_outer_whitespace] : (!block_given? || t[:preserve_tag] || t[:nuke_inner_whitespace])}"
         end
       )
 
       if value && !parse
-        push_text("#{value}</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+        push_text("#{value}</#{t[:name]}>#{"\n".freeze unless t[:nuke_outer_whitespace]}")
       end
 
       return if t[:self_closing]
@@ -125,13 +125,13 @@ module Haml
       if value.nil?
         yield if block_given?
         rstrip_buffer! if t[:nuke_inner_whitespace]
-        push_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+        push_text("</#{t[:name]}>#{"\n".freeze unless t[:nuke_outer_whitespace]}")
         return
       end
 
       if parse
         push_script(value, t.merge(:in_tag => true))
-        push_text("</#{t[:name]}>#{"\n" unless t[:nuke_outer_whitespace]}")
+        push_text("</#{t[:name]}>#{"\n".freeze unless t[:nuke_outer_whitespace]}")
       end
     end
 
@@ -179,36 +179,36 @@ module Haml
     end
 
     def text_for_doctype
-      if @node.value[:type] == "xml"
+      if @node.value[:type] == "xml".freeze
         return nil if @options.html?
         wrapper = @options.attr_wrapper
         return "<?xml version=#{wrapper}1.0#{wrapper} encoding=#{wrapper}#{@node.value[:encoding] || "utf-8"}#{wrapper} ?>"
       end
 
       if @options.html5?
-        '<!DOCTYPE html>'
+        '<!DOCTYPE html>'.freeze
       else
         if @options.xhtml?
-          if @node.value[:version] == "1.1"
-            '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">'
-          elsif @node.value[:version] == "5"
-            '<!DOCTYPE html>'
+          if @node.value[:version] == "1.1".freeze
+            '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">'.freeze
+          elsif @node.value[:version] == "5".freeze
+            '<!DOCTYPE html>'.freeze
           else
             case @node.value[:type]
-            when "strict";   '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
-            when "frameset"; '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">'
-            when "mobile";   '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">'
-            when "rdfa";     '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">'
-            when "basic";    '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">'
-            else             '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
+            when "strict".freeze;   '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'.freeze
+            when "frameset".freeze; '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">'.freeze
+            when "mobile".freeze;   '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">'.freeze
+            when "rdfa".freeze;     '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">'.freeze
+            when "basic".freeze;    '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">'.freeze
+            else             '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'.freeze
             end
           end
 
         elsif @options.html4?
           case @node.value[:type]
-          when "strict";   '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'
-          when "frameset"; '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">'
-          else             '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'
+          when "strict".freeze;   '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'.freeze
+          when "frameset".freeze; '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">'.freeze
+          else             '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'.freeze
           end
         end
       end
@@ -219,9 +219,9 @@ module Haml
     def push_silent(text, can_suppress = false)
       flush_merged_text
       return if can_suppress && @options.suppress_eval?
-      newline = (text == "end") ? ";" : "\n"
+      newline = (text == "end".freeze) ? ";".freeze : "\n".freeze
       @temple << [:code, "#{resolve_newlines}#{text}#{newline}"]
-      @output_line = @output_line + text.count("\n") + newline.count("\n")
+      @output_line = @output_line + text.count("\n".freeze) + newline.count("\n".freeze)
     end
 
     # Adds `text` to `@buffer`.
@@ -231,7 +231,7 @@ module Haml
 
     def push_temple(temple)
       flush_merged_text
-      @temple.concat([[:newline]] * resolve_newlines.count("\n"))
+      @temple.concat([[:newline]] * resolve_newlines.count("\n".freeze))
       @temple << temple
       @output_line += TempleLineCounter.count_lines(temple)
     end
@@ -246,7 +246,7 @@ module Haml
         when :script
           @temple << [:dynamic, val]
         else
-          raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
+          raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.".freeze)
         end
       end
 
@@ -265,6 +265,14 @@ module Haml
 
       unless block_given?
         push_generated_script(no_format ? "(#{text}\n).to_s" : build_script_formatter("(#{text}\n)", opts))
+        # TODO this \n should be able to be frozen but the following tests fails
+        #
+        # bin/rails test test/helper_test.rb:596
+        # bin/rails test test/engine_test.rb:534
+        #
+        # Both appear to be testing outer whitespace nuking but at this point
+        # of the code there is no nuke_outer_whitespace key and the
+        # nuke_inner_whitespace key is false.
         push_text("\n") unless opts[:in_tag] || opts[:nuke_inner_whitespace]
         return
       end
@@ -273,7 +281,7 @@ module Haml
       push_silent "haml_temp = #{text}"
       yield
       push_silent('end', :can_suppress) unless @node.value[:dont_push_end]
-      @temple << [:dynamic, no_format ? 'haml_temp.to_s;' : build_script_formatter('haml_temp', opts)]
+      @temple << [:dynamic, no_format ? 'haml_temp.to_s;'.freeze : build_script_formatter('haml_temp', opts)]
     end
 
     def build_script_formatter(text, opts)
@@ -294,14 +302,15 @@ module Haml
 
     def push_generated_script(text)
       @to_merge << [:script, resolve_newlines + text]
-      @output_line += text.count("\n")
+      @output_line += text.count("\n".freeze)
     end
 
     def resolve_newlines
       diff = @node.line - @output_line
-      return "" if diff <= 0
+      return "".freeze if diff <= 0
       @output_line = @node.line
-      "\n" * diff
+      return "\n".freeze if diff == 1
+      "\n".freeze * diff
     end
 
     # Get rid of and whitespace at the end of the buffer
@@ -309,7 +318,7 @@ module Haml
     def rstrip_buffer!(index = -1)
       last = @to_merge[index]
       if last.nil?
-        push_silent("_hamlout.rstrip!", false)
+        push_silent("_hamlout.rstrip!".freeze, false)
         return
       end
 
@@ -321,10 +330,10 @@ module Haml
           rstrip_buffer! index
         end
       when :script
-        last[1].gsub!(/\(haml_temp, (.*?)\);$/, '(haml_temp.rstrip, \1);')
+        last[1].gsub!(/\(haml_temp, (.*?)\);$/, '(haml_temp.rstrip, \1);'.freeze)
         rstrip_buffer! index - 1
       else
-        raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.")
+        raise SyntaxError.new("[HAML BUG] Undefined entry in Haml::Compiler@to_merge.".freeze)
       end
     end
   end

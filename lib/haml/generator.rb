@@ -13,7 +13,7 @@ module Haml
     end
 
     def on_multi(*exp)
-      exp.map { |e| compile(e) }.join('; ')
+      exp.map { |e| compile(e) }.join('; '.freeze)
     end
 
     def on_static(text)
@@ -29,7 +29,7 @@ module Haml
     end
 
     def on_newline
-      "\n"
+      "\n".freeze
     end
 
     private

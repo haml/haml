@@ -167,7 +167,7 @@ module Haml
 
       begin
         eval("Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {};" <<
-             @temple_engine.precompiled_with_ambles(local_names) << "}\n", scope, @options.filename, @options.line)
+             @temple_engine.precompiled_with_ambles(local_names) << "}\n".freeze, scope, @options.filename, @options.line)
       rescue ::SyntaxError => e
         raise SyntaxError, e.message
       end

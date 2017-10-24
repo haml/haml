@@ -106,7 +106,7 @@ module Haml
         Line.new(whitespace, text.rstrip, full, index, self, false)
       end
       # Append special end-of-document marker
-      @template << Line.new(nil, '-#', '-#', @template.size, self, true)
+      @template << Line.new(nil, '-#'.freeze, '-#'.freeze, @template.size, self, true)
 
       @root = @parent = ParseNode.new(:root)
       @flat = false
@@ -123,7 +123,7 @@ module Haml
 
         if flat?
           text = @line.full.dup
-          text = "" unless text.gsub!(/^#{@flat_spaces}/, '')
+          text = "".freeze unless text.gsub!(/^#{@flat_spaces}/, ''.freeze)
           @filter_buffer << "#{text}\n"
           @line = @next_line
           next
@@ -210,14 +210,14 @@ module Haml
     class DynamicAttributes < Struct.new(:new, :old)
       def old=(value)
         unless value =~ /\A{.*}\z/m
-          raise ArgumentError.new('Old attributes must start with "{" and end with "}"')
+          raise ArgumentError.new('Old attributes must start with "{" and end with "}"'.freeze)
         end
         super
       end
 
       # This will be a literal for Haml::Buffer#attributes's last argument, `attributes_hashes`.
       def to_literal
-        [new, stripped_old].compact.join(', ')
+        [new, stripped_old].compact.join(', '.freeze)
       end
 
       private
@@ -225,7 +225,7 @@ module Haml
       # For `%foo{ { foo: 1 }, bar: 2 }`, :old is "{ { foo: 1 }, bar: 2 }" and this method returns " { foo: 1 }, bar: 2 " for last argument.
       def stripped_old
         return nil if old.nil?
-        old.sub!(/\A{/, '').sub!(/}\z/m, '')
+        old.sub!(/\A{/, ''.freeze).sub!(/}\z/m, ''.freeze)
       end
     end
 
@@ -258,10 +258,10 @@ module Haml
       when ELEMENT; push tag(line)
       when COMMENT; push comment(line.text[1..-1].lstrip)
       when SANITIZE
-        return push plain(line.strip!(3), :escape_html) if line.text[1, 2] == '=='
+        return push plain(line.strip!(3), :escape_html) if line.text[1, 2] == '=='.freeze
         return push script(line.strip!(2), :escape_html) if line.text[1] == SCRIPT
         return push flat_script(line.strip!(2), :escape_html) if line.text[1] == FLAT_SCRIPT
-        return push plain(line.strip!(1), :escape_html) if line.text[1] == ?\s || line.text[1..2] == '#{'
+        return push plain(line.strip!(1), :escape_html) if line.text[1] == ?\s || line.text[1..2] == '#{'.freeze
         push plain(line)
       when SCRIPT
         return push plain(line.strip!(2)) if line.text[1] == SCRIPT
@@ -273,11 +273,11 @@ module Haml
         push silent_script(line)
       when FILTER; push filter(line.text[1..-1].downcase)
       when DOCTYPE
-        return push doctype(line.text) if line.text[0, 3] == '!!!'
-        return push plain(line.strip!(3), false) if line.text[1, 2] == '=='
+        return push doctype(line.text) if line.text[0, 3] == '!!!'.freeze
+        return push plain(line.strip!(3), false) if line.text[1, 2] == '=='.freeze
         return push script(line.strip!(2), false) if line.text[1] == SCRIPT
         return push flat_script(line.strip!(2), false) if line.text[1] == FLAT_SCRIPT
-        return push plain(line.strip!(1), false) if line.text[1] == ?\s || line.text[1..2] == '#{'
+        return push plain(line.strip!(1), false) if line.text[1] == ?\s || line.text[1..2] == '#{'.freeze
         push plain(line)
       when ESCAPE
         line.text = line.text[1..-1]
@@ -311,7 +311,7 @@ module Haml
     end
 
     def script(line, escape_html = nil, preserve = false)
-      raise SyntaxError.new(Error.message(:no_ruby_code, '=')) if line.text.empty?
+      raise SyntaxError.new(Error.message(:no_ruby_code, '='.freeze)) if line.text.empty?
       line = handle_ruby_multiline(line)
       escape_html = @options.escape_html if escape_html.nil?
 
@@ -323,7 +323,7 @@ module Haml
     end
 
     def flat_script(line, escape_html = nil)
-      raise SyntaxError.new(Error.message(:no_ruby_code, '~')) if line.text.empty?
+      raise SyntaxError.new(Error.message(:no_ruby_code, '~'.freeze)) if line.text.empty?
       script(line, escape_html, :preserve)
     end
 
@@ -335,12 +335,12 @@ module Haml
 
       check_push_script_stack(keyword)
 
-      if ["else", "elsif", "when"].include?(keyword)
+      if ["else".freeze, "elsif".freeze, "when".freeze].include?(keyword)
         if @script_level_stack.empty?
           raise Haml::SyntaxError.new(Error.message(:missing_if, keyword), @line.index)
         end
 
-        if keyword == 'when' and !@script_level_stack.last[2]
+        if keyword == 'when'.freeze and !@script_level_stack.last[2]
           if @script_level_stack.last[1] + 1 == @line.tabs
             @script_level_stack.last[1] += 1
           end
@@ -358,11 +358,11 @@ module Haml
     end
 
     def check_push_script_stack(keyword)
-      if ["if", "case", "unless"].include?(keyword)
+      if ["if".freeze, "case".freeze, "unless".freeze].include?(keyword)
         # @script_level_stack contents are arrays of form
         # [:keyword, stack_level, other_info]
         @script_level_stack.push([keyword.to_sym, @line.tabs])
-        @script_level_stack.last << false if keyword == 'case'
+        @script_level_stack.last << false if keyword == 'case'.freeze
         @tab_up = true
       end
     end
@@ -386,18 +386,18 @@ module Haml
 
       preserve_tag = @options.preserve.include?(tag_name)
       nuke_inner_whitespace ||= preserve_tag
-      escape_html = (action == '&' || (action != '!' && @options.escape_html))
+      escape_html = (action == '&'.freeze || (action != '!'.freeze && @options.escape_html))
 
       case action
-      when '/'; self_closing = true
-      when '~'; parse = preserve_script = true
-      when '='
+      when '/'.freeze; self_closing = true
+      when '~'.freeze; parse = preserve_script = true
+      when '='.freeze
         parse = true
         if value[0] == ?=
           value = unescape_interpolation(value[1..-1].strip, escape_html)
           escape_html = false
         end
-      when '&', '!'
+      when '&'.freeze, '!'.freeze
         if value[0] == ?= || value[0] == ?~
           parse = true
           preserve_script = (value[0] == ?~)
@@ -465,7 +465,7 @@ module Haml
 
     # Renders an XHTML comment.
     def comment(text)
-      if text[0..1] == '!['
+      if text[0..1] == '!['.freeze
         revealed = true
         text = text[1..-1]
       else
@@ -530,12 +530,12 @@ module Haml
     end
 
     def close_silent_script(node)
-      @script_level_stack.pop if ["if", "case", "unless"].include? node.value[:keyword]
+      @script_level_stack.pop if ["if".freeze, "case".freeze, "unless".freeze].include? node.value[:keyword]
 
       # Post-process case statements to normalize the nesting of "when" clauses
-      return unless node.value[:keyword] == "case"
+      return unless node.value[:keyword] == "case".freeze
       return unless first = node.children.first
-      return unless first.type == :silent_script && first.value[:keyword] == "when"
+      return unless first.type == :silent_script && first.value[:keyword] == "when".freeze
       return if first.children.empty?
       # If the case node has a "when" child with children, it's the
       # only child. Then we want to put everything nested beneath it
@@ -559,12 +559,12 @@ module Haml
         case type
         when '.'
           if attributes[CLASS_KEY]
-            attributes[CLASS_KEY] += " "
+            attributes[CLASS_KEY] += " ".freeze
           else
-            attributes[CLASS_KEY] = ""
+            attributes[CLASS_KEY] = "".freeze
           end
           attributes[CLASS_KEY] += property
-        when '#'; attributes[ID_KEY] = property
+        when '#'.freeze; attributes[ID_KEY] = property
         end
       end
       attributes
@@ -637,7 +637,7 @@ module Haml
       end
 
       if value.nil?
-        value = ''
+        value = ''.freeze
       else
         value.strip!
       end
@@ -706,8 +706,8 @@ module Haml
           dynamic_attributes << "#{inspect_obj(name)} => #{val},"
         end
       end
-      dynamic_attributes << "}"
-      dynamic_attributes = nil if dynamic_attributes == "{}"
+      dynamic_attributes << "}".freeze
+      dynamic_attributes = nil if dynamic_attributes == "{}".freeze
 
       return [static_attributes, dynamic_attributes], scanner.rest, last_line
     end
@@ -731,7 +731,7 @@ module Haml
       content = []
       loop do
         return false unless scanner.scan(re)
-        content << [:str, scanner[1].gsub(/\\(.)/, '\1')]
+        content << [:str, scanner[1].gsub(/\\(.)/, '\1'.freeze)]
         break if scanner[2] == quote
         content << [:ruby, balance(scanner, ?{, ?}, 1).first[0...-1]]
       end
