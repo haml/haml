@@ -698,7 +698,7 @@ module Haml
       end
 
       static_attributes = {}
-      dynamic_attributes = ["{".freeze]
+      dynamic_attributes = "{"
       attributes.each do |name, (type, val)|
         if type == :static
           static_attributes[name] = val
@@ -707,7 +707,6 @@ module Haml
         end
       end
       dynamic_attributes << "}".freeze
-      dynamic_attributes = dynamic_attributes.join(''.freeze)
       dynamic_attributes = nil if dynamic_attributes == "{}".freeze
 
       return [static_attributes, dynamic_attributes], scanner.rest, last_line
