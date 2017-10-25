@@ -52,10 +52,12 @@ module ActionView
     end
 
     module TagHelper
+      DEFAULT_PRESERVE_OPTIONS = %w(textarea pre code).freeze
+
       def content_tag_with_haml(name, *args, &block)
         return content_tag_without_haml(name, *args, &block) unless is_haml?
 
-        preserve = haml_buffer.options.fetch(:preserve, %w[textarea pre code]).include?(name.to_s)
+        preserve = haml_buffer.options.fetch(:preserve, DEFAULT_PRESERVE_OPTIONS).include?(name.to_s)
 
         if block_given? && block_is_haml?(block) && preserve
           return content_tag_without_haml(name, *args) do
