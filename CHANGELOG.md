@@ -1,5 +1,7 @@
 # Haml Changelog
 
+* Add erubis to gemspec so that `benchmark.rb` works [#964](https://github.com/haml/haml/pull/964) (thanks [Dillon Welch](https://github.com/oniofchaos))
+
 ## 5.0.4
 
 Released on October 13, 2017
