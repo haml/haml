@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 require 'strscan'
 
 module Haml
@@ -788,7 +788,7 @@ module Haml
     end
 
     def handle_ruby_multiline(line)
-      line.text = line.text.rstrip
+      line.text.rstrip!
       return line unless is_ruby_multiline?(line.text)
       begin
         # Use already fetched @next_line in the first loop. Otherwise, fetch next
