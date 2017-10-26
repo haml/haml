@@ -12,7 +12,7 @@ END
   exit 1
 end
 
-%w[erb erubis rails active_support action_controller
+%w[erb erubi rails active_support action_controller
    action_view action_pack haml/template rbench].each {|dep| require(dep)}
 
 def view
@@ -28,7 +28,7 @@ end
 RBench.run(times) do
   column :haml, :title => "Haml"
   column :erb, :title => "ERB"
-  column :erubis, :title => "Erubis"
+  column :erubi, :title => "Erubi"
 
   template_name = 'standard'
   haml_template    = File.read("#{File.dirname(__FILE__)}/test/templates/#{template_name}.haml")
@@ -38,12 +38,12 @@ RBench.run(times) do
     obj = Object.new
 
     Haml::Engine.new(haml_template).def_method(obj, :haml)
-    Erubis::Eruby.new(erb_template).def_method(obj, :erubis)
     obj.instance_eval("def erb; #{ERB.new(erb_template, nil, '-').src}; end")
+    obj.instance_eval("def erubi; #{Erubi::Engine.new(erb_template).src}; end")
 
     haml      { obj.haml }
     erb       { obj.erb }
-    erubis    { obj.erubis }
+    erubi     { obj.erubi }
   end
 
   report "ActionView" do
@@ -51,8 +51,8 @@ RBench.run(times) do
     render view, 'templates/standard'
     render view, 'erb/standard'
 
-    haml { render view, 'templates/standard' }
-    erb  { render view, 'erb/standard' }
+    haml  { render view, 'templates/standard' }
+    erubi { render view, 'erb/standard' }
   end
 
   report "ActionView with deep partials" do
@@ -60,7 +60,7 @@ RBench.run(times) do
     render view, 'templates/action_view'
     render view, 'erb/action_view'
 
-    haml { render view, 'templates/action_view' }
-    erb  { render view, 'erb/action_view' }
+    haml  { render view, 'templates/action_view' }
+    erubi { render view, 'erb/action_view' }
   end
 end
