@@ -22,7 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'temple', '>= 0.8.0'
   spec.add_dependency 'tilt'
 
-  spec.add_development_dependency 'erubis' # for benchmark.rb
   spec.add_development_dependency 'rails', '>= 4.0.0'
   spec.add_development_dependency 'rbench'
   spec.add_development_dependency 'minitest', '>= 4.0'

@@ -2,7 +2,6 @@
 
 * Add constant for default options in `lib/haml/helpers/action_view_mods.rb` [#966](https://github.com/haml/haml/pull/966) (thanks [Dillon Welch](https://github.com/oniofchaos))
 * Performance/memory usage improvement in `lib/haml/buffer.rb` [#963](https://github.com/haml/haml/pull/963) (thanks [Dillon Welch](https://github.com/oniofchaos))
-* Add erubis to gemspec so that `benchmark.rb` works [#964](https://github.com/haml/haml/pull/964) (thanks [Dillon Welch](https://github.com/oniofchaos))
 
 ## 5.0.4
 
