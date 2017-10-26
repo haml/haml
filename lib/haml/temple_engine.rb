@@ -99,12 +99,13 @@ END
     def locals_code(names)
       names = names.keys if Hash === names
 
-      names.each_with_object('') do |name, code|
+      code = []
+      names.map do |name|
         # Can't use || because someone might explicitly pass in false with a symbol
         sym_local = "_haml_locals[#{inspect_obj(name.to_sym)}]"
         str_local = "_haml_locals[#{inspect_obj(name.to_s)}]"
         code << "#{name} = #{sym_local}.nil? ? #{str_local} : #{sym_local};"
-      end
+      end.join
     end
 
     def inspect_obj(obj)
