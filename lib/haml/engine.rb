@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 require 'forwardable'
 
 require 'haml/parser'
@@ -166,8 +166,13 @@ module Haml
       end
 
       begin
-        eval("Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {};" <<
-             @temple_engine.precompiled_with_ambles(local_names) << "}\n", scope, @options.filename, @options.line)
+        str = @temple_engine.precompiled_with_ambles(local_names)
+        eval(
+          "Proc.new { |*_haml_locals| _haml_locals = _haml_locals[0] || {}; #{str}}\n",
+          scope,
+          @options.filename,
+          @options.line
+        )
       rescue ::SyntaxError => e
         raise SyntaxError, e.message
       end

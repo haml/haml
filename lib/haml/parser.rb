@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 require 'strscan'
 
 module Haml
@@ -698,7 +698,7 @@ module Haml
       end
 
       static_attributes = {}
-      dynamic_attributes = "{"
+      dynamic_attributes = ["{"]
       attributes.each do |name, (type, val)|
         if type == :static
           static_attributes[name] = val
@@ -707,8 +707,12 @@ module Haml
         end
       end
       dynamic_attributes << "}"
-      dynamic_attributes = nil if dynamic_attributes == "{}"
-
+      if dynamic_attributes.first == "{}" &&
+          dynamic_attributes.length == 1
+        dynamic_attributes = nil
+      else
+        dynamic_attributes = dynamic_attributes.join
+      end
       return [static_attributes, dynamic_attributes], scanner.rest, last_line
     end
 
@@ -737,8 +741,10 @@ module Haml
       end
 
       return name, [:static, content.first[1]] if content.size == 1
-      return name, [:dynamic,
-        %!"#{content.each_with_object('') {|(t, v), s| s << (t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
+      str = content.map do |t, v|
+        t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}"
+      end.join
+      return name, [:dynamic, %!"#{str}"!]
     end
 
     def next_line
@@ -782,7 +788,7 @@ module Haml
     end
 
     def handle_ruby_multiline(line)
-      line.text.rstrip!
+      line.text = line.text.rstrip
       return line unless is_ruby_multiline?(line.text)
       begin
         # Use already fetched @next_line in the first loop. Otherwise, fetch next

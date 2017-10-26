@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 require 'temple'
 require 'haml/escapable'
 require 'haml/generator'
@@ -64,14 +64,14 @@ module Haml
     #
     # @return [String]
     def precompiled_with_ambles(local_names, after_preamble: '')
-      preamble = <<END.tr!("\n", ';')
+      preamble = <<END.tr("\n", ';')
 begin
 extend Haml::Helpers
 _hamlout = @haml_buffer = Haml::Buffer.new(haml_buffer, #{Options.new(options).for_buffer.inspect})
 _erbout = _hamlout.buffer
 #{after_preamble}
 END
-      postamble = <<END.tr!("\n", ';')
+      postamble = <<END.tr("\n", ';')
 #{precompiled_method_return_value}
 ensure
 @haml_buffer = @haml_buffer.upper if @haml_buffer
@@ -99,12 +99,13 @@ END
     def locals_code(names)
       names = names.keys if Hash === names
 
-      names.each_with_object('') do |name, code|
+      code = []
+      names.map do |name|
         # Can't use || because someone might explicitly pass in false with a symbol
         sym_local = "_haml_locals[#{inspect_obj(name.to_sym)}]"
         str_local = "_haml_locals[#{inspect_obj(name.to_s)}]"
         code << "#{name} = #{sym_local}.nil? ? #{str_local} : #{sym_local};"
-      end
+      end.join
     end
 
     def inspect_obj(obj)
