@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 require "tilt"
 
 module Haml
@@ -247,8 +247,10 @@ RUBY
 
       # @see Base#render
       def render(text)
-        text = text.rstrip.gsub("\n", "\n    ")
-        "<![CDATA[\n    #{text}\n]]>"
+        text = "\n#{text}"
+        text.rstrip!
+        text.gsub!("\n", "\n    ")
+        "<![CDATA[#{text}\n]]>"
       end
     end
 
