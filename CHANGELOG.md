@@ -1456,4 +1456,3 @@ has been moved to [YARD](http://yard.soen.ca).
 YARD is an excellent documentation system,
 and allows us to write our documentation in [Maruku](http://maruku.rubyforge.org),
 which is also excellent.
->>>>>>> External Changes
