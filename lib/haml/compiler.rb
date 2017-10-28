@@ -315,7 +315,7 @@ module Haml
 
       case last.first
       when :text
-        last[1].rstrip!
+        last[1] = last[1].rstrip
         if last[1].empty?
           @to_merge.slice! index
           rstrip_buffer! index
