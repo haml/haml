@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 require 'haml/attribute_builder'
 require 'haml/attribute_compiler'
 require 'haml/temple_line_counter'
@@ -315,7 +315,7 @@ module Haml
 
       case last.first
       when :text
-        last[1].rstrip!
+        last[1] = last[1].rstrip
         if last[1].empty?
           @to_merge.slice! index
           rstrip_buffer! index

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 
 module Haml
@@ -66,7 +67,7 @@ module Haml
         flunk 'else clause after if containing unless should be accepted'
       end
     end
-    
+
     test "loud script with else is accepted" do
       begin
         parse "= if true\n  - 'A'\n-else\n  - 'B'"

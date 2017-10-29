@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 require "tilt"
 
 module Haml
@@ -183,8 +183,7 @@ RUBY
           end
 
           rendered = Haml::Helpers::find_and_preserve(filter.render_with_options(text, compiler.options), compiler.options[:preserve])
-          rendered.rstrip!
-          push_text("#{rendered}\n")
+          push_text("#{rendered.rstrip}\n")
         end
       end
     end
@@ -247,10 +246,7 @@ RUBY
 
       # @see Base#render
       def render(text)
-        text = "\n#{text}"
-        text.rstrip!
-        text.gsub!("\n", "\n    ")
-        "<![CDATA[#{text}\n]]>"
+        "<![CDATA[#{"\n#{text.rstrip}".gsub("\n", "\n    ")}\n]]>"
       end
     end
 

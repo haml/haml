@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 require 'strscan'
 
 module Haml
@@ -698,7 +698,7 @@ module Haml
       end
 
       static_attributes = {}
-      dynamic_attributes = "{"
+      dynamic_attributes = "{".dup
       attributes.each do |name, (type, val)|
         if type == :static
           static_attributes[name] = val
@@ -738,7 +738,7 @@ module Haml
 
       return name, [:static, content.first[1]] if content.size == 1
       return name, [:dynamic,
-        %!"#{content.each_with_object('') {|(t, v), s| s << (t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
+        %!"#{content.each_with_object(''.dup) {|(t, v), s| s << (t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
     end
 
     def next_line
