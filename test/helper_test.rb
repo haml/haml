@@ -462,7 +462,7 @@ HAML
     assert_equal("foo\n", render("= capture { 'foo' }", :action_view))
   end
 
-  def test_capture_with_non_string_value_reurns_nil
+  def test_capture_with_non_string_value_returns_nil
     def @base.check_capture_returns_nil(&block)
       contents = capture(&block)
 
