@@ -2,11 +2,11 @@
 require 'test_helper'
 require "active_model/naming"
 
-class FormModel
-  extend ActiveModel::Naming
-end
-
 class HelperTest < Haml::TestCase
+  class FormModel
+    extend ActiveModel::Naming
+  end
+
   TEXT_AREA_CONTENT_REGEX = /<(textarea)[^>]*>\n(.*?)<\/\1>/im
 
   Post = Struct.new('Post', :body, :error_field, :errors)
