@@ -150,6 +150,12 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 
 - `:coffeescript` filter's internal class name is changed from `Coffee` to `CoffeeScript`
 
+## [2.2.4](https://github.com/k0kubun/hamlit/compare/v2.2.3...v2.2.4) - 2017-12-05
+
+### Fixed
+
+- Fix to work with Ruby 2.5. This version is usable with both 2.0 and 2.5.
+
 ## [2.2.3](https://github.com/k0kubun/hamlit/compare/v2.2.2...v2.2.3) - 2016-03-10
 
 ### Added
