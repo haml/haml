@@ -72,7 +72,7 @@ ensure_allocated(char *buf, size_t size, size_t *asize)
 size_t
 hesc_escape_html(char **dest, const char *buf, size_t size)
 {
-  size_t asize = 0, esc_i, esize = 0, i = 0, rbuf_end = 0;
+  size_t asize = 0, esc_i = 0, esize = 0, i = 0, rbuf_end = 0;
   const char *esc;
   char *rbuf = NULL;
 
