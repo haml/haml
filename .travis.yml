@@ -4,7 +4,7 @@ branches:
   only:
     - master
 script:
-  - "BACKTRACE=1 bundle exec rake $TASK"
+  - "bundle exec rake $TASK"
 matrix:
   include:
     - rvm: 2.1.10

@@ -9,6 +9,9 @@ require 'rails'
 require 'hamlit'
 require 'haml'
 
+# Protect Minitest from Rails' Minitest plugin: https://github.com/rails/rails/pull/19571
+ENV['BACKTRACE'] ||= '1'
+
 # require 'minitest/reporters'
 # Minitest::Reporters.use!
 
