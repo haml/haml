@@ -72,7 +72,7 @@ module Hamlit
         handler = Hamlit::RailsTemplate.new
         template = ActionView::Template.new(template, 'inline template', handler, { locals: [] })
         code = handler.call(template)
-        source = <<-end_src
+        <<-end_src
           def _inline_template___2144273726781623612_70327218547300(local_assigns, output_buffer)
             _old_virtual_path, @virtual_path = @virtual_path, nil;_old_output_buffer = @output_buffer;;#{code}
           ensure

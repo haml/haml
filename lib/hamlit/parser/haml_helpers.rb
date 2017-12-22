@@ -723,4 +723,5 @@ class Object
   def is_haml?
     false
   end
+  alias :is_haml? :is_haml?
 end

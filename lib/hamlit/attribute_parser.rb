@@ -76,7 +76,7 @@ module Hamlit
       paren_open  = 0
 
       tokens.each do |token|
-        (row, col), type, str = token
+        _, type, _ = token
         case type
         when :on_comma
           if array_open == 0 && brace_open == 0 && paren_open == 0
