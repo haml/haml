@@ -4,7 +4,7 @@ branches:
   only:
     - master
 script:
-  - "bundle exec rake $TASK"
+  - "RUBYOPT='-w' bundle exec rake $TASK"
 matrix:
   include:
     - rvm: 2.1.10

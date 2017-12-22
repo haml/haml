@@ -1,6 +1,5 @@
 require 'strscan'
 require 'hamlit/parser/haml_util'
-require 'hamlit/parser/haml_buffer'
 require 'hamlit/parser/haml_error'
 
 module Hamlit

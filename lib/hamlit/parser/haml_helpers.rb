@@ -1,5 +1,4 @@
 require 'hamlit/parser/haml_error'
-require 'hamlit/parser/haml_buffer'
 require 'hamlit/parser/haml_options'
 require 'hamlit/parser/haml_compiler'
 require 'hamlit/parser/haml_parser'
