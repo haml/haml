@@ -16,6 +16,9 @@ gem 'benchmark-ips', '2.3.0'
 gem 'm'
 gem 'pry-byebug'
 
+# To resolve circular require warning
+gem 'redcarpet', github: 'vmg/redcarpet'
+
 if RUBY_PLATFORM !~ /mswin|mingw|bccwin|wince/
   gem 'faml'
   gem 'stackprof'
