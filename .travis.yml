@@ -4,8 +4,9 @@ language: ruby
 cache: bundler
 rvm:
   - ruby-head
-  - 2.4.2
-  - 2.3.5
+  - 2.5.0
+  - 2.4.3
+  - 2.3.6
   - 2.2.8
   - 2.1.10
   - 2.0.0
@@ -51,4 +52,5 @@ matrix:
     - rvm: rbx-3
     - gemfile: test/gemfiles/Gemfile.rails-edge
   fast_finish: true
+before_install: "gem update --system" # https://github.com/travis-ci/travis-ci/issues/8974
 script: "bundle exec rake submodules test"
