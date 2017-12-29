@@ -33,11 +33,17 @@ matrix:
       gemfile: test/gemfiles/Gemfile.rails-5.0.x
     - rvm: 2.1.10
       gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
-    - rvm: 2.4.2
+    - rvm: 2.4.3
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.4.2
+    - rvm: 2.4.3
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.4.2
+    - rvm: 2.4.3
+      gemfile: test/gemfiles/Gemfile.rails-4.2.x
+    - rvm: 2.5.0
+      gemfile: test/gemfiles/Gemfile.rails-4.0.x
+    - rvm: 2.5.0
+      gemfile: test/gemfiles/Gemfile.rails-4.1.x
+    - rvm: 2.5.0
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
     - rvm: ruby-head
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
@@ -46,7 +52,7 @@ matrix:
     - rvm: ruby-head
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
   include:
-    - rvm: 2.4.2
+    - rvm: 2.4.3
       gemfile: test/gemfiles/Gemfile.rails-edge
   allow_failures:
     - rvm: rbx-3
