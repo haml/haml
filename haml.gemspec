@@ -14,7 +14,6 @@ Gem::Specification.new do |spec|
     f.match(%r{\Atest/})
   end
   spec.homepage    = 'http://haml.info/'
-  spec.has_rdoc    = false
   spec.license     = "MIT"
 
   spec.required_ruby_version = '>= 2.0.0'
