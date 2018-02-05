@@ -1955,10 +1955,10 @@ HAML
 
   # Encodings
 
-  def test_utf_8_bom; skip # encoding
+  def test_utf_8_bom; # encoding
     assert_equal <<HTML, render(<<HAML)
 <div class='foo'>
-  <p>baz</p>
+<p>baz</p>
 </div>
 HTML
 \xEF\xBB\xBF.foo
@@ -1999,10 +1999,10 @@ HAML
     end
   end
 
-  def test_encoding_error; skip # encoding
+  def test_encoding_error # encoding
     render("foo\nbar\nb\xFEaz".force_encoding("utf-8"))
     assert(false, "Expected exception")
-  rescue Hamlit::Error => e; skip
+  rescue Hamlit::Error => e
     assert_equal(3, e.line)
     assert_match(/Invalid .* character/, e.message)
   end
