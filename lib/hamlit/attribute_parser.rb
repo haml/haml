@@ -71,31 +71,33 @@ module Hamlit
 
     def each_attr(tokens)
       attr_tokens = []
-      array_open  = 0
-      brace_open  = 0
-      paren_open  = 0
+      open_tokens = Hash.new { |h, k| h[k] = 0 }
 
       tokens.each do |token|
         _, type, _ = token
         case type
         when :on_comma
-          if array_open == 0 && brace_open == 0 && paren_open == 0
+          if open_tokens.values.all?(&:zero?)
             yield(attr_tokens)
             attr_tokens = []
             next
           end
         when :on_lbracket
-          array_open += 1
+          open_tokens[:array] += 1
         when :on_rbracket
-          array_open -= 1
+          open_tokens[:array] -= 1
         when :on_lbrace
-          brace_open += 1
+          open_tokens[:block] += 1
         when :on_rbrace
-          brace_open -= 1
+          open_tokens[:block] -= 1
         when :on_lparen
-          paren_open += 1
+          open_tokens[:paren] += 1
         when :on_rparen
-          paren_open -= 1
+          open_tokens[:paren] -= 1
+        when :on_embexpr_beg
+          open_tokens[:embexpr] += 1
+        when :on_embexpr_end
+          open_tokens[:embexpr] -= 1
         when :on_sp
           next if attr_tokens.empty?
         end
