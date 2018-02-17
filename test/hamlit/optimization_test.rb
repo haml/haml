@@ -1,3 +1,5 @@
+require_relative '../test_helper'
+
 describe 'optimization' do
   def compiled_code(haml)
     Hamlit::Engine.new.call(haml)

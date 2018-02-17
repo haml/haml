@@ -1,6 +1,6 @@
 $:.unshift __dir__
 
-require 'test_helper'
+require_relative '../test_helper'
 
 class EngineTest < Haml::TestCase
   # A map of erroneous Haml documents to the error messages they should produce.

@@ -1,3 +1,5 @@
+require_relative '../test_helper'
+
 describe Hamlit::Engine do
   include RenderHelper
 
