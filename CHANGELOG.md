@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.8.7](https://github.com/k0kubun/hamlit/compare/v2.8.6...v2.8.7) - 2018-02-17
+
+### Fixed
+
+- Fix parser error on string interpolation in attributes
+
 ## [2.8.6](https://github.com/k0kubun/hamlit/compare/v2.8.5...v2.8.6) - 2017-12-22
 
 ### Fixed
