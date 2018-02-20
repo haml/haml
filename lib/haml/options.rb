@@ -8,7 +8,7 @@ module Haml
     @valid_formats = [:html4, :html5, :xhtml]
 
     @buffer_option_keys = [:autoclose, :preserve, :attr_wrapper, :format,
-      :encoding, :escape_html, :escape_attrs, :hyphenate_data_attrs, :cdata]
+      :encoding, :escape_html, :escape_interpolated_html, :escape_attrs, :hyphenate_data_attrs, :cdata]
 
     # The default option values.
     # @return Hash
@@ -84,6 +84,13 @@ module Haml
     #
     # Defaults to false.
     attr_accessor :escape_html
+
+    # Sets whether or not to escape HTML-sensitive characters in interpolated strings.
+    # See also {file:REFERENCE.md#escaping_html Escaping HTML} and
+    # {file:REFERENCE.md#unescaping_html Unescaping HTML}.
+    #
+    # Defaults to the current value of `escape_html`.
+    attr_accessor :escape_interpolated_html
 
     # The name of the Haml file being parsed.
     # This is only used as information when exceptions are raised. This is
