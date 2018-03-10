@@ -55,6 +55,7 @@ matrix:
     - rvm: 2.4.3
       gemfile: test/gemfiles/Gemfile.rails-edge
   allow_failures:
+    - rvm: ruby-head
     - rvm: rbx-3
     - gemfile: test/gemfiles/Gemfile.rails-edge
   fast_finish: true
