@@ -185,6 +185,12 @@ class JavascriptFilterTest < Haml::TestCase
     refute_match('//<![CDATA[', out)
     refute_match('//]]>', out)
   end
+
+  test "should emit tag on empty block" do
+    html = "<script>\n  \n</script>\n"
+    haml = ":javascript"
+    assert_equal(html, render(haml))
+  end
 end
 
 class CSSFilterTest < Haml::TestCase
@@ -223,6 +229,12 @@ class CSSFilterTest < Haml::TestCase
     out = render(haml, :format => :html5)
     refute_match('<![CDATA[', out)
     refute_match(']]>', out)
+  end
+
+  test "should emit tag on empty block" do
+    html = "<style>\n  \n</style>\n"
+    haml = ":css"
+    assert_equal(html, render(haml))
   end
 end
 
