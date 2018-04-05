@@ -8,7 +8,7 @@ module Hamlit
   class Filters
     class Less < TiltBase
       def compile(node)
-        require 'tilt/less' if explicit_require?
+        require 'tilt/less' if explicit_require?('less')
         temple = [:multi]
         temple << [:static, "<style>\n"]
         temple << compile_with_tilt(node, 'less', indent_width: 2)
