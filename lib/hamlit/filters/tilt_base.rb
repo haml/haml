@@ -10,8 +10,9 @@ module Hamlit
         text.gsub!(/^/, ' ' * indent_width)
       end
 
-      def explicit_require?
-        Gem::Version.new(Tilt::VERSION) >= Gem::Version.new('2.0.0')
+      def explicit_require?(needed_registration)
+        Gem::Version.new(Tilt::VERSION) >= Gem::Version.new('2.0.0') &&
+          !Tilt.registered?(needed_registration)
       end
 
       private
