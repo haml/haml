@@ -14,7 +14,6 @@ end
 
 gem 'benchmark-ips', '2.3.0'
 gem 'maxitest'
-gem 'minitest-line'
 gem 'pry-byebug'
 
 # To resolve circular require warning
