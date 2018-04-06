@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.8.8](https://github.com/k0kubun/hamlit/compare/v2.8.7...v2.8.8) - 2018-04-06
+
+### Fixed
+
+- Don't require Tilt dependencies if unregistered
+  [#121](https://github.com/k0kubun/hamlit/pull/121). *Thanks to @michaelglass*
+
 ## [2.8.7](https://github.com/k0kubun/hamlit/compare/v2.8.6...v2.8.7) - 2018-02-17
 
 ### Fixed
