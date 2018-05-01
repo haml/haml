@@ -58,7 +58,6 @@ If you want to use view generator, consider using [hamlit-rails](https://github.
 ### Sinatra
 
 Replace `gem "haml"` with `gem "hamlit"` in Gemfile, and require "hamlit".
-See [sample/sinatra](sample/sinatra) for working sample.
 
 While Haml disables `escape_html` option by default, Hamlit enables it for security.
 If you want to disable it, please write:
