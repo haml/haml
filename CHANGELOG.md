@@ -11,7 +11,7 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 - Fix uninitialized constant error introduced in v2.8.9
   [#125](https://github.com/k0kubun/hamlit/pull/125). *Thanks to @vovchynniko*
 
-## [2.8.9](https://github.com/k0kubun/hamlit/compare/v2.8.8...v2.8.9) - 2018-09-05
+## [2.8.9](https://github.com/k0kubun/hamlit/compare/v2.8.8...v2.8.9) - 2018-09-05 [YANKED]
 
 ### Fixed
 
