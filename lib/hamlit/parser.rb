@@ -26,7 +26,7 @@ module Hamlit
     end
 
     def call(template)
-      template = Haml::Util.check_haml_encoding(template) do |msg, line|
+      template = Hamlit::HamlUtil.check_haml_encoding(template) do |msg, line|
         raise Hamlit::Error.new(msg, line)
       end
       HamlParser.new(template, HamlOptions.new(@options)).parse
