@@ -2,6 +2,8 @@
 
 Hamlit::HamlFoo is originally Haml::Foo in haml gem.
 
+This directory is NOT intended to be updated other than following Haml's changes.
+
 ## License
 
 lib/hamlit/parser/haml\_\*.rb is:
