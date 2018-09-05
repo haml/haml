@@ -98,7 +98,12 @@ module Hamlit
       @template_index     = 0
       @template_tabs      = 0
 
-      match = template.rstrip.scan(/(([ \t]+)?(.*?))(?:\Z|\r\n|\r|\n)/m)
+      # try to check encoding and clean UTF-8 BOM 
+      template_bom_stripped = check_haml_encoding(template) do |msg, line|
+        raise Hamlit::Error.new(msg, line)
+      end
+
+      match = template_bom_stripped.rstrip.scan(/(([ \t]+)?(.*?))(?:\Z|\r\n|\r|\n)/m)
       # discard the last match which is always blank
       match.pop
       @template = match.each_with_index.map do |(full, whitespace, text), index|
