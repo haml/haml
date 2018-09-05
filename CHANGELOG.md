@@ -4,12 +4,19 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.8.10](https://github.com/k0kubun/hamlit/compare/v2.8.8...v2.8.9) - 2018-09-05
+
+### Fixed
+
+- Fix uninitialized constant error introduced in v2.8.9
+  [#125](https://github.com/k0kubun/hamlit/pull/125). *Thanks to @vovchynniko*
+
 ## [2.8.9](https://github.com/k0kubun/hamlit/compare/v2.8.8...v2.8.9) - 2018-09-05
 
 ### Fixed
 
 - Don't raise an error on UTF-8 BOM [#117](https://github.com/k0kubun/hamlit/pull/117)
-  [#124](https://github.com/k0kubun/hamlit/pull/117). *Thanks to @southwolf*
+  [#124](https://github.com/k0kubun/hamlit/pull/124). *Thanks to @southwolf*
 
 ## [2.8.8](https://github.com/k0kubun/hamlit/compare/v2.8.7...v2.8.8) - 2018-04-06
 
