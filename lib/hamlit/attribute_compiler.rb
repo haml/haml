@@ -45,9 +45,9 @@ module Hamlit
           compile_id!(temple, key, values)
         when 'class'
           compile_class!(temple, key, values)
-        when 'data'
+        when 'data', 'aria'
           compile_data!(temple, key, values)
-        when *AttributeBuilder::BOOLEAN_ATTRIBUTES, /\Adata-/
+        when *AttributeBuilder::BOOLEAN_ATTRIBUTES, /\Adata-/, /\Aaria-/
           compile_boolean!(temple, key, values)
         else
           compile_common!(temple, key, values)
@@ -76,7 +76,7 @@ module Hamlit
 
     def compile_data!(temple, key, values)
       args = [@escape_attrs.inspect, "#{@quote.inspect}.freeze", values.map { |v| literal_for(v) }]
-      build_code = "::Hamlit::AttributeBuilder.build_data(#{args.join(', ')})"
+      build_code = "::Hamlit::AttributeBuilder.build_#{key}(#{args.join(', ')})"
 
       if values.all? { |type, exp| type == :static || Temple::StaticAnalyzer.static?(exp) }
         temple << [:static, eval(build_code).to_s]

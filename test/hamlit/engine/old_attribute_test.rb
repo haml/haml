@@ -290,7 +290,7 @@ describe Hamlit::Engine do
       end
     end
 
-    describe 'nested attributes' do
+    describe 'nested data attributes' do
       it 'renders data attribute by hash' do
         assert_render(<<-HTML.unindent, <<-HAML.unindent)
           <span class='foo' data-bar='baz'></span>
@@ -331,6 +331,51 @@ describe Hamlit::Engine do
         HTML
           - hash = { raw_src: 'foo' }
           %div{ data: hash }
+        HAML
+      end
+    end
+
+    describe 'nested aria attributes' do
+      it 'renders aria attribute by hash' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <span aria-bar='baz' class='foo'></span>
+        HTML
+          - hash = { bar: 'baz' }
+          %span.foo{ aria: hash }
+        HAML
+      end
+
+      it 'renders true attributes' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <span aria-disabled>bar</span>
+        HTML
+          %span{ aria: { disabled: true } } bar
+        HAML
+      end
+
+      it 'renders nested hash whose value is variable' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <span aria-disabled>bar</span>
+        HTML
+          - hash = { disabled: true }
+          %span{ aria: hash } bar
+        HAML
+      end
+
+      it 'changes an underscore in a nested key to a hyphen' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <div aria-raw-src='foo'></div>
+        HTML
+          %div{ aria: { raw_src: 'foo' } }
+        HAML
+      end
+
+      it 'changes an underscore in a nested dynamic attribute' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <div aria-raw-src='foo'></div>
+        HTML
+          - hash = { raw_src: 'foo' }
+          %div{ aria: hash }
         HAML
       end
     end

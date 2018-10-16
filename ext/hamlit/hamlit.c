@@ -5,9 +5,10 @@
 
 VALUE mAttributeBuilder, mObjectRef;
 static ID id_flatten, id_keys, id_parse, id_prepend, id_tr, id_uniq_bang;
-static ID id_data, id_equal, id_hyphen, id_space, id_underscore;
+static ID id_aria, id_data, id_equal, id_hyphen, id_space, id_underscore;
 static ID id_boolean_attributes, id_xhtml;
 
+static VALUE str_aria()        { return rb_const_get(mAttributeBuilder, id_aria); }
 static VALUE str_data()        { return rb_const_get(mAttributeBuilder, id_data); }
 static VALUE str_equal()       { return rb_const_get(mAttributeBuilder, id_equal); }
 static VALUE str_hyphen()      { return rb_const_get(mAttributeBuilder, id_hyphen); }
@@ -166,32 +167,45 @@ hamlit_build_class(VALUE escape_attrs, VALUE array)
   }
 }
 
+struct merge_data_attrs_var {
+  VALUE merged;
+  VALUE key_str;
+};
+
 static int
-merge_data_attrs_i(VALUE key, VALUE value, VALUE merged)
+merge_data_attrs_i(VALUE key, VALUE value, VALUE ptr)
 {
+  struct merge_data_attrs_var *arg = (struct merge_data_attrs_var *)ptr;
+  VALUE merged = arg->merged;
+  VALUE key_str = arg->key_str;
+
   if (NIL_P(key)) {
-    rb_hash_aset(merged, str_data(), value);
+    rb_hash_aset(merged, key_str, value);
   } else {
-    key = rb_str_concat(rb_str_new_cstr("data-"), to_s(key));
+    key = rb_str_concat(rb_str_concat(rb_str_dup(key_str), rb_str_new_cstr("-")), to_s(key));
     rb_hash_aset(merged, key, value);
   }
   return ST_CONTINUE;
 }
 
 static VALUE
-merge_data_attrs(VALUE values)
+merge_data_attrs(VALUE values, VALUE key_str)
 {
   long i;
   VALUE value, merged = rb_hash_new();
 
   for (i = 0; i < RARRAY_LEN(values); i++) {
+    struct merge_data_attrs_var arg;
+    arg.merged = merged;
+    arg.key_str = key_str;
+
     value = rb_ary_entry(values, i);
     switch (TYPE(value)) {
       case T_HASH:
-        rb_hash_foreach(value, merge_data_attrs_i, merged);
+        rb_hash_foreach(value, merge_data_attrs_i, (VALUE)&arg);
         break;
       default:
-        rb_hash_aset(merged, str_data(), value);
+        rb_hash_aset(merged, key_str, value);
         break;
     }
   }
@@ -255,12 +269,12 @@ flatten_data_attrs(VALUE attrs)
 }
 
 static VALUE
-hamlit_build_data(VALUE escape_attrs, VALUE quote, VALUE values)
+hamlit_build_data(VALUE escape_attrs, VALUE quote, VALUE values, VALUE key_str)
 {
   long i;
   VALUE attrs, buf, keys, key, value;
 
-  attrs = merge_data_attrs(values);
+  attrs = merge_data_attrs(values, key_str);
   attrs = flatten_data_attrs(attrs);
   keys  = rb_ary_sort_bang(rb_funcall(attrs, id_keys, 0));
   buf   = rb_str_new("", 0);
@@ -304,7 +318,7 @@ merge_all_attrs_i(VALUE key, VALUE value, VALUE merged)
   VALUE array;
 
   key = to_s(key);
-  if (str_eq(key, "id", 2) || str_eq(key, "class", 5) || str_eq(key, "data", 4)) {
+  if (str_eq(key, "id", 2) || str_eq(key, "class", 5) || str_eq(key, "data", 4) || str_eq(key, "aria", 4)) {
     array = rb_hash_aref(merged, key);
     if (NIL_P(array)) {
       array = rb_ary_new2(1);
@@ -338,6 +352,7 @@ is_boolean_attribute(VALUE key)
 {
   VALUE boolean_attributes;
   if (str_eq(rb_str_substr(key, 0, 5), "data-", 5)) return 1;
+  if (str_eq(rb_str_substr(key, 0, 5), "aria-", 5)) return 1;
 
   boolean_attributes = rb_const_get(mAttributeBuilder, id_boolean_attributes);
   return RTEST(rb_ary_includes(boolean_attributes, key));
@@ -364,7 +379,13 @@ hamlit_build_for_class(VALUE escape_attrs, VALUE quote, VALUE buf, VALUE values)
 void
 hamlit_build_for_data(VALUE escape_attrs, VALUE quote, VALUE buf, VALUE values)
 {
-  rb_str_concat(buf, hamlit_build_data(escape_attrs, quote, values));
+  rb_str_concat(buf, hamlit_build_data(escape_attrs, quote, values, str_data()));
+}
+
+void
+hamlit_build_for_aria(VALUE escape_attrs, VALUE quote, VALUE buf, VALUE values)
+{
+  rb_str_concat(buf, hamlit_build_data(escape_attrs, quote, values, str_aria()));
 }
 
 void
@@ -422,6 +443,8 @@ hamlit_build(VALUE escape_attrs, VALUE quote, VALUE format, VALUE object_ref, VA
       hamlit_build_for_class(escape_attrs, quote, buf, value);
     } else if (str_eq(key, "data", 4)) {
       hamlit_build_for_data(escape_attrs, quote, buf, value);
+    } else if (str_eq(key, "aria", 4)) {
+      hamlit_build_for_aria(escape_attrs, quote, buf, value);
     } else if (is_boolean_attribute(key)) {
       hamlit_build_for_boolean(escape_attrs, quote, format, buf, key, value);
     } else {
@@ -455,6 +478,17 @@ rb_hamlit_build_class(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
 }
 
 static VALUE
+rb_hamlit_build_aria(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
+{
+  VALUE array;
+
+  rb_check_arity(argc, 2, UNLIMITED_ARGUMENTS);
+  rb_scan_args(argc - 2, argv + 2, "*", &array);
+
+  return hamlit_build_data(argv[0], argv[1], array, str_aria());
+}
+
+static VALUE
 rb_hamlit_build_data(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
 {
   VALUE array;
@@ -462,7 +496,7 @@ rb_hamlit_build_data(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
   rb_check_arity(argc, 2, UNLIMITED_ARGUMENTS);
   rb_scan_args(argc - 2, argv + 2, "*", &array);
 
-  return hamlit_build_data(argv[0], argv[1], array);
+  return hamlit_build_data(argv[0], argv[1], array, str_data());
 }
 
 static VALUE
@@ -490,6 +524,7 @@ Init_hamlit(void)
   rb_define_singleton_method(mAttributeBuilder, "build", rb_hamlit_build, -1);
   rb_define_singleton_method(mAttributeBuilder, "build_id", rb_hamlit_build_id, -1);
   rb_define_singleton_method(mAttributeBuilder, "build_class", rb_hamlit_build_class, -1);
+  rb_define_singleton_method(mAttributeBuilder, "build_aria", rb_hamlit_build_aria, -1);
   rb_define_singleton_method(mAttributeBuilder, "build_data", rb_hamlit_build_data, -1);
 
   id_flatten   = rb_intern("flatten");
@@ -499,6 +534,7 @@ Init_hamlit(void)
   id_tr        = rb_intern("tr");
   id_uniq_bang = rb_intern("uniq!");
 
+  id_aria       = rb_intern("ARIA");
   id_data       = rb_intern("DATA");
   id_equal      = rb_intern("EQUAL");
   id_hyphen     = rb_intern("HYPHEN");
@@ -508,6 +544,7 @@ Init_hamlit(void)
   id_boolean_attributes = rb_intern("BOOLEAN_ATTRIBUTES");
   id_xhtml = rb_intern("xhtml");
 
+  rb_const_set(mAttributeBuilder, id_aria,       rb_obj_freeze(rb_str_new_cstr("aria")));
   rb_const_set(mAttributeBuilder, id_data,       rb_obj_freeze(rb_str_new_cstr("data")));
   rb_const_set(mAttributeBuilder, id_equal,      rb_obj_freeze(rb_str_new_cstr("=")));
   rb_const_set(mAttributeBuilder, id_hyphen,     rb_obj_freeze(rb_str_new_cstr("-")));
