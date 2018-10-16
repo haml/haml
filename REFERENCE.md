@@ -82,7 +82,7 @@ But some helpers are supported on Rails. Some of not-implemented methods are pla
 
 ### Limited attributes hyphenation
 In Haml, `%a{ foo: { bar: 'baz' } }` is rendered as `<a foo-bar='baz'></a>`, whatever foo is.
-In Hamlit, this feature is supported only for data attribute. Hamlit renders `%a{ data: { foo: 'bar' } }`
+In Hamlit, this feature is supported only for aria and data attribute. Hamlit renders `%a{ data: { foo: 'bar' } }`
 as `<a data-foo='bar'></a>` because it's data attribute. This design allows us to reduce work on runtime
 and the idea is originally in [Faml](https://github.com/eagletmt/faml).
 
@@ -91,7 +91,7 @@ In Haml, `%a{ foo: false }` is rendered as `<a></a>`, whatever `foo` is.
 In Hamlit, this feature is supported for only boolean attributes, which are defined by
 http://www.w3.org/TR/xhtml1/guidelines.html or https://html.spec.whatwg.org/.
 The list is the same as `ActionView::Helpers::TagHelper::BOOLEAN_ATTRIBUTES`.
-In addition, data-\* is also regarded as boolean.
+In addition, aria-\* and data-\* is also regarded as boolean.
 
 Since `foo` is not boolean attribute, `%a{ foo: false }` is rendered as `<a foo='false'></a>`
 This is the same behavior as Rails helpers. Also for `%a{ foo: nil }`,
@@ -102,7 +102,7 @@ is the only difference between Faml and Hamlit.
 ## 5 Types of Attributes
 
 Haml has 3 types of attributes: id, class and others.
-In addition, Hamlit treats data and boolean attributes specially.
+In addition, Hamlit treats aria/data and boolean attributes specially.
 So there are 5 types of attributes in Hamlit.
 
 ### id attribute
@@ -143,7 +143,7 @@ and merging multiple classes results in unique alphabetical sort.
 <div class=''></div>
 ```
 
-### data attribute
+### aria / data attribute
 Completely compatible with Haml, hyphenation and boolean are supported.
 
 ```rb
@@ -155,6 +155,8 @@ Completely compatible with Haml, hyphenation and boolean are supported.
 <div data-disabled></div>
 <div data-foo='bar'></div>
 ```
+
+aria attribute works in the same way as data attribute.
 
 ### boolean attributes
 No hyphenation but complete boolean support.
