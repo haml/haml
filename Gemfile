@@ -5,7 +5,7 @@ gem "m"
 gem "pry"
 
 group :docs do
-  gem "yard", "~> 0.8.0"
+  gem "yard"
   gem "kramdown"
   gem "sass"
 end
