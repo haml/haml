@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   if /java/ === RUBY_PLATFORM
-    # spec.platform = 'java'
+    spec.platform = 'java'
   else
     spec.extensions = ['ext/hamlit/extconf.rb']
     spec.required_ruby_version = '>= 2.1.0'
