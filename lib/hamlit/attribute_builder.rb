@@ -80,7 +80,12 @@ module Hamlit::AttributeBuilder
 
       def build_data_attribute(key, escape_attrs, quote, *hashes)
         attrs = []
-        hash = flatten_attributes(key => hashes.first)
+        if hashes.size > 1 && hashes.all? { |h| h.is_a?(Hash) }
+          data_value = merge_all_attrs(hashes)
+        else
+          data_value = hashes.last
+        end
+        hash = flatten_attributes(key => data_value)
 
         hash.sort_by(&:first).each do |key, value|
           case value
