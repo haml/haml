@@ -17,6 +17,8 @@ matrix:
       env: TASK=test
     - rvm: ruby-head
       env: TASK=test
+    - rvm: jruby-9.1.9.0
+      env: TASK=test
     - rvm: 2.4.0
       env: TASK=bench TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
     - rvm: 2.4.0
