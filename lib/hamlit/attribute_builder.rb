@@ -1,7 +1,9 @@
 # frozen_string_literal: true
-require 'hamlit/hamlit'
-require 'hamlit/object_ref'
+unless /java/ === RUBY_PLATFORM # exclude JRuby
+  require 'hamlit/hamlit'
+end
 require 'hamlit/utils'
+require 'hamlit/object_ref'
 
 module Hamlit::AttributeBuilder
   BOOLEAN_ATTRIBUTES = %w[disabled readonly multiple checked autobuffer

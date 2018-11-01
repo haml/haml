@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-require 'hamlit/hamlit'
+unless /java/ === RUBY_PLATFORM # exclude JRuby
+  require 'hamlit/hamlit' # depends on C-ext defines Hamlit::Utils first for now
+end
 
 module Hamlit
   module Utils

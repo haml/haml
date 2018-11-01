@@ -17,9 +17,14 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features|sample)/}) }
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.extensions    = ['ext/hamlit/extconf.rb']
   spec.require_paths = ['lib']
-  spec.required_ruby_version = '>= 2.1.0'
+
+  if /java/ === RUBY_PLATFORM
+    # spec.platform = 'java'
+  else
+    spec.extensions = ['ext/hamlit/extconf.rb']
+    spec.required_ruby_version = '>= 2.1.0'
+  end
 
   spec.add_dependency 'temple', '>= 0.8.0'
   spec.add_dependency 'thor'
