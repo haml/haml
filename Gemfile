@@ -15,7 +15,9 @@ end
 gem 'benchmark-ips', '2.3.0'
 gem 'maxitest'
 
-if RUBY_ENGINE == 'ruby' # exclude C-ext gems for JRuby
+if /java/ === RUBY_PLATFORM # JRuby
+  gem 'pandoc-ruby'
+else
   gem 'pry-byebug'
   gem 'redcarpet', github: 'vmg/redcarpet' # To resolve circular require warning
 
