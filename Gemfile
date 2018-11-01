@@ -14,12 +14,15 @@ end
 
 gem 'benchmark-ips', '2.3.0'
 gem 'maxitest'
-gem 'pry-byebug'
 
-# To resolve circular require warning
-gem 'redcarpet', github: 'vmg/redcarpet'
+if /java/ === RUBY_PLATFORM # JRuby
+  gem 'pandoc-ruby'
+else
+  gem 'pry-byebug'
+  gem 'redcarpet', github: 'vmg/redcarpet' # To resolve circular require warning
 
-if RUBY_PLATFORM !~ /mswin|mingw|bccwin|wince/
-  gem 'faml'
-  gem 'stackprof'
+  if RUBY_PLATFORM !~ /mswin|mingw/
+    gem 'faml'
+    gem 'stackprof'
+  end
 end

@@ -38,6 +38,10 @@ describe Hamlit::StringSplitter do
       end
 
       it 'raises internal error' do
+        if /java/ === RUBY_PLATFORM
+          skip 'Ripper of JRuby is behaving in a different way'
+        end
+
         assert_raises Hamlit::InternalError do
           Hamlit::StringSplitter.compile('"]')
         end

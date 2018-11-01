@@ -3,6 +3,10 @@ describe Hamlit::Filters do
 
   describe '#compile' do
     it 'renders markdown filter' do
+      if /java/ === RUBY_PLATFORM && !system('whcih pandoc > /dev/null')
+        skip 'pandoc is required to test :markdown filter'
+      end
+
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
         <h1>Hamlit</h1>
 
@@ -16,6 +20,10 @@ describe Hamlit::Filters do
     end
 
     it 'renders markdown filter with string interpolation' do
+      if /java/ === RUBY_PLATFORM && !system('whcih pandoc > /dev/null')
+        skip 'pandoc is required to test :markdown filter'
+      end
+
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         <h1><Hamlit></h1>
 

@@ -17,7 +17,22 @@ if Gem.win_platform?
 end
 
 require 'rake/testtask'
-require 'rake/extensiontask'
+if /java/ === RUBY_PLATFORM
+  # require 'rake/javaextensiontask'
+  # Rake::JavaExtensionTask.new(:hamlit) do |ext|
+  #   ext.ext_dir = 'ext/java'
+  #   ext.lib_dir = 'lib/hamlit'
+  # end
+
+  task :compile do
+    # dummy for now
+  end
+else
+  require 'rake/extensiontask'
+  Rake::ExtensionTask.new(:hamlit) do |ext|
+    ext.lib_dir = 'lib/hamlit'
+  end
+end
 
 Dir['benchmark/*.rake'].each { |b| import(b) }
 
@@ -86,10 +101,6 @@ namespace :test do
     t.test_files = %w[test/haml/template_test.rb]
     t.verbose = true
   end
-end
-
-Rake::ExtensionTask.new(:hamlit) do |ext|
-  ext.lib_dir = 'lib/hamlit'
 end
 
 desc 'bench task for CI'
