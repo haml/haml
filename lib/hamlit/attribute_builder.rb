@@ -103,10 +103,10 @@ module Hamlit::AttributeBuilder
           when attributes
           when Hash
             flatten_attributes(value).each do |k, v|
-              if k
-                flattened["#{key}-#{k.to_s.gsub(/_/, '-')}"] = v
-              else
+              if k.nil?
                 flattened[key] = v
+              else
+                flattened["#{key}-#{k.to_s.gsub(/_/, '-')}"] = v
               end
             end
           else
