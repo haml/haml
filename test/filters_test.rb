@@ -254,6 +254,17 @@ class EscapedFilterTest < Haml::TestCase
   end
 end
 
+
+class BabelFilterTest < Haml::TestCase
+  [:jsx, :es6, :babel].each do |filter|
+    test "should escape #{filter}" do
+      html = ":#{filter}\n  const squares = arr.map(x => x * x)"
+      haml = %Q{:javascript\n "use strict";\n \n var squares = arr.map(function (x) {\n return x * x;\n });}
+      assert_equal(html, render(haml))
+    end
+  end
+end
+
 class RubyFilterTest < Haml::TestCase
   test "can write to haml_io" do
     haml = ":ruby\n  haml_io.puts 'hello'\n"
