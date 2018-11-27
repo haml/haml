@@ -115,6 +115,11 @@ Haml::Options.defaults:
 
     Haml::Options.defaults[:format] = :html5
 
+In sinatra specifically, you can set them in global config with:
+```ruby
+set :haml, { escape_html: true }
+```
+
 Finally, you can also set them by passing an options hash to
 {Haml::Engine#initialize}. For the complete list of available options, please
 see {Haml::Options}.
