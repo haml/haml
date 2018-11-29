@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'temple/static_analyzer'
 require 'hamlit/ruby_expression'
 require 'hamlit/string_splitter'
 
