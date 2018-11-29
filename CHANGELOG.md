@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.9.2](https://github.com/k0kubun/hamlit/compare/v2.9.1...v2.9.2) - 2018-11-30
+
+- Fix possible `autoload` failure of dependency [#131](https://github.com/k0kubun/hamlit/issues/131).
+  *Thanks to @wimrijnders*
+
 ## [2.9.1](https://github.com/k0kubun/hamlit/compare/v2.9.0...v2.9.1) - 2018-11-01
 
 - Start supporting JRuby [#100](https://github.com/k0kubun/hamlit/issues/100).
