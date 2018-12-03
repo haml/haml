@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'forwardable'
 
+require 'haml/util'
 require 'haml/parser'
 require 'haml/compiler'
 require 'haml/options'
