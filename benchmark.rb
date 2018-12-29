@@ -38,7 +38,11 @@ RBench.run(times) do
     obj = Object.new
 
     Haml::Engine.new(haml_template).def_method(obj, :haml)
-    obj.instance_eval("def erb; #{ERB.new(erb_template, nil, '-').src}; end")
+    if ERB.instance_method(:initialize).parameters.assoc(:key) # Ruby 2.6+
+      obj.instance_eval("def erb; #{ERB.new(erb_template, trim_mode: '-').src}; end")
+    else
+      obj.instance_eval("def erb; #{ERB.new(erb_template, nil, '-').src}; end")
+    end
     obj.instance_eval("def erubi; #{Erubi::Engine.new(erb_template).src}; end")
 
     haml      { obj.haml }
