@@ -59,7 +59,7 @@ matrix:
     - rvm: ruby-head
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
   include:
-    - rvm: 2.4.5
+    - rvm: 2.6.0
       gemfile: test/gemfiles/Gemfile.rails-edge
   allow_failures:
     - rvm: ruby-head
