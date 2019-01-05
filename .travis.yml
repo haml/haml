@@ -4,13 +4,13 @@ language: ruby
 cache: bundler
 rvm:
   - ruby-head
-  - 2.5.0
-  - 2.4.3
-  - 2.3.6
-  - 2.2.8
+  - 2.5.3
+  - 2.4.5
+  - 2.3.8
+  - 2.2.10
   - 2.1.10
   - 2.0.0
-  - jruby-9.1.12.0
+  - jruby-9.2.5.0
   - rbx-3
 gemfile:
   - test/gemfiles/Gemfile.rails-5.1.x
@@ -33,17 +33,17 @@ matrix:
       gemfile: test/gemfiles/Gemfile.rails-5.0.x
     - rvm: 2.1.10
       gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
-    - rvm: 2.4.3
+    - rvm: 2.4.5
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.4.3
+    - rvm: 2.4.5
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.4.3
+    - rvm: 2.4.5
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: 2.5.0
+    - rvm: 2.5.3
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.5.0
+    - rvm: 2.5.3
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.5.0
+    - rvm: 2.5.3
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
     - rvm: ruby-head
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
@@ -52,17 +52,17 @@ matrix:
     - rvm: ruby-head
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
   include:
-    - rvm: 2.4.3
+    - rvm: 2.4.5
       gemfile: test/gemfiles/Gemfile.rails-edge
   allow_failures:
     - rvm: ruby-head
     - rvm: rbx-3
     - gemfile: test/gemfiles/Gemfile.rails-edge
-    - rvm: jruby-9.1.12.0
+    - rvm: jruby-9.2.5.0
       gemfile: test/gemfiles/Gemfile.rails-5.1.x
-    - rvm: jruby-9.1.12.0
+    - rvm: jruby-9.2.5.0
       gemfile: test/gemfiles/Gemfile.rails-5.0.x
-    - rvm: jruby-9.1.12.0
+    - rvm: jruby-9.2.5.0
       gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
   fast_finish: true
 before_install: gem i rubygems-update -v '<3' && update_rubygems # https://github.com/travis-ci/travis-ci/issues/8974
