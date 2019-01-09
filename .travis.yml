@@ -71,11 +71,11 @@ matrix:
     - rvm: rbx-3
     - gemfile: test/gemfiles/Gemfile.rails-edge
     - rvm: jruby-9.2.5.0
-      gemfile: test/gemfiles/Gemfile.rails-5.2.x
+      gemfile: test/gemfiles/Gemfile.rails-4.2.x
     - rvm: jruby-9.2.5.0
-      gemfile: test/gemfiles/Gemfile.rails-5.1.x
+      gemfile: test/gemfiles/Gemfile.rails-4.1.x
     - rvm: jruby-9.2.5.0
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x
+      gemfile: test/gemfiles/Gemfile.rails-4.0.x
     - rvm: jruby-9.2.5.0
       gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
   fast_finish: true
