@@ -51,6 +51,9 @@ module Haml
     #   see {file:REFERENCE.md#options the Haml options documentation}
     # @raise [Haml::Error] if there's a Haml syntax error in the template
     def initialize(template, options = {})
+      # Reflect changes of `Haml::Options.defaults` to `Haml::TempleEngine` options, but `#initialize_encoding`
+      # should be run against the arguemnt `options[:encoding]` for backward compatibility with old `Haml::Engine`.
+      options = Options.defaults.dup.tap { |o| o.delete(:encoding) }.merge!(options)
       @options = Options.new(options)
 
       @template = check_haml_encoding(template) do |msg, line|

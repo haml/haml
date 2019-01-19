@@ -2141,6 +2141,14 @@ HAML
     end
   end
 
+  def test_engine_reflects_defaults
+    defaults = Haml::Options.defaults.dup
+    Haml::Options.defaults[:attr_wrapper] = '"'
+    assert_equal %Q[<a a="a"></a>\n], Haml::Engine.new('%a(a="a")').render
+  ensure
+    Haml::Options.defaults.replace(defaults)
+  end
+
   private
 
   def assert_valid_encoding_comment(comment)
