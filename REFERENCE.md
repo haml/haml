@@ -1125,7 +1125,7 @@ is compiled to
       <p>I <strong>really</strong> prefer <em>raspberry</em> jam.</p>
     </div>
 
-Note that `#{}` interpolation within filters is HTML-escaped if you specify
+Note that `#{}` interpolation within filters is HTML-escaped if you specify true to
 {Haml::Options#escape_filter_interpolations `:escape_filter_interpolations`} option.
 
 The functionality of some filters such as Markdown can be provided by many
