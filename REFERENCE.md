@@ -1126,7 +1126,7 @@ is compiled to
     </div>
 
 Note that `#{}` interpolation within filters is HTML-escaped if you specify
-{Haml::Options#escape_html `:escape_html`} option.
+{Haml::Options#escape_interpolated_html `:escape_interpolated_html`} option.
 
 The functionality of some filters such as Markdown can be provided by many
 different libraries. Usually you don't have to worry about this - you can just
