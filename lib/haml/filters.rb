@@ -164,8 +164,8 @@ module Haml
           if contains_interpolation?(text)
             return if options[:suppress_eval]
 
-            escape = options[:escape_interpolated_html]
-            # `escape_interpolated_html` defaults to `escape_html` if unset.
+            escape = options[:escape_filter_interpolations]
+            # `escape_filter_interpolations` defaults to `escape_html` if unset.
             escape = options[:escape_html] if escape.nil?
 
             text = unescape_interpolation(text, escape).gsub(/(\\+)n/) do |s|

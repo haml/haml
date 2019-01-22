@@ -13,7 +13,7 @@ module Haml
       encoding:             nil,
       escape_attrs:         true,
       escape_html:          false,
-      escape_interpolated_html: nil,
+      escape_filter_interpolations: nil,
       filename:             '(haml)',
       format:               :html5,
       hyphenate_data_attrs: true,
