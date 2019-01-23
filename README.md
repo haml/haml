@@ -141,6 +141,10 @@ Please report an issue with following information:
 - Hamlit version
 - Rails/Sinatra version
 
+### Coding styles
+
+Please follow the existing coding styles and do not send patches including cosmetic changes.
+
 ## License
 
 Copyright (c) 2015 Takashi Kokubun
