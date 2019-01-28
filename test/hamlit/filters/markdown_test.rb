@@ -3,7 +3,7 @@ describe Hamlit::Filters do
 
   describe '#compile' do
     it 'renders markdown filter' do
-      if /java/ === RUBY_PLATFORM && !system('whcih pandoc > /dev/null')
+      if /java/ === RUBY_PLATFORM && !system('which pandoc > /dev/null')
         skip 'pandoc is required to test :markdown filter'
       end
 
