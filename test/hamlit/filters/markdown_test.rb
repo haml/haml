@@ -20,7 +20,7 @@ describe Hamlit::Filters do
     end
 
     it 'renders markdown filter with string interpolation' do
-      if /java/ === RUBY_PLATFORM && !system('whcih pandoc > /dev/null')
+      if /java/ === RUBY_PLATFORM && !system('which pandoc > /dev/null')
         skip 'pandoc is required to test :markdown filter'
       end
 
