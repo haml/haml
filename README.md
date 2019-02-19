@@ -191,7 +191,7 @@ Some of Natalie's work on Haml was supported by Unspace Interactive.
 
 Beyond that, the implementation is licensed under the MIT License.
 
-Copyright (c) 2006-2018 Hampton Catlin, Natalie Weizenbaum and the Haml team
+Copyright (c) 2006-2019 Hampton Catlin, Natalie Weizenbaum and the Haml team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
