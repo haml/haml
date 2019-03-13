@@ -5,7 +5,7 @@ module Haml
   class Plugin
     def handles_encoding?; true; end
 
-    def compile(template)
+    def compile(template, source)
       options = Haml::Template.options.dup
       if template.respond_to?(:type)
         options[:mime_type] = template.type
@@ -13,14 +13,16 @@ module Haml
         options[:mime_type] = template.mime_type
       end
       options[:filename] = template.identifier
-      Haml::Engine.new(template.source, options).compiler.precompiled_with_ambles(
+      Haml::Engine.new(source, options).compiler.precompiled_with_ambles(
         [],
         after_preamble: '@output_buffer = output_buffer ||= ActionView::OutputBuffer.new if defined?(ActionView::OutputBuffer)',
       )
     end
 
-    def self.call(template)
-      new.compile(template)
+    def self.call(template, source = nil)
+      source ||= template.source
+
+      new.compile(template, source)
     end
 
     def cache_fragment(block, name = {}, options = nil)
