@@ -23,7 +23,8 @@ module Hamlit
       end
     end
 
-    def call(template)
+    def call(template, source = nil)
+      source ||= template.source
       options = RailsTemplate.options
 
       # https://github.com/haml/haml/blob/4.0.7/lib/haml/template/plugin.rb#L19-L20
@@ -32,7 +33,7 @@ module Hamlit
         options = options.merge(format: :xhtml)
       end
 
-      Engine.new(options).call(template.source)
+      Engine.new(options).call(source)
     end
 
     def supports_streaming?
