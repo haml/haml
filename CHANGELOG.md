@@ -6,15 +6,21 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 
 ## [2.9.3](https://github.com/k0kubun/hamlit/compare/v2.9.2...v2.9.3) - 2019-04-09
 
+### Fixed
+
 - Fix deprecation warning on Rails 6 [#138](https://github.com/k0kubun/hamlit/issues/138).
   *Thanks to @r7kamura*
 
 ## [2.9.2](https://github.com/k0kubun/hamlit/compare/v2.9.1...v2.9.2) - 2018-11-30
 
+### Fixed
+
 - Fix possible `autoload` failure of dependency [#131](https://github.com/k0kubun/hamlit/issues/131).
   *Thanks to @wimrijnders*
 
 ## [2.9.1](https://github.com/k0kubun/hamlit/compare/v2.9.0...v2.9.1) - 2018-11-01
+
+### Added
 
 - Start supporting JRuby [#100](https://github.com/k0kubun/hamlit/issues/100).
 
