@@ -31,6 +31,7 @@ class TestApp < Rails::Application
   config.root = ""
 end
 Rails.application = TestApp
+Rails.backtrace_cleaner.remove_silencers!
 
 ActionController::Base.logger = Logger.new(nil)
 
