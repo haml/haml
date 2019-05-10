@@ -14,6 +14,7 @@ rvm:
   - jruby-9.2.7.0
   - rbx-3
 gemfile:
+  - test/gemfiles/Gemfile.rails-6.0.x
   - test/gemfiles/Gemfile.rails-5.2.x
   - test/gemfiles/Gemfile.rails-5.1.x
   - test/gemfiles/Gemfile.rails-5.0.x
@@ -23,6 +24,16 @@ gemfile:
   - test/gemfiles/Gemfile.rails-4.0.x
 matrix:
   exclude:
+    - rvm: 2.0.0
+      gemfile: test/gemfiles/Gemfile.rails-6.0.x
+    - rvm: 2.1.10
+      gemfile: test/gemfiles/Gemfile.rails-6.0.x
+    - rvm: 2.2.10
+      gemfile: test/gemfiles/Gemfile.rails-6.0.x
+    - rvm: 2.3.8
+      gemfile: test/gemfiles/Gemfile.rails-6.0.x
+    - rvm: 2.4.5
+      gemfile: test/gemfiles/Gemfile.rails-6.0.x
     - rvm: 2.0.0
       gemfile: test/gemfiles/Gemfile.rails-5.2.x
     - rvm: 2.1.10
