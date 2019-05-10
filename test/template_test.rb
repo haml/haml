@@ -31,6 +31,8 @@ class TemplateTest < Haml::TestCase
     # It's usually provided by ActionController::Base.
     def base.protect_against_forgery?; false; end
 
+    def base.compiled_method_container() self.class; end
+
     base
   end
 
