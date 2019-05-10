@@ -23,6 +23,7 @@ class HelpersForRailsTest < Haml::TestCase
   end
 
   def setup
+    context = ActionView::LookupContext.new(File.expand_path("../templates", __FILE__))
     @base = Class.new(ActionView::Base) {
       def nested_tag
         content_tag(:span) {content_tag(:div) {"something"}}
@@ -31,10 +32,7 @@ class HelpersForRailsTest < Haml::TestCase
       def wacky_form
         form_tag("/foo") {"bar"}
       end
-    }.new
-    @base.controller = ActionController::Base.new
-    @base.view_paths << File.expand_path("../templates", __FILE__)
-    @base.instance_variable_set(:@post, Post.new("Foo bar\nbaz", nil, PostErrors.new))
+    }.new(context, {post: Post.new("Foo bar\nbaz", nil, PostErrors.new)}, ActionController::Base.new)
   end
 
   def render(text, options = {})
