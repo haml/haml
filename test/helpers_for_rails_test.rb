@@ -226,6 +226,10 @@ HAML
     def protect_against_forgery?
     end
 
+    def compiled_method_container
+      self.class
+    end
+
     # def capture(*args, &block)
     #   capture_haml(*args, &block)
     # end
