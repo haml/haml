@@ -13,10 +13,11 @@ module Haml
     def test_buffer_defaults_values_are_the_same_as_rails_defaults
       rails_defaults = Haml::Options.defaults.merge(Haml::Template.options)
       Haml::Options.buffer_option_keys.each do |key|
-        assert_equal(
-          rails_defaults[key],
-          Haml::Options.buffer_defaults[key], "key: #{key}"
-        )
+        if rails_defaults[key].nil?
+          assert_nil Haml::Options.buffer_defaults[key], "key: #{key}"
+        else
+          assert_equal rails_defaults[key], Haml::Options.buffer_defaults[key], "key: #{key}"
+        end
       end
     end
   end
