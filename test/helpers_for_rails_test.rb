@@ -230,6 +230,12 @@ HAML
       self.class
     end
 
+    def _run(method, template, locals, buffer, &block)
+      @current_template = template
+      @output_buffer = buffer
+      send(method, locals, buffer, &block)
+    end
+
     # def capture(*args, &block)
     #   capture_haml(*args, &block)
     # end
