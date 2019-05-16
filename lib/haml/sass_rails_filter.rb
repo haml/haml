@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Haml
   module Filters
     # This is an extension of Sass::Rails's SassTemplate class that allows

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Haml
 
   # This module makes Haml work with Rails using the template handler API.

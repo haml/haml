@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'temple'
 require 'haml/escapable'
 require 'haml/generator'

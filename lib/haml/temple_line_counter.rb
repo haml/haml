@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Haml
   # A module to count lines of expected code. This would be faster than actual code generation
   # and counting newlines in it.

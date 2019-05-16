@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Haml
   # This class encapsulates all of the configuration options that Haml
   # understands. Please see the {file:REFERENCE.md#options Haml Reference} to

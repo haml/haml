@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Haml
   # An exception raised by Haml code.
   class Error < StandardError

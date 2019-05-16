@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'haml/template/options'
 if defined?(ActiveSupport)
   ActiveSupport.on_load(:action_view) do

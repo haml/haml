@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Haml
   module AttributeBuilder
     # https://html.spec.whatwg.org/multipage/syntax.html#attributes-2

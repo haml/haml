@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'haml/attribute_parser'
 
 module Haml

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'haml/attribute_builder'
 require 'haml/attribute_compiler'
 require 'haml/temple_line_counter'

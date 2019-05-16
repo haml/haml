@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module TemplateTestHelper
   TEMPLATE_PATH = File.join(__dir__, "templates")
 end
