@@ -1,8 +1,17 @@
 # Haml Changelog
 
-* Performance/memory improvement in `lib/haml/util.rb` that saves a string allocation [#965](https://github.com/haml/haml/pull/965) (thanks [Dillon Welch](https://github.com/oniofchaos))
-* Add constant for default options in `lib/haml/helpers/action_view_mods.rb` [#966](https://github.com/haml/haml/pull/966) (thanks [Dillon Welch](https://github.com/oniofchaos))
-* Performance/memory usage improvement in `lib/haml/buffer.rb` [#963](https://github.com/haml/haml/pull/963) (thanks [Dillon Welch](https://github.com/oniofchaos))
+## 5.1.0
+
+Released on May 16, 2019
+([diff](https://github.com/haml/haml/compare/v5.0.4...v5.1.0)).
+
+* Rails 6 support [#1008](https://github.com/haml/haml/pull/1008) (thanks [Seb Jacobs](https://github.com/sebjacobs))
+* Add `escape_filter_interpolations` option for backwards compatibility with haml 4 defaults [#984](https://github.com/haml/haml/pull/984) (thanks [Will Jordan](https://github.com/wjordan))
+* Fix error on empty :javascript and :css filter blocks [#986](https://github.com/haml/haml/pull/986) (thanks [Will Jordan](https://github.com/wjordan))
+* Respect changes in Haml::Options.defaults in `Haml::TempleEngine` options (Takashi Kokubun)
+* Un-freeze TempleEngine precompiled string literals [#983](https://github.com/haml/haml/pull/983) (thanks [Will Jordan](https://github.com/wjordan))
+* Various performance/memory improvements [#965](https://github.com/haml/haml/pull/965), [#966](https://github.com/haml/haml/pull/966), [#963](https://github.com/haml/haml/pull/963) (thanks [Dillon Welch](https://github.com/oniofchaos))
+* Enable `frozen_string_literal` magic comment for all .rb files [#967](https://github.com/haml/haml/pull/967) (thanks [Dillon Welch](https://github.com/oniofchaos))
 
 ## 5.0.4
 
