@@ -8,7 +8,6 @@ Gem::Specification.new do |spec|
   spec.authors     = ['Natalie Weizenbaum', 'Hampton Catlin', 'Norman Clarke', 'Akira Matsuda']
   spec.email       = ['haml@googlegroups.com', 'ronnie@dio.jp']
 
-  readmes          = Dir['*'].reject{ |x| x =~ /(^|[^.a-z])[a-z]+/ || x == "TODO" }
   spec.executables = ['haml']
   spec.files       = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{\Atest/})
