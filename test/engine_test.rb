@@ -2110,15 +2110,13 @@ HAML
   end
 
   def test_block_spacing
-    begin
-      assert render(<<-HAML)
+    assert render(<<-HAML)
 - foo = ["bar", "baz", "kni"]
 - foo.each do | item |
   = item
 HAML
-    rescue ::SyntaxError
-      flunk("Should not have raised syntax error")
-    end
+  rescue ::SyntaxError
+    flunk("Should not have raised syntax error")
   end
 
   def test_tracing

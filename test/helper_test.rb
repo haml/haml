@@ -344,11 +344,9 @@ MESSAGE
   end
 
   def test_html_escape_should_work_on_frozen_strings
-    begin
-      assert Haml::Helpers.html_escape('foo'.freeze)
-    rescue => e
-      flunk e.message
-    end
+    assert Haml::Helpers.html_escape('foo'.freeze)
+  rescue => e
+    flunk e.message
   end
 
   def test_html_escape_encoding
@@ -418,11 +416,8 @@ MESSAGE
   end
 
   def test_escape_once_should_work_on_frozen_strings
-    begin
-      Haml::Helpers.escape_once('foo'.freeze)
-    rescue => e
-      flunk e.message
-    end
+    Haml::Helpers.escape_once('foo'.freeze)
+  rescue => e
+    flunk e.message
   end
-
 end
