@@ -28,11 +28,8 @@ class FiltersTest < Haml::TestCase
   test "should raise error when a Tilt filters dependencies are unavailable for extension" do
     begin
       assert_raises Haml::Error do
-        # ignore warnings from Tilt
-        silence_warnings do
-          Haml::Filters.register_tilt_filter "Textile"
-          Haml::Filters.defined["textile"].template_class
-        end
+        Haml::Filters.register_tilt_filter "Textile"
+        Haml::Filters.defined["textile"].template_class
       end
     ensure
       Haml::Filters.remove_filter "Textile"
