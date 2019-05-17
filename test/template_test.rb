@@ -40,7 +40,7 @@ class TemplateTest < Haml::TestCase
 
   def render(text, options = {})
     return @base.render(:inline => text, :type => :haml) if options == :action_view
-    options = options.merge(:format => :xhtml)
+    options[:format] = :xhtml
     super(text, options, @base)
   end
 
