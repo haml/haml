@@ -179,7 +179,7 @@ module Haml
     private
 
     # @private
-    class Line < Struct.new(:whitespace, :text, :full, :index, :parser, :eod)
+    Line = Struct.new(:whitespace, :text, :full, :index, :parser, :eod) do
       alias_method :eod?, :eod
 
       # @private
@@ -195,7 +195,7 @@ module Haml
     end
 
     # @private
-    class ParseNode < Struct.new(:type, :line, :value, :parent, :children)
+    ParseNode = Struct.new(:type, :line, :value, :parent, :children) do
       def initialize(*args)
         super
         self.children ||= []
@@ -208,12 +208,13 @@ module Haml
 
     # @param [String] new - Hash literal including dynamic values.
     # @param [String] old - Hash literal including dynamic values or Ruby literal of multiple Hashes which MUST be interpreted as method's last arguments.
-    class DynamicAttributes < Struct.new(:new, :old)
+    DynamicAttributes = Struct.new(:new, :old) do
+      undef :old=
       def old=(value)
         unless value =~ /\A{.*}\z/m
           raise ArgumentError.new('Old attributes must start with "{" and end with "}"')
         end
-        super
+        self[:old] = value
       end
 
       # This will be a literal for Haml::Buffer#attributes's last argument, `attributes_hashes`.

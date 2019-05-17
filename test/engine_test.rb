@@ -82,7 +82,7 @@ class EngineTest < Haml::TestCase
   }
 
   User = Struct.new('User', :id)
-  class CustomHamlClass < Struct.new(:id)
+  CustomHamlClass = Struct.new(:id) do
     def haml_object_ref
       "my_thing"
     end

@@ -7,7 +7,7 @@ module Haml
     # @param type [Symbol] :static or :dynamic
     # @param key [String]
     # @param value [String] Actual string value for :static type, value's Ruby literal for :dynamic type.
-    class AttributeValue < Struct.new(:type, :key, :value)
+    AttributeValue = Struct.new(:type, :key, :value) do
       # @return [String] A Ruby literal of value.
       def to_literal
         case type
