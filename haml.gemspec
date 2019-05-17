@@ -14,6 +14,14 @@ Gem::Specification.new do |spec|
   end
   spec.homepage    = 'http://haml.info/'
   spec.license     = "MIT"
+  spec.metadata    = {
+    "bug_tracker_uri"   => "https://github.com/haml/haml/issues",
+    "changelog_uri"     => "https://github.com/haml/haml/blob/master/CHANGELOG.md",
+    "documentation_uri" => "http://haml.info/docs.html",
+    "homepage_uri"      => "http://haml.info",
+    "mailing_list_uri"  => "https://groups.google.com/forum/?fromgroups#!forum/haml",
+    "source_code_uri"   => "https://github.com/haml/haml"
+  }
 
   spec.required_ruby_version = '>= 2.0.0'
 
