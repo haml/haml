@@ -288,7 +288,7 @@ module Haml
     end
 
     def block_keyword(text)
-      return unless keyword = text.scan(BLOCK_KEYWORD_REGEX)[0]
+      return unless (keyword = text.scan(BLOCK_KEYWORD_REGEX)[0])
       keyword[0] || keyword[1]
     end
 
@@ -535,7 +535,7 @@ module Haml
 
       # Post-process case statements to normalize the nesting of "when" clauses
       return unless node.value[:keyword] == "case"
-      return unless first = node.children.first
+      return unless (first = node.children.first)
       return unless first.type == :silent_script && first.value[:keyword] == "when"
       return if first.children.empty?
       # If the case node has a "when" child with children, it's the
@@ -584,9 +584,9 @@ module Haml
       scanner = StringScanner.new(text)
       scanner.scan(/\s+/)
       until scanner.eos?
-        return unless key = scanner.scan(LITERAL_VALUE_REGEX)
+        return unless (key = scanner.scan(LITERAL_VALUE_REGEX))
         return unless scanner.scan(/\s*=>\s*/)
-        return unless value = scanner.scan(LITERAL_VALUE_REGEX)
+        return unless (value = scanner.scan(LITERAL_VALUE_REGEX))
         return unless scanner.scan(/\s*(?:,|$)\s*/)
         attributes[eval(key).to_s] = eval(value).to_s
       end
@@ -714,7 +714,7 @@ module Haml
     end
 
     def parse_new_attribute(scanner)
-      unless name = scanner.scan(/[-:\w]+/)
+      unless (name = scanner.scan(/[-:\w]+/))
         return if scanner.scan(/\)/)
         return false
       end
@@ -723,8 +723,8 @@ module Haml
       return name, [:static, true] unless scanner.scan(/=/) #/end
 
       scanner.scan(/\s*/)
-      unless quote = scanner.scan(/["']/)
-        return false unless var = scanner.scan(/(@@?|\$)?\w+/)
+      unless (quote = scanner.scan(/["']/))
+        return false unless (var = scanner.scan(/(@@?|\$)?\w+/))
         return name, [:dynamic, var]
       end
 

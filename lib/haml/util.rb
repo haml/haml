@@ -234,7 +234,7 @@ MSG
       scanner = StringScanner.new(str.dup.force_encoding(Encoding::ASCII_8BIT))
       bom = scanner.scan(/\xEF\xBB\xBF/n)
       return bom unless scanner.scan(/-\s*#\s*/n)
-      if coding = try_parse_haml_emacs_magic_comment(scanner)
+      if (coding = try_parse_haml_emacs_magic_comment(scanner))
         return bom, coding
       end
 

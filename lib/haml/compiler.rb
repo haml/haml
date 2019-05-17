@@ -168,7 +168,7 @@ module Haml
     end
 
     def compile_filter
-      unless filter = @filters[@node.value[:name]]
+      unless (filter = @filters[@node.value[:name]])
         name = @node.value[:name]
         if ["maruku", "textile"].include?(name)
           raise Error.new(Error.message(:install_haml_contrib, name), @node.line - 1)
