@@ -53,7 +53,9 @@ class TemplateTest < Haml::TestCase
     Haml::Template.options[:escape_html] = false
     render_method ||= proc { |n| @base.render(:file => n) }
     expected = load_result(name)
-    actual = silence_warnings do
+    actual = if ['silent_script', 'helpful'].include? name
+      silence_warnings { render_method[name] }
+    else
       render_method[name]
     end
 
