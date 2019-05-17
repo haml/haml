@@ -244,7 +244,7 @@ HAML
 
   def test_form_for_with_homemade_view_context
     handler  = ActionView::Template.handler_for_extension("haml")
-    template = ActionView::Template.new(<<HAML, "inline template", handler, {})
+    template = ActionView::Template.new(<<HAML, "inline template", handler, locals: [])
 = form_for(m, :url => "/") do
   %b Bold!
 HAML
