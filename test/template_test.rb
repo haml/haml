@@ -53,7 +53,7 @@ class TemplateTest < Haml::TestCase
   def assert_renders_correctly(name, &render_method)
     old_options = Haml::Template.options.dup
     Haml::Template.options[:escape_html] = false
-    render_method ||= proc { |n| @base.render(:file => n) }
+    render_method ||= proc { |n| @base.render(template: n) }
     expected = load_result(name)
     actual = if ['silent_script', 'helpful'].include? name
       silence_warnings { render_method[name] }
