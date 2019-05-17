@@ -57,14 +57,14 @@ HAML
     proper_behavior = false
 
     begin
-      ActionView::Base.new(ActionView::LookupContext.new('')).render(inline: "<%= flatten('Foo\\nBar') %>")
+      action_view_instance.render(inline: "<%= flatten('Foo\\nBar') %>")
     rescue NoMethodError, ActionView::Template::Error
       proper_behavior = true
     end
     assert(proper_behavior)
 
     begin
-      ActionView::Base.new(ActionView::LookupContext.new('')).render(inline: "<%= concat('foo') %>")
+      action_view_instance.render(inline: "<%= concat('foo') %>")
     rescue ArgumentError, NameError
       proper_behavior = true
     end
