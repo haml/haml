@@ -11,7 +11,7 @@ module Haml::Helpers
 end
 
 class Egocentic
-  def method_missing(*args)
+  def method_missing(*)
     self
   end
 end

@@ -120,7 +120,7 @@ module Haml
       # @param text [String] The source text for the filter to process
       # @return [String] The filtered result
       # @raise [Haml::Error] if it's not overridden
-      def render(text)
+      def render(_text)
         raise Error.new("#{self.inspect}#render not defined!")
       end
 
@@ -131,7 +131,7 @@ module Haml
       # @param text [String] The source text for the filter to process
       # @return [String] The filtered result
       # @raise [Haml::Error] if it or \{#render} isn't overridden
-      def render_with_options(text, options)
+      def render_with_options(text, _options)
         render(text)
       end
 
