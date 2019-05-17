@@ -52,12 +52,14 @@ class TemplateTest < Haml::TestCase
     old_options = Haml::Template.options.dup
     Haml::Template.options[:escape_html] = false
     render_method ||= proc { |n| @base.render(:file => n) }
+    expected = load_result(name)
+    actual = silence_warnings do
+      render_method[name]
+    end
 
-    silence_warnings do
-      load_result(name).split("\n").zip(render_method[name].split("\n")).each_with_index do |pair, line|
-        message = "template: #{name}\nline:     #{line}"
-        assert_equal(pair.first, pair.last, message)
-      end
+    expected.split("\n").zip(actual.split("\n")).each_with_index do |pair, line|
+      message = "template: #{name}\nline:     #{line}"
+      assert_equal(pair.first, pair.last, message)
     end
   rescue ActionView::Template::Error => e
     if e.message =~ /Can't run [\w:]+ filter; required (one of|file) ((?:'\w+'(?: or )?)+)(, but none were found| not found)/
