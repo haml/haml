@@ -169,7 +169,7 @@ HAML
   end
 
   def test_is_haml
-    assert(!ActionView::Base.new.is_haml?)
+    assert(!ActionView::Base.new(ActionView::LookupContext.new('')).is_haml?)
     assert_equal("true\n", render("= is_haml?", :action_view))
     assert_equal("false", @base.render(:inline => '<%= is_haml? %>'))
     assert_equal("false\n", render("= render :inline => '<%= is_haml? %>'", :action_view))

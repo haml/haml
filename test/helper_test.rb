@@ -57,14 +57,14 @@ HAML
     proper_behavior = false
 
     begin
-      ActionView::Base.new.render(:inline => "<%= flatten('Foo\\nBar') %>")
+      ActionView::Base.new(ActionView::LookupContext.new('')).render(inline: "<%= flatten('Foo\\nBar') %>")
     rescue NoMethodError, ActionView::Template::Error
       proper_behavior = true
     end
     assert(proper_behavior)
 
     begin
-      ActionView::Base.new.render(:inline => "<%= concat('foo') %>")
+      ActionView::Base.new(ActionView::LookupContext.new('')).render(inline: "<%= concat('foo') %>")
     rescue ArgumentError, NameError
       proper_behavior = true
     end
@@ -262,7 +262,7 @@ HAML
   end
 
   def test_is_haml
-    assert(!ActionView::Base.new.is_haml?)
+    assert(!ActionView::Base.new(ActionView::LookupContext.new('')).is_haml?)
     assert_equal("true\n", render("= is_haml?"))
   end
 
