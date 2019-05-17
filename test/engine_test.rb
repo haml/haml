@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# frozen_string_literal: true
 
 require 'test_helper'
 
@@ -1334,7 +1335,7 @@ HAML
   end
 
   def test_render_should_accept_a_binding_as_scope
-    string = "This is a string!"
+    string = "This is a string!".dup
     string.instance_variable_set(:@var, "Instance variable")
     b = string.instance_eval do
       var = "Local variable"
@@ -1349,18 +1350,18 @@ HAML
   end
 
   def test_yield_should_work_with_binding
-    assert_equal("12\nFOO\n", render("= yield\n= upcase", :scope => "foo".instance_eval{binding}) { 12 })
+    assert_equal("12\nFOO\n", render("= yield\n= upcase", :scope => "foo".dup.instance_eval{binding}) { 12 })
   end
 
   def test_yield_should_work_with_def_method
-    s = "foo"
+    s = "foo".dup
     engine("= yield\n= upcase").def_method(s, :render)
     assert_equal("12\nFOO\n", s.render { 12 })
   end
 
   def test_def_method_with_module
     engine("= yield\n= upcase").def_method(String, :render_haml)
-    assert_equal("12\nFOO\n", "foo".render_haml { 12 })
+    assert_equal("12\nFOO\n", "foo".dup.render_haml { 12 })
   end
 
   def test_def_method_locals
@@ -1375,7 +1376,7 @@ HAML
   end
 
   def test_render_proc_with_binding
-    assert_equal("FOO\n", engine("= upcase").render_proc("foo".instance_eval{binding}).call)
+    assert_equal("FOO\n", engine("= upcase").render_proc("foo".dup.instance_eval{binding}).call)
   end
 
   def test_haml_buffer_gets_reset_even_with_exception
@@ -2027,7 +2028,7 @@ HAML
   end
 
   def test_fake_ascii_encoding
-    assert_encoded_equal(<<HTML.force_encoding("ascii-8bit"), render(<<HAML, :encoding => "ascii-8bit"))
+    assert_encoded_equal(<<HTML.dup.force_encoding("ascii-8bit"), render(<<HAML, :encoding => "ascii-8bit"))
 <p>bâr</p>
 <p>föö</p>
 HTML
@@ -2053,7 +2054,7 @@ HAML
   end
 
   def test_encoding_error
-    render("foo\nbar\nb\xFEaz".force_encoding("utf-8"))
+    render("foo\nbar\nb\xFEaz".dup.force_encoding("utf-8"))
     assert(false, "Expected exception")
   rescue Haml::Error => e
     assert_equal(3, e.line)
@@ -2062,7 +2063,7 @@ HAML
 
   def test_ascii_incompatible_encoding_error
     template = "foo\nbar\nb_z".encode("utf-16le")
-    template[9] = "\xFE".force_encoding("utf-16le")
+    template[9] = "\xFE".dup.force_encoding("utf-16le")
     render(template)
     assert(false, "Expected exception")
   rescue Haml::Error => e

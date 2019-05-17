@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 begin
   if ENV['TRAVIS'] && RUBY_VERSION == '2.1.2' && !defined?(Rubinius)
     require 'coveralls'
