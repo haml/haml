@@ -68,10 +68,6 @@ matrix:
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
     - rvm: 2.6.3
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: 2.6.3
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x
-    - rvm: 2.6.3
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
     - rvm: ruby-head
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
     - rvm: ruby-head
