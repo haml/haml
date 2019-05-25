@@ -34,7 +34,7 @@ module Haml
         # solved by looking for ::Erubi first.
         # However, in JRuby, the const_defined? finds it anyway, so we must make sure that it's
         # not just a reference to ::Erubi.
-        if defined?(::Erubi) && (Object.const_get('::ActionView::Template::Handlers::ERB::Erubi') != ::Erubi)
+        if defined?(::Erubi) && (::ActionView::Template::Handlers::ERB.const_get('Erubi') != ::Erubi)
           require "haml/helpers/safe_erubi_template"
           Haml::Filters::RailsErb.template_class = Haml::SafeErubiTemplate
         else
