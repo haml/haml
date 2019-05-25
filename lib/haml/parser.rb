@@ -61,7 +61,7 @@ module Haml
       SILENT_SCRIPT,
       ESCAPE,
       FILTER
-    ]
+    ].freeze
 
     # The value of the character that designates that a line is part
     # of a multiline string.
@@ -75,8 +75,8 @@ module Haml
     #
     BLOCK_WITH_SPACES = /do\s*\|\s*[^\|]*\s+\|\z/
 
-    MID_BLOCK_KEYWORDS = %w[else elsif rescue ensure end when]
-    START_BLOCK_KEYWORDS = %w[if begin case unless]
+    MID_BLOCK_KEYWORDS = %w[else elsif rescue ensure end when].freeze
+    START_BLOCK_KEYWORDS = %w[if begin case unless].freeze
     # Try to parse assignments to block starters as best as possible
     START_BLOCK_KEYWORD_REGEX = /(?:\w+(?:,\s*\w+)*\s*=\s*)?(#{START_BLOCK_KEYWORDS.join('|')})/
     BLOCK_KEYWORD_REGEX = /^-?\s*(?:(#{MID_BLOCK_KEYWORDS.join('|')})|#{START_BLOCK_KEYWORD_REGEX.source})\b/

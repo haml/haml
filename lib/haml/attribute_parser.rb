@@ -16,7 +16,7 @@ module Haml
     TYPE = 1
     TEXT = 2
 
-    IGNORED_TYPES = %i[on_sp on_ignored_nl]
+    IGNORED_TYPES = %i[on_sp on_ignored_nl].freeze
 
     class << self
       # @return [Boolean] - return true if AttributeParser.parse can be used.

@@ -121,7 +121,7 @@ module Haml
         @options[:input], @options[:output] = input, output
       end
 
-      COLORS = { :red => 31, :green => 32, :yellow => 33 }
+      COLORS = {red: 31, green: 32, yellow: 33}.freeze
 
       # Prints a status message about performing the given action,
       # colored using the given color (via terminal escapes) if possible.

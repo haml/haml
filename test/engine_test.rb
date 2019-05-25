@@ -80,7 +80,7 @@ class EngineTest < Haml::TestCase
     "foo\n:plain\n  1\n  2\n  \#{raise 'foo'}"             => ["foo", 5],
     "= raise 'foo'\nfoo\nbar\nbaz\nbang"                   => ["foo", 1],
     "- case 1\n\n- when 1\n  - raise 'foo'"                => ["foo", 4],
-  }
+  }.freeze
 
   User = Struct.new('User', :id)
   CustomHamlClass = Struct.new(:id) do
