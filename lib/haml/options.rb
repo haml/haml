@@ -135,7 +135,7 @@ module Haml
     # formatting errors.
     #
     # Defaults to `false`.
-    attr_reader :remove_whitespace
+    attr_accessor :remove_whitespace
 
     # Whether or not attribute hashes and Ruby scripts designated by `=` or `~`
     # should be evaluated. If this is `true`, said scripts are rendered as empty
@@ -239,10 +239,6 @@ module Haml
     undef :cdata
     def cdata
       xhtml? || @cdata
-    end
-
-    def remove_whitespace=(value)
-      @remove_whitespace = value
     end
 
     def encoding=(value)
