@@ -171,7 +171,7 @@ module Haml
     # Key is filter name in String and value is Class to use. Defaults to {}.
     attr_accessor :filters
 
-    def initialize(values = {}, &block)
+    def initialize(values = {})
       defaults.each {|k, v| instance_variable_set :"@#{k}", v}
       values.each {|k, v| send("#{k}=", v) if defaults.has_key?(k) && !v.nil?}
       yield if block_given?
