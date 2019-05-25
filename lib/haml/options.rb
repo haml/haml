@@ -18,16 +18,12 @@ module Haml
 
       # An array of valid values for the `:format` option.
       # @return Array
-      def valid_formats
-        @valid_formats
-      end
+      attr_reader :valid_formats
 
       # An array of keys that will be used to provide a hash of options to
       # {Haml::Buffer}.
       # @return Hash
-      def buffer_option_keys
-        @buffer_option_keys
-      end
+      attr_reader :buffer_option_keys
 
       # Returns a subset of defaults: those that {Haml::Buffer} cares about.
       # @return [{Symbol => Object}] The options hash
