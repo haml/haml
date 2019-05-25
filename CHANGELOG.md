@@ -5,7 +5,7 @@
 Released on May 25, 2019
 ([diff](https://github.com/haml/haml/compare/v5.1.0...v5.1.1)).
 
-* Fix NameError bug for that happens on ruby 2.6.1-2.6.3 + haml 5.1.0 + rails 4.2.x + erubi. (Akira Matsuda)
+* Fix NameError bug that happens on ruby 2.6.1-2.6.3 + haml 5.1.0 + rails < 5.1 + erubi. (Akira Matsuda)
 
 ## 5.1.0
 
