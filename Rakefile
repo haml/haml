@@ -88,10 +88,7 @@ task :profile do
 end
 
 def gemfiles
-  @gemfiles ||= begin
-    Dir[File.dirname(__FILE__) + '/test/gemfiles/Gemfile.*'].
-      reject {|f| f =~ /\.lock$/}
-  end
+  @gemfiles ||= Dir[File.dirname(__FILE__) + '/test/gemfiles/Gemfile.*'].reject {|f| f =~ /\.lock$/}
 end
 
 def with_each_gemfile
