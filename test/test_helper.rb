@@ -54,13 +54,13 @@ BASE_TEST_CLASS = if defined?(Minitest::Test)
                     MiniTest::Unit::TestCase
                   end
 
-module Declarative
-  def test(name, &block)
-    define_method("test_ #{name}", &block)
-  end
-end
-
 class Haml::TestCase < BASE_TEST_CLASS
+  module Declarative
+    def test(name, &block)
+      define_method("test_ #{name}", &block)
+    end
+  end
+
   extend Declarative
 
   def render(text, options = {}, base = nil, &block)
