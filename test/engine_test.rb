@@ -1458,6 +1458,10 @@ HAML
     end
   end
 
+  def test_mime_type_text_plain_with_interpolation
+    assert_equal("&\n", render("\#{'&'}", :escape_html => true, :mime_type => 'text/plain'))
+  end
+
   def test_static_hashes
     assert_equal("<a b='a =&gt; b'></a>\n", render("%a{:b => 'a => b'}", :suppress_eval => true))
     assert_equal("<a b='a, b'></a>\n", render("%a{:b => 'a, b'}", :suppress_eval => true))

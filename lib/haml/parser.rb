@@ -307,7 +307,7 @@ module Haml
         return ParseNode.new(:plain, line.index + 1, :text => line.text)
       end
 
-      escape_html = @options.escape_html if escape_html.nil?
+      escape_html = @options.escape_html && @options.mime_type != 'text/plain' if escape_html.nil?
       line.text = unescape_interpolation(line.text, escape_html)
       script(line, false)
     end
