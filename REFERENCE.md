@@ -99,6 +99,9 @@ Hamlit does not remove non-boolean attributes and render `<a foo=''></a>`
 (`foo` is not removed). This design allows us to reduce string concatenation and
 is the only difference between Faml and Hamlit.
 
+You may be also interested in
+[hamlit/hamlit-boolean\_attributes](https://github.com/hamlit/hamlit-boolean_attributes).
+
 ## 5 Types of Attributes
 
 Haml has 3 types of attributes: id, class and others.
@@ -181,7 +184,10 @@ defer reversed ismap seamless muted required autofocus novalidate formnovalidate
 itemscope allowfullscreen default inert sortable truespeed typemustmatch
 ```
 
-"data-\*" is also regarded as boolean.
+If you want to customize the list of boolean attributes, you can use
+[hamlit/hamlit-boolean\_attributes](https://github.com/hamlit/hamlit-boolean_attributes).
+
+"aria-\*" and "data-\*" are also regarded as boolean.
 
 ### other attributes
 No hyphenation and boolean support. `false` is rendered as "false" (like Rails helpers).
