@@ -1,5 +1,12 @@
 # Haml Changelog
 
+## 5.1.2
+
+Released on August 6, 2019
+([diff](https://github.com/haml/haml/compare/v5.1.1...v5.1.2)).
+
+* Fix crash in some environments such as New Relic by unfreezing string literals for ParseNode#inspect. [#1016](https://github.com/haml/haml/pull/1016) (thanks [Jalyna](https://github.com/jalyna))
+
 ## 5.1.1
 
 Released on May 25, 2019
