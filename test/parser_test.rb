@@ -96,6 +96,14 @@ module Haml
       end
     end
 
+    test "inspect for node with children returns text" do
+      text = "some revealed text"
+      cond = "[cond]"
+      node = parse("/!#{cond} #{text}")
+
+      assert_equal "(root nil\n  (comment {:conditional=>\"[cond]\", :text=>\"some revealed text\", :revealed=>true, :parse=>false}))", node.inspect
+    end
+
     test "revealed conditional comments are detected" do
       text = "some revealed text"
       cond = "[cond]"
