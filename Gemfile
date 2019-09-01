@@ -22,7 +22,9 @@ else
   gem 'redcarpet'
 
   if RUBY_PLATFORM !~ /mswin|mingw/
-    gem 'faml', github: 'k0kubun/faml', ref: '7e1c84ed806d8ff2193f3d6428ae24b0e7c6b7a6', submodules: true
+    if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.7.0') # Travis cannot compile ruby.h with C++
+      gem 'faml'
+    end
     gem 'stackprof'
   end
 end
