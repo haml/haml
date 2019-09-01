@@ -1299,7 +1299,7 @@ HAML
 
   def test_local_assigns_dont_modify_class
     assert_haml_ugly("= foo", :locals => {:foo => 'bar'})
-    assert_equal(nil, defined?(foo))
+    assert_nil(defined?(foo))
   end
 
   def test_object_ref_with_nil_id; skip # object reference
