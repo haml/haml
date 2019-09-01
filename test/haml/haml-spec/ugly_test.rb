@@ -984,7 +984,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def test_code_following_when_escape_haml_is_set_to_true
+    def test_code_following_eq_when_escape_haml_is_set_to_true
       haml    = %q{= '<"&>'}
       _html   = %q{&lt;&quot;&amp;&gt;}
       locals  = {}
@@ -994,7 +994,7 @@ class UglyTest < MiniTest::Test
       assert_equal haml_result, hamlit_result
     end
 
-    def test_code_following_when_escape_haml_is_set_to_true
+    def test_code_following_neq_when_escape_haml_is_set_to_true
       haml    = %q{!= '<"&>'}
       _html   = %q{<"&>}
       locals  = {}
