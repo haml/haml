@@ -4,7 +4,11 @@ require 'hamlit/rails_template'
 describe Hamlit::RailsTemplate do
   def render(haml)
     ActionView::Template.register_template_handler(:haml, Hamlit::RailsTemplate.new)
-    base = ActionView::Base.new(ActionView::LookupContext.new(''))
+    base = Class.new(ActionView::Base) do
+      def compiled_method_container
+        self.class
+      end
+    end.new(ActionView::LookupContext.new(''))
     base.render(inline: haml, type: :haml)
   end
 

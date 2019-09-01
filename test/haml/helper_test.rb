@@ -22,7 +22,7 @@ class HelperTest < Haml::TestCase
   end
 
   def setup
-    @base = Class.new(ActionView::Base) {
+    @base = Class.new(ActionView::Base) do
       def nested_tag
         content_tag(:span) {content_tag(:div) {"something"}}
       end
@@ -30,7 +30,11 @@ class HelperTest < Haml::TestCase
       def wacky_form
         form_tag("/foo") {"bar"}
       end
-    }.new
+
+      def compiled_method_container
+        self.class
+      end
+    end.new(ActionView::LookupContext.new(''))
     @base.controller = ActionController::Base.new
     @base.view_paths << File.expand_path("../templates", __FILE__)
     @base.instance_variable_set(:@post, Post.new("Foo bar\nbaz", nil, PostErrors.new))
