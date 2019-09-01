@@ -22,7 +22,7 @@ else
   gem 'redcarpet', github: 'vmg/redcarpet' # To resolve circular require warning
 
   if RUBY_PLATFORM !~ /mswin|mingw/
-    gem 'faml'
+    gem 'faml', github: 'k0kubun/faml', ref: '7e1c84ed806d8ff2193f3d6428ae24b0e7c6b7a6', submodules: true
     gem 'stackprof'
   end
 end
