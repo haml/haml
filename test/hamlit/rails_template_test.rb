@@ -4,7 +4,7 @@ require 'hamlit/rails_template'
 describe Hamlit::RailsTemplate do
   def render(haml)
     ActionView::Template.register_template_handler(:haml, Hamlit::RailsTemplate.new)
-    base = ActionView::Base.new(__dir__, {})
+    base = ActionView::Base.new(ActionView::LookupContext.new(''))
     base.render(inline: haml, type: :haml)
   end
 
@@ -157,19 +157,5 @@ describe Hamlit::RailsTemplate do
     ensure
       Hamlit::RailsTemplate.set_options(use_html_safe: original)
     end
-  end
-
-  specify 'xml mime_type' do
-    base = ActionView::Base.new(__dir__, {})
-    handler = Hamlit::RailsTemplate.new
-    html_template = ActionView::Template.new('%link', 'test.html.haml', handler, {
-      format: Mime::Type.new('text/html', :html, ['application/xhtml+xml']),
-    })
-    xml_template  = ActionView::Template.new('%link', 'test.xml.haml', handler, {
-      format: Mime::Type.new('application/xml', :xml, ['text/xml', 'application/x-xml']),
-    })
-
-    assert_equal %Q|<link>\n|, base.render(template: html_template)
-    assert_equal %Q|<link />\n|, base.render(template: xml_template)
   end
 end
