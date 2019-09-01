@@ -70,7 +70,8 @@ class TemplateTest < Haml::TestCase
   def create_base
     vars = { 'article' => Article.new, 'foo' => 'value one' }
 
-    base = ActionView::Base.new(TEMPLATE_PATH, vars)
+    context = ActionView::LookupContext.new(TEMPLATE_PATH)
+    base = ActionView::Base.new(context, vars)
 
     # This is needed by RJS in (at least) Rails 3
     base.instance_variable_set(:@template, base)
