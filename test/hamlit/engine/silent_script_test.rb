@@ -5,9 +5,9 @@ describe Hamlit::Engine do
     it 'renders nothing' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
       HTML
-        - nil
-        - 3
-        - 'foo'
+        - _ = nil
+        - _ = 3
+        - _ = 'foo'
       HAML
     end
 
@@ -184,7 +184,7 @@ describe Hamlit::Engine do
       HTML
         - begin
           - raise 'error'
-        - rescue RuntimeError => e
+        - rescue RuntimeError => _e
           hello
       HAML
     end
