@@ -98,6 +98,14 @@ class Haml::TestCase < BASE_TEST_CLASS
     flunk "Expected exception #{klass}, none raised"
   end
 
+  def action_view_instance
+    Class.new(ActionView::Base) do
+      def compiled_method_container
+        self.class
+      end
+    end.new(ActionView::LookupContext.new(''))
+  end
+
   def self.error(*args)
     Hamlit::HamlError.message(*args)
   end
