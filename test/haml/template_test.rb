@@ -80,6 +80,8 @@ class TemplateTest < Haml::TestCase
     # It's usually provided by ActionController::Base.
     def base.protect_against_forgery?; false; end
 
+    def base.compiled_method_container() self.class; end
+
     base
   end
 
@@ -169,16 +171,16 @@ class TemplateTest < Haml::TestCase
 
   def test_instance_variables_should_work_inside_templates
     @base.instance_variable_set(:@content_for_layout, 'something')
-    assert_haml_ugly("%p= @content_for_layout")
+    assert_haml_ugly("%p= @content_for_layout", scope: @base)
 
     @base.instance_eval("@author = 'Hampton Catlin'")
-    assert_haml_ugly(".author= @author")
+    assert_haml_ugly(".author= @author", scope: @base)
 
     @base.instance_eval("@author = 'Hampton'")
-    assert_haml_ugly("= @author")
+    assert_haml_ugly("= @author", scope: @base)
 
     @base.instance_eval("@author = 'Catlin'")
-    assert_haml_ugly("= @author")
+    assert_haml_ugly("= @author", scope: @base)
   end
 
   def test_instance_variables_should_work_inside_attributes

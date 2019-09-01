@@ -59,13 +59,14 @@ class Haml::TestCase < BASE_TEST_CLASS
   def render(text, options = {}, base = nil, &block)
     options = { escape_html: false }.merge(options) # incompatible default
     %i[attr_wrapper cdata suppress_eval ugly].each { |opt| options.delete(opt) }
-    eval Hamlit::Engine.new(options).call(text)
+    scope = (base ? base.instance_eval { binding } : nil)
+    eval Hamlit::Engine.new(options).call(text), scope
   end
 
-  def assert_haml_ugly(text, options = {}, base = nil)
+  def assert_haml_ugly(text, options = {})
     haml_base = { escape_html: true, escape_attrs: true }
     hamlit_base = { escape_html: true }
-    scope  = options.delete(:scope)  || Object.new
+    scope  = options.delete(:scope) || Object.new
     locals = options.delete(:locals) || {}
     haml_result   = Haml::Engine.new(text, haml_base.merge(options)).render(scope, locals)
     hamlit_result = Hamlit::Template.new(hamlit_base.merge(options)) { text }.render(scope, locals)
