@@ -59,6 +59,7 @@ class Haml::TestCase < BASE_TEST_CLASS
   def render(text, options = {}, base = nil, &block)
     options = { escape_html: false }.merge(options) # incompatible default
     options.delete(:ugly)
+    options.delete(:suppress_eval)
     eval Hamlit::Engine.new(options).call(text)
   end
 
