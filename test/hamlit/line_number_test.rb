@@ -147,7 +147,7 @@ describe Hamlit::Engine do
           = __LINE__
         HAML
       end
-    end
+    end unless /java/ === RUBY_PLATFORM # execjs is not working with Travis JRuby environment
 
     describe 'css filter' do
       it 'renders static filter' do
