@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 
   if /java/ === RUBY_PLATFORM
     spec.platform = 'java'
-  elsif RUBY_ENGINE != 'truffleruby'
+  else
     spec.extensions = ['ext/hamlit/extconf.rb']
     spec.required_ruby_version = '>= 2.1.0'
   end
