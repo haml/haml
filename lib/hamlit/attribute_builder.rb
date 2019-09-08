@@ -9,7 +9,9 @@ module Hamlit::AttributeBuilder
                        itemscope allowfullscreen default inert sortable
                        truespeed typemustmatch download].freeze
 
-  if /java/ === RUBY_PLATFORM # JRuby
+  # Java extension is not implemented for JRuby yet.
+  # TruffleRuby does not implement `rb_ary_sort_bang`, etc.
+  if /java/ === RUBY_PLATFORM || RUBY_ENGINE == 'truffleruby'
     class << self
       def build(escape_attrs, quote, format, object_ref, *hashes)
         hashes << Hamlit::ObjectRef.parse(object_ref) if object_ref

@@ -1,5 +1,6 @@
 #include <ruby.h>
 #include <ruby/encoding.h>
+#ifndef TRUFFLERUBY
 #include "hescape.h"
 #include "string.h"
 
@@ -551,3 +552,4 @@ Init_hamlit(void)
   rb_const_set(mAttributeBuilder, id_space,      rb_obj_freeze(rb_str_new_cstr(" ")));
   rb_const_set(mAttributeBuilder, id_underscore, rb_obj_freeze(rb_str_new_cstr("_")));
 }
+#endif

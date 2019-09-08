@@ -47,5 +47,5 @@ describe Hamlit::StringSplitter do
         end
       end
     end
-  end
+  end if RUBY_ENGINE != 'truffleruby' # truffleruby doesn't have Ripper.lex
 end

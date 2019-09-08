@@ -44,4 +44,4 @@ describe 'optimization' do
       assert_equal true, compiled_code(haml).include?(%|value='hello|)
     end
   end
-end
+end if RUBY_ENGINE != 'truffleruby' # truffleruby does not implement major Ripper features

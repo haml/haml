@@ -5,6 +5,9 @@ module Hamlit
   class Filters
     class Plain < Base
       def compile(node)
+        unless Ripper.respond_to?(:lex)
+          raise NotImplementedError.new('This platform does not have Ripper.lex required for :plain filter')
+        end
         text = node.value[:text]
         text = text.rstrip unless ::Hamlit::HamlUtil.contains_interpolation?(text) # for compatibility
         [:multi, *compile_plain(text)]

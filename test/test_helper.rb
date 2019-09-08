@@ -47,6 +47,9 @@ module RenderHelper
   end
 
   def assert_haml(haml, options = {})
+    if RUBY_ENGINE == 'truffleruby'
+      skip 'truffleruby cannot run Haml'
+    end
     expected = render_haml(haml, options)
     actual = render_hamlit(haml, options)
     assert_equal expected, actual
@@ -64,6 +67,9 @@ class Haml::TestCase < BASE_TEST_CLASS
   end
 
   def assert_haml_ugly(text, options = {})
+    if RUBY_ENGINE == 'truffleruby'
+      skip 'truffleruby cannot run Haml'
+    end
     haml_base = { escape_html: true, escape_attrs: true }
     hamlit_base = { escape_html: true }
     scope  = options.delete(:scope) || Object.new

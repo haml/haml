@@ -28,8 +28,10 @@ module Hamlit
           nil
         when node.value[:parse]
           return compile_interpolated_plain(node) if node.value[:escape_interpolation]
-          return delegate_optimization(node) if RubyExpression.string_literal?(node.value[:value])
-          return delegate_optimization(node) if Temple::StaticAnalyzer.static?(node.value[:value])
+          if Ripper.respond_to?(:lex) # No Ripper.lex in truffleruby
+            return delegate_optimization(node) if RubyExpression.string_literal?(node.value[:value])
+            return delegate_optimization(node) if Temple::StaticAnalyzer.static?(node.value[:value])
+          end
 
           var = @identity.generate
           [:multi,
@@ -53,6 +55,10 @@ module Hamlit
 
       # We should handle interpolation here to escape only interpolated values.
       def compile_interpolated_plain(node)
+        unless Ripper.respond_to?(:lex) # No Ripper.lex in truffleruby
+          return [:multi, [:escape, node.value[:escape_interpolation], [:dynamic, "%Q[#{node.value[:value]}]"]], [:newline]]
+        end
+
         temple = [:multi]
         StringSplitter.compile(node.value[:value]).each do |type, value|
           case type

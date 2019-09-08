@@ -11,6 +11,10 @@ module Hamlit
       end
 
       def compile(node, &block)
+        unless Ripper.respond_to?(:lex) # No Ripper.lex in truffleruby
+          return dynamic_compile(node, &block)
+        end
+
         no_children = node.children.empty?
         case
         when no_children && node.value[:escape_interpolation]

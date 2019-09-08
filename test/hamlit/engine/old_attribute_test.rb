@@ -114,6 +114,9 @@ describe Hamlit::Engine do
         if /java/ === RUBY_PLATFORM
           skip 'maybe due to Ripper of JRuby'
         end
+        if RUBY_ENGINE == 'truffleruby'
+          skip 'truffleruby raises NoMethodError'
+        end
 
         assert_raises ArgumentError do
           render_hamlit("%div{ nil }")

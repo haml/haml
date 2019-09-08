@@ -14,7 +14,9 @@ module Hamlit
 
     def compile(node)
       hashes = []
-      return runtime_compile(node) if node.value[:object_ref] != :nil
+      if node.value[:object_ref] != :nil || !Ripper.respond_to?(:lex) # No Ripper.lex in truffleruby
+        return runtime_compile(node)
+      end
       node.value[:attributes_hashes].each do |attribute_str|
         hash = AttributeParser.parse(attribute_str)
         return runtime_compile(node) unless hash

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 module Hamlit
   module Utils
-    if /java/ === RUBY_PLATFORM # JRuby
+    # Java extension is not implemented for JRuby yet.
+    # TruffleRuby does not implement `rb_ary_sort_bang`, etc.
+    if /java/ === RUBY_PLATFORM || RUBY_ENGINE == 'truffleruby'
       require 'cgi/escape'
 
       def self.escape_html(html)
