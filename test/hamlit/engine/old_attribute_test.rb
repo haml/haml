@@ -385,7 +385,7 @@ describe Hamlit::Engine do
           %div{ aria: hash }
         HAML
       end
-    end
+    end if RUBY_ENGINE != 'truffleruby' # aria attribute is not working in truffleruby
 
     describe 'element class with attribute class' do
       it 'does not generate double classes' do
