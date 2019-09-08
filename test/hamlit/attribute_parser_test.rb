@@ -97,5 +97,5 @@ describe Hamlit::AttributeParser do
       it { assert_parse({ 'foo' => 'bar(a, b)', 'hoge' => 'piyo(a, b,)' }, 'foo: bar(a, b), hoge: piyo(a, b,),') }
       it { assert_parse({ 'foo' => 'bar(a, b)', 'hoge' => 'piyo(a, b,)' }, ' { foo: bar(a, b), hoge: piyo(a, b,), } ') }
     end
-  end
+  end if RUBY_ENGINE != 'truffleruby' # truffleruby doesn't have Ripper.lex
 end

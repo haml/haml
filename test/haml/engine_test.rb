@@ -2105,4 +2105,4 @@ HTML
     assert_equal expected.encoding, actual.encoding
     assert_equal expected, actual
   end
-end
+end if RUBY_ENGINE != 'truffleruby' # truffleruby cannot run Haml

@@ -1107,4 +1107,4 @@ world</p>}
       assert_equal haml_result, hamlit_result
     end
   end
-end
+end if RUBY_ENGINE != 'truffleruby' # truffleruby cannot run Haml

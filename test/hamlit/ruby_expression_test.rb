@@ -41,4 +41,4 @@ describe Hamlit::RubyExpression do
       it { assert_literal(false, %Q|''\n''|) }
     end
   end
-end
+end if RUBY_ENGINE != 'truffleruby' # truffleruby doesn't have Ripper.sexp

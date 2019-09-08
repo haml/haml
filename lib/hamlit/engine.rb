@@ -25,8 +25,10 @@ module Hamlit
     use Parser
     use Compiler
     use HTML
-    use StringSplitter
-    filter :StaticAnalyzer
+    if Ripper.respond_to?(:lex) # No Ripper.lex in truffleruby
+      use StringSplitter
+      filter :StaticAnalyzer
+    end
     use Escapable
     use ForceEscapable
     filter :ControlFlow

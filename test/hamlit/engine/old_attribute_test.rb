@@ -114,6 +114,9 @@ describe Hamlit::Engine do
         if /java/ === RUBY_PLATFORM
           skip 'maybe due to Ripper of JRuby'
         end
+        if RUBY_ENGINE == 'truffleruby'
+          skip 'truffleruby raises NoMethodError'
+        end
 
         assert_raises ArgumentError do
           render_hamlit("%div{ nil }")
@@ -382,7 +385,7 @@ describe Hamlit::Engine do
           %div{ aria: hash }
         HAML
       end
-    end
+    end if RUBY_ENGINE != 'truffleruby' # aria attribute is not working in truffleruby
 
     describe 'element class with attribute class' do
       it 'does not generate double classes' do
