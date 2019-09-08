@@ -11,6 +11,7 @@
 .ruby-version
 *.bundle
 *.so
+*.su
 *.o
 *.a
 *.swp
