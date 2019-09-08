@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.9.4](https://github.com/k0kubun/hamlit/compare/v2.9.3...v2.9.4) - 2019-09-08
+
+### Added
+
+- Experimental support of truffleruby [#145](https://github.com/k0kubun/hamlit/issues/145).
+
 ## [2.9.3](https://github.com/k0kubun/hamlit/compare/v2.9.2...v2.9.3) - 2019-04-09
 
 ### Fixed
