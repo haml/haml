@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.9.5](https://github.com/k0kubun/hamlit/compare/v2.9.4...v2.9.5) - 2019-09-08
+
+### Added
+
+- Supported `:plain` filter in truffleruby
+
 ## [2.9.4](https://github.com/k0kubun/hamlit/compare/v2.9.3...v2.9.4) - 2019-09-08
 
 ### Added
