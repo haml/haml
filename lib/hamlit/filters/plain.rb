@@ -5,9 +5,6 @@ module Hamlit
   class Filters
     class Plain < Base
       def compile(node)
-        unless Ripper.respond_to?(:lex)
-          raise NotImplementedError.new('This platform does not have Ripper.lex required for :plain filter')
-        end
         text = node.value[:text]
         text = text.rstrip unless ::Hamlit::HamlUtil.contains_interpolation?(text) # for compatibility
         [:multi, *compile_plain(text)]
@@ -17,6 +14,10 @@ module Hamlit
 
       def compile_plain(text)
         string_literal = ::Hamlit::HamlUtil.unescape_interpolation(text)
+        unless Ripper.respond_to?(:lex) # truffleruby doesn't have Ripper.lex
+          return [[:escape, false, [:dynamic, string_literal]]]
+        end
+
         StringSplitter.compile(string_literal).map do |temple|
           type, str = temple
           case type
