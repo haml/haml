@@ -14,11 +14,11 @@ end
 
 gem 'benchmark-ips', '2.3.0'
 gem 'maxitest'
+gem 'pry'
 
 if /java/ === RUBY_PLATFORM # JRuby
   gem 'pandoc-ruby'
 else
-  gem 'pry-byebug'
   gem 'redcarpet'
 
   if RUBY_PLATFORM !~ /mswin|mingw/ && RUBY_ENGINE != 'truffleruby'
