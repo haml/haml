@@ -2,10 +2,9 @@
 require 'temple'
 require 'hamlit/parser'
 require 'hamlit/compiler'
+require 'hamlit/html'
 require 'hamlit/escapable'
 require 'hamlit/force_escapable'
-require 'hamlit/html'
-require 'hamlit/string_splitter'
 
 module Hamlit
   class Engine < Temple::Engine
