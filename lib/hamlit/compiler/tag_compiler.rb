@@ -55,10 +55,6 @@ module Hamlit
 
       # We should handle interpolation here to escape only interpolated values.
       def compile_interpolated_plain(node)
-        unless Ripper.respond_to?(:lex) # No Ripper.lex in truffleruby
-          return [:multi, [:escape, node.value[:escape_interpolation], [:dynamic, "%Q\0#{node.value[:value]}\0"]], [:newline]]
-        end
-
         temple = [:multi]
         StringSplitter.compile(node.value[:value]).each do |type, value|
           case type

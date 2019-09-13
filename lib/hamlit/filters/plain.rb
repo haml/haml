@@ -14,10 +14,6 @@ module Hamlit
 
       def compile_plain(text)
         string_literal = ::Hamlit::HamlUtil.unescape_interpolation(text)
-        unless Ripper.respond_to?(:lex) # truffleruby doesn't have Ripper.lex
-          return [[:escape, false, [:dynamic, string_literal]]]
-        end
-
         StringSplitter.compile(string_literal).map do |temple|
           type, str = temple
           case type
