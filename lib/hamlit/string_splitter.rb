@@ -68,21 +68,5 @@ module Hamlit
         end
       end
     end
-
-    def on_dynamic(code)
-      return [:dynamic, code] unless RubyExpression.string_literal?(code)
-      return [:dynamic, code] if code.include?("\n")
-
-      temple = [:multi]
-      StringSplitter.compile(code).each do |type, content|
-        case type
-        when :static
-          temple << [:static, content]
-        when :dynamic
-          temple << on_dynamic(content)
-        end
-      end
-      temple
-    end
   end
 end

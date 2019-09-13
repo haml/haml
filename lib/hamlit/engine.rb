@@ -25,7 +25,7 @@ module Hamlit
     use Parser
     use Compiler
     use HTML
-    use StringSplitter
+    filter :StringSplitter
     filter :StaticAnalyzer
     use Escapable
     use ForceEscapable
