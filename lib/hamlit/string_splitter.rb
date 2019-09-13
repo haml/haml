@@ -6,7 +6,7 @@ module Hamlit
     # `code` param must be valid string literal
     def self.compile(code)
       unless Ripper.respond_to?(:lex) # truffleruby doesn't have Ripper.lex
-        return [:dynamic, code]
+        return [[:dynamic, code]]
       end
 
       begin
