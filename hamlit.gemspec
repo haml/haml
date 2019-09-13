@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
     spec.required_ruby_version = '>= 2.1.0'
   end
 
-  spec.add_dependency 'temple', '>= 0.8.0'
+  spec.add_dependency 'temple', '>= 0.8.2'
   spec.add_dependency 'thor'
   spec.add_dependency 'tilt'
 
