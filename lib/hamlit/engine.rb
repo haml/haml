@@ -5,6 +5,7 @@ require 'hamlit/compiler'
 require 'hamlit/html'
 require 'hamlit/escapable'
 require 'hamlit/force_escapable'
+require 'hamlit/dynamic_merger'
 
 module Hamlit
   class Engine < Temple::Engine
@@ -31,6 +32,7 @@ module Hamlit
     filter :ControlFlow
     filter :MultiFlattener
     filter :StaticMerger
+    use DynamicMerger
     use :Generator, -> { options[:generator] }
   end
 end

@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'thor'
   spec.add_dependency 'tilt'
 
+  spec.add_development_dependency 'benchmark_driver'
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'coffee-script'
   spec.add_development_dependency 'erubi'
@@ -41,5 +42,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake-compiler'
   spec.add_development_dependency 'sass'
   spec.add_development_dependency 'slim'
+  spec.add_development_dependency 'string_template'
   spec.add_development_dependency 'unindent'
 end
