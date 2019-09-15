@@ -1,7 +1,7 @@
 # Original: https://github.com/amatsuda/string_template/blob/master/benchmark.rb
 require 'benchmark_driver'
 
-Benchmark.driver(repeat_count: 1) do |x|
+Benchmark.driver(repeat_count: 8) do |x|
   x.prelude %{
     require 'rails'
     require 'action_view'
