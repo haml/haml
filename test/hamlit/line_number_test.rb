@@ -244,4 +244,21 @@ describe Hamlit::Engine do
       end
     end unless /java/ === RUBY_PLATFORM # execjs is not working with Travis JRuby environment
   end
+
+  describe 'dynamic merger' do
+    it 'renders optimized string' do
+      assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+        foo1
+        2
+        3bar
+        5baz
+      HTML
+        foo#{__LINE__}
+        #{__LINE__}
+        #{__LINE__}bar
+        - 1.to_s
+        #{__LINE__}baz
+      HAML
+    end
+  end
 end if RUBY_ENGINE != 'truffleruby' # negetive line numbers are broken in truffleruby
