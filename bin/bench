@@ -43,7 +43,7 @@ class Bench < Thor
       object.instance_eval(File.read(ruby_file))
     end
 
-    Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).def_method(object, :haml)
+    Haml::Engine.new(haml, escape_html: true, escape_attrs: true).def_method(object, :haml)
     object.instance_eval "def faml; #{Faml::Engine.new.call(haml)}; end"
     object.instance_eval "def hamlit; #{Hamlit::Engine.new.call(haml)}; end"
 
@@ -59,7 +59,7 @@ class Bench < Thor
   def code(file)
     haml = File.read(file)
     puts "#{?= * 49}\n Haml Source: #{file}\n#{?= * 49}"
-    puts Haml::Engine.new(haml, escape_html: true, escape_attrs: true, ugly: true).precompiled
+    puts Haml::Engine.new(haml, escape_html: true, escape_attrs: true).precompiled
     puts "\n#{?= * 49}\n Faml Source: #{file}\n#{?= * 49}"
     puts Faml::Engine.new.call(haml)
     puts "\n#{?= * 49}\n Hamlit Source: #{file}\n#{?= * 49}"
