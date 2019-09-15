@@ -8,7 +8,7 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 
 ### Added
 
-- Optimize template rendering by exploiting string interpolation [#146](https://github.com/k0kubun/hamlit/issues/146)
+- Optimize template rendering by string interpolation [#146](https://github.com/k0kubun/hamlit/issues/146)
   - Exploiting pre-allocation of string interpolation introduced in Ruby 2.5 [ruby/ruby#1626](https://github.com/ruby/ruby/pull/1626)
 - Require temple.gem >= 0.8.2
 
