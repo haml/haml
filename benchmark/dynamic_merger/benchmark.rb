@@ -1,7 +1,7 @@
 # Original: https://github.com/amatsuda/string_template/blob/master/benchmark.rb
 require 'benchmark_driver'
 
-Benchmark.driver(repeat_count: 8) do |x|
+Benchmark.driver(repeat_count: 1) do |x|
   x.prelude %{
     require 'rails'
     require 'action_view'
@@ -16,9 +16,11 @@ Benchmark.driver(repeat_count: 8) do |x|
 
     # compile template
     hello = 'benchmark/dynamic_merger/hello'
+    view.render(template: hello, handlers: 'erb')
     view.render(template: hello, handlers: 'string')
     view.render(template: hello, handlers: 'haml')
   }
+  x.report 'erubi', %{ view.render(template: hello, handlers: 'erb') }
   x.report 'string', %{ view.render(template: hello, handlers: 'string') }
   x.report 'hamlit', %{ view.render(template: hello, handlers: 'haml') }
   x.loop_count 100_000
