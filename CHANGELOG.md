@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.10.0](https://github.com/k0kubun/hamlit/compare/v2.9.5...v2.10.0) - 2019-09-15
+
+### Added
+
+- Optimize template rendering by exploiting string interpolation [#146](https://github.com/k0kubun/hamlit/issues/146)
+  - Exploiting pre-allocation of string interpolation introduced in Ruby 2.5 [ruby/ruby#1626](https://github.com/ruby/ruby/pull/1626)
+- Require temple.gem >= 0.8.2
+
 ## [2.9.5](https://github.com/k0kubun/hamlit/compare/v2.9.4...v2.9.5) - 2019-09-08
 
 ### Added
