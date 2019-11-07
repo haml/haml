@@ -205,8 +205,8 @@ describe Hamlit::Engine do
       HTML
         %span
           %div
-            - def foo(a, b); a + b; end
-            - num = foo(1,
+            - obj = Object.new; def obj.foo(a, b); a + b; end
+            - num = obj.foo(1,
         2)
             = num
       HAML

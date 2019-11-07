@@ -95,8 +95,8 @@ describe Hamlit::Engine do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
         3
       HTML
-        - def foo(a, b); a + b; end
-        = foo(1,
+        - obj = Object.new; def obj.foo(a, b); a + b; end
+        = obj.foo(1,
         2)
       HAML
     end
