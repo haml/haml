@@ -14,7 +14,7 @@ end
 module Hamlit
   Template = Temple::Templates::Tilt.create(
     Hamlit::Engine,
-    register_as: :haml,
+    register_as: [:haml, :hamlit],
   )
 
   module TemplateExtension
