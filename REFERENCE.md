@@ -225,6 +225,14 @@ Hamlit::RailsTemplate.set_options attr_quote: '"'
 set :haml, { attr_quote: '"' }
 ```
 
+## Ruby module
+
+`Hamlit::Template` is a module registered to `Tilt`. You can use it like:
+
+```rb
+Hamlit::Template.new { "%strong Yay for HAML!" }.render
+```
+
 ## Creating a custom filter
 
 Currently it doesn't have filter registering interface compatible with Haml.
