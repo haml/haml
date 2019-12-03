@@ -57,6 +57,7 @@ for full features in original implementation.
   - [x] :plain
   - [x] :preserve
   - [x] :ruby
+     - `haml_io` API is not supported. Use [hamlit-haml\_io.gem](https://github.com/hamlit/hamlit-haml_io) if you need.
   - [x] :sass
   - [x] :scss
   - [ ] :textile
