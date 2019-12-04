@@ -34,16 +34,16 @@ module Haml
             next
           end
 
-          value =
-            if escape_attrs == :once
-              Haml::Helpers.escape_once(value.to_s)
-            elsif escape_attrs
-              Haml::Helpers.html_escape(value.to_s)
-            else
-              value.to_s
-            end
+          if escape_attrs == :once
+            value = Haml::Helpers.escape_once(value.to_s)
+          elsif escape_attrs
+            value = Haml::Helpers.html_escape(value.to_s)
+          else
+            next " #{attr}=#{value.to_s.inspect}"
+          end
           " #{attr}=#{attr_wrapper}#{value}#{attr_wrapper}"
         end
+
         result.compact!
         result.sort!
         result.join

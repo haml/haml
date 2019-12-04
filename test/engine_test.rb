@@ -692,7 +692,7 @@ HAML
 
   def test_escape_attrs_false
     assert_equal(<<HTML, render(<<HAML, :escape_attrs => false))
-<div class='<?php echo "&quot;" ?>' id='foo'>
+<div class="<?php echo \\\"&quot;\\\" ?>" id="foo">
 bar
 </div>
 HTML
@@ -2139,6 +2139,11 @@ HAML
 %div{ 'x /><script>alert(1);</script><div x' => 'hello' }
       HAML
     end
+  end
+
+  def test_escape_attrs_quotes
+    html = render(%{ %a{ :href => '/', :'@click' => "callback('a')" } link }.strip, :escape_attrs => false)
+    assert_equal html.strip, %{ <a @click="callback('a')" href="/">link</a> }.strip
   end
 
   def test_engine_reflects_defaults
