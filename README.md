@@ -160,7 +160,7 @@ Note that you can also run just one test out of the test suite if you're working
 on a specific area:
 
 ~~~sh
-ruby -Itest test/helper_test.rb -n test_buffer_access
+bunle exec ruby -Itest test/helper_test.rb -n test_buffer_access
 ~~~
 
 Haml currently supports Ruby 2.0.0 and higher, so please make sure your changes run on 2.0+.
