@@ -10,5 +10,13 @@ module Hamlit
       end
       super(opts)
     end
+
+    # This dispatcher supports Haml's "revealed" conditional comment.
+    def on_html_condcomment(condition, content, revealed = false)
+      on_html_comment [:multi,
+                       [:static, "[#{condition}]>#{'<!-->' if revealed}"],
+                       content,
+                       [:static, "#{'<!--' if revealed}<![endif]"]]
+    end
   end
 end

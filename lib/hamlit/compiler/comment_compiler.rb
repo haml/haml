@@ -25,11 +25,13 @@ module Hamlit
           condition = $1
         end
 
-        if node.children.empty?
-          [:html, :condcomment, condition, [:static, " #{node.value[:text]} "]]
-        else
-          [:html, :condcomment, condition, yield(node)]
-        end
+        content =
+          if node.children.empty?
+            [:static, " #{node.value[:text]} "]
+          else
+            yield(node)
+          end
+        [:html, :condcomment, condition, content, node.value[:revealed]]
       end
     end
   end
