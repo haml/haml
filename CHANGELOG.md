@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.11.0](https://github.com/k0kubun/hamlit/compare/v2.10.0...v2.10.1) - 2019-12-12
+
+### Added
+
+- Support Haml's _revealed_ conditional comment feature on `/![if !IE]` [#153](https://github.com/k0kubun/hamlit/issues/153).
+  *Thanks to @esb*
+
 ## [2.10.1](https://github.com/k0kubun/hamlit/compare/v2.10.0...v2.10.1) - 2019-11-28
 
 ### Added
