@@ -22,9 +22,7 @@ else
   gem 'redcarpet'
 
   if RUBY_PLATFORM !~ /mswin|mingw/ && RUBY_ENGINE != 'truffleruby'
-    if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.7.0') # Travis cannot compile ruby.h with C++
-      gem 'faml'
-    end
+    gem 'faml'
     gem 'stackprof'
   end
 end
