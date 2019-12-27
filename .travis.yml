@@ -4,6 +4,7 @@ language: ruby
 cache: bundler
 rvm:
   - ruby-head
+  - 2.7.0
   - 2.6.5
   - 2.5.7
   - 2.4.9
@@ -67,6 +68,12 @@ matrix:
     - rvm: 2.6.5
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
     - rvm: 2.6.5
+      gemfile: test/gemfiles/Gemfile.rails-4.2.x
+    - rvm: 2.7.0
+      gemfile: test/gemfiles/Gemfile.rails-4.0.x
+    - rvm: 2.7.0
+      gemfile: test/gemfiles/Gemfile.rails-4.1.x
+    - rvm: 2.7.0
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
     - rvm: ruby-head
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
