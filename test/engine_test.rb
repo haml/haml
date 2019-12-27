@@ -1089,7 +1089,7 @@ HAML
     rescue Exception => e
       assert_kind_of NoMethodError, e
       backtrace = e.backtrace
-      backtrace.shift if rubinius?
+      backtrace.shift if "rbx" == RUBY_ENGINE
       assert_match(/test:6/, backtrace.first)
     end
   end
@@ -1247,7 +1247,7 @@ HAML
     render("%p\n  hi\n  %a= undefined\n= 12")
   rescue Exception => e
     backtrace = e.backtrace
-    backtrace.shift if rubinius?
+    backtrace.shift if "rbx" == RUBY_ENGINE
     assert_match("(test_exception):3", backtrace[0])
   else
     # Test failed... should have raised an exception
