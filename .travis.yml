@@ -4,9 +4,9 @@ language: ruby
 cache: bundler
 rvm:
   - ruby-head
-  - 2.6.3
-  - 2.5.5
-  - 2.4.6
+  - 2.6.5
+  - 2.5.7
+  - 2.4.9
   - 2.3.8
   - 2.2.10
   - 2.1.10
@@ -32,7 +32,7 @@ matrix:
       gemfile: test/gemfiles/Gemfile.rails-6.0.x
     - rvm: 2.3.8
       gemfile: test/gemfiles/Gemfile.rails-6.0.x
-    - rvm: 2.4.6
+    - rvm: 2.4.9
       gemfile: test/gemfiles/Gemfile.rails-6.0.x
     - rvm: 2.0.0
       gemfile: test/gemfiles/Gemfile.rails-5.2.x
@@ -50,23 +50,23 @@ matrix:
       gemfile: test/gemfiles/Gemfile.rails-5.0.x
     - rvm: 2.1.10
       gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
-    - rvm: 2.4.6
+    - rvm: 2.4.9
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.4.6
+    - rvm: 2.4.9
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.4.6
+    - rvm: 2.4.9
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: 2.5.5
+    - rvm: 2.5.7
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.5.5
+    - rvm: 2.5.7
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.5.5
+    - rvm: 2.5.7
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: 2.6.3
+    - rvm: 2.6.5
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.6.3
+    - rvm: 2.6.5
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.6.3
+    - rvm: 2.6.5
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
     - rvm: ruby-head
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
@@ -75,7 +75,7 @@ matrix:
     - rvm: ruby-head
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
   include:
-    - rvm: 2.6.3
+    - rvm: 2.6.5
       gemfile: test/gemfiles/Gemfile.rails-edge
   allow_failures:
     - rvm: ruby-head
