@@ -122,10 +122,10 @@ and merging multiple ids results in concatenation by "\_".
 %div{ id: false }
 
 # Output
-<div id='foo_bar'></span>
-<div id='foo_bar'></span>
-<div id='foo_bar'></span>
-<div id=''></span>
+<div id='foo_bar'></div>
+<div id='foo_bar'></div>
+<div id='foo_bar'></div>
+<div id=''></div>
 ```
 
 ### class attribute
