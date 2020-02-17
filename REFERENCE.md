@@ -853,7 +853,7 @@ is compiled to:
 
 ## Ruby Evaluation
 
-### Inserting Ruby: `=`
+### Inserting Ruby: `=` {#inserting_ruby}
 
 The equals character is followed by Ruby code. This code is evaluated and the
 output is inserted into the document. For example:
@@ -1323,7 +1323,7 @@ that just need a lot of template information.
 So data structures and  functions that require lots of arguments
 can be wrapped over multiple lines,
 as long as each line but the last ends in a comma
-(see [Inserting Ruby](#inserting_ruby_)).
+(see [Inserting Ruby](#inserting_ruby)).
 
 ## Whitespace Preservation
 
