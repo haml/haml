@@ -4,6 +4,20 @@ require 'haml/attribute_parser'
 
 module Haml
   class AttributeCompiler
+    # For haml/haml#972
+    using Module.new {
+      refine Object do
+        def to_literal
+          case self
+          when true, false
+            to_s
+          else
+            Haml::Util.inspect_obj(self)
+          end
+        end
+      end
+    }
+
     # @param type [Symbol] :static or :dynamic
     # @param key [String]
     # @param value [String] Actual string value for :static type, value's Ruby literal for :dynamic type.
@@ -18,20 +32,6 @@ module Haml
         end
       end
     end
-
-    # For haml/haml#972
-    using Module.new {
-      refine Object do
-        def to_literal
-          case self
-          when true, false
-            to_s
-          else
-            Haml::Util.inspect_obj(self)
-          end
-        end
-      end
-    }
 
     # Returns a script to render attributes on runtime.
     #
