@@ -2159,7 +2159,7 @@ HAML
           end
         end
 
-        TrueClass.class_eval do
+        FalseClass.class_eval do
           def inspect
             "⊥"
           end
