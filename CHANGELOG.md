@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## Unreleased
+
+* Fix crash in the attribute optimizer when `#inspect` is overridden in TrueClass / FalseClass [#972](https://github.com/haml/haml/issues/972)
+
 ## 5.1.2
 
 Released on August 6, 2019
