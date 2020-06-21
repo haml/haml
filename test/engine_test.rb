@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require 'test_helper'
+require 'tempfile'
 
 class EngineTest < Haml::TestCase
   # A map of erroneous Haml documents to the error messages they should produce.
@@ -2147,6 +2148,31 @@ HAML
     assert_equal %Q[<a a="a"></a>\n], Haml::Engine.new('%a(a="a")').render
   ensure
     Haml::Options.defaults.replace(defaults)
+  end
+
+  def test_engine_inspect_monkeypatch
+    Tempfile.open(['haml-test', '.rb']) do |f|
+      f.puts <<-HAML
+        TrueClass.class_eval do
+          def inspect
+            "⊤"
+          end
+        end
+
+        TrueClass.class_eval do
+          def inspect
+            "⊥"
+          end
+        end
+
+        require 'haml'
+        print Haml::Engine.new('%div{ foo: true, bar: false }').render
+      HAML
+      f.close
+      out = IO.popen([RbConfig.ruby, f.path], &:read)
+      assert_equal true, $?.success?
+      assert_equal "<div foo></div>\n", out
+    end
   end
 
   private

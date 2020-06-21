@@ -12,21 +12,35 @@ module Haml
       def to_literal
         case type
         when :static
-          Haml::Util.inspect_obj(value)
+          value.to_literal
         when :dynamic
           value
         end
       end
     end
 
+    # For haml/haml#972
+    using Module.new {
+      refine Object do
+        def to_literal
+          case self
+          when true, false
+            to_s
+          else
+            Haml::Util.inspect_obj(self)
+          end
+        end
+      end
+    }
+
     # Returns a script to render attributes on runtime.
     #
     # @param attributes [Hash]
     # @param object_ref [String,:nil]
-    # @param dynamic_attributes [DynamicAttributes]
+    # @param dynamic_attributes [Haml::AttributeCompiler::AttributeValue]
     # @return [String] Attributes rendering code
     def self.runtime_build(attributes, object_ref, dynamic_attributes)
-      "_hamlout.attributes(#{Haml::Util.inspect_obj(attributes)}, #{object_ref},#{dynamic_attributes.to_literal})"
+      "_hamlout.attributes(#{attributes.to_literal}, #{object_ref},#{dynamic_attributes.to_literal})"
     end
 
     # @param options [Haml::Options]
@@ -130,7 +144,7 @@ module Haml
 
       arguments = [@is_html, @attr_wrapper, @escape_attrs, @hyphenate_data_attrs]
       code = "::Haml::AttributeBuilder.build_attributes"\
-        "(#{arguments.map { |a| Haml::Util.inspect_obj(a) }.join(', ')}, { #{hash_content} })"
+        "(#{arguments.map(&:to_literal).join(', ')}, { #{hash_content} })"
       [:static, eval(code).to_s]
     end
 
@@ -148,7 +162,7 @@ module Haml
     # @param str [String]
     # @return [String]
     def frozen_string(str)
-      "#{Haml::Util.inspect_obj(str)}.freeze"
+      "#{str.to_literal}.freeze"
     end
 
     # Compiles attribute values for one key to Temple expression that generates ` key='value'`.
