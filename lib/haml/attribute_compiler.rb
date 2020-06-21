@@ -4,44 +4,10 @@ require 'haml/attribute_parser'
 
 module Haml
   class AttributeCompiler
-    # For haml/haml#972
-    using Module.new {
-      refine Object do
-        def to_literal
-          case self
-          when true, false
-            to_s
-          else
-            Haml::Util.inspect_obj(self)
-          end
-        end
-      end
-    }
-
     # @param type [Symbol] :static or :dynamic
     # @param key [String]
     # @param value [String] Actual string value for :static type, value's Ruby literal for :dynamic type.
-    AttributeValue = Struct.new(:type, :key, :value) do
-      # @return [String] A Ruby literal of value.
-      def to_literal
-        case type
-        when :static
-          value.to_literal
-        when :dynamic
-          value
-        end
-      end
-    end
-
-    # Returns a script to render attributes on runtime.
-    #
-    # @param attributes [Hash]
-    # @param object_ref [String,:nil]
-    # @param dynamic_attributes [Haml::AttributeCompiler::AttributeValue]
-    # @return [String] Attributes rendering code
-    def self.runtime_build(attributes, object_ref, dynamic_attributes)
-      "_hamlout.attributes(#{attributes.to_literal}, #{object_ref},#{dynamic_attributes.to_literal})"
-    end
+    AttributeValue = Struct.new(:type, :key, :value)
 
     # @param options [Haml::Options]
     def initialize(options)
@@ -55,16 +21,16 @@ module Haml
     #
     # @param attributes [Hash]
     # @param object_ref [String,:nil]
-    # @param dynamic_attributes [DynamicAttributes]
+    # @param dynamic_attributes [Haml::Parser::DynamicAttributes]
     # @return [Array] Temple expression
     def compile(attributes, object_ref, dynamic_attributes)
       if object_ref != :nil || !AttributeParser.available?
-        return [:dynamic, AttributeCompiler.runtime_build(attributes, object_ref, dynamic_attributes)]
+        return [:dynamic, compile_runtime_build(attributes, object_ref, dynamic_attributes)]
       end
 
       parsed_hashes = [dynamic_attributes.new, dynamic_attributes.old].compact.map do |attribute_hash|
         unless (hash = AttributeParser.parse(attribute_hash))
-          return [:dynamic, AttributeCompiler.runtime_build(attributes, object_ref, dynamic_attributes)]
+          return [:dynamic, compile_runtime_build(attributes, object_ref, dynamic_attributes)]
         end
         hash
       end
@@ -77,6 +43,16 @@ module Haml
     end
 
     private
+
+    # Returns a script to render attributes on runtime.
+    #
+    # @param attributes [Hash]
+    # @param object_ref [String,:nil]
+    # @param dynamic_attributes [Haml::Parser::DynamicAttributes]
+    # @return [String] Attributes rendering code
+    def compile_runtime_build(attributes, object_ref, dynamic_attributes)
+      "_hamlout.attributes(#{to_literal(attributes)}, #{object_ref}, #{dynamic_attributes.to_literal})"
+    end
 
     # Build array of grouped values whose sort order may go back and forth, which is also sorted with key name.
     # This method needs to group values with the same start because it can be changed in `Haml::AttributeBuidler#build_data_keys`.
@@ -144,7 +120,7 @@ module Haml
 
       arguments = [@is_html, @attr_wrapper, @escape_attrs, @hyphenate_data_attrs]
       code = "::Haml::AttributeBuilder.build_attributes"\
-        "(#{arguments.map(&:to_literal).join(', ')}, { #{hash_content} })"
+        "(#{arguments.map(&method(:to_literal)).join(', ')}, { #{hash_content} })"
       [:static, eval(code).to_s]
     end
 
@@ -153,16 +129,16 @@ module Haml
     # @return [String]
     def merged_value(key, values)
       if values.size == 1
-        values.first.to_literal
+        attr_literal(values.first)
       else
-        "::Haml::AttributeBuilder.merge_values(#{frozen_string(key)}, #{values.map(&:to_literal).join(', ')})"
+        "::Haml::AttributeBuilder.merge_values(#{frozen_string(key)}, #{values.map(&method(:attr_literal)).join(', ')})"
       end
     end
 
     # @param str [String]
     # @return [String]
     def frozen_string(str)
-      "#{str.to_literal}.freeze"
+      "#{to_literal(str)}.freeze"
     end
 
     # Compiles attribute values for one key to Temple expression that generates ` key='value'`.
@@ -171,7 +147,7 @@ module Haml
     # @param values [Array<AttributeValue>]
     # @return [Array] Temple expression
     def compile_attribute(key, values)
-      if values.all? { |v| Temple::StaticAnalyzer.static?(v.to_literal) }
+      if values.all? { |v| Temple::StaticAnalyzer.static?(attr_literal(v)) }
         return static_build(values)
       end
 
@@ -233,6 +209,27 @@ module Haml
     def unique_name
       @unique_name ||= 0
       "_haml_attribute_compiler#{@unique_name += 1}"
+    end
+
+    # @param [Haml::AttributeCompiler::AttributeValue] attr
+    def attr_literal(attr)
+      case attr.type
+      when :static
+        to_literal(attr.value)
+      when :dynamic
+        attr.value
+      end
+    end
+
+    # For haml/haml#972
+    # @param [Object] value
+    def to_literal(value)
+      case value
+      when true, false
+        value.to_s
+      else
+        Haml::Util.inspect_obj(value)
+      end
     end
   end
 end
