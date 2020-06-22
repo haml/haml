@@ -607,8 +607,11 @@ MESSAGE
     # @param text [String] The string to sanitize
     # @return [String] The sanitized string
     def html_escape(text)
-      ERB::Util.html_escape(text)
+      CGI.escapeHTML(text.to_s)
     end
+
+    # Always escape text regardless of html_safe?
+    alias_method :html_escape_without_haml_xss, :html_escape
 
     HTML_ESCAPE_ONCE_REGEX = /['"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
 
@@ -621,6 +624,9 @@ MESSAGE
       text = text.to_s
       text.gsub(HTML_ESCAPE_ONCE_REGEX, HTML_ESCAPE)
     end
+
+    # Always escape text once regardless of html_safe?
+    alias_method :escape_once_without_haml_xss, :escape_once
 
     # Returns whether or not the current template is a Haml template.
     #
