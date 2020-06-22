@@ -171,7 +171,7 @@ module Haml
         ['false, nil', [:multi]],
         [:else, [:multi,
                  [:static, " #{id_or_class}=#{@attr_wrapper}"],
-                 [:escape, @escape_attrs, [:dynamic, var]],
+                 [:escape, Escapable::EscapeSafeBuffer.new(@escape_attrs), [:dynamic, var]],
                  [:static, @attr_wrapper]],
         ]
        ],
@@ -191,7 +191,7 @@ module Haml
         ['false, nil', [:multi]],
         [:else, [:multi,
                  [:static, " #{key}=#{@attr_wrapper}"],
-                 [:escape, @escape_attrs, [:dynamic, var]],
+                 [:escape, Escapable::EscapeSafeBuffer.new(@escape_attrs), [:dynamic, var]],
                  [:static, @attr_wrapper]],
         ]
        ],
