@@ -15,6 +15,7 @@ if ENV["COVERAGE"]
 end
 
 require 'bundler'
+Bundler.setup
 require 'minitest/autorun'
 require 'action_pack'
 require 'action_controller'
