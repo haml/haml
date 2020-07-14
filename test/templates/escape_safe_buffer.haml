@@ -1,0 +1,6 @@
+%div{ 'data-html' => '<foo>bar</foo>'.html_safe }
+%meta{ content: %{'"}.html_safe }
+- val = %{'"}.html_safe
+%meta{ content: val }
+- hash = { content: val }
+%meta{ hash }
