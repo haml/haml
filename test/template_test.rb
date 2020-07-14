@@ -248,18 +248,9 @@ HAML
   end
 
   def test_xss_protection_in_attributes_with_safe_strings
-    assert_equal("<div data-html='&lt;foo&gt;bar&lt;/foo&gt;'></div>\n", render('%div{ "data-html" => "<foo>bar</foo>".html_safe }', :action_view))
-    assert_equal(<<-HTML, render(<<-HAML, :action_view))
-<meta content='&#39;&quot;' />
-<meta content='&#39;&quot;' />
-<meta content='&#39;&quot;' />
-HTML
-%meta{ content: %{'"}.html_safe }
-- val = %{'"}.html_safe
-%meta{ content: val }
-- hash = { content: val }
-%meta{ hash }
-HAML
+    assert_renders_correctly('escape_safe_buffer') do |name|
+      render(File.read(File.expand_path("templates/#{name}.haml", __dir__)), :action_view)
+    end
   end
 
   def test_xss_protection_with_bang_in_interpolation
