@@ -1681,7 +1681,7 @@ HAML
   def test_new_attribute_classes
     assert_equal("<div class='foo bar'></div>\n", render(".foo(class='bar')"))
     assert_equal("<div class='foo baz bar'></div>\n", render(".foo{:class => 'bar'}(class='baz')"))
-    assert_equal("<div class='foo bar baz'></div>\n", render(".foo(class='bar'){:class => 'baz'}"))
+    assert_equal("<div class='foo moo baz bar alpha'></div>\n", render(".foo.moo{:class => ['bar', 'alpha']}(class='baz')"))
     foo = User.new(42)
     assert_equal("<div class='foo bar baz struct_user' id='struct_user_42'></div>\n",
       render(".foo(class='bar'){:class => 'baz'}[foo]", :locals => {:foo => foo}))
