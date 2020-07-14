@@ -13,6 +13,8 @@ class TemplateTest < Haml::TestCase
     nuke_outer_whitespace  nuke_inner_whitespace         bemit
     render_layout partial_layout partial_layout_erb}.freeze
 
+  # TEMPLATES = ["just_stuff"]
+
   def setup
     @base = create_base
 
