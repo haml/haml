@@ -14,6 +14,4 @@ platform :mri do
   gem "ruby-prof"
 end
 
-platform :mri_21 do
-  gem "simplecov"
-end
+gem "simplecov"

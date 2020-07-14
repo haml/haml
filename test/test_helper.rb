@@ -1,18 +1,7 @@
 # frozen_string_literal: true
 
-begin
-  if ENV['TRAVIS'] && RUBY_VERSION == '2.1.2' && !defined?(Rubinius)
-    require 'coveralls'
-    Coveralls.wear!
-  end
-rescue LoadError
-  # ignore error for other test Gemfiles
-end
-
-if ENV["COVERAGE"]
-  require "simplecov"
-  SimpleCov.start
-end
+require "simplecov"
+SimpleCov.start
 
 require 'bundler/setup'
 require 'minitest/autorun'
@@ -32,6 +21,7 @@ class TestApp < Rails::Application
   config.eager_load = false
   config.root = ""
 end
+
 Rails.application = TestApp
 Rails.backtrace_cleaner.remove_silencers!
 
@@ -64,7 +54,7 @@ class Haml::TestCase < BASE_TEST_CLASS
   extend Declarative
 
   def render(text, options = {}, base = nil, &block)
-    scope  = options.delete(:scope)  || Object.new
+    scope = options.delete(:scope) || Object.new
     locals = options.delete(:locals) || {}
     engine = Haml::Engine.new(text, options)
     return engine.to_html(base) if base

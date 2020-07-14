@@ -26,13 +26,6 @@ task :benchmark do
   sh "ruby benchmark.rb #{ENV['TIMES']}"
 end
 
-task :set_coverage_env do
-  ENV["COVERAGE"] = "true"
-end
-
-desc "Run Simplecov"
-task :coverage => [:set_coverage_env, :test]
-
 task :submodules do
   if File.exist?(File.dirname(__FILE__) + "/.git")
     sh %{git submodule sync}
