@@ -4,6 +4,7 @@
 
 * Fix crash in the attribute optimizer when `#inspect` is overridden in TrueClass / FalseClass [#972](https://github.com/haml/haml/issues/972)
 * Do not HTML-escape templates that are declared to be plaintext [#1014](https://github.com/haml/haml/issues/1014) (Thanks [@cesarizu](https://github.com/cesarizu))
+* Class names are no longer ordered alphabetically, and now follow a new specification as laid out in REFERENCE [#306](https://github.com/haml/haml/issues/306)
 
 ## 5.1.2
 
