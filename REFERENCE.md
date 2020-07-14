@@ -517,6 +517,24 @@ and is compiled to:
       </div>
     </div>
 
+#### Class Name Merging and Ordering
+
+Class names are ordered in the following way:
+
+1) Tag identifiers in order (aka, ".alert.me" => "alert me")
+2) Classes appearing in HTML-style attributes
+3) Classes appearing in Hash-style attributes
+
+For instance, this is a complicated and unintuitive test case illustrating the ordering
+
+    .foo.moo{:class => ['bar', 'alpha']}(class='baz')
+
+The resulting HTML would be as follows:
+
+    <div class='foo moo baz bar alpha'></div>
+
+*Versions of Haml prior to 5.0 would alphabetically sort class names.*
+
 ### Empty (void) Tags: `/`
 
 The forward slash character, when placed at the end of a tag definition, causes
