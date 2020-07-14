@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Fix crash in the attribute optimizer when `#inspect` is overridden in TrueClass / FalseClass [#972](https://github.com/haml/haml/issues/972)
+* Do not HTML-escape templates that are declared to be plaintext [#1014](https://github.com/haml/haml/issues/1014) (Thanks [@cesarizu](https://github.com/cesarizu))
 
 ## 5.1.2
 
