@@ -1,4 +1,4 @@
 source "https://rubygems.org"
 
-gem 'rails', '~> 6.0.0.rc1'
+gem 'rails', '~> 6.0.0'
 gemspec :path => '../..'

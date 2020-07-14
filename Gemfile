@@ -13,5 +13,3 @@ end
 platform :mri do
   gem "ruby-prof"
 end
-
-gem "simplecov"
