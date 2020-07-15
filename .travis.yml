@@ -5,16 +5,10 @@ cache:
   bundler: true
 rvm:
   - ruby-head
-  - 2.7.0
-  - 2.6.5
-  - 2.5.7
-  - 2.4.9
-  - 2.3.8
-  - 2.2.10
-  - 2.1.10
-  - 2.0.0
-  - jruby-9.2.7.0
-  - rbx-3
+  - 2.7
+  - 2.6
+  - 2.5
+  - jruby-9.2
 gemfile:
   - test/gemfiles/Gemfile.rails-6.0.x
   - test/gemfiles/Gemfile.rails-5.2.x
@@ -26,57 +20,23 @@ gemfile:
   - test/gemfiles/Gemfile.rails-4.0.x
 matrix:
   exclude:
-    - rvm: 2.0.0
-      gemfile: test/gemfiles/Gemfile.rails-6.0.x
-    - rvm: 2.1.10
-      gemfile: test/gemfiles/Gemfile.rails-6.0.x
-    - rvm: 2.2.10
-      gemfile: test/gemfiles/Gemfile.rails-6.0.x
-    - rvm: 2.3.8
-      gemfile: test/gemfiles/Gemfile.rails-6.0.x
-    - rvm: 2.4.9
-      gemfile: test/gemfiles/Gemfile.rails-6.0.x
-    - rvm: 2.0.0
-      gemfile: test/gemfiles/Gemfile.rails-5.2.x
-    - rvm: 2.1.10
-      gemfile: test/gemfiles/Gemfile.rails-5.2.x
-    - rvm: 2.2.10
-      gemfile: test/gemfiles/Gemfile.rails-5.2.x
-    - rvm: 2.0.0
-      gemfile: test/gemfiles/Gemfile.rails-5.1.x
-    - rvm: 2.1.10
-      gemfile: test/gemfiles/Gemfile.rails-5.1.x
-    - rvm: 2.0.0
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x
-    - rvm: 2.0.0
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
-    - rvm: 2.1.10
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x
-    - rvm: 2.1.10
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
-    - rvm: 2.4.9
+    - rvm: 2.5
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.4.9
+    - rvm: 2.5
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.4.9
+    - rvm: 2.5
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: 2.5.7
+    - rvm: 2.6
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.5.7
+    - rvm: 2.6
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.5.7
+    - rvm: 2.6
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: 2.6.5
+    - rvm: 2.7
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.6.5
+    - rvm: 2.7
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.6.5
-      gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: 2.7.0
-      gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.7.0
-      gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.7.0
+    - rvm: 2.7
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
     - rvm: ruby-head
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
@@ -85,19 +45,18 @@ matrix:
     - rvm: ruby-head
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
   include:
-    - rvm: 2.6.5
+    - rvm: 2.7
       gemfile: test/gemfiles/Gemfile.rails-edge
   allow_failures:
     - rvm: ruby-head
-    - rvm: rbx-3
     - gemfile: test/gemfiles/Gemfile.rails-edge
-    - rvm: jruby-9.2.7.0
+    - rvm: jruby-9.2
       gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: jruby-9.2.7.0
+    - rvm: jruby-9.2
       gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: jruby-9.2.7.0
+    - rvm: jruby-9.2
       gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: jruby-9.2.7.0
+    - rvm: jruby-9.2
       gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
   fast_finish: true
 before_install:
