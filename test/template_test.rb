@@ -11,7 +11,7 @@ class TemplateTest < Haml::TestCase
     whitespace_handling    original_engine   list        helpful
     silent_script          tag_parsing       just_stuff  partials
     nuke_outer_whitespace  nuke_inner_whitespace         bemit
-    render_layout partial_layout partial_layout_erb}.freeze
+    render_layout partial_layout partial_layout_erb escape_safe_buffer}.freeze
 
   def setup
     @base = create_base
@@ -246,13 +246,7 @@ HAML
   def test_xss_protection_in_attributes
     assert_equal("<div data-html='&lt;foo&gt;bar&lt;/foo&gt;'></div>\n", render('%div{ "data-html" => "<foo>bar</foo>" }', :action_view))
   end
-
-  def test_xss_protection_in_attributes_with_safe_strings
-    assert_renders_correctly('escape_safe_buffer') do |name|
-      render(File.read(File.expand_path("templates/#{name}.haml", __dir__)), :action_view)
-    end
-  end
-
+  
   def test_xss_protection_with_bang_in_interpolation
     assert_equal("Foo & Bar\n", render('! Foo #{"&"} Bar', :action_view))
   end
