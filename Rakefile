@@ -14,7 +14,7 @@ isolated_test = Rake::TestTask.new do |t|
 end
 Rake::TestTask.new do |t|
   t.libs << 'test'
-  t.test_files = Dir['test/*_test.rb'] + Dir['test/haml-spec/*_test.rb'] - isolated_test.file_list
+  t.test_files = Dir['test/*_test.rb'] + Dir['test/haml-spec/*_test.rb'] + Dir['test/cases/*_test.rb'] - isolated_test.file_list
   t.warning = true
   t.verbose = true
 end

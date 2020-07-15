@@ -3,6 +3,7 @@ gemspec
 
 gem "m"
 gem "pry"
+gem "simplecov"
 
 group :docs do
   gem "yard"
