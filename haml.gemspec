@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.license     = "MIT"
   spec.metadata    = {
     "bug_tracker_uri"   => "https://github.com/haml/haml/issues",
-    "changelog_uri"     => "https://github.com/haml/haml/blob/master/CHANGELOG.md",
+    "changelog_uri"     => "https://github.com/haml/haml/blob/main/CHANGELOG.md",
     "documentation_uri" => "http://haml.info/docs.html",
     "homepage_uri"      => "http://haml.info",
     "mailing_list_uri"  => "https://groups.google.com/forum/?fromgroups#!forum/haml",
