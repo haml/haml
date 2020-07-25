@@ -31,7 +31,7 @@ to compile it to HTML. For more information on these commands, check out
 haml --help
 ~~~
 
-To use Haml programatically, check out the [YARD documentation](http://haml.info/docs/yardoc/).
+To use Haml programmatically, check out the [YARD documentation](http://haml.info/docs/yardoc/).
 
 ## Using Haml with Rails
 
