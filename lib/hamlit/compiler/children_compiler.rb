@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'hamlit/temple_line_counter'
+
 module Hamlit
   class Compiler
     class ChildrenCompiler
@@ -14,7 +16,7 @@ module Hamlit
         node.children.each do |n|
           rstrip_whitespace!(temple) if nuke_prev_whitespace?(n)
           insert_newlines!(temple, n)
-          temple << yield(n)
+          temple << moving_lineno(n) { block.call(n) }
           temple << :whitespace if insert_whitespace?(n)
         end
         rstrip_whitespace!(temple) if nuke_inner_whitespace?(node)
@@ -27,19 +29,31 @@ module Hamlit
         (node.line - @lineno).times do
           temple << [:newline]
         end
-        @lineno = node.line
 
+        @lineno = node.line
+      end
+
+      def moving_lineno(node, &block)
+        # before: As they may have children, we need to increment lineno before compilation.
         case node.type
         when :script, :silent_script
           @lineno += 1
-        when :filter
-          @lineno += (node.value[:text] || '').split("\n").size
         when :tag
           node.value[:attributes_hashes].each do |attribute_hash|
             @lineno += attribute_hash.count("\n")
           end
           @lineno += 1 if node.children.empty? && node.value[:parse]
         end
+
+        temple = block.call # compile
+
+        # after: filter may not have children, and for some dynamic filters we can't predict the number of lines.
+        case node.type
+        when :filter
+          @lineno += TempleLineCounter.count_lines(temple)
+        end
+
+        temple
       end
 
       def confirm_whitespace(temple)

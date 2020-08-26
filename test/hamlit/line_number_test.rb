@@ -243,6 +243,74 @@ describe Hamlit::Engine do
         HAML
       end
     end unless /java/ === RUBY_PLATFORM # execjs is not working with Travis JRuby environment
+
+    describe 'plain filter' do
+      it 'renders line numbers with an empty line correctly' do
+        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+          hello
+          4
+        HTML
+          :plain
+            hello
+
+          = __LINE__
+        HAML
+      end
+
+      it 'renders line numbers with a script line correctly' do
+        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+          hello
+          3
+          4
+        HTML
+          :plain
+            hello
+          = 3
+          = __LINE__
+        HAML
+      end
+
+      it 'renders line numbers with interpolation' do
+        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+          hello
+
+          3
+          4
+        HTML
+          :plain
+            hello#{}
+          = 3
+          = __LINE__
+        HAML
+      end
+    end
+
+    describe 'preserve filter' do
+      it 'renders line numbers correctly' do
+        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+          hello&#x000A;
+          4
+        HTML
+          :preserve
+            hello
+
+          = __LINE__
+        HAML
+      end
+    end
+
+    describe 'ruby filter' do
+      it 'renders line numbers correctly' do
+        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+          4
+        HTML
+          :ruby
+            _ = 1
+
+          = __LINE__
+        HAML
+      end
+    end
   end
 
   describe 'dynamic merger' do
