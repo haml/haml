@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
-## [2.11.0](https://github.com/k0kubun/hamlit/compare/v2.10.0...v2.10.1) - 2019-12-12
+## [2.11.1](https://github.com/k0kubun/hamlit/compare/v2.11.0...v2.11.1) - 2020-08-25
+
+### Fixed
+
+- Fix a line number on an error after filters like preserve, plain, and ruby.
+  *Thanks to @rgisiger*
+
+## [2.11.0](https://github.com/k0kubun/hamlit/compare/v2.10.1...v2.11.0) - 2019-12-12
 
 ### Added
 
