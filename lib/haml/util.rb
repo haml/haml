@@ -213,7 +213,7 @@ MSG
             scan.scan(/\w+/)
           end
           content = eval("\"#{interpolated}\"")
-          content.prepend(char) if char == '@' || char == '$'
+          content = "#{char}#{content}" if char == '@' || char == '$'
           content = "Haml::Helpers.html_escape((#{content}))" if escape_html
 
           res << "\#{#{content}}"
