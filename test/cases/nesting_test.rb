@@ -160,7 +160,7 @@ c
 b
 a
 HTML
-- str = "abcde"
+- str = +"abcde"
 - if true
   = str.slice!(-1).chr
 - end until str.empty?

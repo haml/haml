@@ -187,7 +187,7 @@ bar, , true, bang
 <p>bar</p>
 HTML
 = ["bar",
-   "  ".strip!,
+   "  ".strip,
    "".empty?,
    "bang"].join(", ")
 %p foo
