@@ -37,7 +37,7 @@ class EngineInternalsTest < TestBase
         print Haml::Engine.new('%div{ foo: true, bar: false }').render
       HAML
       f.close
-      out = IO.popen([RbConfig.ruby, f.path], &:read)
+      out = IO.popen([RbConfig.ruby, '-W0', f.path], &:read)
       assert_equal true, $?.success?
       assert_equal "<div foo></div>\n", out
     end

@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rbench'
   spec.add_development_dependency 'minitest', '>= 4.0'
   spec.add_development_dependency 'nokogiri'
-  spec.add_development_dependency 'simplecov', '0.17.1' # Locked to this version due to https://github.com/codeclimate/test-reporter/issues/418
+  spec.add_development_dependency 'simplecov'
 
   spec.description = <<-END
 Haml (HTML Abstraction Markup Language) is a layer on top of HTML or XML that's
