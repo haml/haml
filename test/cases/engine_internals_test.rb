@@ -18,6 +18,10 @@ class EngineInternalsTest < TestBase
     Haml::Options.defaults.replace(defaults)
   end
 
+  # This test is here due to https://github.com/haml/haml/issues/972
+  # where we used to trust in the #inspect of `true` and `false` to return
+  # "true" and "false". This tests isolates and executes a whole ruby interpreter
+  # to catch the problem.
   def test_engine_inspect_monkeypatch
     Tempfile.open(['haml-test', '.rb']) do |f|
       f.puts <<-HAML
@@ -39,7 +43,13 @@ class EngineInternalsTest < TestBase
       f.close
       out = IO.popen([RbConfig.ruby, '-W0', f.path], &:read)
       assert_equal true, $?.success?
-      assert_equal "<div foo></div>\n", out
+      # JRuby can sometimes print warnings that are printed to STDOUT
+      # which can cause a 'polluted' output. Here, instead of looking
+      # for a perfectly clean output, we ensure the expected output
+      # is included – but not that in this invocation-style that it's
+      # perfectly clean. An error that truly broke rendering would
+      # be caught by many other lines
+      assert out.include?("<div foo></div>\n")
     end
   end
 
