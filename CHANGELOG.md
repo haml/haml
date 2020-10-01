@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.12.0](https://github.com/k0kubun/hamlit/compare/v2.11.1...v2.12.0) - 2020-09-30
+
+### Changed
+
+- Class names are no longer ordered alphabetically
+  *Thanks to @aliismayilov*
+  - This is compatible with [Haml 5.2](https://github.com/haml/haml/blob/v5.2.0/CHANGELOG.md#52)
+
 ## [2.11.1](https://github.com/k0kubun/hamlit/compare/v2.11.0...v2.11.1) - 2020-08-25
 
 ### Fixed
