@@ -700,10 +700,10 @@ module Hamlit
         if type == :static
           static_attributes[name] = val
         else
-          dynamic_attributes << "#{inspect_obj(name)} => #{val},"
+          dynamic_attributes += "#{inspect_obj(name)} => #{val},"
         end
       end
-      dynamic_attributes << "}"
+      dynamic_attributes += "}"
       dynamic_attributes = nil if dynamic_attributes == "{}"
 
       return [static_attributes, dynamic_attributes], scanner.rest, last_line
@@ -735,7 +735,7 @@ module Hamlit
 
       return name, [:static, content.first[1]] if content.size == 1
       return name, [:dynamic,
-        %!"#{content.each_with_object('') {|(t, v), s| s << (t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
+        %!"#{content.each_with_object(+'') {|(t, v), s| s << (t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
     end
 
     def next_line

@@ -111,7 +111,7 @@ MESSAGE
     #   @yield The block within which to escape newlines
     def find_and_preserve(input = nil, tags = haml_buffer.options[:preserve], &block)
       return find_and_preserve(capture_haml(&block), input || tags) if block
-      tags = tags.each_with_object('') do |t, s|
+      tags = tags.each_with_object(+'') do |t, s|
         s << '|' unless s.empty?
         s << Regexp.escape(t)
       end
@@ -203,7 +203,7 @@ MESSAGE
     # @yieldparam item An element of `enum`
     def list_of(enum, opts={}, &block)
       opts_attributes = opts.each_with_object('') {|(k, v), s| s << " #{k}='#{v}'"}
-      enum.each_with_object('') do |i, ret|
+      enum.each_with_object(+'') do |i, ret|
         result = capture_haml(i, &block)
 
         if result.count("\n") > 1
