@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'hamlit/parser/haml_error'
 require 'hamlit/parser/haml_options'
 require 'hamlit/parser/haml_compiler'

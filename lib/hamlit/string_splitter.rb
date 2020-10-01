@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ripper'
 require 'hamlit/ruby_expression'
 
