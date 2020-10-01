@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Hamlit
   class Filters
     class Markdown < TiltBase
