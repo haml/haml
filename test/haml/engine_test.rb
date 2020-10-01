@@ -151,8 +151,8 @@ class EngineTest < Haml::TestCase
 
   def test_class_attr_with_array
     assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => %w[a b]} foo")) # basic
-    assert_equal("<p class='a b css'>foo</p>\n", render("%p.css{:class => %w[a b]} foo")) # merge with css
-    assert_equal("<p class='b css'>foo</p>\n", render("%p.css{:class => %w[css b]} foo")) # merge uniquely
+    assert_equal("<p class='css a b'>foo</p>\n", render("%p.css{:class => %w[a b]} foo")) # merge with css
+    assert_equal("<p class='css b'>foo</p>\n", render("%p.css{:class => %w[css b]} foo")) # merge uniquely
     assert_equal("<p class='a b c d'>foo</p>\n", render("%p{:class => [%w[a b], %w[c d]]} foo")) # flatten
     assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => [:a, :b] } foo")) # stringify
     # [INCOMPATIBILITY] Hamlit limits boolean attributes
@@ -162,7 +162,7 @@ class EngineTest < Haml::TestCase
     # [INCOMPATIBILITY] Hamlit limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:class => false} foo")) # single falsey
     assert_equal("<p class=''>foo</p>\n", render("%p{:class => false} foo")) # single falsey
-    assert_equal("<p class='a b html'>foo</p>\n", render("%p(class='html'){:class => %w[a b]} foo")) # html attrs
+    assert_equal("<p class='html a b'>foo</p>\n", render("%p(class='html'){:class => %w[a b]} foo")) # html attrs
   end
 
   def test_id_attr_with_array
@@ -198,7 +198,7 @@ HAML
   def test_attributes_with_to_s
     assert_equal(<<HTML, render(<<HAML))
 <p id='foo_2'></p>
-<p class='2 foo'></p>
+<p class='foo 2'></p>
 <p blaz='2'></p>
 <p 2='2'></p>
 HTML
@@ -1185,8 +1185,8 @@ HAML
   def test_nil_class_with_syntactic_class
     assert_equal("<p class='foo'>nil</p>\n", render("%p.foo{:class => nil} nil"))
     assert_equal("<p class='bar foo'>nil</p>\n", render("%p.bar.foo{:class => nil} nil"))
-    assert_equal("<p class='bar foo'>nil</p>\n", render("%p.foo{{:class => 'bar'}, :class => nil} nil"))
-    assert_equal("<p class='bar foo'>nil</p>\n", render("%p.foo{{:class => nil}, :class => 'bar'} nil"))
+    assert_equal("<p class='foo bar'>nil</p>\n", render("%p.foo{{:class => 'bar'}, :class => nil} nil"))
+    assert_equal("<p class='foo bar'>nil</p>\n", render("%p.foo{{:class => nil}, :class => 'bar'} nil"))
   end
 
   def test_locals

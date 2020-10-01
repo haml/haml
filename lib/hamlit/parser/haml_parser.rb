@@ -1,6 +1,7 @@
 require 'strscan'
 require 'hamlit/parser/haml_util'
 require 'hamlit/parser/haml_error'
+require 'hamlit/parser/haml_attribute_builder'
 
 module Hamlit
   class HamlParser
@@ -206,6 +207,31 @@ module Hamlit
       end
     end
 
+    # @param [String] new - Hash literal including dynamic values.
+    # @param [String] old - Hash literal including dynamic values or Ruby literal of multiple Hashes which MUST be interpreted as method's last arguments.
+    DynamicAttributes = Struct.new(:new, :old) do
+      undef :old=
+      def old=(value)
+        unless value =~ /\A{.*}\z/m
+          raise ArgumentError.new('Old attributes must start with "{" and end with "}"')
+        end
+        self[:old] = value
+      end
+
+      # This will be a literal for Haml::Buffer#attributes's last argument, `attributes_hashes`.
+      def to_literal
+        [new, stripped_old].compact.join(', ')
+      end
+
+      private
+
+      # For `%foo{ { foo: 1 }, bar: 2 }`, :old is "{ { foo: 1 }, bar: 2 }" and this method returns " { foo: 1 }, bar: 2 " for last argument.
+      def stripped_old
+        return nil if old.nil?
+        old.sub!(/\A{/, '').sub!(/}\z/m, '')
+      end
+    end
+
     # Processes and deals with lowering indentation.
     def process_indent(line)
       return unless line.tabs <= @template_tabs && @template_tabs > 0
@@ -403,21 +429,19 @@ module Hamlit
       end
 
       attributes = ::Hamlit::HamlParser.parse_class_and_id(attributes)
-      attributes_list = []
+      dynamic_attributes = DynamicAttributes.new
 
       if attributes_hashes[:new]
         static_attributes, attributes_hash = attributes_hashes[:new]
-        ::Hamlit::HamlBuffer.merge_attrs(attributes, static_attributes) if static_attributes
-        attributes_list << attributes_hash
+        HamlAttributeBuilder.merge_attributes!(attributes, static_attributes) if static_attributes
+        dynamic_attributes.new = attributes_hash
       end
 
       if attributes_hashes[:old]
         static_attributes = parse_static_hash(attributes_hashes[:old])
-        ::Hamlit::HamlBuffer.merge_attrs(attributes, static_attributes) if static_attributes
-        attributes_list << attributes_hashes[:old] unless static_attributes || @options.suppress_eval
+        HamlAttributeBuilder.merge_attributes!(attributes, static_attributes) if static_attributes
+        dynamic_attributes.old = attributes_hashes[:old] unless static_attributes || @options.suppress_eval
       end
-
-      attributes_list.compact!
 
       raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:illegal_nesting_self_closing), @next_line.index) if block_opened? && self_closing
       raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:no_ruby_code, action), last_line - 1) if parse && value.empty?
@@ -433,7 +457,7 @@ module Hamlit
       line = handle_ruby_multiline(line) if parse
 
       ParseNode.new(:tag, line.index + 1, :name => tag_name, :attributes => attributes,
-        :attributes_hashes => attributes_list, :self_closing => self_closing,
+        :dynamic_attributes => dynamic_attributes, :self_closing => self_closing,
         :nuke_inner_whitespace => nuke_inner_whitespace,
         :nuke_outer_whitespace => nuke_outer_whitespace, :object_ref => object_ref,
         :escape_html => escape_html, :preserve_tag => preserve_tag,
@@ -641,7 +665,6 @@ module Hamlit
         raise e
       end
 
-      attributes_hash = attributes_hash[1...-1] if attributes_hash
       return attributes_hash, rest, last_line
     end
 

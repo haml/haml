@@ -140,10 +140,10 @@ describe Hamlit::Engine do
 
       it 'joins attribute class and element class' do
         assert_render(<<-HTML.unindent, <<-HAML.unindent)
-          <div class='bar foo'></div>
-          <div class='bar foo'></div>
-          <div class='bar foo'></div>
-          <div class='bar baz foo'></div>
+          <div class='foo bar'></div>
+          <div class='foo bar'></div>
+          <div class='foo bar'></div>
+          <div class='foo bar baz'></div>
         HTML
           .foo{ class: ['bar'] }
           .foo{ class: ['bar', 'foo'] }
@@ -390,7 +390,7 @@ describe Hamlit::Engine do
     describe 'element class with attribute class' do
       it 'does not generate double classes' do
         assert_render(<<-HTML.unindent, <<-HAML.unindent)
-          <div class='first item'></div>
+          <div class='item first'></div>
         HTML
           .item{ class: 'first' }
         HAML

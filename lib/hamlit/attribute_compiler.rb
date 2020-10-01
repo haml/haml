@@ -17,7 +17,7 @@ module Hamlit
       if node.value[:object_ref] != :nil || !Ripper.respond_to?(:lex) # No Ripper.lex in truffleruby
         return runtime_compile(node)
       end
-      node.value[:attributes_hashes].each do |attribute_str|
+      [node.value[:dynamic_attributes].new, node.value[:dynamic_attributes].old].compact.each do |attribute_str|
         hash = AttributeParser.parse(attribute_str)
         return runtime_compile(node) unless hash
         hashes << hash
@@ -28,11 +28,11 @@ module Hamlit
     private
 
     def runtime_compile(node)
-      attrs = node.value[:attributes_hashes]
+      attrs = []
       attrs.unshift(node.value[:attributes].inspect) if node.value[:attributes] != {}
 
       args = [@escape_attrs.inspect, "#{@quote.inspect}.freeze", @format.inspect].push(node.value[:object_ref]) + attrs
-      [:html, :attrs, [:dynamic, "::Hamlit::AttributeBuilder.build(#{args.join(', ')})"]]
+      [:html, :attrs, [:dynamic, "::Hamlit::AttributeBuilder.build(#{args.join(', ')}, #{node.value[:dynamic_attributes].to_literal})"]]
     end
 
     def static_compile(static_hash, dynamic_hashes)

@@ -47,7 +47,7 @@ module Hamlit::AttributeBuilder
           when value.is_a?(String)
             # noop
           when value.is_a?(Array)
-            value = value.flatten.select { |v| v }.map(&:to_s).sort.uniq.join(' ')
+            value = value.flatten.select { |v| v }.map(&:to_s).uniq.join(' ')
           when value
             value = value.to_s
           else
@@ -67,7 +67,7 @@ module Hamlit::AttributeBuilder
             classes << value.to_s
           end
         end
-        escape_html(escape_attrs, classes.map(&:to_s).sort.uniq.join(' '))
+        escape_html(escape_attrs, classes.map(&:to_s).uniq.join(' '))
       end
 
       def build_data(escape_attrs, quote, *hashes)

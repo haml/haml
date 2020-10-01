@@ -6,10 +6,13 @@ module Hamlit
     # to work with Rails' XSS protection methods.
     module XssMods
       def self.included(base)
-        %w[html_escape find_and_preserve preserve list_of surround
-           precede succeed capture_haml haml_concat haml_internal_concat haml_indent
-           escape_once].each do |name|
+        %w[find_and_preserve preserve list_of surround
+           precede succeed capture_haml haml_concat haml_internal_concat haml_indent].each do |name|
           base.send(:alias_method, "#{name}_without_haml_xss", name)
+          base.send(:alias_method, name, "#{name}_with_haml_xss")
+        end
+        # Those two always have _without_haml_xss
+        %w[html_escape escape_once].each do |name|
           base.send(:alias_method, name, "#{name}_with_haml_xss")
         end
       end

@@ -63,7 +63,7 @@ describe Hamlit::Engine do
     describe 'element class with attribute class' do
       it 'does not generate double classes' do
         assert_render(<<-HTML.unindent, <<-HAML.unindent)
-          <div class='first item'></div>
+          <div class='item first'></div>
         HTML
           .item(class='first')
         HAML

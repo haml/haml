@@ -152,7 +152,6 @@ hamlit_build_multi_class(VALUE escape_attrs, VALUE values)
     }
   }
 
-  rb_ary_sort_bang(buf);
   rb_funcall(buf, id_uniq_bang, 0);
 
   return escape_attribute(escape_attrs, rb_ary_join(buf, str_space()));

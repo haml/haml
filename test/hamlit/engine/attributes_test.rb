@@ -264,7 +264,7 @@ describe Hamlit::Engine do
     it { assert_render(%Q|<div class='static' id='static'></div>\n|, %q|.static#static[nil]|) }
     it do
       assert_render(
-        %Q|<a class='dynamic pre_test_object static' id='static_dynamic_pre_test_object_10'></a>\n|,
+        %Q|<a class='static dynamic pre_test_object' id='static_dynamic_pre_test_object_10'></a>\n|,
         %q|%a.static#static[foo, 'pre']{ id: dynamic, class: dynamic }|,
         locals: { foo: TestObject.new(10), dynamic: 'dynamic' },
       )

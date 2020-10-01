@@ -617,6 +617,9 @@ MESSAGE
       text.gsub(HTML_ESCAPE_REGEX, HTML_ESCAPE)
     end
 
+    # Always escape text regardless of html_safe?
+    alias_method :html_escape_without_haml_xss, :html_escape
+
     HTML_ESCAPE_ONCE_REGEX = /[\"><]|&(?!(?:[a-zA-Z]+|#(?:\d+|[xX][0-9a-fA-F]+));)/
 
     # Escapes HTML entities in `text`, but without escaping an ampersand
@@ -628,6 +631,9 @@ MESSAGE
       text = text.to_s
       text.gsub(HTML_ESCAPE_ONCE_REGEX, HTML_ESCAPE)
     end
+
+    # Always escape text once regardless of html_safe?
+    alias_method :escape_once_without_haml_xss, :escape_once
 
     # Returns whether or not the current template is a Haml template.
     #

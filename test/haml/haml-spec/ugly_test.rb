@@ -531,7 +531,7 @@ class UglyTest < MiniTest::Test
 
     def test_HTML_style_tag_with_a_CSS_class_and_class_as_an_attribute
       haml    = %q{%p.class2(class='class1')}
-      _html   = %q{<p class='class1 class2'></p>}
+      _html   = %q{<p class='class2 class1'></p>}
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
@@ -665,7 +665,7 @@ class UglyTest < MiniTest::Test
 
     def test_Ruby_style_tag_with_a_CSS_class_and_class_as_an_attribute
       haml    = %q{%p.class2{:class => 'class1'}}
-      _html   = %q{<p class='class1 class2'></p>}
+      _html   = %q{<p class='class2 class1'></p>}
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
