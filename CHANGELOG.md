@@ -8,7 +8,7 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 
 ### Changed
 
-- Class names are no longer ordered alphabetically
+- Class names are no longer ordered alphabetically.
   *Thanks to @aliismayilov*
   - This is compatible with [Haml 5.2](https://github.com/haml/haml/blob/v5.2.0/CHANGELOG.md#52)
 
