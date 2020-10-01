@@ -112,10 +112,7 @@ MESSAGE
     #   @yield The block within which to escape newlines
     def find_and_preserve(input = nil, tags = haml_buffer.options[:preserve], &block)
       return find_and_preserve(capture_haml(&block), input || tags) if block
-      tags = tags.each_with_object(+'') do |t, s|
-        s << '|' unless s.empty?
-        s << Regexp.escape(t)
-      end
+      tags = tags.map { |tag| Regexp.escape(tag) }.join('|')
       re = /<(#{tags})([^>]*)>(.*?)(<\/\1>)/im
       input.to_s.gsub(re) do |s|
         s =~ re # Can't rely on $1, etc. existing since Rails' SafeBuffer#gsub is incompatible

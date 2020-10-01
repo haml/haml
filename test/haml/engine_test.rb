@@ -2000,7 +2000,7 @@ HAML
   end
 
   def test_encoding_error # encoding
-    render("foo\nbar\nb\xFEaz".encode("utf-8"))
+    render("foo\nbar\nb\xFEaz".dup.force_encoding("utf-8"))
     assert(false, "Expected exception")
   rescue Hamlit::Error => e
     assert_equal(3, e.line)
