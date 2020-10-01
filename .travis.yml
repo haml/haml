@@ -4,7 +4,7 @@ branches:
   only:
     - master
 script:
-  - "RUBYOPT='-w' bundle exec rake $TASK"
+  - "RUBYOPT='-w --enable-frozen-string-literal' bundle exec rake $TASK"
 matrix:
   include:
     - rvm: 2.3.8
