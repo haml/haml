@@ -4,7 +4,9 @@ branches:
   only:
     - master
 script:
-  - "RUBYOPT='-w --enable-frozen-string-literal' bundle exec rake $TASK"
+  - bundle exec rake $TASK
+env:
+  - RUBYOPT='-w --enable-frozen-string-literal'
 matrix:
   include:
     - rvm: 2.3.8
@@ -22,7 +24,7 @@ matrix:
     - rvm: jruby-9.2.8.0
       env: TASK=test
     - rvm: truffleruby
-      env: TASK=test
+      env: TASK=test RUBYOPT='-w'
     - rvm: 2.7.0
       env: TASK=bench TEMPLATE=benchmark/boolean_attribute.haml,benchmark/class_attribute.haml,benchmark/id_attribute.haml,benchmark/data_attribute.haml,benchmark/common_attribute.haml
     - rvm: 2.7.0
