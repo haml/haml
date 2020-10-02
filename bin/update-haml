@@ -43,7 +43,7 @@ class HamlitParserBuilder
     # 'error.rb',
     'escapable.rb', # for temple_engine.rb :(
     'generator.rb', # for temple_engine.rb :(
-    # 'helpers.rb',
+    'helpers.rb',
     'options.rb',
     'temple_engine.rb', # for options.rb :(
     # TODO: make the upstream sharable first
