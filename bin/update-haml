@@ -40,7 +40,7 @@ class HamlitParserBuilder
     'attribute_builder.rb',
     # 'buffer.rb',
     # 'compiler.rb',
-    # 'error.rb',
+    'error.rb',
     'escapable.rb', # for temple_engine.rb :(
     'generator.rb', # for temple_engine.rb :(
     'helpers.rb',
@@ -79,10 +79,12 @@ class HamlitParserBuilder
     src.gsub!(/\bHaml::/, 'Hamlit::Haml')
 
     # Prefix Haml to references without Haml::
-    src.gsub!(/\b(AttributeBuilder|Error|Options|Parser|SyntaxError)\./, 'Haml\0')
+    src.gsub!(/\b(AttributeBuilder|Error|InvalidAttributeNameError|Options|Parser|SyntaxError)\./, 'Haml\0')
     src.gsub!(/\brescue SyntaxError /, 'rescue HamlSyntaxError ')
 
     case file
+    when 'error.rb'
+      src.gsub!(/^  class ([^ ]+) < ([^ ]+);/, '  class Haml\1 < Haml\2;')
     when 'options.rb'
       src.gsub!(/\.is_a\?\(Options\)/, '.is_a?(HamlOptions)')
     when 'temple_engine.rb'
