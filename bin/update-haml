@@ -40,11 +40,9 @@ class HamlitParserBuilder
     'attribute_builder.rb',
     'buffer.rb',
     'error.rb',
-    'escapable.rb', # for temple_engine.rb :(
-    'generator.rb', # for temple_engine.rb :(
     'helpers.rb',
     'options.rb',
-    'temple_engine.rb', # for options.rb :(
+    'temple_engine.rb',
     # TODO: make the upstream sharable first
     # 'parser.rb',
     'util.rb',
@@ -52,8 +50,10 @@ class HamlitParserBuilder
   ]
 
   # Classes which are just referenced by Options and not really used by the parser
-  DUMMY_MODULES = {
+  DUMMY_CLASSES = {
     'compiler.rb' => 'Compiler',
+    'escapable.rb' => 'Escapable',
+    'generator.rb' => 'Generator',
   }
 
   def initialize(haml:, hamlit_parser:)
@@ -74,9 +74,9 @@ class HamlitParserBuilder
       File.write(dest_path, src)
     end
 
-    DUMMY_MODULES.each do |file, klass|
+    DUMMY_CLASSES.each do |file, klass|
       dest_path = File.join(@hamlit_parser, "haml_#{file}")
-      src = "module Hamlit::Haml#{klass}; end"
+      src = "class Hamlit::Haml#{klass}; end"
       File.write(dest_path, src)
     end
   end

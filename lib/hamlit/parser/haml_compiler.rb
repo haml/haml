@@ -1,1 +1,1 @@
-module Hamlit::HamlCompiler; end
+class Hamlit::HamlCompiler; end
