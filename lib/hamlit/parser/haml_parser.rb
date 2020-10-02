@@ -486,7 +486,7 @@ module Hamlit
 
       if contains_interpolation?(text)
         parse = true
-        text = slow_unescape_interpolation(text)
+        text = unescape_interpolation(text)
       else
         parse = false
       end

@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 begin
   require 'erubis/tiny'
@@ -126,7 +126,7 @@ MSG
     def inspect_obj(obj)
       case obj
       when String
-        %Q!"#{obj.gsub(/[\x00-\x7F]+/) {|s| s.inspect[1...-1]}}"!
+        %Q!"#{obj.gsub(/[\x00-\x7F]+/) {|s| s.dump[1...-1]}}"!
       when Symbol
         ":#{inspect_obj(obj.to_s)}"
       else
@@ -166,7 +166,7 @@ MSG
     #   and the rest of the string.
     #   `["Foo (Bar (Baz bang) bop)", " (Bang (bop bip))"]` in the example above.
     def balance(scanner, start, finish, count = 0)
-      str = ''
+      str = ''.dup
       scanner = StringScanner.new(scanner) unless scanner.is_a? StringScanner
       regexp = Regexp.new("(.*?)[\\#{start.chr}\\#{finish.chr}]", Regexp::MULTILINE)
       while scanner.scan(regexp)
@@ -198,12 +198,9 @@ MSG
       /#[\{$@]/ === str
     end
 
-    # Original Haml::Util.unescape_interpolation
-    # ex) slow_unescape_interpolation('foo#{bar}baz"', escape_html: true)
-    #   #=> "\"foo\#{::Hamlit::HamlHelpers.html_escape((bar))}baz\\\"\""
-    def slow_unescape_interpolation(str, escape_html = nil)
-      res = ''
-      rest = ::Hamlit::HamlUtil.handle_interpolation str.dump do |scan|
+    def unescape_interpolation(str, escape_html = nil)
+      res = ''.dup
+      rest = Hamlit::HamlUtil.handle_interpolation str.dump do |scan|
         escapes = (scan[2].size - 1) / 2
         char = scan[3] # '{', '@' or '$'
         res << scan.matched[0...-3 - escapes]
@@ -215,36 +212,9 @@ MSG
           else
             scan.scan(/\w+/)
           end
-          content = eval('"' + interpolated + '"')
-          content.prepend(char) if char == '@' || char == '$'
-          content = "::Hamlit::HamlHelpers.html_escape((#{content}))" if escape_html
-
-          res << "\#{#{content}}"
-        end
-      end
-      res + rest
-    end
-
-    # Customized Haml::Util.unescape_interpolation to handle escape by Hamlit.
-    # It wraps double quotes to given `str` with escaping `"`.
-    #
-    # ex) unescape_interpolation('foo#{bar}baz"') #=> "\"foo\#{bar}baz\\\"\""
-    def unescape_interpolation(str)
-      res = ''
-      rest = ::Hamlit::HamlUtil.handle_interpolation str.dump do |scan|
-        escapes = (scan[2].size - 1) / 2
-        char = scan[3] # '{', '@' or '$'
-        res << scan.matched[0...-3 - escapes]
-        if escapes % 2 == 1
-          res << "\##{char}"
-        else
-          interpolated = if char == '{'
-            balance(scan, ?{, ?}, 1)[0][0...-1]
-          else
-            scan.scan(/\w+/)
-          end
-          content = eval('"' + interpolated + '"')
-          content.prepend(char) if char == '@' || char == '$'
+          content = eval("\"#{interpolated}\"")
+          content = "#{char}#{content}" if char == '@' || char == '$'
+          content = "Hamlit::HamlHelpers.html_escape((#{content}))" if escape_html
 
           res << "\#{#{content}}"
         end
@@ -264,7 +234,7 @@ MSG
       scanner = StringScanner.new(str.dup.force_encoding(Encoding::ASCII_8BIT))
       bom = scanner.scan(/\xEF\xBB\xBF/n)
       return bom unless scanner.scan(/-\s*#\s*/n)
-      if coding = try_parse_haml_emacs_magic_comment(scanner)
+      if (coding = try_parse_haml_emacs_magic_comment(scanner))
         return bom, coding
       end
 

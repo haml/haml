@@ -44,7 +44,7 @@ class HamlitParserBuilder
     # 'helpers.rb',
     # 'options.rb',
     # 'parser.rb',
-    # 'util.rb',
+    'util.rb',
     'helpers/xss_mods.rb',
   ]
 
@@ -71,7 +71,7 @@ class HamlitParserBuilder
 
   def patch_source!(src)
     # Use Hamlit::HamlFoo instead of Haml::Foo
-    src.gsub!(/^module Haml\n  (module|class) ([^ ]+)/, "module Hamlit\n  \\1 Haml\\2")
+    src.gsub!(/^module Haml\n(  #[^\n]+\n)?  (module|class) ([^ ]+)/, "module Hamlit\n\\1  \\2 Haml\\3")
     src.gsub!(/\bHaml::/, 'Hamlit::Haml')
   end
 end
