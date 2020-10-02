@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+require 'tmpdir'
+
+HAML_REPO    = 'haml/haml'
+HAML_VERSION = 'v5.2.0'
+
+module GitHubFetcher
+  def self.fetch(repo, tag:, path:)
+    Dir.mktmpdir do |dir|
+      Dir.chdir(dir) do
+        url = "https://github.com/#{repo}/archive/#{tag}.tar.gz"
+        system("curl -L --fail --retry 3 --retry-delay 1 #{url} -o - | tar zxf -")
+        FileUtils.mv("#{File.basename(repo)}-#{tag.sub(/\Av/, '')}", path)
+      end
+    end
+  end
+end
+
+class LicenseBuilder
+  DELIMITER = "\n==="
+  HAML_LICENSE = 'MIT-LICENSE'
+  HAMLIT_LICENSE = 'LICENSE.txt'
+
+  def initialize(haml:, hamlit:)
+    @haml_license = File.join(haml, HAML_LICENSE)
+    @hamlit_license = File.join(hamlit, HAMLIT_LICENSE)
+  end
+
+  def build
+    license = [
+      File.read(@haml_license),
+      File.read(@hamlit_license).split(DELIMITER, 2).last,
+    ].join(DELIMITER)
+    File.write(@hamlit_license, license)
+  end
+end
+
+# Generate lib/hamlit/parser from haml
+class HamlitParserBuilder
+  TARGET_FILES = %w[]
+
+  def initialize(haml_lib:, hamlit_parser:)
+    @haml_lib = haml_lib
+    @hamlit_parser = hamlit_parser
+  end
+
+  def build
+    TARGET_FILES.each do |file|
+      src_path  = File.join(@haml_lib, file)
+      dest_path = File.join(@hamlit_parser, file)
+
+      FileUtils.mkdir_p(File.dirname(dest_path))
+      FileUtils.cp(src_path, dest_path)
+
+      # TODO:
+      # src = File.read(dest_fullpath)
+      # patch_source!(src, path: src_path)
+      # File.write(dest_fullpath, src)
+    end
+  end
+end
+
+FileUtils.rm_rf(haml = File.expand_path('../haml', __dir__))
+GitHubFetcher.fetch(HAML_REPO, tag: HAML_VERSION, path: haml)
+
+hamlit = File.expand_path('..', __dir__)
+LicenseBuilder.new(haml: haml, hamlit: hamlit).build
+
+hamlit_parser = File.join(hamlit, 'lib/hamlit/parser')
+# TODO: FileUtils.rm_rf(hamlit_parser = File.join(hamlit, 'lib/hamlit/parser'))
+HamlitParserBuilder.new(
+  haml_lib: File.join(haml, 'lib'),
+  hamlit_parser: hamlit_parser,
+).build
