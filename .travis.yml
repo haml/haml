@@ -4,7 +4,9 @@ branches:
   only:
     - master
 script:
-  - "RUBYOPT='-w' bundle exec rake $TASK"
+  - bundle exec rake $TASK
+env:
+  - RUBYOPT='-w'
 matrix:
   include:
     - rvm: 2.3.8
@@ -17,6 +19,8 @@ matrix:
       env: TASK=test
     - rvm: 2.7.0
       env: TASK=test
+    - rvm: 2.7.0
+      env: TASK=test RUBYOPT='-w --enable-frozen-string-literal'
     - rvm: ruby-head
       env: TASK=test
     - rvm: jruby-9.2.8.0
