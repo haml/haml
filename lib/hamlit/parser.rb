@@ -2,13 +2,17 @@
 # Hamlit::Parser uses original Haml::Parser to generate Haml AST.
 # hamlit/parser/haml_* are modules originally in haml gem.
 
+require 'hamlit/parser/haml_attribute_builder'
 require 'hamlit/parser/haml_error'
 require 'hamlit/parser/haml_util'
+require 'hamlit/parser/haml_helpers'
 require 'hamlit/parser/haml_buffer'
 require 'hamlit/parser/haml_compiler'
 require 'hamlit/parser/haml_parser'
-require 'hamlit/parser/haml_helpers'
 require 'hamlit/parser/haml_options'
+require 'hamlit/parser/haml_escapable'
+require 'hamlit/parser/haml_generator'
+require 'hamlit/parser/haml_temple_engine'
 
 module Hamlit
   class Parser
@@ -29,7 +33,7 @@ module Hamlit
       template = Hamlit::HamlUtil.check_haml_encoding(template) do |msg, line|
         raise Hamlit::Error.new(msg, line)
       end
-      HamlParser.new(template, HamlOptions.new(@options)).parse
+      HamlParser.new(HamlOptions.new(@options)).call(template)
     rescue ::Hamlit::HamlError => e
       error_with_lineno(e)
     end

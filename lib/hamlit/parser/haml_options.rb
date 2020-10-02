@@ -1,59 +1,45 @@
 # frozen_string_literal: true
-require 'hamlit/parser/haml_parser'
-require 'hamlit/parser/haml_compiler'
-require 'hamlit/parser/haml_error'
 
 module Hamlit
   # This class encapsulates all of the configuration options that Haml
   # understands. Please see the {file:REFERENCE.md#options Haml Reference} to
   # learn how to set the options.
   class HamlOptions
-
-    @defaults = {
-      :attr_wrapper         => "'",
-      :autoclose            => %w(area base basefont br col command embed frame
-                                  hr img input isindex keygen link menuitem meta
-                                  param source track wbr),
-      :encoding             => "UTF-8",
-      :escape_attrs         => true,
-      :escape_html          => false,
-      :filename             => '(haml)',
-      :format               => :html5,
-      :hyphenate_data_attrs => true,
-      :line                 => 1,
-      :mime_type            => 'text/html',
-      :preserve             => %w(textarea pre code),
-      :remove_whitespace    => false,
-      :suppress_eval        => false,
-      :ugly                 => false,
-      :cdata                => false,
-      :parser_class         => ::Hamlit::HamlParser,
-      :compiler_class       => ::Hamlit::HamlCompiler,
-      :trace                => false
-    }
-
     @valid_formats = [:html4, :html5, :xhtml]
+    @buffer_option_keys = [:autoclose, :preserve, :attr_wrapper, :format,
+      :encoding, :escape_html, :escape_filter_interpolations, :escape_attrs, :hyphenate_data_attrs, :cdata]
 
-    @buffer_option_keys = [:autoclose, :preserve, :attr_wrapper, :ugly, :format,
-      :encoding, :escape_html, :escape_attrs, :hyphenate_data_attrs, :cdata]
+    class << self
+      # The default option values.
+      # @return Hash
+      def defaults
+        @defaults ||= Hamlit::HamlTempleEngine.options.to_hash.merge(encoding: 'UTF-8')
+      end
 
-    # The default option values.
-    # @return Hash
-    def self.defaults
-      @defaults
-    end
+      # An array of valid values for the `:format` option.
+      # @return Array
+      attr_reader :valid_formats
 
-    # An array of valid values for the `:format` option.
-    # @return Array
-    def self.valid_formats
-      @valid_formats
-    end
+      # An array of keys that will be used to provide a hash of options to
+      # {Hamlit::HamlBuffer}.
+      # @return Hash
+      attr_reader :buffer_option_keys
 
-    # An array of keys that will be used to provide a hash of options to
-    # {Haml::Buffer}.
-    # @return Hash
-    def self.buffer_option_keys
-      @buffer_option_keys
+      # Returns a subset of defaults: those that {Hamlit::HamlBuffer} cares about.
+      # @return [{Symbol => Object}] The options hash
+      def buffer_defaults
+        @buffer_defaults ||= buffer_option_keys.inject({}) do |hash, key|
+          hash.merge(key => defaults[key])
+        end
+      end
+
+      def wrap(options)
+        if options.is_a?(HamlOptions)
+          options
+        else
+          HamlOptions.new(options)
+        end
+      end
     end
 
     # The character that should wrap element attributes. This defaults to `'`
@@ -96,6 +82,13 @@ module Hamlit
     # Defaults to false.
     attr_accessor :escape_html
 
+    # Sets whether or not to escape HTML-sensitive characters in interpolated strings.
+    # See also {file:REFERENCE.md#escaping_html Escaping HTML} and
+    # {file:REFERENCE.md#unescaping_html Unescaping HTML}.
+    #
+    # Defaults to the current value of `escape_html`.
+    attr_accessor :escape_filter_interpolations
+
     # The name of the Haml file being parsed.
     # This is only used as information when exceptions are raised. This is
     # automatically assigned when working through ActionView, so it's really
@@ -129,7 +122,7 @@ module Hamlit
     attr_accessor :mime_type
 
     # A list of tag names that should automatically have their newlines
-    # preserved using the {Haml::Helpers#preserve} helper. This means that any
+    # preserved using the {Hamlit::HamlHelpers#preserve} helper. This means that any
     # content given on the same line as the tag will be preserved. For example,
     # `%textarea= "Foo\nBar"` compiles to `<textarea>Foo&#x000A;Bar</textarea>`.
     # Defaults to `['textarea', 'pre']`. See also
@@ -142,7 +135,7 @@ module Hamlit
     # formatting errors.
     #
     # Defaults to `false`.
-    attr_reader :remove_whitespace
+    attr_accessor :remove_whitespace
 
     # Whether or not attribute hashes and Ruby scripts designated by `=` or `~`
     # should be evaluated. If this is `true`, said scripts are rendered as empty
@@ -150,13 +143,6 @@ module Hamlit
     #
     # Defaults to `false`.
     attr_accessor :suppress_eval
-
-    # If set to `true`, Haml makes no attempt to properly indent or format the
-    # HTML output. This significantly improves rendering performance but makes
-    # viewing the source unpleasant.
-    #
-    # Defaults to `true` in Rails production  mode, and `false` everywhere else.
-    attr_accessor :ugly
 
     # Whether to include CDATA sections around javascript and css blocks when
     # using the `:javascript` or `:css` filters.
@@ -168,10 +154,10 @@ module Hamlit
     # xhtml.
     attr_accessor :cdata
 
-    # The parser class to use. Defaults to Haml::Parser.
+    # The parser class to use. Defaults to Hamlit::HamlParser.
     attr_accessor :parser_class
 
-    # The compiler class to use. Defaults to Haml::Compiler.
+    # The compiler class to use. Defaults to Hamlit::HamlCompiler.
     attr_accessor :compiler_class
 
     # Enable template tracing. If true, it will add a 'data-trace' attribute to
@@ -182,7 +168,10 @@ module Hamlit
     # the path will be the full path.
     attr_accessor :trace
 
-    def initialize(values = {}, &block)
+    # Key is filter name in String and value is Class to use. Defaults to {}.
+    attr_accessor :filters
+
+    def initialize(values = {})
       defaults.each {|k, v| instance_variable_set :"@#{k}", v}
       values.each {|k, v| send("#{k}=", v) if defaults.has_key?(k) && !v.nil?}
       yield if block_given?
@@ -201,8 +190,7 @@ module Hamlit
       send "#{key}=", value
     end
 
-    [:escape_attrs, :hyphenate_data_attrs, :remove_whitespace, :suppress_eval,
-      :ugly].each do |method|
+    [:escape_attrs, :hyphenate_data_attrs, :remove_whitespace, :suppress_eval].each do |method|
       class_eval(<<-END)
         def #{method}?
           !! @#{method}
@@ -243,7 +231,7 @@ module Hamlit
 
     def format=(value)
       unless self.class.valid_formats.include?(value)
-        raise ::Hamlit::HamlError, "Invalid output format #{value.inspect}"
+        raise Hamlit::HamlError, "Invalid output format #{value.inspect}"
       end
       @format = value
     end
@@ -253,18 +241,13 @@ module Hamlit
       xhtml? || @cdata
     end
 
-    def remove_whitespace=(value)
-      @ugly = true if value
-      @remove_whitespace = value
-    end
-
     def encoding=(value)
       return unless value
       @encoding = value.is_a?(Encoding) ? value.name : value.to_s
       @encoding = "UTF-8" if @encoding.upcase == "US-ASCII"
     end
 
-    # Returns a subset of options: those that {Haml::Buffer} cares about.
+    # Returns a non-default subset of options: those that {Hamlit::HamlBuffer} cares about.
     # All of the values here are such that when `#inspect` is called on the hash,
     # it can be `Kernel#eval`ed to get the same result back.
     #
@@ -273,7 +256,10 @@ module Hamlit
     # @return [{Symbol => Object}] The options hash
     def for_buffer
       self.class.buffer_option_keys.inject({}) do |hash, key|
-        hash[key] = send(key)
+        value = public_send(key)
+        if self.class.buffer_defaults[key] != value
+          hash[key] = value
+        end
         hash
       end
     end

@@ -1,12 +1,10 @@
 # frozen_string_literal: true
+
 require 'strscan'
-require 'hamlit/parser/haml_util'
-require 'hamlit/parser/haml_error'
-require 'hamlit/parser/haml_attribute_builder'
 
 module Hamlit
   class HamlParser
-    include ::Hamlit::HamlUtil
+    include Hamlit::HamlUtil
 
     attr_reader :root
 
@@ -63,7 +61,7 @@ module Hamlit
       SILENT_SCRIPT,
       ESCAPE,
       FILTER
-    ]
+    ].freeze
 
     # The value of the character that designates that a line is part
     # of a multiline string.
@@ -77,8 +75,8 @@ module Hamlit
     #
     BLOCK_WITH_SPACES = /do\s*\|\s*[^\|]*\s+\|\z/
 
-    MID_BLOCK_KEYWORDS = %w[else elsif rescue ensure end when]
-    START_BLOCK_KEYWORDS = %w[if begin case unless]
+    MID_BLOCK_KEYWORDS = %w[else elsif rescue ensure end when].freeze
+    START_BLOCK_KEYWORDS = %w[if begin case unless].freeze
     # Try to parse assignments to block starters as best as possible
     START_BLOCK_KEYWORD_REGEX = /(?:\w+(?:,\s*\w+)*\s*=\s*)?(#{START_BLOCK_KEYWORDS.join('|')})/
     BLOCK_KEYWORD_REGEX = /^-?\s*(?:(#{MID_BLOCK_KEYWORDS.join('|')})|#{START_BLOCK_KEYWORD_REGEX.source})\b/
@@ -92,14 +90,16 @@ module Hamlit
     ID_KEY    = 'id'.freeze
     CLASS_KEY = 'class'.freeze
 
-    def initialize(template, options)
-      @options            = options
+    def initialize(options)
+      @options = HamlOptions.wrap(options)
       # Record the indent levels of "if" statements to validate the subsequent
       # elsif and else statements are indented at the appropriate level.
       @script_level_stack = []
       @template_index     = 0
       @template_tabs      = 0
+    end
 
+    def call(template)
       match = template.rstrip.scan(/(([ \t]+)?(.*?))(?:\Z|\r\n|\r|\n)/m)
       # discard the last match which is always blank
       match.pop
@@ -108,16 +108,14 @@ module Hamlit
       end
       # Append special end-of-document marker
       @template << Line.new(nil, '-#', '-#', @template.size, self, true)
-    end
 
-    def parse
       @root = @parent = ParseNode.new(:root)
       @flat = false
       @filter_buffer = nil
       @indentation = nil
       @line = next_line
 
-      raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:indenting_at_start), @line.index) if @line.tabs != 0
+      raise HamlSyntaxError.new(HamlError.message(:indenting_at_start), @line.index) if @line.tabs != 0
 
       loop do
         next_line
@@ -140,7 +138,7 @@ module Hamlit
         end
 
         if !flat? && @next_line.tabs - @line.tabs > 1
-          raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:deeper_indenting, @next_line.tabs - @line.tabs), @next_line.index)
+          raise HamlSyntaxError.new(HamlError.message(:deeper_indenting, @next_line.tabs - @line.tabs), @next_line.index)
         end
 
         @line = @next_line
@@ -148,7 +146,7 @@ module Hamlit
       # Close all the open tags
       close until @parent.type == :root
       @root
-    rescue ::Hamlit::HamlError => e
+    rescue Hamlit::HamlError => e
       e.backtrace.unshift "#{@options.filename}:#{(e.line ? e.line + 1 : @line.index + 1) + @options.line - 1}"
       raise
     end
@@ -160,7 +158,7 @@ module Hamlit
         @indentation = line.whitespace
 
         if @indentation.include?(?\s) && @indentation.include?(?\t)
-          raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:cant_use_tabs_and_spaces), line.index)
+          raise HamlSyntaxError.new(HamlError.message(:cant_use_tabs_and_spaces), line.index)
         end
 
         @flat_spaces = @indentation * (@template_tabs+1) if flat?
@@ -171,17 +169,17 @@ module Hamlit
       return tabs if line.whitespace == @indentation * tabs
       return @template_tabs + 1 if flat? && line.whitespace =~ /^#{@flat_spaces}/
 
-      message = ::Hamlit::HamlError.message(:inconsistent_indentation,
+      message = HamlError.message(:inconsistent_indentation,
         human_indentation(line.whitespace),
         human_indentation(@indentation)
       )
-      raise ::Hamlit::HamlSyntaxError.new(message, line.index)
+      raise HamlSyntaxError.new(message, line.index)
     end
 
     private
 
     # @private
-    class Line < Struct.new(:whitespace, :text, :full, :index, :parser, :eod)
+    Line = Struct.new(:whitespace, :text, :full, :index, :parser, :eod) do
       alias_method :eod?, :eod
 
       # @private
@@ -197,14 +195,14 @@ module Hamlit
     end
 
     # @private
-    class ParseNode < Struct.new(:type, :line, :value, :parent, :children)
+    ParseNode = Struct.new(:type, :line, :value, :parent, :children) do
       def initialize(*args)
         super
         self.children ||= []
       end
 
       def inspect
-        %Q[(#{type} #{value.inspect}#{children.each_with_object('') {|c, s| s << "\n#{c.inspect.gsub!(/^/, '  ')}"}})]
+        %Q[(#{type} #{value.inspect}#{children.each_with_object(''.dup) {|c, s| s << "\n#{c.inspect.gsub!(/^/, '  ')}"}})].dup
       end
     end
 
@@ -219,7 +217,7 @@ module Hamlit
         self[:old] = value
       end
 
-      # This will be a literal for Haml::Buffer#attributes's last argument, `attributes_hashes`.
+      # This will be a literal for Hamlit::HamlBuffer#attributes's last argument, `attributes_hashes`.
       def to_literal
         [new, stripped_old].compact.join(', ')
       end
@@ -291,7 +289,7 @@ module Hamlit
     end
 
     def block_keyword(text)
-      return unless keyword = text.scan(BLOCK_KEYWORD_REGEX)[0]
+      return unless (keyword = text.scan(BLOCK_KEYWORD_REGEX)[0])
       keyword[0] || keyword[1]
     end
 
@@ -302,20 +300,20 @@ module Hamlit
 
     def plain(line, escape_html = nil)
       if block_opened?
-        raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:illegal_nesting_plain), @next_line.index)
+        raise HamlSyntaxError.new(HamlError.message(:illegal_nesting_plain), @next_line.index)
       end
 
       unless contains_interpolation?(line.text)
         return ParseNode.new(:plain, line.index + 1, :text => line.text)
       end
 
-      escape_html = @options.escape_html if escape_html.nil?
-      line.text = ::Hamlit::HamlUtil.unescape_interpolation(line.text)
+      escape_html = @options.escape_html && @options.mime_type != 'text/plain' if escape_html.nil?
+      line.text = unescape_interpolation(line.text)
       script(line, false).tap { |n| n.value[:escape_interpolation] = true if escape_html }
     end
 
     def script(line, escape_html = nil, preserve = false)
-      raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:no_ruby_code, '=')) if line.text.empty?
+      raise HamlSyntaxError.new(HamlError.message(:no_ruby_code, '=')) if line.text.empty?
       line = handle_ruby_multiline(line)
       escape_html = @options.escape_html if escape_html.nil?
 
@@ -327,12 +325,12 @@ module Hamlit
     end
 
     def flat_script(line, escape_html = nil)
-      raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:no_ruby_code, '~')) if line.text.empty?
+      raise HamlSyntaxError.new(HamlError.message(:no_ruby_code, '~')) if line.text.empty?
       script(line, escape_html, :preserve)
     end
 
     def silent_script(line)
-      raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:no_end), line.index) if line.text[1..-1].strip == 'end'
+      raise HamlSyntaxError.new(HamlError.message(:no_end), line.index) if line.text[1..-1].strip == 'end'
 
       line = handle_ruby_multiline(line)
       keyword = block_keyword(line.text)
@@ -341,7 +339,7 @@ module Hamlit
 
       if ["else", "elsif", "when"].include?(keyword)
         if @script_level_stack.empty?
-          raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:missing_if, keyword), @line.index)
+          raise Hamlit::HamlSyntaxError.new(HamlError.message(:missing_if, keyword), @line.index)
         end
 
         if keyword == 'when' and !@script_level_stack.last[2]
@@ -352,8 +350,8 @@ module Hamlit
         end
 
         if @script_level_stack.last[1] != @line.tabs
-          message = ::Hamlit::HamlError.message(:bad_script_indent, keyword, @script_level_stack.last[1], @line.tabs)
-          raise ::Hamlit::HamlSyntaxError.new(message, @line.index)
+          message = HamlError.message(:bad_script_indent, keyword, @script_level_stack.last[1], @line.tabs)
+          raise Hamlit::HamlSyntaxError.new(message, @line.index)
         end
       end
 
@@ -390,7 +388,6 @@ module Hamlit
 
       preserve_tag = @options.preserve.include?(tag_name)
       nuke_inner_whitespace ||= preserve_tag
-      preserve_tag = false if @options.ugly
       escape_html = (action == '&' || (action != '!' && @options.escape_html))
 
       case action
@@ -399,7 +396,7 @@ module Hamlit
       when '='
         parse = true
         if value[0] == ?=
-          value = ::Hamlit::HamlUtil.unescape_interpolation(value[1..-1].strip)
+          value = unescape_interpolation(value[1..-1].strip)
           escape_interpolation = true if escape_html
           escape_html = false
         end
@@ -408,28 +405,27 @@ module Hamlit
           parse = true
           preserve_script = (value[0] == ?~)
           if value[1] == ?=
-            value = ::Hamlit::HamlUtil.unescape_interpolation(value[2..-1].strip)
+            value = unescape_interpolation(value[2..-1].strip)
             escape_interpolation = true if escape_html
             escape_html = false
           else
             value = value[1..-1].strip
           end
         elsif contains_interpolation?(value)
-          value = ::Hamlit::HamlUtil.unescape_interpolation(value)
+          value = unescape_interpolation(value)
           escape_interpolation = true if escape_html
           parse = true
           escape_html = false
         end
       else
         if contains_interpolation?(value)
-          value = ::Hamlit::HamlUtil.unescape_interpolation(value)
-          escape_interpolation = true if escape_html
+          value = unescape_interpolation(value, escape_html)
           parse = true
           escape_html = false
         end
       end
 
-      attributes = ::Hamlit::HamlParser.parse_class_and_id(attributes)
+      attributes = HamlParser.parse_class_and_id(attributes)
       dynamic_attributes = DynamicAttributes.new
 
       if attributes_hashes[:new]
@@ -444,12 +440,12 @@ module Hamlit
         dynamic_attributes.old = attributes_hashes[:old] unless static_attributes || @options.suppress_eval
       end
 
-      raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:illegal_nesting_self_closing), @next_line.index) if block_opened? && self_closing
-      raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:no_ruby_code, action), last_line - 1) if parse && value.empty?
-      raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:self_closing_content), last_line - 1) if self_closing && !value.empty?
+      raise HamlSyntaxError.new(HamlError.message(:illegal_nesting_self_closing), @next_line.index) if block_opened? && self_closing
+      raise HamlSyntaxError.new(HamlError.message(:no_ruby_code, action), last_line - 1) if parse && value.empty?
+      raise HamlSyntaxError.new(HamlError.message(:self_closing_content), last_line - 1) if self_closing && !value.empty?
 
       if block_opened? && !value.empty? && !is_ruby_multiline?(value)
-        raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:illegal_nesting_line, tag_name), @next_line.index)
+        raise HamlSyntaxError.new(HamlError.message(:illegal_nesting_line, tag_name), @next_line.index)
       end
 
       self_closing ||= !!(!block_opened? && value.empty? && @options.autoclose.any? {|t| t === tag_name})
@@ -487,13 +483,13 @@ module Hamlit
 
       if contains_interpolation?(text)
         parse = true
-        text = slow_unescape_interpolation(text)
+        text = unescape_interpolation(text)
       else
         parse = false
       end
 
       if block_opened? && !text.empty?
-        raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:illegal_nesting_content), @next_line.index)
+        raise HamlSyntaxError.new(Hamlit::HamlError.message(:illegal_nesting_content), @next_line.index)
       end
 
       ParseNode.new(:comment, @line.index + 1, :conditional => conditional, :text => text, :revealed => revealed, :parse => parse)
@@ -501,13 +497,13 @@ module Hamlit
 
     # Renders an XHTML doctype or XML shebang.
     def doctype(text)
-      raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:illegal_nesting_header), @next_line.index) if block_opened?
+      raise HamlSyntaxError.new(HamlError.message(:illegal_nesting_header), @next_line.index) if block_opened?
       version, type, encoding = text[3..-1].strip.downcase.scan(DOCTYPE_REGEX)[0]
       ParseNode.new(:doctype, @line.index + 1, :version => version, :type => type, :encoding => encoding)
     end
 
     def filter(name)
-      raise ::Hamlit::HamlError.new(::Hamlit::HamlError.message(:invalid_filter_name, name)) unless name =~ /^\w+$/
+      raise HamlError.new(HamlError.message(:invalid_filter_name, name)) unless name =~ /^\w+$/
 
       if filter_opened?
         @flat = true
@@ -544,7 +540,7 @@ module Hamlit
 
       # Post-process case statements to normalize the nesting of "when" clauses
       return unless node.value[:keyword] == "case"
-      return unless first = node.children.first
+      return unless (first = node.children.first)
       return unless first.type == :silent_script && first.value[:keyword] == "when"
       return if first.children.empty?
       # If the case node has a "when" child with children, it's the
@@ -556,7 +552,7 @@ module Hamlit
 
     alias :close_script :close_silent_script
 
-    # This is a class method so it can be accessed from {Haml::Helpers}.
+    # This is a class method so it can be accessed from {Hamlit::HamlHelpers}.
     #
     # Iterates through the classes and ids supplied through `.`
     # and `#` syntax, and returns a hash with them as attributes,
@@ -565,7 +561,7 @@ module Hamlit
       attributes = {}
       return attributes if list.empty?
 
-      list.scan(/([#.])([-:_a-zA-Z0-9]+)/) do |type, property|
+      list.scan(/([#.])([-:_a-zA-Z0-9\@]+)/) do |type, property|
         case type
         when '.'
           if attributes[CLASS_KEY]
@@ -580,16 +576,22 @@ module Hamlit
       attributes
     end
 
+    # This method doesn't use Hamlit::HamlAttributeParser because currently it depends on Ripper and Rubinius doesn't provide it.
+    # Ideally this logic should be placed in Hamlit::HamlAttributeParser instead of here and this method should use it.
+    #
+    # @param  [String] text - Hash literal or text inside old attributes
+    # @return [Hash,nil] - Return nil if text is not static Hash literal
     def parse_static_hash(text)
       attributes = {}
       return attributes if text.empty?
 
+      text = text[1...-1] # strip brackets
       scanner = StringScanner.new(text)
       scanner.scan(/\s+/)
       until scanner.eos?
-        return unless key = scanner.scan(LITERAL_VALUE_REGEX)
+        return unless (key = scanner.scan(LITERAL_VALUE_REGEX))
         return unless scanner.scan(/\s*=>\s*/)
-        return unless value = scanner.scan(LITERAL_VALUE_REGEX)
+        return unless (value = scanner.scan(LITERAL_VALUE_REGEX))
         return unless scanner.scan(/\s*(?:,|$)\s*/)
         attributes[eval(key).to_s] = eval(value).to_s
       end
@@ -598,13 +600,13 @@ module Hamlit
 
     # Parses a line into tag_name, attributes, attributes_hash, object_ref, action, value
     def parse_tag(text)
-      match = text.scan(/%([-:\w]+)([-:\w.#]*)(.+)?/)[0]
-      raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:invalid_tag, text)) unless match
+      match = text.scan(/%([-:\w]+)([-:\w.#\@]*)(.+)?/)[0]
+      raise HamlSyntaxError.new(HamlError.message(:invalid_tag, text)) unless match
 
       tag_name, attributes, rest = match
 
       if !attributes.empty? && (attributes =~ /[.#](\.|#|\z)/)
-        raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:illegal_element))
+        raise HamlSyntaxError.new(HamlError.message(:illegal_element))
       end
 
       new_attributes_hash = old_attributes_hash = last_line = nil
@@ -649,14 +651,17 @@ module Hamlit
        nuke_inner_whitespace, action, value, last_line || @line.index + 1]
     end
 
+    # @return [String] attributes_hash - Hash literal starting with `{` and ending with `}`
+    # @return [String] rest
+    # @return [Integer] last_line
     def parse_old_attributes(text)
       text = text.dup
       last_line = @line.index + 1
 
       begin
         attributes_hash, rest = balance(text, ?{, ?})
-      rescue ::Hamlit::HamlSyntaxError => e
-        if text.strip[-1] == ?, && e.message == ::Hamlit::HamlError.message(:unbalanced_brackets)
+      rescue HamlSyntaxError => e
+        if text.strip[-1] == ?, && e.message == HamlError.message(:unbalanced_brackets)
           text << "\n#{@next_line.text}"
           last_line += 1
           next_line
@@ -669,6 +674,9 @@ module Hamlit
       return attributes_hash, rest, last_line
     end
 
+    # @return [Array<Hash,String,nil>] - [static_attributes (Hash), dynamic_attributes (nil or String starting with `{` and ending with `}`)]
+    # @return [String] rest
+    # @return [Integer] last_line
     def parse_new_attributes(text)
       scanner = StringScanner.new(text)
       last_line = @line.index + 1
@@ -680,9 +688,9 @@ module Hamlit
         break if name.nil?
 
         if name == false
-          scanned = ::Hamlit::HamlUtil.balance(text, ?(, ?))
+          scanned = Hamlit::HamlUtil.balance(text, ?(, ?))
           text = scanned ? scanned.first : text
-          raise ::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:invalid_attribute_list, text.inspect), last_line - 1)
+          raise Hamlit::HamlSyntaxError.new(HamlError.message(:invalid_attribute_list, text.inspect), last_line - 1)
         end
         attributes[name] = value
         scanner.scan(/\s*/)
@@ -696,22 +704,22 @@ module Hamlit
       end
 
       static_attributes = {}
-      dynamic_attributes = "{"
+      dynamic_attributes = "{".dup
       attributes.each do |name, (type, val)|
         if type == :static
           static_attributes[name] = val
         else
-          dynamic_attributes += "#{inspect_obj(name)} => #{val},"
+          dynamic_attributes << "#{inspect_obj(name)} => #{val},"
         end
       end
-      dynamic_attributes += "}"
+      dynamic_attributes << "}"
       dynamic_attributes = nil if dynamic_attributes == "{}"
 
       return [static_attributes, dynamic_attributes], scanner.rest, last_line
     end
 
     def parse_new_attribute(scanner)
-      unless name = scanner.scan(/[-:\w]+/)
+      unless (name = scanner.scan(/[-:\w]+/))
         return if scanner.scan(/\)/)
         return false
       end
@@ -720,8 +728,8 @@ module Hamlit
       return name, [:static, true] unless scanner.scan(/=/) #/end
 
       scanner.scan(/\s*/)
-      unless quote = scanner.scan(/["']/)
-        return false unless var = scanner.scan(/(@@?|\$)?\w+/)
+      unless (quote = scanner.scan(/["']/))
+        return false unless (var = scanner.scan(/(@@?|\$)?\w+/))
         return name, [:dynamic, var]
       end
 
@@ -736,7 +744,7 @@ module Hamlit
 
       return name, [:static, content.first[1]] if content.size == 1
       return name, [:dynamic,
-        %!"#{content.each_with_object(+'') {|(t, v), s| s << (t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
+        %!"#{content.each_with_object(''.dup) {|(t, v), s| s << (t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
     end
 
     def next_line
@@ -804,7 +812,7 @@ module Hamlit
     end
 
     def balance(*args)
-      ::Hamlit::HamlUtil.balance(*args) or raise(::Hamlit::HamlSyntaxError.new(::Hamlit::HamlError.message(:unbalanced_brackets)))
+      Hamlit::HamlUtil.balance(*args) or raise(HamlSyntaxError.new(HamlError.message(:unbalanced_brackets)))
     end
 
     def block_opened?

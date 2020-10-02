@@ -35,7 +35,7 @@ module Hamlit
 
       def dynamic_compile(node, name, indent_width: 0)
         # original: Haml::Filters#compile
-        text = ::Hamlit::HamlUtil.slow_unescape_interpolation(node.value[:text]).gsub(/(\\+)n/) do |s|
+        text = ::Hamlit::HamlUtil.unescape_interpolation(node.value[:text]).gsub(/(\\+)n/) do |s|
           escapes = $1.size
           next s if escapes % 2 == 0
           "#{'\\' * (escapes - 1)}\n"
