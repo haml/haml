@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.13.0](https://github.com/k0kubun/hamlit/compare/v2.12.0...v2.13.0) - 2020-10-2
+
+### Added
+
+- Support `--enable-frozen-string-literal` [#162](https://github.com/k0kubun/hamlit/issues/162).
+  *Thanks to @aliismayilov*
+
+### Changed
+
+- Upgrade the Haml parser from Haml 4.0 to 5.2 [#163](https://github.com/k0kubun/hamlit/issues/163).
+  - Allow `@` as tag's class name.
+  - Fix NameError on an `InvalidAttributeNameError` reference introduced at Hamlit v2.12.0.
+
 ## [2.12.0](https://github.com/k0kubun/hamlit/compare/v2.11.1...v2.12.0) - 2020-09-30
 
 ### Changed
