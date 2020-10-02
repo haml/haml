@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'temple'
-require 'haml/escapable'
-require 'haml/generator'
+require 'hamlit/parser/haml_escapable'
+require 'hamlit/parser/haml_generator'
 
 module Hamlit
   class HamlTempleEngine < Temple::Engine
