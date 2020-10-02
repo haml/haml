@@ -76,7 +76,7 @@ class HamlitParserBuilder
 
     DUMMY_CLASSES.each do |file, klass|
       dest_path = File.join(@hamlit_parser, "haml_#{file}")
-      src = "class Hamlit::Haml#{klass}; end"
+      src = "class Hamlit::Haml#{klass}; end\n"
       File.write(dest_path, src)
     end
   end
