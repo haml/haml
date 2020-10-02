@@ -39,7 +39,6 @@ class HamlitParserBuilder
   TARGET_FILES = [
     'attribute_builder.rb',
     'buffer.rb',
-    'compiler.rb',
     'error.rb',
     'escapable.rb', # for temple_engine.rb :(
     'generator.rb', # for temple_engine.rb :(
@@ -51,6 +50,11 @@ class HamlitParserBuilder
     'util.rb',
     'helpers/xss_mods.rb',
   ]
+
+  # Classes which are just referenced by Options and not really used by the parser
+  DUMMY_MODULES = {
+    'compiler.rb' => 'Compiler',
+  }
 
   def initialize(haml:, hamlit_parser:)
     @haml = haml
@@ -67,6 +71,12 @@ class HamlitParserBuilder
 
       src = File.read(dest_path)
       patch_source!(src, file: file)
+      File.write(dest_path, src)
+    end
+
+    DUMMY_MODULES.each do |file, klass|
+      dest_path = File.join(@hamlit_parser, "haml_#{file}")
+      src = "module Hamlit::Haml#{klass}; end"
       File.write(dest_path, src)
     end
   end
@@ -86,8 +96,6 @@ class HamlitParserBuilder
     src.gsub!(/^require 'haml\/([^']+)'/, "require 'hamlit/parser/haml_\\1'")
 
     case file
-    when 'compiler.rb'
-      src.gsub!(/^require 'hamlit\/parser\/([^']+)'/, '# \0') # to be fixed later
     when 'error.rb'
       src.gsub!(/^  class ([^ ]+) < ([^ ]+);/, '  class Haml\1 < Haml\2;')
     when 'helpers.rb'
