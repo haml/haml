@@ -43,6 +43,7 @@ class HamlitParserBuilder
     # 'error.rb',
     # 'helpers.rb',
     # 'options.rb',
+    # TODO: make the upstream sharable first
     # 'parser.rb',
     'util.rb',
     'helpers/xss_mods.rb',
@@ -73,6 +74,10 @@ class HamlitParserBuilder
     # Use Hamlit::HamlFoo instead of Haml::Foo
     src.gsub!(/^module Haml\n(  #[^\n]+\n)?  (module|class) ([^ ]+)/, "module Hamlit\n\\1  \\2 Haml\\3")
     src.gsub!(/\bHaml::/, 'Hamlit::Haml')
+
+    # Prefix Haml to references without Haml::
+    src.gsub!(/\b(AttributeBuilder|Error|Options|Parser|SyntaxError)\./, 'Haml\0')
+    src.gsub!(/\brescue SyntaxError /, 'rescue HamlSyntaxError ')
   end
 end
 
