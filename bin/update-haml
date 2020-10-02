@@ -36,8 +36,16 @@ end
 
 # Generate lib/hamlit/parser from haml
 class HamlitParserBuilder
-  TARGET_FILES = %w[
-    attribute_builder.rb
+  TARGET_FILES = [
+    'attribute_builder.rb',
+    # 'buffer.rb',
+    # 'compiler.rb',
+    # 'error.rb',
+    # 'helpers.rb',
+    # 'options.rb',
+    # 'parser.rb',
+    # 'util.rb',
+    'helpers/xss_mods.rb',
   ]
 
   def initialize(haml:, hamlit_parser:)
