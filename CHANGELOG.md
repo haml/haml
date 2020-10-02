@@ -3,7 +3,7 @@
 ## 5.2
 
 Released on September 28, 2020
-([diff](https://github.com/haml/haml/compare/v5.1.2...v5.2)).
+([diff](https://github.com/haml/haml/compare/v5.1.2...v5.2.0)).
 
 * Fix crash in the attribute optimizer when `#inspect` is overridden in TrueClass / FalseClass [#972](https://github.com/haml/haml/issues/972)
 * Do not HTML-escape templates that are declared to be plaintext [#1014](https://github.com/haml/haml/issues/1014) (Thanks [@cesarizu](https://github.com/cesarizu))
