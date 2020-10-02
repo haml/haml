@@ -44,7 +44,7 @@ module Hamlit
 
   # https://github.com/haml/haml/blob/4.0.7/lib/haml/template.rb
   module HamlHelpers
-    require 'hamlit/parser/haml_xss_mods'
+    require 'hamlit/parser/haml_helpers/xss_mods'
     include Hamlit::HamlHelpers::XssMods
   end
 

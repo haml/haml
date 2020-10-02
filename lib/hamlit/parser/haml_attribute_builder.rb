@@ -98,7 +98,7 @@ module Hamlit
       def verify_attribute_names!(attribute_names)
         attribute_names.each do |attribute_name|
           if attribute_name =~ INVALID_ATTRIBUTE_NAME_REGEX
-            raise InvalidAttributeNameError.new("Invalid attribute name '#{attribute_name}' was rendered")
+            raise HamlInvalidAttributeNameError.new("Invalid attribute name '#{attribute_name}' was rendered")
           end
         end
       end
