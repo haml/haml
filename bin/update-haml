@@ -38,7 +38,7 @@ end
 class HamlitParserBuilder
   TARGET_FILES = [
     'attribute_builder.rb',
-    # 'buffer.rb',
+    'buffer.rb',
     # 'compiler.rb',
     'error.rb',
     'escapable.rb', # for temple_engine.rb :(
@@ -85,6 +85,8 @@ class HamlitParserBuilder
     case file
     when 'error.rb'
       src.gsub!(/^  class ([^ ]+) < ([^ ]+);/, '  class Haml\1 < Haml\2;')
+    when 'helpers.rb'
+      src.gsub!(/^  def is_haml\?\n    false\n  end/m) { |str| str.gsub(/^  /, '  # ') } # not needed for the parser
     when 'options.rb'
       src.gsub!(/\.is_a\?\(Options\)/, '.is_a?(HamlOptions)')
     when 'temple_engine.rb'

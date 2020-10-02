@@ -703,7 +703,7 @@ class Object
   # is a proper Haml context.
   # Because `ActionView` helpers may be included in non-`ActionView::Base` classes,
   # it's a good idea to define \{#is\_haml?} for all objects.
-  def is_haml?
-    false
-  end
+  # def is_haml?
+  #   false
+  # end
 end
