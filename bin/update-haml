@@ -19,12 +19,10 @@ end
 
 class LicenseBuilder
   DELIMITER = "\n==="
-  HAML_LICENSE = 'MIT-LICENSE'
-  HAMLIT_LICENSE = 'LICENSE.txt'
 
-  def initialize(haml:, hamlit:)
-    @haml_license = File.join(haml, HAML_LICENSE)
-    @hamlit_license = File.join(hamlit, HAMLIT_LICENSE)
+  def initialize(haml_license:, hamlit_license:)
+    @haml_license = haml_license
+    @hamlit_license = hamlit_license
   end
 
   def build
@@ -38,26 +36,35 @@ end
 
 # Generate lib/hamlit/parser from haml
 class HamlitParserBuilder
-  TARGET_FILES = %w[]
+  TARGET_FILES = %w[
+    attribute_builder.rb
+  ]
 
-  def initialize(haml_lib:, hamlit_parser:)
-    @haml_lib = haml_lib
+  def initialize(haml:, hamlit_parser:)
+    @haml = haml
     @hamlit_parser = hamlit_parser
   end
 
   def build
     TARGET_FILES.each do |file|
-      src_path  = File.join(@haml_lib, file)
-      dest_path = File.join(@hamlit_parser, file)
+      src_path  = File.join(@haml, file)
+      dest_path = File.join(@hamlit_parser, "haml_#{file}")
 
       FileUtils.mkdir_p(File.dirname(dest_path))
       FileUtils.cp(src_path, dest_path)
 
-      # TODO:
-      # src = File.read(dest_fullpath)
-      # patch_source!(src, path: src_path)
-      # File.write(dest_fullpath, src)
+      src = File.read(dest_path)
+      patch_source!(src)
+      File.write(dest_path, src)
     end
+  end
+
+  private
+
+  def patch_source!(src)
+    # Use Hamlit::HamlFoo instead of Haml::Foo
+    src.gsub!(/^module Haml\n  (module|class) ([^ ]+)/, "module Hamlit\n  \\1 Haml\\2")
+    src.gsub!(/\bHaml::/, 'Hamlit::Haml')
   end
 end
 
@@ -65,11 +72,14 @@ FileUtils.rm_rf(haml = File.expand_path('../haml', __dir__))
 GitHubFetcher.fetch(HAML_REPO, tag: HAML_VERSION, path: haml)
 
 hamlit = File.expand_path('..', __dir__)
-LicenseBuilder.new(haml: haml, hamlit: hamlit).build
+LicenseBuilder.new(
+  haml_license: File.join(haml, 'MIT-LICENSE'),
+  hamlit_license: File.join(hamlit, 'LICENSE.txt'),
+).build
 
 hamlit_parser = File.join(hamlit, 'lib/hamlit/parser')
 # TODO: FileUtils.rm_rf(hamlit_parser = File.join(hamlit, 'lib/hamlit/parser'))
 HamlitParserBuilder.new(
-  haml_lib: File.join(haml, 'lib'),
+  haml: File.join(haml, 'lib/haml'),
   hamlit_parser: hamlit_parser,
 ).build
