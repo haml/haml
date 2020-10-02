@@ -10,6 +10,9 @@ require 'hamlit/parser/haml_compiler'
 require 'hamlit/parser/haml_parser'
 require 'hamlit/parser/haml_helpers'
 require 'hamlit/parser/haml_options'
+require 'hamlit/parser/haml_escapable'
+require 'hamlit/parser/haml_generator'
+require 'hamlit/parser/haml_temple_engine'
 
 module Hamlit
   class Parser

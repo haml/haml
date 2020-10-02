@@ -41,8 +41,11 @@ class HamlitParserBuilder
     # 'buffer.rb',
     # 'compiler.rb',
     # 'error.rb',
+    'escapable.rb', # for temple_engine.rb :(
+    'generator.rb', # for temple_engine.rb :(
     # 'helpers.rb',
-    # 'options.rb',
+    'options.rb',
+    'temple_engine.rb', # for options.rb :(
     # TODO: make the upstream sharable first
     # 'parser.rb',
     'util.rb',
@@ -63,21 +66,28 @@ class HamlitParserBuilder
       FileUtils.cp(src_path, dest_path)
 
       src = File.read(dest_path)
-      patch_source!(src)
+      patch_source!(src, file: file)
       File.write(dest_path, src)
     end
   end
 
   private
 
-  def patch_source!(src)
+  def patch_source!(src, file:)
     # Use Hamlit::HamlFoo instead of Haml::Foo
-    src.gsub!(/^module Haml\n(  #[^\n]+\n)?  (module|class) ([^ ]+)/, "module Hamlit\n\\1  \\2 Haml\\3")
+    src.gsub!(/^module Haml\n((?:  #[^\n]+\n)*)  (module|class) ([^ ]+)/, "module Hamlit\n\\1  \\2 Haml\\3")
     src.gsub!(/\bHaml::/, 'Hamlit::Haml')
 
     # Prefix Haml to references without Haml::
     src.gsub!(/\b(AttributeBuilder|Error|Options|Parser|SyntaxError)\./, 'Haml\0')
     src.gsub!(/\brescue SyntaxError /, 'rescue HamlSyntaxError ')
+
+    case file
+    when 'options.rb'
+      src.gsub!(/\.is_a\?\(Options\)/, '.is_a?(HamlOptions)')
+    when 'temple_engine.rb'
+      src.gsub!(/\buse (Generator|Escapable)$/, 'use Haml\1')
+    end
   end
 end
 
