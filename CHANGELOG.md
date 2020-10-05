@@ -16,6 +16,7 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 - Upgrade the Haml parser from Haml 4.0 to 5.2 [#163](https://github.com/k0kubun/hamlit/issues/163).
   - Allow `@` as tag's class name.
   - Fix NameError on an `InvalidAttributeNameError` reference introduced at Hamlit v2.12.0.
+  - You can no longer specify `ugly` option, which has had no effect.
 
 ## [2.12.0](https://github.com/k0kubun/hamlit/compare/v2.11.1...v2.12.0) - 2020-09-30
 
