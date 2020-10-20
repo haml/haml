@@ -109,4 +109,19 @@ HAML
 %a{h1, :aria => h2}
     HAML
   end
+
+  def test_multiline_attributes
+    assert_equal(<<HTML, render(<<HAML))
+<div class='haml' data-content='/:|}' data-haml-info-url='https://haml.info' id='info'>Haml</div>
+HTML
+.haml#info{
+  "data": {
+    "content": "/:|}",
+    "haml-info": {
+      "url": "https://haml.info",
+    }
+  }
+} Haml
+HAML
+  end
 end
