@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'ripper'
 require 'strscan'
 
 module Haml
@@ -89,6 +90,9 @@ module Haml
 
     ID_KEY    = 'id'.freeze
     CLASS_KEY = 'class'.freeze
+
+    # Used for scanning old attributes, substituting the first '{'
+    METHOD_CALL_PREFIX = 'a('
 
     def initialize(options)
       @options = Options.wrap(options)
@@ -651,13 +655,18 @@ module Haml
     # @return [String] rest
     # @return [Integer] last_line
     def parse_old_attributes(text)
-      text = text.dup
       last_line = @line.index + 1
 
       begin
-        attributes_hash, rest = balance(text, ?{, ?})
+        # Old attributes often look like a valid Hash literal, but it sometimes allow code like
+        # `{ hash, foo: bar }`, which is compiled to `_hamlout.attributes({}, nil, hash, foo: bar)`.
+        #
+        # To scan such code correctly, this scans `a( hash, foo: bar }` instead, stops when there is
+        # 1 more :on_embexpr_end (the last '}') than :on_embexpr_beg, and resurrects '{' afterwards.
+        balanced, rest = balance_tokens(text.sub(?{, METHOD_CALL_PREFIX), :on_embexpr_beg, :on_embexpr_end, count: 1)
+        attributes_hash = balanced.sub(METHOD_CALL_PREFIX, ?{)
       rescue SyntaxError => e
-        if text.strip[-1] == ?, && e.message == Error.message(:unbalanced_brackets)
+        if e.message == Error.message(:unbalanced_brackets) && !@template.empty?
           text << "\n#{@next_line.text}"
           last_line += 1
           next_line
@@ -809,6 +818,25 @@ module Haml
 
     def balance(*args)
       Haml::Util.balance(*args) or raise(SyntaxError.new(Error.message(:unbalanced_brackets)))
+    end
+
+    # Unlike #balance, this balances Ripper tokens to balance something like `{ a: "}" }` correctly.
+    def balance_tokens(buf, start, finish, count: 0)
+      text = ''.dup
+      Ripper.lex(buf).each do |_, token, str|
+        text << str
+        case token
+        when start
+          count += 1
+        when finish
+          count -= 1
+        end
+
+        if count == 0
+          return text, buf.sub(text, '')
+        end
+      end
+      raise SyntaxError.new(Error.message(:unbalanced_brackets))
     end
 
     def block_opened?
