@@ -228,15 +228,19 @@ is compiled to:
     <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'></html>
 
 Attribute hashes can also be stretched out over multiple lines to accommodate
-many attributes. However, newlines may only be placed immediately after commas.
-For example:
+many attributes.
 
-    %script{:type => "text/javascript",
-            :src  => "javascripts/script_#{2 + 7}"}
+    %script{
+      "type": text/javascript",
+      "src": javascripts/script_#{2 + 7}",
+      "data": {
+        "controller": "reporter",
+      },
+    }
 
 is compiled to:
 
-    <script src='javascripts/script_9' type='text/javascript'></script>
+    <script src='javascripts/script_9' type='text/javascript' data-controller='reporter'></script>
 
 #### `:class` and `:id` Attributes {#class-and-id-attributes}
 

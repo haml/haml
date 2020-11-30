@@ -1,5 +1,12 @@
 # Haml Changelog
 
+## 5.2.1
+
+Released on November 30, 2020
+([diff](https://github.com/haml/haml/compare/v5.2.0...v5.2.1)).
+
+* Add in improved "multiline" support for attributes [#1043](https://github.com/haml/haml/issues/1043)
+
 ## 5.2
 
 Released on September 28, 2020
