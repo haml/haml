@@ -231,7 +231,7 @@ HAML
       self.class
     end
 
-    def _run(method, template, locals, buffer, &block)
+    def _run(method, template, locals, buffer, add_to_stack: true, &block)
       @current_template = template
       @output_buffer = buffer
       send(method, locals, buffer, &block)
