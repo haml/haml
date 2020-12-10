@@ -25,7 +25,7 @@ class HelpersForRailsTest < Haml::TestCase
 
   def setup
     context = ActionView::LookupContext.new(File.expand_path("../templates", __FILE__))
-    @base = Class.new(ActionView::Base.with_empty_template_cache) {
+    @base = Class.new(ActionView::Base.try(:with_empty_template_cache) || ActionView::Base) {
       def nested_tag
         content_tag(:span) {content_tag(:div) {"something"}}
       end
