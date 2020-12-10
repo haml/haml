@@ -24,7 +24,7 @@ class TemplateTest < Haml::TestCase
     vars = { 'article' => Article.new, 'foo' => 'value one' }
 
     context = ActionView::LookupContext.new(TemplateTestHelper::TEMPLATE_PATH)
-    base = ActionView::Base.new(context, vars)
+    base = ActionView::Base.new(context, vars, nil)
 
     # This is needed by RJS in (at least) Rails 3
     base.instance_variable_set(:@template, base)
@@ -246,7 +246,7 @@ HAML
   def test_xss_protection_in_attributes
     assert_equal("<div data-html='&lt;foo&gt;bar&lt;/foo&gt;'></div>\n", render('%div{ "data-html" => "<foo>bar</foo>" }', :action_view))
   end
-  
+
   def test_xss_protection_with_bang_in_interpolation
     assert_equal("Foo & Bar\n", render('! Foo #{"&"} Bar', :action_view))
   end

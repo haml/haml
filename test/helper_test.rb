@@ -262,7 +262,7 @@ HAML
   end
 
   def test_is_haml
-    assert(!ActionView::Base.new(ActionView::LookupContext.new('')).is_haml?)
+    assert(!ActionView::Base.new(ActionView::LookupContext.new(''), {}, nil).is_haml?)
     assert_equal("true\n", render("= is_haml?"))
   end
 
