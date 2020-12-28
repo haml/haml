@@ -4,8 +4,10 @@ require 'hamlit/error'
 require 'hamlit/version'
 require 'hamlit/template'
 
-begin
-  require 'rails'
-  require 'hamlit/railtie'
-rescue LoadError
+if File.basename($0) != 'hamlit'
+  begin
+    require 'rails'
+    require 'hamlit/railtie'
+  rescue LoadError
+  end
 end
