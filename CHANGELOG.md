@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.13.2](https://github.com/k0kubun/hamlit/compare/v2.13.1...v2.13.2) - 2020-12-27
+
+### Added
+
+- Speed up `hamlit` commands [#166](https://github.com/k0kubun/hamlit/issues/166)
+  *Thanks to @knightq*
+
 ## [2.13.1](https://github.com/k0kubun/hamlit/compare/v2.13.0...v2.13.1) - 2020-12-27
 
 ### Added
