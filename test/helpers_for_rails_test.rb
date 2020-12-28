@@ -25,7 +25,7 @@ class HelpersForRailsTest < Haml::TestCase
 
   def setup
     context = ActionView::LookupContext.new(File.expand_path("../templates", __FILE__))
-    @base = Class.new(ActionView::Base) {
+    @base = Class.new(ActionView::Base.try(:with_empty_template_cache) || ActionView::Base) {
       def nested_tag
         content_tag(:span) {content_tag(:div) {"something"}}
       end
@@ -169,7 +169,7 @@ HAML
   end
 
   def test_is_haml
-    assert(!ActionView::Base.new(ActionView::LookupContext.new('')).is_haml?)
+    assert(!ActionView::Base.new(ActionView::LookupContext.new(''), {}, nil).is_haml?)
     assert_equal("true\n", render("= is_haml?", :action_view))
     assert_equal("false", @base.render(:inline => '<%= is_haml? %>'))
     assert_equal("false\n", render("= render :inline => '<%= is_haml? %>'", :action_view))
@@ -231,7 +231,7 @@ HAML
       self.class
     end
 
-    def _run(method, template, locals, buffer, &block)
+    def _run(method, template, locals, buffer, add_to_stack: true, &block)
       @current_template = template
       @output_buffer = buffer
       send(method, locals, buffer, &block)
