@@ -8,7 +8,7 @@ describe Hamlit::RailsTemplate do
       def compiled_method_container
         self.class
       end
-    end.new(ActionView::LookupContext.new(''))
+    end.new(ActionView::LookupContext.new(''), {}, ActionController::Base.new)
     base.render(inline: haml, type: :haml)
   end
 

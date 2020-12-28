@@ -71,7 +71,7 @@ class TemplateTest < Haml::TestCase
     vars = { 'article' => Article.new, 'foo' => 'value one' }
 
     context = ActionView::LookupContext.new(TEMPLATE_PATH)
-    base = ActionView::Base.new(context, vars)
+    base = ActionView::Base.new(context, vars, ActionController::Base.new)
 
     # This is needed by RJS in (at least) Rails 3
     base.instance_variable_set(:@template, base)
@@ -100,7 +100,7 @@ class TemplateTest < Haml::TestCase
   def assert_renders_correctly(name, &render_method)
     old_options = Haml::Template.options.dup
     Haml::Template.options[:escape_html] = false
-    render_method ||= proc { |n| @base.render(:file => n) }
+    render_method ||= proc { |n| @base.render(template: n) }
 
     silence_warnings do
       load_result(name).split("\n").zip(render_method[name].split("\n")).each_with_index do |pair, line|

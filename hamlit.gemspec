@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'haml', '>= 5'
   spec.add_development_dependency 'less'
   spec.add_development_dependency 'minitest-reporters', '~> 1.1'
-  spec.add_development_dependency 'rails', '>= 4.0', '< 6.1'
+  spec.add_development_dependency 'rails', '>= 4.0'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rake-compiler'
   spec.add_development_dependency 'sass'

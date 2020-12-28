@@ -110,7 +110,7 @@ class Haml::TestCase < BASE_TEST_CLASS
       def compiled_method_container
         self.class
       end
-    end.new(ActionView::LookupContext.new(''))
+    end.new(ActionView::LookupContext.new(''), {}, ActionController::Base.new)
   end
 
   def self.error(*args)

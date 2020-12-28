@@ -34,8 +34,7 @@ class HelperTest < Haml::TestCase
       def compiled_method_container
         self.class
       end
-    end.new(ActionView::LookupContext.new(''))
-    @base.controller = ActionController::Base.new
+    end.new(ActionView::LookupContext.new(''), {}, ActionController::Base.new)
     @base.view_paths << File.expand_path("../templates", __FILE__)
     @base.instance_variable_set(:@post, Post.new("Foo bar\nbaz", nil, PostErrors.new))
   end
