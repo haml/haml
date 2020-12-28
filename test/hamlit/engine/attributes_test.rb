@@ -25,6 +25,17 @@ describe Hamlit::Engine do
       it { assert_haml(%q|#b{ hash }|,         locals: { hash: { id: 'a' } }) }
       it { assert_haml(%q|#b{ hash }(id='c')|, locals: { hash: { id: 'a' }, id: 'c' }) }
       it { assert_haml(%q|#b{ hash }(id=id)|,  locals: { hash: { id: 'a' }, id: 'c' }) }
+
+      it { assert_haml(<<-HAML.unindent) }
+        .haml#info{
+          "data": {
+            "content": "/:|}",
+            "haml-info": {
+              "url": "https://haml.info",
+            }
+          }
+        } Haml
+      HAML
     end
 
     describe 'incompatibility' do

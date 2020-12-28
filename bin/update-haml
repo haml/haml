@@ -3,7 +3,7 @@ require 'fileutils'
 require 'tmpdir'
 
 HAML_REPO    = 'haml/haml'
-HAML_VERSION = 'v5.2.0'
+HAML_VERSION = '5.2.1'
 
 module GitHubFetcher
   def self.fetch(repo, tag:, path:)

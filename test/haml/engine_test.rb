@@ -57,9 +57,9 @@ class EngineTest < Haml::TestCase
     "%p{'foo' => 'bar' 'bar' => 'baz'}"                    => :compile,
     "%p{:foo => }"                                         => :compile,
     "%p{=> 'bar'}"                                         => :compile,
-    "%p{'foo => 'bar'}"                                    => :compile,
-    "%p{:foo => 'bar}"                                     => :compile,
-    "%p{:foo => 'bar\"}"                                   => :compile,
+    "%p{'foo => 'bar'}"                                    => error(:unbalanced_brackets),
+    "%p{:foo => 'bar}"                                     => error(:unbalanced_brackets),
+    "%p{:foo => 'bar\"}"                                   => error(:unbalanced_brackets),
     # Regression tests
     "foo\n\n\n  bar"                                       => [error(:illegal_nesting_plain), 4],
     "%p/\n\n  bar"                                         => [error(:illegal_nesting_self_closing), 3],
