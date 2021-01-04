@@ -13,6 +13,6 @@
 *.bundle
 *.so
 *.su
-*.o
 *.a
+*.o
 *.swp
