@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.14.0](https://github.com/k0kubun/hamlit/compare/v2.13.2...v2.14.0) - 2021-01-07
+
+### Changed
+
+- CLI changes
+  - Remove `-c` shorthand of `--color`.
+  - Make `--color` default. Please use `--no-color` to disable it.
+  - `--color` uses IRB instead of Pry for syntax highlight.
+     - Syntax highlight of `hamlit compile` is enabled only with IRB of Ruby 2.7+.
+     - Syntax highlight of `hamlit parse` / `hamlit temple` is enabled only with IRB of Ruby 3.1+.
+
 ## [2.13.2](https://github.com/k0kubun/hamlit/compare/v2.13.1...v2.13.2) - 2020-12-27
 
 ### Added
