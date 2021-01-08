@@ -18,20 +18,20 @@ module Hamlit
 
     desc 'compile HAML', 'Show compile result'
     option :actionview, type: :boolean, default: false, aliases: %w[-a]
-    option :color, type: :boolean, default: false, aliases: %w[-c]
+    option :color, type: :boolean, default: false
     def compile(file)
       code = generate_code(file)
       puts_code(code, color: options[:color])
     end
 
     desc 'temple HAML', 'Show temple intermediate expression'
-    option :color, type: :boolean, default: false, aliases: %w[-c]
+    option :color, type: :boolean, default: false
     def temple(file)
       pp_object(generate_temple(file), color: options[:color])
     end
 
     desc 'parse HAML', 'Show parse result'
-    option :color, type: :boolean, default: false, aliases: %w[-c]
+    option :color, type: :boolean, default: false
     def parse(file)
       pp_object(generate_ast(file), color: options[:color])
     end
