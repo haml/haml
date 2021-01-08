@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.14.1](https://github.com/k0kubun/hamlit/compare/v2.14.0...v2.14.1) - 2021-01-07
+
+### Added
+
+- Add `-c` option to `hamlit compile` that works like `haml -c` [#166](https://github.com/k0kubun/hamlit/issues/166)
+  *Thanks to @knightq*
+
 ## [2.14.0](https://github.com/k0kubun/hamlit/compare/v2.13.2...v2.14.0) - 2021-01-07
 
 ### Changed
