@@ -19,8 +19,16 @@ module Hamlit
     desc 'compile HAML', 'Show compile result'
     option :actionview, type: :boolean, default: false, aliases: %w[-a]
     option :color, type: :boolean, default: true
+    option :check, type: :boolean, default: false, aliases: %w[-c]
     def compile(file)
       code = generate_code(file)
+      if options[:check]
+        if error = validate_ruby(code, file)
+          abort error.message.split("\n").first
+        end
+        puts "Syntax OK"
+        return
+      end
       puts_code(code, color: options[:color])
     end
 
@@ -132,6 +140,14 @@ module Hamlit
       else
         require 'pp'
         pp(arg)
+      end
+    end
+
+    def validate_ruby(code, file)
+      begin
+        eval("BEGIN {return nil}; #{code}", binding, file)
+      rescue ::SyntaxError # Not to be confused with Hamlit::SyntaxError
+        $!
       end
     end
   end
