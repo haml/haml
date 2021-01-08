@@ -109,12 +109,12 @@ module Hamlit
 
     def puts_code(code, color: true)
       begin
-        require 'pry'
+        require 'irb/color'
       rescue LoadError
         color = false
       end
       if color
-        puts Pry.Code(code).highlighted
+        puts IRB::Color.colorize_code(code)
       else
         puts code
       end
@@ -123,12 +123,12 @@ module Hamlit
     # Enable colored pretty printing only for development environment.
     def pp_object(arg, color: true)
       begin
-        require 'pry'
+        require 'irb/color_printer'
       rescue LoadError
         color = false
       end
       if color
-        Pry::ColorPrinter.pp(arg)
+        IRB::ColorPrinter.pp(arg)
       else
         require 'pp'
         pp(arg)
