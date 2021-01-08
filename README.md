@@ -2,6 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/hamlit.svg)](http://badge.fury.io/rb/hamlit)
 [![Build Status](https://travis-ci.org/k0kubun/hamlit.svg?branch=master)](https://travis-ci.org/k0kubun/hamlit)
+[![test](https://github.com/k0kubun/hamlit/workflows/test/badge.svg)](https://github.com/k0kubun/hamlit/actions?query=workflow%3Atest)
 
 Hamlit is a high performance [Haml](https://github.com/haml/haml) implementation.
 
