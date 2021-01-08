@@ -13,7 +13,7 @@ module Hamlit
     def render(file)
       process_load_options
       code = generate_code(file)
-      puts eval(code)
+      puts eval(code, binding, file)
     end
 
     desc 'compile HAML', 'Show compile result'
