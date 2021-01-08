@@ -18,20 +18,20 @@ module Hamlit
 
     desc 'compile HAML', 'Show compile result'
     option :actionview, type: :boolean, default: false, aliases: %w[-a]
-    option :color, type: :boolean, default: false
+    option :color, type: :boolean, default: true
     def compile(file)
       code = generate_code(file)
       puts_code(code, color: options[:color])
     end
 
     desc 'temple HAML', 'Show temple intermediate expression'
-    option :color, type: :boolean, default: false
+    option :color, type: :boolean, default: true
     def temple(file)
       pp_object(generate_temple(file), color: options[:color])
     end
 
     desc 'parse HAML', 'Show parse result'
-    option :color, type: :boolean, default: false
+    option :color, type: :boolean, default: true
     def parse(file)
       pp_object(generate_ast(file), color: options[:color])
     end
@@ -107,9 +107,13 @@ module Hamlit
       render(args.first.to_s)
     end
 
-    def puts_code(code, color: false)
-      if color
+    def puts_code(code, color: true)
+      begin
         require 'pry'
+      rescue LoadError
+        color = false
+      end
+      if color
         puts Pry.Code(code).highlighted
       else
         puts code
@@ -117,9 +121,13 @@ module Hamlit
     end
 
     # Enable colored pretty printing only for development environment.
-    def pp_object(arg, color: false)
-      if color
+    def pp_object(arg, color: true)
+      begin
         require 'pry'
+      rescue LoadError
+        color = false
+      end
+      if color
         Pry::ColorPrinter.pp(arg)
       else
         require 'pp'
