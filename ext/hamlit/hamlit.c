@@ -6,15 +6,9 @@
 
 VALUE mAttributeBuilder, mObjectRef;
 static ID id_flatten, id_keys, id_parse, id_prepend, id_tr, id_uniq_bang;
-static ID id_aria, id_data, id_equal, id_hyphen, id_space, id_underscore;
 static ID id_boolean_attributes, id_xhtml;
 
-static VALUE str_aria()        { return rb_const_get(mAttributeBuilder, id_aria); }
-static VALUE str_data()        { return rb_const_get(mAttributeBuilder, id_data); }
-static VALUE str_equal()       { return rb_const_get(mAttributeBuilder, id_equal); }
-static VALUE str_hyphen()      { return rb_const_get(mAttributeBuilder, id_hyphen); }
-static VALUE str_space()       { return rb_const_get(mAttributeBuilder, id_space); }
-static VALUE str_underscore()  { return rb_const_get(mAttributeBuilder, id_underscore); }
+static VALUE str_aria, str_data, str_equal, str_hyphen, str_space, str_underscore;
 
 static void
 delete_falsey_values(VALUE values)
@@ -51,7 +45,7 @@ hyphenate(VALUE str)
 
   for (i = 0; i < RSTRING_LEN(str); i++) {
     if (RSTRING_PTR(str)[i] == '_') {
-      rb_str_update(str, i, 1, str_hyphen());
+      rb_str_update(str, i, 1, str_hyphen);
     }
   }
   return str;
@@ -97,7 +91,7 @@ hamlit_build_id(VALUE escape_attrs, VALUE values)
   values = rb_funcall(values, id_flatten, 0);
   delete_falsey_values(values);
 
-  attr_value = rb_ary_join(values, str_underscore());
+  attr_value = rb_ary_join(values, str_underscore);
   return escape_attribute(escape_attrs, attr_value);
 }
 
@@ -110,7 +104,7 @@ hamlit_build_single_class(VALUE escape_attrs, VALUE value)
     case T_ARRAY:
       value = rb_funcall(value, id_flatten, 0);
       delete_falsey_values(value);
-      value = rb_ary_join(value, str_space());
+      value = rb_ary_join(value, str_space);
       break;
     default:
       if (RTEST(value)) {
@@ -154,7 +148,7 @@ hamlit_build_multi_class(VALUE escape_attrs, VALUE values)
 
   rb_funcall(buf, id_uniq_bang, 0);
 
-  return escape_attribute(escape_attrs, rb_ary_join(buf, str_space()));
+  return escape_attribute(escape_attrs, rb_ary_join(buf, str_space));
 }
 
 static VALUE
@@ -285,7 +279,7 @@ hamlit_build_data(VALUE escape_attrs, VALUE quote, VALUE values, VALUE key_str)
 
     switch (value) {
       case Qtrue:
-        rb_str_concat(buf, str_space());
+        rb_str_concat(buf, str_space);
         rb_str_concat(buf, key);
         break;
       case Qnil:
@@ -293,9 +287,9 @@ hamlit_build_data(VALUE escape_attrs, VALUE quote, VALUE values, VALUE key_str)
       case Qfalse:
         break; // noop
       default:
-        rb_str_concat(buf, str_space());
+        rb_str_concat(buf, str_space);
         rb_str_concat(buf, key);
-        rb_str_concat(buf, str_equal());
+        rb_str_concat(buf, str_equal);
         rb_str_concat(buf, quote);
         rb_str_concat(buf, escape_attribute(escape_attrs, to_s(value)));
         rb_str_concat(buf, quote);
@@ -379,13 +373,13 @@ hamlit_build_for_class(VALUE escape_attrs, VALUE quote, VALUE buf, VALUE values)
 void
 hamlit_build_for_data(VALUE escape_attrs, VALUE quote, VALUE buf, VALUE values)
 {
-  rb_str_concat(buf, hamlit_build_data(escape_attrs, quote, values, str_data()));
+  rb_str_concat(buf, hamlit_build_data(escape_attrs, quote, values, str_data));
 }
 
 void
 hamlit_build_for_aria(VALUE escape_attrs, VALUE quote, VALUE buf, VALUE values)
 {
-  rb_str_concat(buf, hamlit_build_data(escape_attrs, quote, values, str_aria()));
+  rb_str_concat(buf, hamlit_build_data(escape_attrs, quote, values, str_aria));
 }
 
 void
@@ -485,7 +479,7 @@ rb_hamlit_build_aria(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
   rb_check_arity(argc, 2, UNLIMITED_ARGUMENTS);
   rb_scan_args(argc - 2, argv + 2, "*", &array);
 
-  return hamlit_build_data(argv[0], argv[1], array, str_aria());
+  return hamlit_build_data(argv[0], argv[1], array, str_aria);
 }
 
 static VALUE
@@ -496,7 +490,7 @@ rb_hamlit_build_data(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
   rb_check_arity(argc, 2, UNLIMITED_ARGUMENTS);
   rb_scan_args(argc - 2, argv + 2, "*", &array);
 
-  return hamlit_build_data(argv[0], argv[1], array, str_data());
+  return hamlit_build_data(argv[0], argv[1], array, str_data);
 }
 
 static VALUE
@@ -534,21 +528,15 @@ Init_hamlit(void)
   id_tr        = rb_intern("tr");
   id_uniq_bang = rb_intern("uniq!");
 
-  id_aria       = rb_intern("ARIA");
-  id_data       = rb_intern("DATA");
-  id_equal      = rb_intern("EQUAL");
-  id_hyphen     = rb_intern("HYPHEN");
-  id_space      = rb_intern("SPACE");
-  id_underscore = rb_intern("UNDERSCORE");
-
   id_boolean_attributes = rb_intern("BOOLEAN_ATTRIBUTES");
   id_xhtml = rb_intern("xhtml");
 
-  rb_const_set(mAttributeBuilder, id_aria,       rb_obj_freeze(rb_str_new_cstr("aria")));
-  rb_const_set(mAttributeBuilder, id_data,       rb_obj_freeze(rb_str_new_cstr("data")));
-  rb_const_set(mAttributeBuilder, id_equal,      rb_obj_freeze(rb_str_new_cstr("=")));
-  rb_const_set(mAttributeBuilder, id_hyphen,     rb_obj_freeze(rb_str_new_cstr("-")));
-  rb_const_set(mAttributeBuilder, id_space,      rb_obj_freeze(rb_str_new_cstr(" ")));
-  rb_const_set(mAttributeBuilder, id_underscore, rb_obj_freeze(rb_str_new_cstr("_")));
+  // Consider using rb_interned_str() once we stop supporting Ruby 2.7.
+  rb_gc_register_mark_object(str_aria       = rb_obj_freeze(rb_str_new_cstr("aria")));
+  rb_gc_register_mark_object(str_data       = rb_obj_freeze(rb_str_new_cstr("data")));
+  rb_gc_register_mark_object(str_equal      = rb_obj_freeze(rb_str_new_cstr("=")));
+  rb_gc_register_mark_object(str_hyphen     = rb_obj_freeze(rb_str_new_cstr("-")));
+  rb_gc_register_mark_object(str_space      = rb_obj_freeze(rb_str_new_cstr(" ")));
+  rb_gc_register_mark_object(str_underscore = rb_obj_freeze(rb_str_new_cstr("_")));
 }
 #endif
