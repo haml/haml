@@ -21,6 +21,7 @@ jobs:
           - '2.6'
           - '2.7'
           - '3.0'
+          - jruby
           - truffleruby-head
     steps:
       - uses: actions/checkout@v2
