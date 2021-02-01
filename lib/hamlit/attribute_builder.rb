@@ -13,7 +13,7 @@ module Hamlit::AttributeBuilder
   # TruffleRuby does not implement `rb_ary_sort_bang`, etc.
   if /java/ === RUBY_PLATFORM || RUBY_ENGINE == 'truffleruby'
     class << self
-      def build(escape_attrs, quote, format, object_ref, *hashes)
+      def build(escape_attrs, quote, format, boolean_attributes, object_ref, *hashes)
         hashes << Hamlit::ObjectRef.parse(object_ref) if object_ref
         buf  = []
         hash = merge_all_attrs(hashes)
@@ -27,7 +27,7 @@ module Hamlit::AttributeBuilder
             buf << " class=#{quote}#{build_class(escape_attrs, *hash[key])}#{quote}"
           when 'data'.freeze
             buf << build_data(escape_attrs, quote, *hash[key])
-          when *BOOLEAN_ATTRIBUTES, /\Adata-/
+          when *boolean_attributes, /\Adata-/
             build_boolean!(escape_attrs, quote, format, buf, key, hash[key])
           else
             buf << " #{key}=#{quote}#{escape_html(escape_attrs, hash[key].to_s)}#{quote}"
