@@ -6,7 +6,7 @@
 
 VALUE mAttributeBuilder, mObjectRef;
 static ID id_flatten, id_keys, id_parse, id_prepend, id_tr, id_uniq_bang;
-static ID id_boolean_attributes, id_xhtml;
+static ID id_xhtml;
 
 static VALUE str_aria, str_data, str_equal, str_hyphen, str_space, str_underscore;
 
@@ -342,13 +342,10 @@ merge_all_attrs(VALUE hashes)
 }
 
 int
-is_boolean_attribute(VALUE key)
+is_boolean_attribute(VALUE key, VALUE boolean_attributes)
 {
-  VALUE boolean_attributes;
   if (str_eq(rb_str_substr(key, 0, 5), "data-", 5)) return 1;
   if (str_eq(rb_str_substr(key, 0, 5), "aria-", 5)) return 1;
-
-  boolean_attributes = rb_const_get(mAttributeBuilder, id_boolean_attributes);
   return RTEST(rb_ary_includes(boolean_attributes, key));
 }
 
@@ -418,7 +415,7 @@ hamlit_build_for_boolean(VALUE escape_attrs, VALUE quote, VALUE format, VALUE bu
 }
 
 static VALUE
-hamlit_build(VALUE escape_attrs, VALUE quote, VALUE format, VALUE object_ref, VALUE hashes)
+hamlit_build(VALUE escape_attrs, VALUE quote, VALUE format, VALUE boolean_attributes, VALUE object_ref, VALUE hashes)
 {
   long i;
   VALUE attrs, buf, key, keys, value;
@@ -439,7 +436,7 @@ hamlit_build(VALUE escape_attrs, VALUE quote, VALUE format, VALUE object_ref, VA
       hamlit_build_for_data(escape_attrs, quote, buf, value);
     } else if (str_eq(key, "aria", 4)) {
       hamlit_build_for_aria(escape_attrs, quote, buf, value);
-    } else if (is_boolean_attribute(key)) {
+    } else if (is_boolean_attribute(key, boolean_attributes)) {
       hamlit_build_for_boolean(escape_attrs, quote, format, buf, key, value);
     } else {
       hamlit_build_for_others(escape_attrs, quote, buf, key, value);
@@ -498,10 +495,10 @@ rb_hamlit_build(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
 {
   VALUE array;
 
-  rb_check_arity(argc, 4, UNLIMITED_ARGUMENTS);
-  rb_scan_args(argc - 4, argv + 4, "*", &array);
+  rb_check_arity(argc, 5, UNLIMITED_ARGUMENTS);
+  rb_scan_args(argc - 5, argv + 5, "*", &array);
 
-  return hamlit_build(argv[0], argv[1], argv[2], argv[3], array);
+  return hamlit_build(argv[0], argv[1], argv[2], argv[3], argv[4], array);
 }
 
 void
@@ -527,9 +524,7 @@ Init_hamlit(void)
   id_prepend   = rb_intern("prepend");
   id_tr        = rb_intern("tr");
   id_uniq_bang = rb_intern("uniq!");
-
-  id_boolean_attributes = rb_intern("BOOLEAN_ATTRIBUTES");
-  id_xhtml = rb_intern("xhtml");
+  id_xhtml     = rb_intern("xhtml");
 
   // Consider using rb_interned_str() once we stop supporting Ruby 2.7.
   rb_gc_register_mark_object(str_aria       = rb_obj_freeze(rb_str_new_cstr("aria")));

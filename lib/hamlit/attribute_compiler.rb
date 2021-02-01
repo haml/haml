@@ -31,7 +31,10 @@ module Hamlit
       attrs = []
       attrs.unshift(node.value[:attributes].inspect) if node.value[:attributes] != {}
 
-      args = [@escape_attrs.inspect, "#{@quote.inspect}.freeze", @format.inspect].push(node.value[:object_ref]) + attrs
+      args = [
+        @escape_attrs.inspect, "#{@quote.inspect}.freeze", @format.inspect,
+        '::Hamlit::AttributeBuilder::BOOLEAN_ATTRIBUTES', node.value[:object_ref],
+      ] + attrs
       [:html, :attrs, [:dynamic, "::Hamlit::AttributeBuilder.build(#{args.join(', ')}, #{node.value[:dynamic_attributes].to_literal})"]]
     end
 
