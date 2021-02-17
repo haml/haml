@@ -4,6 +4,11 @@ module Haml
 
   # This module makes Haml work with Rails using the template handler API.
   class Plugin
+    class << self
+      attr_accessor :annotate_rendered_view_with_filenames
+    end
+    self.annotate_rendered_view_with_filenames = false
+
     def handles_encoding?; true; end
 
     def compile(template, source)
@@ -14,9 +19,19 @@ module Haml
         options[:mime_type] = template.mime_type
       end
       options[:filename] = template.identifier
+
+      preamble = '@output_buffer = output_buffer ||= ActionView::OutputBuffer.new if defined?(ActionView::OutputBuffer);'
+      postamble = ''
+
+      if self.class.annotate_rendered_view_with_filenames
+        preamble += "haml_concat '<!-- BEGIN #{template.short_identifier} -->'.html_safe;"
+        postamble += "haml_concat '<!-- END #{template.short_identifier} -->'.html_safe;"
+      end
+
       Haml::Engine.new(source, options).compiler.precompiled_with_ambles(
         [],
-        after_preamble: '@output_buffer = output_buffer ||= ActionView::OutputBuffer.new if defined?(ActionView::OutputBuffer)',
+        after_preamble: preamble,
+        before_postamble: postamble
       )
     end
 

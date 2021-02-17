@@ -293,6 +293,16 @@ HAML
     assert_equal("Foo & Bar", render('- safe_concat "Foo & Bar"', :action_view))
   end
 
+  def test_annotated_template_names
+    original_setting = Haml::Plugin.annotate_rendered_view_with_filenames
+    Haml::Plugin.annotate_rendered_view_with_filenames = true
+    result = @base.render(partial: "partial")
+    assert_equal("<!-- BEGIN test/templates/_partial.haml -->\n", result.lines.first)
+    assert_equal("<!-- END test/templates/_partial.haml -->\n", result.lines.last)
+  ensure
+    Haml::Plugin.annotate_rendered_view_with_filenames = original_setting
+  end
+
   ## Regression
 
   def test_xss_protection_with_nested_haml_tag
