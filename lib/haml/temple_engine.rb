@@ -65,7 +65,7 @@ module Haml
     # (see {file:REFERENCE.md#encodings the `:encoding` option}).
     #
     # @return [String]
-    def precompiled_with_ambles(local_names, after_preamble: '')
+    def precompiled_with_ambles(local_names, after_preamble: '', before_postamble: '')
       preamble = <<END.tr("\n", ';')
 begin
 extend Haml::Helpers
@@ -74,6 +74,7 @@ _erbout = _hamlout.buffer
 #{after_preamble}
 END
       postamble = <<END.tr("\n", ';')
+#{before_postamble}
 #{precompiled_method_return_value}
 ensure
 @haml_buffer = @haml_buffer.upper if @haml_buffer

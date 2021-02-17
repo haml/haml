@@ -42,6 +42,11 @@ module Haml
           Haml::Filters::RailsErb.template_class = Haml::SafeErubisTemplate
         end
         Haml::Template.options[:filters] = { 'erb' => Haml::Filters::RailsErb }
+
+        if app.config.respond_to?(:action_view) &&
+           app.config.action_view.annotate_rendered_view_with_filenames
+          Haml::Plugin.annotate_rendered_view_with_filenames = true
+        end
       end
     end
   end
