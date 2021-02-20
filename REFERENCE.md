@@ -107,13 +107,20 @@ output.
 In Rails, options can be set by setting the {Haml::Template#options Haml::Template.options}
 hash in an initializer:
 
-    # config/initializers/haml.rb
-    Haml::Template.options[:format] = :html5
+```ruby
+# config/initializers/haml.rb
+Haml::Template.options[:format] = :html5
+
+# Avoid escaping attributes which are already escaped
+Haml::Template.options[:escape_attrs] = :once
+```
 
 Outside Rails, you can set them by configuring them globally in
 Haml::Options.defaults:
 
-    Haml::Options.defaults[:format] = :html5
+```ruby
+Haml::Options.defaults[:format] = :html5
+```
 
 In sinatra specifically, you can set them in global config with:
 ```ruby
