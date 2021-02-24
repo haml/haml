@@ -24,8 +24,10 @@ module Haml
       postamble = ''
 
       if self.class.annotate_rendered_view_with_filenames
-        preamble += "haml_concat '<!-- BEGIN #{template.short_identifier} -->'.html_safe;"
-        postamble += "haml_concat '<!-- END #{template.short_identifier} -->'.html_safe;"
+        # short_identifier is only available in Rails 6+. On older versions, 'inspect' gives similar results.
+        ident = template.respond_to?(:short_identifier) ? template.short_identifier : template.inspect
+        preamble += "haml_concat '<!-- BEGIN #{ident} -->'.html_safe;"
+        postamble += "haml_concat '<!-- END #{ident} -->'.html_safe;"
       end
 
       Haml::Engine.new(source, options).compiler.precompiled_with_ambles(
