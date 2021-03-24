@@ -31,10 +31,10 @@ module Hamlit
     use Escapable
     use ForceEscapable
     filter :ControlFlow
+    use Ambles
     filter :MultiFlattener
     filter :StaticMerger
     use DynamicMerger
-    use Ambles
     use :Generator, -> { options[:generator] }
   end
 end
