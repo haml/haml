@@ -8,7 +8,7 @@ project adheres to [Semantic Versioning](http://semver.org/). This change log is
 
 ### Added
 
-- Support `config.action_view.annotate_template_file_names = true` of Rails 6.1
+- Support `config.action_view.annotate_rendered_view_with_filenames = true` of Rails 6.1
   *Thanks to @kirin121*
 
 ## [2.14.4](https://github.com/k0kubun/hamlit/compare/v2.14.3...v2.14.4) - 2021-02-01
