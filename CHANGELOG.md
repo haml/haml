@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.14.5](https://github.com/k0kubun/hamlit/compare/v2.14.4...v2.14.5) - 2021-03-23
+
+### Added
+
+- Support `config.action_view.annotate_template_file_names = true` of Rails 6.1
+  *Thanks to @kirin121*
+
 ## [2.14.4](https://github.com/k0kubun/hamlit/compare/v2.14.3...v2.14.4) - 2021-02-01
 
 ### Fixed
