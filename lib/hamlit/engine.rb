@@ -6,6 +6,7 @@ require 'hamlit/html'
 require 'hamlit/escapable'
 require 'hamlit/force_escapable'
 require 'hamlit/dynamic_merger'
+require 'hamlit/ambles'
 
 module Hamlit
   class Engine < Temple::Engine
@@ -33,6 +34,7 @@ module Hamlit
     filter :MultiFlattener
     filter :StaticMerger
     use DynamicMerger
+    use Ambles
     use :Generator, -> { options[:generator] }
   end
 end

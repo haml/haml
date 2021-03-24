@@ -33,6 +33,11 @@ module Hamlit
         options = options.merge(format: :xhtml)
       end
 
+      if ActionView::Base.try(:annotate_rendered_view_with_filenames) && template.format == :html
+        options[:preamble] = "<!-- BEGIN #{template.short_identifier} -->\n"
+        options[:postamble] = "<!-- END #{template.short_identifier} -->\n"
+      end
+
       Engine.new(options).call(source)
     end
 
