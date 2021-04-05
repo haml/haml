@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
-## [2.14.6](https://github.com/k0kubun/hamlit/compare/v2.14.4...v2.14.5) - 2021-03-23
+## [2.14.6](https://github.com/k0kubun/hamlit/compare/v2.14.5...v2.14.6) - 2021-03-23
 
 ### Fixed
 
