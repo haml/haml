@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file. This
 project adheres to [Semantic Versioning](http://semver.org/). This change log is based upon
 [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog).
 
+## [2.15.0](https://github.com/k0kubun/hamlit/compare/v2.14.6...v2.15.0) - 2021-04-12
+
+### Added
+
+- Always use Hamlit when both haml.gem and hamlit.gem are installed in Rails
+  *Thanks to @igor-drozdov*
+
 ## [2.14.6](https://github.com/k0kubun/hamlit/compare/v2.14.5...v2.14.6) - 2021-03-23
 
 ### Fixed
