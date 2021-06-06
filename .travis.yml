@@ -90,13 +90,6 @@ matrix:
     - rvm: ruby-head
     - gemfile: test/gemfiles/Gemfile.rails-edge
     - rvm: jruby-9.2
-      gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: jruby-9.2
-      gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: jruby-9.2
-      gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: jruby-9.2
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
   fast_finish: true
 before_install:
   # install older versions of rubygems and bundler only on Ruby < 2.7
