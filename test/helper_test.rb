@@ -3,11 +3,6 @@
 require 'test_helper'
 
 class HelperTest < Haml::TestCase
-  def test_buffer_access
-    assert(render("= buffer") =~ /#<Haml::Buffer:0x[a-z0-9]+>/)
-    assert_equal(render("= (buffer == _hamlout)"), "true\n")
-  end
-
   def test_html_escape
     assert_equal "&quot;&gt;&lt;&amp;", Haml::Helpers.html_escape('"><&')
   end
@@ -29,7 +24,6 @@ class HelperTest < Haml::TestCase
 
   def test_html_escape_non_string
     assert_equal('4.58', Haml::Helpers.html_escape(4.58))
-    assert_equal('4.58', Haml::Helpers.html_escape_without_haml_xss(4.58))
   end
 
   def test_escape_once

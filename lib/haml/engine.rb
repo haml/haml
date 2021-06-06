@@ -6,7 +6,6 @@ require 'haml/parser'
 require 'haml/compiler'
 require 'haml/options'
 require 'haml/helpers'
-require 'haml/buffer'
 require 'haml/filters'
 require 'haml/error'
 require 'haml/temple_engine'
@@ -78,15 +77,10 @@ module Haml
     #
     # Note that Haml modifies the evaluation context
     # (either the scope object or the `self` object of the scope binding).
-    # It extends {Haml::Helpers}, and various instance variables are set
-    # (all prefixed with `haml_`).
     # For example:
     #
     #     s = "foobar"
     #     Haml::Engine.new("%p= upcase").render(s) #=> "<p>FOOBAR</p>"
-    #
-    #     # s now extends Haml::Helpers
-    #     s.respond_to?(:html_attrs) #=> true
     #
     # `locals` is a hash of local variables to make available to the template.
     # For example:
@@ -111,9 +105,6 @@ module Haml
     # @param block [#to_proc] A block that can be yielded to within the template
     # @return [String] The rendered template
     def render(scope = Object.new, locals = {}, &block)
-      parent = scope.instance_variable_defined?(:@haml_buffer) ? scope.instance_variable_get(:@haml_buffer) : nil
-      buffer = Haml::Buffer.new(parent, @options.for_buffer)
-
       if scope.is_a?(Binding)
         scope_object = eval("self", scope)
         scope = scope_object.instance_eval{binding} if block_given?
@@ -122,18 +113,13 @@ module Haml
         scope = scope_object.instance_eval{binding}
       end
 
-      set_locals(locals.merge(:_hamlout => buffer, :_erbout => buffer.buffer), scope, scope_object)
+      set_locals(locals, scope, scope_object)
 
-      scope_object.extend(Haml::Helpers)
-      scope_object.instance_variable_set(:@haml_buffer, buffer)
       begin
-        eval(@temple_engine.precompiled_with_return_value, scope, @options.filename, @options.line)
+        eval(@temple_engine.precompiled, scope, @options.filename, @options.line)
       rescue ::SyntaxError => e
         raise SyntaxError, e.message
       end
-    ensure
-      # Get rid of the current buffer
-      scope_object.instance_variable_set(:@haml_buffer, buffer.upper) if buffer
     end
     alias_method :to_html, :render
 
@@ -214,8 +200,6 @@ module Haml
     #
     # Note that Haml modifies the evaluation context
     # (either the scope object or the `self` object of the scope binding).
-    # It extends {Haml::Helpers}, and various instance variables are set
-    # (all prefixed with `haml_`).
     #
     # @param object [Object, Module] The object on which to define the method
     # @param name [String, Symbol] The name of the method to define

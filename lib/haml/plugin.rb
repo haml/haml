@@ -14,22 +14,18 @@ module Haml
         options[:mime_type] = template.mime_type
       end
       options[:filename] = template.identifier
-      Haml::Engine.new(source, options).compiler.precompiled_with_ambles(
-        [],
-        after_preamble: '@output_buffer = output_buffer ||= ActionView::OutputBuffer.new if defined?(ActionView::OutputBuffer)',
+      options.merge!(
+        use_html_safe: true,
+        generator: Temple::Generators::RailsOutputBuffer,
+        buffer_class: 'ActionView::OutputBuffer',
       )
+      Haml::Engine.new(source, options).compiler.precompiled
     end
 
     def self.call(template, source = nil)
       source ||= template.source
 
       new.compile(template, source)
-    end
-
-    def cache_fragment(block, name = {}, options = nil)
-      @view.fragment_for(block, name, options) do
-        eval("_hamlout.buffer", block.binding)
-      end
     end
   end
 end

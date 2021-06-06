@@ -138,34 +138,6 @@ class ExceptionTest < TestBase
     assert_equal(Haml::Error.message(:unbalanced_brackets), e.message)
   end
 
-
-  def test_render_proc_haml_buffer_gets_reset_even_with_exception
-    scope = Object.new
-    proc = engine("- raise Haml::Error").render_proc(scope)
-    proc.call
-    assert(false, "Expected exception")
-  rescue Exception
-    assert_nil(scope.send(:haml_buffer))
-  end
-
-  def test_haml_buffer_gets_reset_even_with_exception
-    scope = Object.new
-    render("- raise Haml::Error", :scope => scope)
-    assert(false, "Expected exception")
-  rescue Exception
-    assert_nil(scope.send(:haml_buffer))
-  end
-
-  def test_def_method_haml_buffer_gets_reset_even_with_exception
-    scope = Object.new
-    engine("- raise Haml::Error").def_method(scope, :render)
-    scope.render
-    assert(false, "Expected exception")
-  rescue Exception
-    assert_nil(scope.send(:haml_buffer))
-  end
-
-
   def test_render_proc_should_raise_haml_syntax_error_not_ruby_syntax_error
     assert_raises(Haml::SyntaxError) do
       Haml::Engine.new("%p{:foo => !}").render_proc(Object.new, :foo).call

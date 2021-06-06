@@ -278,15 +278,15 @@ module Haml
     def build_script_formatter(text, opts)
       text = "(#{text}).to_s"
       if opts[:escape_html]
-        text = "::Haml::Helpers.html_escape(#{text})"
+        text = "::Haml::Helpers.html_escape#{('_safe' if options[:use_html_safe])}(#{text})"
       end
       if opts[:nuke_inner_whitespace]
         text = "(#{text}).strip"
       end
       if opts[:preserve_tag]
-        text = "_hamlout.fix_textareas!(::Haml::Helpers.preserve(#{text}))"
+        text = "::Haml::Helpers.fix_textareas!(::Haml::Helpers.preserve(#{text}))"
       elsif opts[:preserve_script]
-        text = "_hamlout.fix_textareas!(::Haml::Helpers.find_and_preserve(#{text}, _hamlout.options[:preserve]))"
+        text = "::Haml::Helpers.fix_textareas!(::Haml::Helpers.find_and_preserve(#{text}, #{options[:preserve].inspect}))"
       end
       "#{text};"
     end
@@ -308,7 +308,13 @@ module Haml
     def rstrip_buffer!(index = -1)
       last = @to_merge[index]
       if last.nil?
-        push_silent("_hamlout.rstrip!", false)
+        if options[:generator] == Temple::Generators::ArrayBuffer
+          push_silent("_buf[-1] = _buf[-1].rstrip if _buf[-1]")
+        elsif options[:generator] == Temple::Generators::RailsOutputBuffer
+          push_silent("@output_buffer.rstrip!")
+        else
+          raise "unsupported generator: #{options[:generator]}"
+        end
         return
       end
 

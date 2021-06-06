@@ -47,9 +47,9 @@ module Haml
 
           value =
             if escape_attrs == :once
-              Haml::Helpers.escape_once_without_haml_xss(value.to_s)
+              Haml::Helpers.escape_once(value.to_s)
             elsif escape_attrs
-              Haml::Helpers.html_escape_without_haml_xss(value.to_s)
+              Haml::Helpers.html_escape(value.to_s)
             else
               value.to_s
             end
