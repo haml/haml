@@ -6,6 +6,17 @@ module Haml
     INVALID_ATTRIBUTE_NAME_REGEX = /[ \0"'>\/=]/
 
     class << self
+      def build(class_id, obj_ref, is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, *attributes_hashes)
+        attributes = class_id
+        attributes_hashes.each do |old|
+          result = {}
+          old.each { |k, v| result[k.to_s] = v }
+          merge_attributes!(attributes, result)
+        end
+        merge_attributes!(attributes, parse_object_ref(obj_ref)) if obj_ref
+        build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes)
+      end
+
       def build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
         # @TODO this is an absolutely ridiculous amount of arguments. At least
         # some of this needs to be moved into an instance method.
@@ -158,6 +169,50 @@ module Haml
           joined = key == '' ? k : [key, k].join(join_char)
           hash.merge! flatten_data_attributes(v, joined, join_char, seen)
         end
+      end
+
+      # Takes an array of objects and uses the class and id of the first
+      # one to create an attributes hash.
+      # The second object, if present, is used as a prefix,
+      # just like you can do with `dom_id()` and `dom_class()` in Rails
+      def parse_object_ref(ref)
+        prefix = ref[1]
+        ref = ref[0]
+        # Let's make sure the value isn't nil. If it is, return the default Hash.
+        return {} if ref.nil?
+        class_name =
+          if ref.respond_to?(:haml_object_ref)
+            ref.haml_object_ref
+          else
+            underscore(ref.class)
+          end
+        ref_id =
+          if ref.respond_to?(:to_key)
+            key = ref.to_key
+            key.join('_') unless key.nil?
+          else
+            ref.id
+          end
+        id = "#{class_name}_#{ref_id || 'new'}"
+        if prefix
+          class_name = "#{ prefix }_#{ class_name}"
+          id = "#{ prefix }_#{ id }"
+        end
+
+        { 'id'.freeze => id, 'class'.freeze => class_name }
+      end
+
+      # Changes a word from camel case to underscores.
+      # Based on the method of the same name in Rails' Inflector,
+      # but copied here so it'll run properly without Rails.
+      def underscore(camel_cased_word)
+        word = camel_cased_word.to_s.dup
+        word.gsub!(/::/, '_')
+        word.gsub!(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+        word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
+        word.tr!('-', '_')
+        word.downcase!
+        word
       end
     end
   end
