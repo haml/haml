@@ -7,11 +7,11 @@ require 'action_pack/version'
 require 'template_test_helper'
 
 class TemplateTest < Haml::TestCase
-  TEMPLATES = %w{          very_basic        standard    helpers
-    whitespace_handling    original_engine   list        helpful
+  TEMPLATES = %w{          very_basic        standard
+    original_engine        list             helpful
     silent_script          tag_parsing       just_stuff  partials
-    nuke_outer_whitespace  nuke_inner_whitespace         bemit
-    render_layout partial_layout partial_layout_erb escape_safe_buffer}.freeze
+    nuke_inner_whitespace  bemit
+    render_layout partial_layout_erb escape_safe_buffer}.freeze
 
   def setup
     @base = create_base
@@ -294,20 +294,6 @@ HAML
   end
 
   ## Regression
-
-  def test_xss_protection_with_nested_haml_tag
-    assert_equal(<<HTML, render(<<HAML, :action_view))
-<div>
-  <ul>
-    <li>Content!</li>
-  </ul>
-</div>
-HTML
-- haml_tag :div do
-  - haml_tag :ul do
-    - haml_tag :li, "Content!"
-HAML
-  end
 
   if defined?(ActionView::Helpers::PrototypeHelper)
     def test_rjs

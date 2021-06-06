@@ -10,9 +10,19 @@ module Haml
         # a string so we need it to keep thinking it's Haml until it hits the
         # sub-render.
         if is_haml? && !(options.is_a?(Hash) && options[:layout] && block_given?)
-          return non_haml { super }
+          begin
+            was_active = @haml_buffer.active?
+            @haml_buffer.active = false
+            return super
+          ensure
+            @haml_buffer.active = was_active
+          end
         end
         super
+      end
+
+      def is_haml?
+        !@haml_buffer.nil? && @haml_buffer.active?
       end
 
       def output_buffer
@@ -37,21 +47,6 @@ end
 
 module ActionView
   module Helpers
-    module CaptureHelper
-      def capture_with_haml(*args, &block)
-        if Haml::Helpers.block_is_haml?(block)
-          #double assignment is to avoid warnings
-          _hamlout = _hamlout = eval('_hamlout', block.binding) # Necessary since capture_haml checks _hamlout
-
-          capture_haml(*args, &block)
-        else
-          capture_without_haml(*args, &block)
-        end
-      end
-      alias_method :capture_without_haml, :capture
-      alias_method :capture, :capture_with_haml
-    end
-
     module TagHelper
       DEFAULT_PRESERVE_OPTIONS = %w(textarea pre code).freeze
 
@@ -60,7 +55,7 @@ module ActionView
 
         preserve = haml_buffer.options.fetch(:preserve, DEFAULT_PRESERVE_OPTIONS).include?(name.to_s)
 
-        if block_given? && block_is_haml?(block) && preserve
+        if block_given? && eval('!!defined?(_hamlout)', block.binding) && preserve
           return content_tag_without_haml(name, *args) do
             haml_buffer.fix_textareas!(Haml::Helpers.preserve(&block)).html_safe
           end
@@ -71,6 +66,10 @@ module ActionView
           content = haml_buffer.fix_textareas!(Haml::Helpers.preserve(content)).html_safe
         end
         content
+      end
+
+      def is_haml?
+        !@haml_buffer.nil? && @haml_buffer.active?
       end
 
       alias_method :content_tag_without_haml, :content_tag
@@ -110,13 +109,16 @@ module ActionView
     module FormTagHelper
       def form_tag_with_haml(url_for_options = {}, options = {}, *parameters_for_url, &proc)
         if is_haml?
-          wrap_block = block_given? && block_is_haml?(proc)
+          wrap_block = block_given? && eval('!!defined?(_hamlout)', proc.binding)
           if wrap_block
             oldproc = proc
-            proc = haml_bind_proc do |*args|
+            _hamlout = haml_buffer
+            #double assignment is to avoid warnings
+            _erbout = _erbout = _hamlout.buffer
+            proc = proc { |*args|
               concat "\n"
-              with_tabs(1) {oldproc.call(*args)}
-            end
+              oldproc.call(*args)
+            }
           end
           res = form_tag_without_haml(url_for_options, options, *parameters_for_url, &proc) << "\n"
           res << "\n" if wrap_block

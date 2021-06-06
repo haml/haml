@@ -182,7 +182,7 @@ module Haml
             # too many.
             text = %[\n#{text.sub(/\n"\Z/, "\\n\"")}]
             push_script <<RUBY.rstrip, :escape_html => false
-find_and_preserve(#{filter.inspect}.render_with_options(#{text}, _hamlout.options))
+::Haml::Helpers.find_and_preserve(#{filter.inspect}.render_with_options(#{text}, _hamlout.options), #{compiler.options[:preserve].inspect})
 RUBY
             return
           end

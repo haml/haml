@@ -200,13 +200,6 @@ HAML
 HAML
   end
 
-  def test_equals_block
-    assert_equal("foo\n", render(<<HAML))
-= capture_haml do
-  foo
-HAML
-  end
-
   def test_both_case_indentation_work_with_deeply_nested_code
     result = <<RESULT
 <h2>
