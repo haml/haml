@@ -1,0 +1,125 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+require 'tmpdir'
+
+HAML_REPO    = 'haml/haml'
+HAML_VERSION = '5.2.1'
+
+module GitHubFetcher
+  def self.fetch(repo, tag:, path:)
+    Dir.mktmpdir do |dir|
+      Dir.chdir(dir) do
+        url = "https://github.com/#{repo}/archive/#{tag}.tar.gz"
+        system("curl -L --fail --retry 3 --retry-delay 1 #{url} -o - | tar zxf -")
+        FileUtils.mv("#{File.basename(repo)}-#{tag.sub(/\Av/, '')}", path)
+      end
+    end
+  end
+end
+
+class LicenseBuilder
+  DELIMITER = "\n==="
+
+  def initialize(haml_license:, hamlit_license:)
+    @haml_license = haml_license
+    @hamlit_license = hamlit_license
+  end
+
+  def build
+    license = [
+      File.read(@haml_license),
+      File.read(@hamlit_license).split(DELIMITER, 2).last,
+    ].join(DELIMITER)
+    File.write(@hamlit_license, license)
+  end
+end
+
+# Generate lib/hamlit/parser from haml
+class HamlitParserBuilder
+  TARGET_FILES = [
+    'attribute_builder.rb',
+    'buffer.rb',
+    'error.rb',
+    'helpers.rb',
+    'options.rb',
+    'temple_engine.rb',
+    # TODO: make the upstream sharable first
+    # 'parser.rb',
+    'util.rb',
+    'helpers/xss_mods.rb',
+  ]
+
+  # Classes which are just referenced by Options and not really used by the parser
+  DUMMY_CLASSES = {
+    'compiler.rb' => 'Compiler',
+    'escapable.rb' => 'Escapable',
+    'generator.rb' => 'Generator',
+  }
+
+  def initialize(haml:, hamlit_parser:)
+    @haml = haml
+    @hamlit_parser = hamlit_parser
+  end
+
+  def build
+    TARGET_FILES.each do |file|
+      src_path  = File.join(@haml, file)
+      dest_path = File.join(@hamlit_parser, "haml_#{file}")
+
+      FileUtils.mkdir_p(File.dirname(dest_path))
+      FileUtils.cp(src_path, dest_path)
+
+      src = File.read(dest_path)
+      patch_source!(src, file: file)
+      File.write(dest_path, src)
+    end
+
+    DUMMY_CLASSES.each do |file, klass|
+      dest_path = File.join(@hamlit_parser, "haml_#{file}")
+      src = "class Hamlit::Haml#{klass}; end\n"
+      File.write(dest_path, src)
+    end
+  end
+
+  private
+
+  def patch_source!(src, file:)
+    # Use Hamlit::HamlFoo instead of Haml::Foo
+    src.gsub!(/^module Haml\n((?:  #[^\n]+\n)*)  (module|class) ([^ ]+)/, "module Hamlit\n\\1  \\2 Haml\\3")
+    src.gsub!(/\bHaml::/, 'Hamlit::Haml')
+
+    # Prefix Haml to references without Haml::
+    src.gsub!(/\b(AttributeBuilder|Error|InvalidAttributeNameError|Options|Parser|SyntaxError)\./, 'Haml\0')
+    src.gsub!(/\brescue SyntaxError /, 'rescue HamlSyntaxError ')
+
+    # Hamlit should not rely on Haml
+    src.gsub!(/^require 'haml\/([^']+)'/, "require 'hamlit/parser/haml_\\1'")
+
+    case file
+    when 'error.rb'
+      src.gsub!(/^  class ([^ ]+) < ([^ ]+);/, '  class Haml\1 < Haml\2;')
+    when 'helpers.rb'
+      src.gsub!(/^  def is_haml\?\n    false\n  end/m) { |str| str.gsub(/^  /, '  # ') } # not needed for the parser
+    when 'options.rb'
+      src.gsub!(/\.is_a\?\(Options\)/, '.is_a?(HamlOptions)')
+    when 'temple_engine.rb'
+      src.gsub!(/\buse (Generator|Escapable)$/, 'use Haml\1')
+    end
+  end
+end
+
+FileUtils.rm_rf(haml = File.expand_path('../haml', __dir__))
+GitHubFetcher.fetch(HAML_REPO, tag: HAML_VERSION, path: haml)
+
+hamlit = File.expand_path('..', __dir__)
+LicenseBuilder.new(
+  haml_license: File.join(haml, 'MIT-LICENSE'),
+  hamlit_license: File.join(hamlit, 'LICENSE.txt'),
+).build
+
+hamlit_parser = File.join(hamlit, 'lib/hamlit/parser')
+# TODO: FileUtils.rm_rf(hamlit_parser = File.join(hamlit, 'lib/hamlit/parser'))
+HamlitParserBuilder.new(
+  haml: File.join(haml, 'lib/haml'),
+  hamlit_parser: hamlit_parser,
+).build

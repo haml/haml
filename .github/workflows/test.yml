@@ -1,0 +1,40 @@
+name: test
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  schedule:
+    - cron: "00 15 * * *" # 7:00 PST (-8), 8:00 PDT (-7)
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - '2.5'
+          - '2.6'
+          - '2.7'
+          - '3.0'
+          - jruby
+          - truffleruby-head
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
+      - run: sudo apt-get update && sudo apt-get install -y nodejs libxslt-dev # nodejs for execjs, libxslt for TruffleRuby nokogiri
+      - name: bundle install
+        run: bundle config path vendor/bundle && bundle install -j$(nproc) --retry 3
+      - run: bundle exec rake test

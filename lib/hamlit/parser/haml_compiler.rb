@@ -1,0 +1,1 @@
+class Hamlit::HamlCompiler; end
