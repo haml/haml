@@ -1,39 +1,20 @@
-# frozen_string_literal: true
-
-require 'haml/template/options'
-if defined?(ActiveSupport)
-  ActiveSupport.on_load(:action_view) do
-    require 'haml/helpers/action_view_mods'
-    require 'haml/helpers/action_view_extensions'
-  end
-else
-  require 'haml/helpers/action_view_mods'
-  require 'haml/helpers/action_view_extensions'
-end
-require 'haml/helpers/xss_mods'
-require 'haml/helpers/action_view_xss_mods'
+# frozen_string_literal: false
+require 'temple'
+require 'haml/engine'
+require 'haml/helpers'
 
 module Haml
-  class TempleEngine
-    def precompiled_method_return_value_with_haml_xss
-      "::Haml::Util.html_safe(#{precompiled_method_return_value_without_haml_xss})"
+  Template = Temple::Templates::Tilt.create(
+    Haml::Engine,
+    register_as: [:haml, :haml],
+  )
+
+  module TemplateExtension
+    # Activate Haml::Helpers for tilt templates.
+    # https://github.com/judofyr/temple/blob/v0.7.6/lib/temple/mixins/template.rb#L7-L11
+    def compile(*)
+      "extend Haml::Helpers; #{super}"
     end
-    alias_method :precompiled_method_return_value_without_haml_xss, :precompiled_method_return_value
-    alias_method :precompiled_method_return_value, :precompiled_method_return_value_with_haml_xss
   end
-
-  module Helpers
-    include Haml::Helpers::XssMods
-  end
-
-  module Util
-    undef :rails_xss_safe? if defined? rails_xss_safe?
-    def rails_xss_safe?; true; end
-  end
-
+  Template.send(:extend, TemplateExtension)
 end
-
-
-Haml::Template.options[:escape_html] = true
-
-require 'haml/plugin'

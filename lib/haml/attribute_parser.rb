@@ -1,150 +1,110 @@
 # frozen_string_literal: true
-
-begin
-  require 'ripper'
-rescue LoadError
-end
-require 'temple/static_analyzer'
+require 'haml/ruby_expression'
 
 module Haml
-  # Haml::AttriubuteParser parses Hash literal to { String (key name) => String (value literal) }.
-  module AttributeParser
-    class UnexpectedTokenError < StandardError; end
-    class UnexpectedKeyError < StandardError; end
+  class AttributeParser
+    class ParseSkip < StandardError
+    end
 
-    # Indices in Ripper tokens
-    TYPE = 1
-    TEXT = 2
+    def self.parse(text)
+      self.new.parse(text)
+    end
 
-    IGNORED_TYPES = %i[on_sp on_ignored_nl].freeze
+    def parse(text)
+      exp = wrap_bracket(text)
+      return if RubyExpression.syntax_error?(exp)
 
-    class << self
-      # @return [Boolean] - return true if AttributeParser.parse can be used.
-      def available?
-        defined?(Ripper) && Temple::StaticAnalyzer.available?
+      hash = {}
+      tokens = Ripper.lex(exp)[1..-2] || []
+      each_attr(tokens) do |attr_tokens|
+        key = parse_key!(attr_tokens)
+        hash[key] = attr_tokens.map { |t| t[2] }.join.strip
       end
+      hash
+    rescue ParseSkip
+      nil
+    end
 
-      # @param  [String] exp - Old attributes literal or Hash literal generated from new attributes.
-      # @return [Hash<String, String>,nil] - Return parsed attribute Hash whose values are Ruby literals, or return nil if argument is not a single Hash literal.
-      def parse(exp)
-        return nil unless hash_literal?(exp)
+    private
 
-        hash = {}
-        each_attribute(exp) do |key, value|
-          hash[key] = value
+    def wrap_bracket(text)
+      text = text.strip
+      return text if text[0] == '{'
+      "{#{text}}"
+    end
+
+    def parse_key!(tokens)
+      _, type, str = tokens.shift
+      case type
+      when :on_sp
+        parse_key!(tokens)
+      when :on_label
+        str.tr(':', '')
+      when :on_symbeg
+        _, _, key = tokens.shift
+        assert_type!(tokens.shift, :on_tstring_end) if str != ':'
+        skip_until_hash_rocket!(tokens)
+        key
+      when :on_tstring_beg
+        _, _, key = tokens.shift
+        next_token = tokens.shift
+        unless next_token[1] == :on_label_end
+          assert_type!(next_token, :on_tstring_end)
+          skip_until_hash_rocket!(tokens)
         end
-        hash
-      rescue UnexpectedTokenError, UnexpectedKeyError
-        nil
+        key
+      else
+        raise ParseSkip
       end
+    end
 
-      private
+    def assert_type!(token, type)
+      raise ParseSkip if token[1] != type
+    end
 
-      # @param  [String] exp - Ruby expression
-      # @return [Boolean] - Return true if exp is a single Hash literal
-      def hash_literal?(exp)
-        return false if Temple::StaticAnalyzer.syntax_error?(exp)
-        sym, body = Ripper.sexp(exp)
-        sym == :program && body.is_a?(Array) && body.size == 1 && body[0] && body[0][0] == :hash
+    def skip_until_hash_rocket!(tokens)
+      until tokens.empty?
+        _, type, str = tokens.shift
+        break if type == :on_op && str == '=>'
       end
+    end
 
-      # @param [Array] tokens - Ripper tokens. Scanned tokens will be destructively removed from this argument.
-      # @return [String] - attribute name in String
-      def shift_key!(tokens)
-        while !tokens.empty? && IGNORED_TYPES.include?(tokens.first[TYPE])
-          tokens.shift # ignore spaces
-        end
+    def each_attr(tokens)
+      attr_tokens = []
+      open_tokens = Hash.new { |h, k| h[k] = 0 }
 
-        _, type, first_text = tokens.shift
+      tokens.each do |token|
+        _, type, _ = token
         case type
-        when :on_label # `key:`
-          first_text.tr(':', '')
-        when :on_symbeg # `:key =>`, `:'key' =>` or `:"key" =>`
-          key = tokens.shift[TEXT]
-          if first_text != ':' # `:'key'` or `:"key"`
-            expect_string_end!(tokens.shift)
+        when :on_comma
+          if open_tokens.values.all?(&:zero?)
+            yield(attr_tokens)
+            attr_tokens = []
+            next
           end
-          shift_hash_rocket!(tokens)
-          key
-        when :on_tstring_beg # `"key":`, `'key':` or `"key" =>`
-          key = tokens.shift[TEXT]
-          next_token = tokens.shift
-          if next_token[TYPE] != :on_label_end # on_label_end is `":` or `':`, so `"key" =>`
-            expect_string_end!(next_token)
-            shift_hash_rocket!(tokens)
-          end
-          key
-        else
-          raise UnexpectedKeyError.new("unexpected token is given!: #{first_text} (#{type})")
+        when :on_lbracket
+          open_tokens[:array] += 1
+        when :on_rbracket
+          open_tokens[:array] -= 1
+        when :on_lbrace
+          open_tokens[:block] += 1
+        when :on_rbrace
+          open_tokens[:block] -= 1
+        when :on_lparen
+          open_tokens[:paren] += 1
+        when :on_rparen
+          open_tokens[:paren] -= 1
+        when :on_embexpr_beg
+          open_tokens[:embexpr] += 1
+        when :on_embexpr_end
+          open_tokens[:embexpr] -= 1
+        when :on_sp
+          next if attr_tokens.empty?
         end
+
+        attr_tokens << token
       end
-
-      # @param [Array] token - Ripper token
-      def expect_string_end!(token)
-        if token[TYPE] != :on_tstring_end
-          raise UnexpectedTokenError
-        end
-      end
-
-      # @param [Array] tokens - Ripper tokens
-      def shift_hash_rocket!(tokens)
-        until tokens.empty?
-          _, type, str = tokens.shift
-          break if type == :on_op && str == '=>'
-        end
-      end
-
-      # @param [String] hash_literal
-      # @param [Proc] block - that takes [String, String] as arguments
-      def each_attribute(hash_literal, &block)
-        all_tokens = Ripper.lex(hash_literal.strip)
-        all_tokens = all_tokens[1...-1] || [] # strip tokens for brackets
-
-        each_balanced_tokens(all_tokens) do |tokens|
-          key   = shift_key!(tokens)
-          value = tokens.map {|t| t[2] }.join.strip
-          block.call(key, value)
-        end
-      end
-
-      # @param [Array] tokens - Ripper tokens
-      # @param [Proc] block - that takes balanced Ripper tokens as arguments
-      def each_balanced_tokens(tokens, &block)
-        attr_tokens = []
-        open_tokens = Hash.new { |h, k| h[k] = 0 }
-
-        tokens.each do |token|
-          case token[TYPE]
-          when :on_comma
-            if open_tokens.values.all?(&:zero?)
-              block.call(attr_tokens)
-              attr_tokens = []
-              next
-            end
-          when :on_lbracket
-            open_tokens[:array] += 1
-          when :on_rbracket
-            open_tokens[:array] -= 1
-          when :on_lbrace
-            open_tokens[:block] += 1
-          when :on_rbrace
-            open_tokens[:block] -= 1
-          when :on_lparen
-            open_tokens[:paren] += 1
-          when :on_rparen
-            open_tokens[:paren] -= 1
-          when :on_embexpr_beg
-            open_tokens[:embexpr] += 1
-          when :on_embexpr_end
-            open_tokens[:embexpr] -= 1
-          when *IGNORED_TYPES
-            next if attr_tokens.empty?
-          end
-
-          attr_tokens << token
-        end
-        block.call(attr_tokens) unless attr_tokens.empty?
-      end
+      yield(attr_tokens) unless attr_tokens.empty?
     end
   end
 end

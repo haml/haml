@@ -1,16 +1,24 @@
-source "https://rubygems.org"
-gemspec
+source 'https://rubygems.org'
 
-gem "m"
-gem "pry"
-gem "simplecov"
-
-group :docs do
-  gem "yard"
-  gem "kramdown"
-  gem "sass"
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
 end
 
-platform :mri do
-  gem "ruby-prof"
+# Specify your gem's dependencies in haml.gemspec
+gemspec
+
+gem 'benchmark-ips', '2.3.0'
+gem 'maxitest'
+gem 'pry'
+
+if /java/ === RUBY_PLATFORM # JRuby
+  gem 'pandoc-ruby'
+else
+  gem 'redcarpet'
+
+  if RUBY_PLATFORM !~ /mswin|mingw/ && RUBY_ENGINE != 'truffleruby'
+    gem 'faml'
+    gem 'stackprof'
+  end
 end

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Haml
   # A module to count lines of expected code. This would be faster than actual code generation
   # and counting newlines in it.
@@ -22,6 +21,8 @@ module Haml
         end.reduce(:+)
       when :escape
         count_lines(args[1])
+      when :newline
+        1
       else
         raise UnexpectedExpression.new("[HAML BUG] Unexpected Temple expression '#{type}' is given!")
       end

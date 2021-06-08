@@ -1,219 +1,175 @@
 # frozen_string_literal: true
+require 'haml/object_ref'
 
-module Haml
-  module AttributeBuilder
-    # https://html.spec.whatwg.org/multipage/syntax.html#attributes-2
-    INVALID_ATTRIBUTE_NAME_REGEX = /[ \0"'>\/=]/
+module Haml::AttributeBuilder
+  BOOLEAN_ATTRIBUTES = %w[disabled readonly multiple checked autobuffer
+                       autoplay controls loop selected hidden scoped async
+                       defer reversed ismap seamless muted required
+                       autofocus novalidate formnovalidate open pubdate
+                       itemscope allowfullscreen default inert sortable
+                       truespeed typemustmatch download].freeze
 
+  # Java extension is not implemented for JRuby yet.
+  # TruffleRuby does not implement `rb_ary_sort_bang`, etc.
+  if /java/ === RUBY_PLATFORM || RUBY_ENGINE == 'truffleruby'
     class << self
-      def build(class_id, obj_ref, is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, *attributes_hashes)
-        attributes = class_id
-        attributes_hashes.each do |old|
-          result = {}
-          old.each { |k, v| result[k.to_s] = v }
-          merge_attributes!(attributes, result)
-        end
-        merge_attributes!(attributes, parse_object_ref(obj_ref)) if obj_ref
-        build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes)
-      end
+      def build(escape_attrs, quote, format, boolean_attributes, object_ref, *hashes)
+        hashes << Haml::ObjectRef.parse(object_ref) if object_ref
+        buf  = []
+        hash = merge_all_attrs(hashes)
 
-      def build_attributes(is_html, attr_wrapper, escape_attrs, hyphenate_data_attrs, attributes = {})
-        # @TODO this is an absolutely ridiculous amount of arguments. At least
-        # some of this needs to be moved into an instance method.
-        join_char = hyphenate_data_attrs ? '-' : '_'
-
-        attributes.each do |key, value|
-          if value.is_a?(Hash)
-            data_attributes = attributes.delete(key)
-            data_attributes = flatten_data_attributes(data_attributes, '', join_char)
-            data_attributes = build_data_keys(data_attributes, hyphenate_data_attrs, key)
-            verify_attribute_names!(data_attributes.keys)
-            attributes = data_attributes.merge(attributes)
+        keys = hash.keys.sort!
+        keys.each do |key|
+          case key
+          when 'id'.freeze
+            buf << " id=#{quote}#{build_id(escape_attrs, *hash[key])}#{quote}"
+          when 'class'.freeze
+            buf << " class=#{quote}#{build_class(escape_attrs, *hash[key])}#{quote}"
+          when 'data'.freeze
+            buf << build_data(escape_attrs, quote, *hash[key])
+          when *boolean_attributes, /\Adata-/
+            build_boolean!(escape_attrs, quote, format, buf, key, hash[key])
+          else
+            buf << " #{key}=#{quote}#{escape_html(escape_attrs, hash[key].to_s)}#{quote}"
           end
         end
+        buf.join
+      end
 
-        result = attributes.collect do |attr, value|
-          next if value.nil?
+      def build_id(escape_attrs, *values)
+        escape_html(escape_attrs, values.flatten.select { |v| v }.join('_'))
+      end
 
-          value = filter_and_join(value, ' ') if attr == 'class'
-          value = filter_and_join(value, '_') if attr == 'id'
-
-          if value == true
-            next " #{attr}" if is_html
-            next " #{attr}=#{attr_wrapper}#{attr}#{attr_wrapper}"
-          elsif value == false
-            next
+      def build_class(escape_attrs, *values)
+        if values.size == 1
+          value = values.first
+          case
+          when value.is_a?(String)
+            # noop
+          when value.is_a?(Array)
+            value = value.flatten.select { |v| v }.map(&:to_s).uniq.join(' ')
+          when value
+            value = value.to_s
+          else
+            return ''
           end
-
-          value =
-            if escape_attrs == :once
-              Haml::Helpers.escape_once_without_haml_xss(value.to_s)
-            elsif escape_attrs
-              Haml::Helpers.html_escape_without_haml_xss(value.to_s)
-            else
-              value.to_s
-            end
-          " #{attr}=#{attr_wrapper}#{value}#{attr_wrapper}"
+          return escape_html(escape_attrs, value)
         end
-        result.compact!
-        result.sort!
-        result.join
-      end
 
-      # @return [String, nil]
-      def filter_and_join(value, separator)
-        return '' if (value.respond_to?(:empty?) && value.empty?)
-
-        if value.is_a?(Array)
-          value = value.flatten
-          value.map! {|item| item ? item.to_s : nil}
-          value.compact!
-          value = value.join(separator)
-        else
-          value = value ? value.to_s : nil
-        end
-        !value.nil? && !value.empty? && value
-      end
-
-      # Merges two attribute hashes.
-      # This is the same as `to.merge!(from)`,
-      # except that it merges id, class, and data attributes.
-      #
-      # ids are concatenated with `"_"`,
-      # and classes are concatenated with `" "`.
-      # data hashes are simply merged.
-      #
-      # Destructively modifies `to`.
-      #
-      # @param to [{String => String,Hash}] The attribute hash to merge into
-      # @param from [{String => Object}] The attribute hash to merge from
-      # @return [{String => String,Hash}] `to`, after being merged
-      def merge_attributes!(to, from)
-        from.keys.each do |key|
-          to[key] = merge_value(key, to[key], from[key])
-        end
-        to
-      end
-
-      # Merge multiple values to one attribute value. No destructive operation.
-      #
-      # @param key [String]
-      # @param values [Array<Object>]
-      # @return [String,Hash]
-      def merge_values(key, *values)
-        values.inject(nil) do |to, from|
-          merge_value(key, to, from)
-        end
-      end
-
-      def verify_attribute_names!(attribute_names)
-        attribute_names.each do |attribute_name|
-          if attribute_name =~ INVALID_ATTRIBUTE_NAME_REGEX
-            raise InvalidAttributeNameError.new("Invalid attribute name '#{attribute_name}' was rendered")
+        classes = []
+        values.each do |value|
+          case
+          when value.is_a?(String)
+            classes += value.split(' ')
+          when value.is_a?(Array)
+            classes += value.select { |v| v }
+          when value
+            classes << value.to_s
           end
         end
+        escape_html(escape_attrs, classes.map(&:to_s).uniq.join(' '))
+      end
+
+      def build_data(escape_attrs, quote, *hashes)
+        build_data_attribute(:data, escape_attrs, quote, *hashes)
+      end
+
+      def build_aria(escape_attrs, quote, *hashes)
+        build_data_attribute(:aria, escape_attrs, quote, *hashes)
       end
 
       private
 
-      # Merge a couple of values to one attribute value. No destructive operation.
-      #
-      # @param to [String,Hash,nil]
-      # @param from [Object]
-      # @return [String,Hash]
-      def merge_value(key, to, from)
-        if from.kind_of?(Hash) || to.kind_of?(Hash)
-          from = { nil => from } if !from.is_a?(Hash)
-          to   = { nil => to }   if !to.is_a?(Hash)
-          to.merge(from)
-        elsif key == 'id'
-          merged_id = filter_and_join(from, '_')
-          if to && merged_id
-            merged_id = "#{to}_#{merged_id}"
-          elsif to || merged_id
-            merged_id ||= to
-          end
-          merged_id
-        elsif key == 'class'
-          merged_class = filter_and_join(from, ' ')
-          if to && merged_class
-            merged_class = (to.split(' ') | merged_class.split(' ')).join(' ')
-          elsif to || merged_class
-            merged_class ||= to
-          end
-          merged_class
+      def build_data_attribute(key, escape_attrs, quote, *hashes)
+        attrs = []
+        if hashes.size > 1 && hashes.all? { |h| h.is_a?(Hash) }
+          data_value = merge_all_attrs(hashes)
         else
-          from
+          data_value = hashes.last
+        end
+        hash = flatten_attributes(key => data_value)
+
+        hash.sort_by(&:first).each do |key, value|
+          case value
+          when true
+            attrs << " #{key}"
+          when nil, false
+            # noop
+          else
+            attrs << " #{key}=#{quote}#{escape_html(escape_attrs, value.to_s)}#{quote}"
+          end
+        end
+        attrs.join
+      end
+
+      def flatten_attributes(attributes)
+        flattened = {}
+
+        attributes.each do |key, value|
+          case value
+          when attributes
+          when Hash
+            flatten_attributes(value).each do |k, v|
+              if k.nil?
+                flattened[key] = v
+              else
+                flattened["#{key}-#{k.to_s.gsub(/_/, '-')}"] = v
+              end
+            end
+          else
+            flattened[key] = value if value
+          end
+        end
+        flattened
+      end
+
+      def merge_all_attrs(hashes)
+        merged = {}
+        hashes.each do |hash|
+          hash.each do |key, value|
+            key = key.to_s
+            case key
+            when 'id'.freeze, 'class'.freeze, 'data'.freeze
+              merged[key] ||= []
+              merged[key] << value
+            else
+              merged[key] = value
+            end
+          end
+        end
+        merged
+      end
+
+      def build_boolean!(escape_attrs, quote, format, buf, key, value)
+        case value
+        when true
+          case format
+          when :xhtml
+            buf << " #{key}=#{quote}#{key}#{quote}"
+          else
+            buf << " #{key}"
+          end
+        when false, nil
+          # omitted
+        else
+          buf << " #{key}=#{quote}#{escape_html(escape_attrs, value)}#{quote}"
         end
       end
 
-      def build_data_keys(data_hash, hyphenate, attr_name="data")
-        Hash[data_hash.map do |name, value|
-          if name == nil
-            [attr_name, value]
-          elsif hyphenate
-            ["#{attr_name}-#{name.to_s.tr('_', '-')}", value]
-          else
-            ["#{attr_name}-#{name}", value]
-          end
-        end]
-      end
-
-      def flatten_data_attributes(data, key, join_char, seen = [])
-        return {key => data} unless data.is_a?(Hash)
-
-        return {key => nil} if seen.include? data.object_id
-        seen << data.object_id
-
-        data.sort {|x, y| x[0].to_s <=> y[0].to_s}.inject({}) do |hash, (k, v)|
-          joined = key == '' ? k : [key, k].join(join_char)
-          hash.merge! flatten_data_attributes(v, joined, join_char, seen)
+      def escape_html(escape_attrs, str)
+        if escape_attrs
+          Haml::Utils.escape_html(str)
+        else
+          str
         end
-      end
-
-      # Takes an array of objects and uses the class and id of the first
-      # one to create an attributes hash.
-      # The second object, if present, is used as a prefix,
-      # just like you can do with `dom_id()` and `dom_class()` in Rails
-      def parse_object_ref(ref)
-        prefix = ref[1]
-        ref = ref[0]
-        # Let's make sure the value isn't nil. If it is, return the default Hash.
-        return {} if ref.nil?
-        class_name =
-          if ref.respond_to?(:haml_object_ref)
-            ref.haml_object_ref
-          else
-            underscore(ref.class)
-          end
-        ref_id =
-          if ref.respond_to?(:to_key)
-            key = ref.to_key
-            key.join('_') unless key.nil?
-          else
-            ref.id
-          end
-        id = "#{class_name}_#{ref_id || 'new'}"
-        if prefix
-          class_name = "#{ prefix }_#{ class_name}"
-          id = "#{ prefix }_#{ id }"
-        end
-
-        { 'id'.freeze => id, 'class'.freeze => class_name }
-      end
-
-      # Changes a word from camel case to underscores.
-      # Based on the method of the same name in Rails' Inflector,
-      # but copied here so it'll run properly without Rails.
-      def underscore(camel_cased_word)
-        word = camel_cased_word.to_s.dup
-        word.gsub!(/::/, '_')
-        word.gsub!(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
-        word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
-        word.tr!('-', '_')
-        word.downcase!
-        word
       end
     end
+  else
+    # Haml::AttributeBuilder.build
+    # Haml::AttributeBuilder.build_id
+    # Haml::AttributeBuilder.build_class
+    # Haml::AttributeBuilder.build_data
+    # Haml::AttributeBuilder.build_aria
+    require 'haml/haml'
   end
 end
