@@ -6,7 +6,6 @@ require 'action_controller'
 require 'action_view'
 require 'rails'
 
-require 'hamlit'
 require 'haml'
 
 # Protect Minitest from Rails' Minitest plugin: https://github.com/rails/rails/pull/19571
@@ -29,21 +28,14 @@ end
 
 module RenderHelper
   def assert_render(expected, haml, options = {})
-    actual = render_hamlit(haml, options)
+    actual = render_haml(haml, options)
     assert_equal expected, actual
   end
 
   def render_haml(haml, options = {})
     options = options.dup
     locals  = options.delete(:locals) || {}
-    haml_options = { escape_html: true, escape_attrs: true }
-    Haml::Engine.new(haml, haml_options.merge(options)).render(Object.new, locals)
-  end
-
-  def render_hamlit(haml, options = {})
-    options = options.dup
-    locals  = options.delete(:locals) || {}
-    Hamlit::Template.new(options) { haml }.render(Object.new, locals)
+    Haml::Template.new(options) { haml }.render(Object.new, locals)
   end
 
   def assert_haml(haml, options = {})
@@ -51,7 +43,7 @@ module RenderHelper
       skip 'truffleruby cannot run Haml'
     end
     expected = render_haml(haml, options)
-    actual = render_hamlit(haml, options)
+    actual = render_haml(haml, options)
     assert_equal expected, actual
   end
 end
@@ -63,20 +55,14 @@ class Haml::TestCase < BASE_TEST_CLASS
     options = { escape_html: false }.merge(options) # incompatible default
     %i[attr_wrapper cdata suppress_eval ugly].each { |opt| options.delete(opt) }
     scope = (base ? base.instance_eval { binding } : nil)
-    eval Hamlit::Engine.new(options).call(text), scope
+    eval Haml::Engine.new(options).call(text), scope
   end
 
   def assert_haml_ugly(text, options = {})
-    if RUBY_ENGINE == 'truffleruby'
-      skip 'truffleruby cannot run Haml'
-    end
-    haml_base = { escape_html: true, escape_attrs: true }
-    hamlit_base = { escape_html: true }
+    haml_base = { escape_html: true }
     scope  = options.delete(:scope) || Object.new
     locals = options.delete(:locals) || {}
-    haml_result   = Haml::Engine.new(text, haml_base.merge(options)).render(scope, locals)
-    hamlit_result = Hamlit::Template.new(hamlit_base.merge(options)) { text }.render(scope, locals)
-    assert_equal haml_result, hamlit_result
+    Haml::Template.new(haml_base.merge(options)) { text }.render(scope, locals)
   end
 
   def assert_warning(message)
@@ -93,7 +79,7 @@ class Haml::TestCase < BASE_TEST_CLASS
   end
 
   def silence_warnings(&block)
-    Hamlit::HamlUtil.silence_warnings(&block)
+    Haml::HamlUtil.silence_warnings(&block)
   end
 
   def assert_raises_message(klass, message)
@@ -114,6 +100,6 @@ class Haml::TestCase < BASE_TEST_CLASS
   end
 
   def self.error(*args)
-    Hamlit::HamlError.message(*args)
+    Haml::HamlError.message(*args)
   end
 end

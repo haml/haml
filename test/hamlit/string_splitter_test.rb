@@ -1,7 +1,7 @@
-describe Hamlit::StringSplitter do
+describe Haml::StringSplitter do
   describe '.compile' do
     def assert_compile(expected, code)
-      actual = Hamlit::StringSplitter.compile(code)
+      actual = Haml::StringSplitter.compile(code)
       assert_equal expected, actual
     end
 
@@ -26,14 +26,14 @@ describe Hamlit::StringSplitter do
 
     describe 'invalid argument' do
       it 'raises internal error' do
-        assert_raises Hamlit::InternalError do
-          Hamlit::StringSplitter.compile('1')
+        assert_raises Haml::InternalError do
+          Haml::StringSplitter.compile('1')
         end
       end
 
       it 'raises internal error' do
-        assert_raises Hamlit::InternalError do
-          Hamlit::StringSplitter.compile('[]')
+        assert_raises Haml::InternalError do
+          Haml::StringSplitter.compile('[]')
         end
       end
 
@@ -42,8 +42,8 @@ describe Hamlit::StringSplitter do
           skip 'Ripper of JRuby is behaving in a different way'
         end
 
-        assert_raises Hamlit::InternalError do
-          Hamlit::StringSplitter.compile('"]')
+        assert_raises Haml::InternalError do
+          Haml::StringSplitter.compile('"]')
         end
       end
     end

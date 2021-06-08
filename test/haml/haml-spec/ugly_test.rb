@@ -14,8 +14,8 @@ class UglyTest < MiniTest::Test
     Haml::Engine.new(haml, HAML_DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
   end
 
-  def self.hamlit_result(haml, options, locals)
-    Hamlit::Template.new(HAMLIT_DEFAULT_OPTIONS.merge(options)) { haml }.render(Object.new, locals)
+  def self.haml_result(haml, options, locals)
+    Haml::Template.new(HAMLIT_DEFAULT_OPTIONS.merge(options)) { haml }.render(Object.new, locals)
   end
 
   class Headers < MiniTest::Test
@@ -25,8 +25,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_XHTML_default_transitional_doctype
@@ -35,8 +35,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_XHTML_1_1_doctype
@@ -45,8 +45,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_XHTML_1_2_mobile_doctype
@@ -55,8 +55,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_XHTML_1_1_basic_doctype
@@ -65,8 +65,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_XHTML_1_0_frameset_doctype
@@ -75,8 +75,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_HTML_5_doctype_with_XHTML_syntax
@@ -85,8 +85,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_HTML_5_XML_prolog_silent_
@@ -95,8 +95,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html5}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_HTML_5_doctype
@@ -105,8 +105,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html5}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_HTML_4_XML_prolog_silent_
@@ -115,8 +115,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html4}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_HTML_4_default_transitional_doctype
@@ -125,8 +125,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html4}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_HTML_4_frameset_doctype
@@ -135,8 +135,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html4}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_HTML_4_strict_doctype
@@ -145,8 +145,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html4}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -157,8 +157,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_self_closing_tag_XHTML_
@@ -167,8 +167,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_self_closing_tag_HTML4_
@@ -177,8 +177,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html4}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_self_closing_tag_HTML5_
@@ -187,8 +187,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html5}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_self_closing_tag_modifier_XHTML_
@@ -197,8 +197,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_self_closing_tag_modifier_HTML5_
@@ -207,8 +207,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html5}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_a_CSS_class
@@ -217,8 +217,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_multiple_CSS_classes
@@ -227,8 +227,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_a_CSS_id
@@ -237,8 +237,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_multiple_CSS_id_s
@@ -247,8 +247,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_a_class_followed_by_an_id
@@ -257,8 +257,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_an_id_followed_by_a_class
@@ -267,8 +267,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_implicit_div_with_a_CSS_id
@@ -277,8 +277,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_an_implicit_div_with_a_CSS_class
@@ -287,8 +287,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_multiple_simple_Haml_tags
@@ -303,8 +303,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -315,8 +315,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_underscores
@@ -325,8 +325,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_dashes
@@ -335,8 +335,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_camelCase
@@ -345,8 +345,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_PascalCase
@@ -355,8 +355,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -367,8 +367,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_class_with_underscores
@@ -377,8 +377,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_class_with_dashes
@@ -387,8 +387,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -399,8 +399,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Inline_content_tag_with_CSS
@@ -409,8 +409,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Inline_content_multiple_simple_tags
@@ -425,8 +425,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -440,8 +440,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Nested_content_tag_with_CSS
@@ -453,8 +453,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Nested_content_multiple_simple_tags
@@ -472,8 +472,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -484,8 +484,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_HTML_style_multiple_attributes
@@ -494,8 +494,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_HTML_style_attributes_separated_with_newlines
@@ -505,8 +505,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_HTML_style_interpolated_attribute
@@ -515,8 +515,8 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"value"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_HTML_style_class_as_an_attribute
@@ -525,8 +525,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_HTML_style_tag_with_a_CSS_class_and_class_as_an_attribute
@@ -535,8 +535,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_HTML_style_tag_with_id_as_an_attribute
@@ -545,8 +545,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_HTML_style_tag_with_a_CSS_id_and_id_as_an_attribute
@@ -555,8 +555,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_HTML_style_tag_with_a_variable_attribute
@@ -565,8 +565,8 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"hello"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_HTML_style_tag_with_a_CSS_class_and_class_as_a_variable_attribute
@@ -575,8 +575,8 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"world"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_HTML_style_tag_multiple_CSS_classes_sorted_correctly_
@@ -585,19 +585,19 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"a"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_HTML_style_tag_with_an_atomic_attribute
-      skip '[INCOMPATIBILITY] Hamlit limits boolean attributes'
+      skip '[INCOMPATIBILITY] Haml limits boolean attributes'
       haml    = %q{%a(flag)}
       _html   = %q{<a flag></a>}
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -608,8 +608,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_attributes_hash_with_whitespace
@@ -618,8 +618,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_interpolated_attribute
@@ -628,8 +628,8 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"value"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_multiple_attributes
@@ -638,8 +638,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_attributes_separated_with_newlines
@@ -649,8 +649,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_class_as_an_attribute
@@ -659,8 +659,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_tag_with_a_CSS_class_and_class_as_an_attribute
@@ -669,8 +669,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_tag_with_id_as_an_attribute
@@ -679,8 +679,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_tag_with_a_CSS_id_and_id_as_an_attribute
@@ -689,8 +689,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_tag_with_a_CSS_id_and_a_numeric_id_as_an_attribute
@@ -699,8 +699,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_tag_with_a_variable_attribute
@@ -709,8 +709,8 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"hello"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_tag_with_a_CSS_class_and_class_as_a_variable_attribute
@@ -719,8 +719,8 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"world"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_Ruby_style_tag_multiple_CSS_classes_sorted_correctly_
@@ -729,8 +729,8 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"a"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -741,8 +741,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_nested_silent_comment
@@ -752,8 +752,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_multiply_nested_silent_comment
@@ -764,8 +764,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_multiply_nested_silent_comment_with_inconsistent_indents
@@ -776,8 +776,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -788,8 +788,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_nested_markup_comment
@@ -803,8 +803,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -818,8 +818,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -831,8 +831,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_content_in_a_preserve_filter
@@ -845,8 +845,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_content_in_a_plain_filter
@@ -859,8 +859,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_content_in_a_css_filter_XHTML_
@@ -877,8 +877,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_content_in_a_javascript_filter_XHTML_
@@ -894,8 +894,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_content_in_a_css_filter_HTML_
@@ -910,8 +910,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html5}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_content_in_a_javascript_filter_HTML_
@@ -925,8 +925,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html5}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -937,8 +937,8 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"value"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_no_interpolation_when_escaped
@@ -947,8 +947,8 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"value"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_interpolation_when_the_escape_character_is_escaped
@@ -957,8 +957,8 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"value"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_interpolation_inside_filtered_content
@@ -968,8 +968,8 @@ class UglyTest < MiniTest::Test
       locals  = {:var=>"value"}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -980,8 +980,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_code_following_eq_when_escape_haml_is_set_to_true
@@ -990,8 +990,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:escape_html=>"true"}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_code_following_neq_when_escape_haml_is_set_to_true
@@ -1000,8 +1000,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:escape_html=>"true"}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -1012,8 +1012,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:xhtml}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_boolean_attribute_with_HTML
@@ -1022,8 +1022,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {:format=>:html5}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -1035,8 +1035,8 @@ class UglyTest < MiniTest::Test
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_inside_a_textarea_tag
@@ -1048,8 +1048,8 @@ hello</textarea>}
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_inside_a_pre_tag
@@ -1061,8 +1061,8 @@ hello</pre>}
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 
@@ -1075,8 +1075,8 @@ hello</pre>}
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_appended_and_nested_content
@@ -1090,8 +1090,8 @@ hello</pre>}
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
 
     def test_a_tag_with_appended
@@ -1103,8 +1103,8 @@ world</p>}
       locals  = {}
       options = {}
       haml_result = UglyTest.haml_result(haml, options, locals)
-      hamlit_result = UglyTest.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = UglyTest.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   end
 end if RUBY_ENGINE != 'truffleruby' # truffleruby cannot run Haml

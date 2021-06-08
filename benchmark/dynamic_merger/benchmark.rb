@@ -8,8 +8,8 @@ Benchmark.driver(repeat_count: 8) do |x|
     require 'string_template'
     StringTemplate::Railtie.run_initializers
     require 'hamlit'
-    Hamlit::Railtie.run_initializers
-    Hamlit::RailsTemplate.set_options(escape_html: false, generator: Temple::Generators::ArrayBuffer)
+    Haml::Railtie.run_initializers
+    Haml::RailsTemplate.set_options(escape_html: false, generator: Temple::Generators::ArrayBuffer)
     require 'action_view/base'
 
     (view = Class.new(ActionView::Base).new(ActionView::LookupContext.new(''))).instance_variable_set(:@world, 'world!')

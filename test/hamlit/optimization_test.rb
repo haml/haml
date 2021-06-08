@@ -2,7 +2,7 @@ require_relative '../test_helper'
 
 describe 'optimization' do
   def compiled_code(haml)
-    Hamlit::Engine.new.call(haml)
+    Haml::Engine.new.call(haml)
   end
 
   describe 'static analysis' do

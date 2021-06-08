@@ -1,12 +1,12 @@
-describe Hamlit::Template do
+describe Haml::Template do
   # Simple imitation of Sinatra::Templates#compila_template
   def compile_template(engine, data, options = {})
     template = Tilt[engine]
     template.new(nil, 1, options) { data }
   end
 
-  specify 'Tilt returns Hamlit::Template for haml engine' do
-    assert_equal Hamlit::Template, Tilt[:haml]
+  specify 'Tilt returns Haml::Template for haml engine' do
+    assert_equal Haml::Template, Tilt[:haml]
   end
 
   it 'renders properly via tilt' do

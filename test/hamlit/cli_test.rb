@@ -1,6 +1,6 @@
-require 'hamlit/cli'
+require 'haml/cli'
 
-describe Hamlit::CLI do
+describe Haml::CLI do
   describe '#temple' do
     def redirect_output
       out, $stdout = $stdout, StringIO.new
@@ -11,10 +11,10 @@ describe Hamlit::CLI do
 
     it 'does not crash when compiling a tag' do
       redirect_output do
-        f = Tempfile.open('hamlit')
+        f = Tempfile.open('haml')
         f.write('%input{ hash }')
         f.close
-        Hamlit::CLI.new.temple(f.path)
+        Haml::CLI.new.temple(f.path)
       end
     end
   end

@@ -11,7 +11,7 @@ end
 def generate_spec(mode)
   spec = <<-SPEC.unindent
     require "minitest/autorun"
-    require "hamlit"
+    require "haml"
     require "haml"
 
     # This is a spec converted by haml-spec.
@@ -24,8 +24,8 @@ def generate_spec(mode)
         Haml::Engine.new(haml, HAML_DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
       end
 
-      def self.hamlit_result(haml, options, locals)
-        eval Hamlit::Engine.new(haml, HAMLIT_DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
+      def self.haml_result(haml, options, locals)
+        eval Haml::Engine.new(haml, HAMLIT_DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
       end
 
   SPEC
@@ -68,8 +68,8 @@ def generate_specify(test, locals, options, mode)
       locals  = #{locals}
       options = #{options}
       haml_result = #{mode.capitalize}Test.haml_result(haml, options, locals)
-      hamlit_result = #{mode.capitalize}Test.hamlit_result(haml, options, locals)
-      assert_equal haml_result, hamlit_result
+      haml_result = #{mode.capitalize}Test.haml_result(haml, options, locals)
+      assert_equal haml_result, haml_result
     end
   SPEC
 end

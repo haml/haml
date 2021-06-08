@@ -30,7 +30,7 @@ THE SOFTWARE.
 # SlimBenchmarks with following modifications:
 #   1. Skipping slow engines, tilt and parsing benches.
 #   2. All Ruby script and attributes are escaped for fairness.
-#   3. Faml and Hamlit are added.
+#   3. Faml and Haml are added.
 #
 
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'), File.dirname(__FILE__))
@@ -67,14 +67,14 @@ class SlimBenchmarks
       def run_erubi; #{Erubi::Engine.new(@erb_code).src}; end
       def run_slim_ugly; #{Slim::Engine.new.call @slim_code}; end
       def run_faml; #{Faml::Engine.new.call @haml_code}; end
-      def run_hamlit; #{Hamlit::Engine.new.call @haml_code}; end
+      def run_hamlit; #{Haml::Engine.new.call @haml_code}; end
     }
 
     bench("erubi v#{Erubi::VERSION}")   { context.run_erubi }     unless @only_haml
     bench("slim v#{Slim::VERSION}")     { context.run_slim_ugly } unless @only_haml
     bench("haml v#{Haml::VERSION}")     { context.run_haml_ugly }
     bench("faml v#{Faml::VERSION}")     { context.run_faml }
-    bench("hamlit v#{Hamlit::VERSION}") { context.run_hamlit }
+    bench("hamlit v#{Haml::VERSION}") { context.run_hamlit }
   end
 
   def run

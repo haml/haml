@@ -2,19 +2,11 @@ require 'test_helper'
 require 'haml/mocks/article'
 
 require 'action_pack/version'
-require 'hamlit/rails_template'
+require 'haml/rails_template'
 
-module Haml::Filters::Test
-  include Haml::Filters::Base
-
-  def render(text)
-    "TESTING HAHAHAHA!"
-  end
-end
-
-module Hamlit::RailsHelpers
+module Haml::RailsHelpers
   def test_partial(name, locals = {})
-    Hamlit::Template.new { File.read(File.join(TemplateTest::TEMPLATE_PATH, "_#{name}.haml")) }.render(self, locals)
+    Haml::Template.new { File.read(File.join(TemplateTest::TEMPLATE_PATH, "_#{name}.haml")) }.render(self, locals)
   end
 end
 
@@ -98,8 +90,6 @@ class TemplateTest < Haml::TestCase
   end
 
   def assert_renders_correctly(name, &render_method)
-    old_options = Haml::Template.options.dup
-    Haml::Template.options[:escape_html] = false
     render_method ||= proc { |n| @base.render(template: n) }
 
     silence_warnings do
@@ -114,8 +104,6 @@ class TemplateTest < Haml::TestCase
     else
       raise e
     end
-  ensure
-    Haml::Template.options = old_options
   end
 
   def test_empty_render_should_remain_empty
@@ -156,7 +144,7 @@ class TemplateTest < Haml::TestCase
 
   def test_templates_should_render_correctly_with_render_proc; skip
     assert_renders_correctly("standard") do |name|
-      engine = Hamlit::HamlEngine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
+      engine = Haml::HamlEngine.new(File.read(File.dirname(__FILE__) + "/templates/#{name}.haml"), :format => :xhtml)
       engine.render_proc(@base).call
     end
   end
@@ -313,10 +301,6 @@ HAML
 
   def test_rendered_string_is_html_safe_with_action_view
     assert(render("Foo", :action_view).html_safe?)
-  end
-
-  def test_xss_html_escaping_with_non_strings
-    assert_haml_ugly("= html_escape(4)")
   end
 
   def test_xss_protection_with_concat; skip

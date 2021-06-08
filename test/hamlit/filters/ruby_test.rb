@@ -1,4 +1,4 @@
-describe Hamlit::Filters do
+describe Haml::Filters do
   include RenderHelper
 
   it 'renders ruby filter' do

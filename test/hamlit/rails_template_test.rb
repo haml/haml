@@ -1,9 +1,9 @@
 # Explicitly requiring rails_template because rails initializers is not executed here.
-require 'hamlit/rails_template'
+require 'haml/rails_template'
 
-describe Hamlit::RailsTemplate do
+describe Haml::RailsTemplate do
   def render(haml)
-    ActionView::Template.register_template_handler(:haml, Hamlit::RailsTemplate.new)
+    ActionView::Template.register_template_handler(:haml, Haml::RailsTemplate.new)
     base = Class.new(ActionView::Base) do
       def compiled_method_container
         self.class
@@ -155,12 +155,12 @@ describe Hamlit::RailsTemplate do
   end
 
   specify '.set_options' do
-    original = Hamlit::RailsTemplate.options[:use_html_safe]
+    original = Haml::RailsTemplate.options[:use_html_safe]
     begin
-      Hamlit::RailsTemplate.set_options(use_html_safe: !original)
-      assert_equal !original, Hamlit::RailsTemplate.options[:use_html_safe]
+      Haml::RailsTemplate.set_options(use_html_safe: !original)
+      assert_equal !original, Haml::RailsTemplate.options[:use_html_safe]
     ensure
-      Hamlit::RailsTemplate.set_options(use_html_safe: original)
+      Haml::RailsTemplate.set_options(use_html_safe: original)
     end
   end
 end

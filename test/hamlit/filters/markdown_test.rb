@@ -1,4 +1,4 @@
-describe Hamlit::Filters do
+describe Haml::Filters do
   include RenderHelper
 
   describe '#compile' do
@@ -8,13 +8,13 @@ describe Hamlit::Filters do
       end
 
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <h1>Hamlit</h1>
+        <h1>Haml</h1>
 
         <p>Yet another haml implementation</p>
 
       HTML
         :markdown
-          # Hamlit
+          # Haml
           Yet another haml implementation
       HAML
     end
@@ -25,13 +25,13 @@ describe Hamlit::Filters do
       end
 
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
-        <h1><Hamlit></h1>
+        <h1><Haml></h1>
 
         <p>&lt;&amp;&gt;
         Yet another haml implementation</p>
 
       HTML
-        - project = '<Hamlit>'
+        - project = '<Haml>'
         :markdown
           # #{project}
           #{'<&>'}

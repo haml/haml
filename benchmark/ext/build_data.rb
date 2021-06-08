@@ -12,6 +12,6 @@ Benchmark.ips do |x|
   quote = "'"
   faml_options = { data: h }
   x.report("Faml::AB.build")    { Faml::AttributeBuilder.build(quote, true, nil, faml_options) }
-  x.report("Hamlit.build_data") { Hamlit::AttributeBuilder.build_data(true, quote, h) }
+  x.report("Haml.build_data") { Haml::AttributeBuilder.build_data(true, quote, h) }
   x.compare!
 end

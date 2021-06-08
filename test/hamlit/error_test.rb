@@ -1,24 +1,24 @@
-describe Hamlit::Engine do
+describe Haml::Engine do
   describe 'HamlSyntaxError' do
     it 'raises on runtime' do
-      code = Hamlit::Engine.new.call("  %a")
-      assert_raises(Hamlit::HamlSyntaxError) do
+      code = Haml::Engine.new.call("  %a")
+      assert_raises(Haml::HamlSyntaxError) do
         eval code
       end
     end
 
     it 'returns error with lines before error' do
-      code = Hamlit::Engine.new.call("\n\n  %a")
+      code = Haml::Engine.new.call("\n\n  %a")
       begin
         eval code
-      rescue Hamlit::HamlSyntaxError => e
+      rescue Haml::HamlSyntaxError => e
         assert_equal(2, e.line)
       end
     end
 
-    describe 'Hamlit v1 syntax' do
+    describe 'Haml v1 syntax' do
       it 'returns an error with proper line number' do
-        code = Hamlit::Engine.new.call(<<-HAML.unindent)
+        code = Haml::Engine.new.call(<<-HAML.unindent)
           %span
           - if true
             %div{ data: {
@@ -27,7 +27,7 @@ describe Hamlit::Engine do
         HAML
         begin
           eval code
-        rescue Hamlit::HamlSyntaxError => e
+        rescue Haml::HamlSyntaxError => e
           assert_equal(3, e.line)
         end
       end
@@ -36,17 +36,17 @@ describe Hamlit::Engine do
 
   describe 'FilterNotFound' do
     it 'raises on runtime' do
-      code = Hamlit::Engine.new.call(":k0kubun")
-      assert_raises(Hamlit::FilterNotFound) do
+      code = Haml::Engine.new.call(":k0kubun")
+      assert_raises(Haml::FilterNotFound) do
         eval code
       end
     end
 
     it 'returns error with lines before error' do
-      code = Hamlit::Engine.new.call("\n\n:k0kubun")
+      code = Haml::Engine.new.call("\n\n:k0kubun")
       begin
         eval code
-      rescue Hamlit::FilterNotFound => e
+      rescue Haml::FilterNotFound => e
         assert_equal(2, e.line)
       end
     end

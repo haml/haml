@@ -1,13 +1,13 @@
 require 'test_helper'
 
 class FiltersTest < Haml::TestCase
-  test "should be registered as filters when including Hamlit::Filters::Base" do; skip
+  test "should be registered as filters when including Haml::Filters::Base" do; skip
     begin
-      refute Hamlit::Filters.defined.has_key? "bar"
-      Module.new {def self.name; "Foo::Bar"; end; include Hamlit::Filters::Base}
-      assert Hamlit::Filters.defined.has_key? "bar"
+      refute Haml::Filters.defined.has_key? "bar"
+      Module.new {def self.name; "Foo::Bar"; end; include Haml::Filters::Base}
+      assert Haml::Filters.defined.has_key? "bar"
     ensure
-      Hamlit::Filters.remove_filter "Bar"
+      Haml::Filters.remove_filter "Bar"
     end
   end
 
@@ -15,36 +15,36 @@ class FiltersTest < Haml::TestCase
     begin
       assert_raises RuntimeError do
         2.times do
-          Hamlit::Filters.register_tilt_filter "Foo"
+          Haml::Filters.register_tilt_filter "Foo"
         end
       end
     ensure
-      Hamlit::Filters.remove_filter "Foo"
+      Haml::Filters.remove_filter "Foo"
     end
   end
 
   test "should raise error when a Tilt filters dependencies are unavailable for extension" do; skip
     begin
-      assert_raises Hamlit::Error do
+      assert_raises Haml::Error do
         # ignore warnings from Tilt
         silence_warnings do
-          Hamlit::Filters.register_tilt_filter "Textile"
-          Hamlit::Filters.defined["textile"].template_class
+          Haml::Filters.register_tilt_filter "Textile"
+          Haml::Filters.defined["textile"].template_class
         end
       end
     ensure
-      Hamlit::Filters.remove_filter "Textile"
+      Haml::Filters.remove_filter "Textile"
     end
   end
 
   test "should raise error when a Tilt filters dependencies are unavailable for filter without extension" do; skip
     begin
-      assert_raises Hamlit::Error do
-        Hamlit::Filters.register_tilt_filter "Maruku"
-        Hamlit::Filters.defined["maruku"].template_class
+      assert_raises Haml::Error do
+        Haml::Filters.register_tilt_filter "Maruku"
+        Haml::Filters.defined["maruku"].template_class
       end
     ensure
-      Hamlit::Filters.remove_filter "Maruku"
+      Haml::Filters.remove_filter "Maruku"
     end
   end
 
@@ -52,8 +52,8 @@ class FiltersTest < Haml::TestCase
     begin
       render(":maruku\n  # foo")
       flunk("Should have raised error with message about the haml-contrib gem.")
-    rescue Hamlit::Error => e
-      assert_equal e.message, Hamlit::Error.message(:install_haml_contrib, "maruku")
+    rescue Haml::Error => e
+      assert_equal e.message, Haml::Error.message(:install_haml_contrib, "maruku")
     end
   end
 
@@ -61,8 +61,8 @@ class FiltersTest < Haml::TestCase
     begin
       render(":textile\n  h1. foo")
       flunk("Should have raised error with message about the haml-contrib gem.")
-    rescue Hamlit::Error => e
-      assert_equal e.message, Hamlit::Error.message(:install_haml_contrib, "textile")
+    rescue Haml::Error => e
+      assert_equal e.message, Haml::Error.message(:install_haml_contrib, "textile")
     end
   end
 
@@ -81,13 +81,13 @@ class FiltersTest < Haml::TestCase
 
   test "should pass options to Tilt filters that precompile" do; skip
     begin
-      orig_erb_opts = Hamlit::Filters::Erb.options
+      orig_erb_opts = Haml::Filters::Erb.options
       haml  = ":erb\n  <%= 'foo' %>"
       refute_match('test_var', Haml::Engine.new(haml).compiler.precompiled)
-      Hamlit::Filters::Erb.options = {:outvar => 'test_var'}
+      Haml::Filters::Erb.options = {:outvar => 'test_var'}
       assert_match('test_var', Haml::Engine.new(haml).compiler.precompiled)
     ensure
-      Hamlit::Filters::Erb.options = orig_erb_opts
+      Haml::Filters::Erb.options = orig_erb_opts
     end
   end
 
@@ -106,12 +106,12 @@ class FiltersTest < Haml::TestCase
           @output = @engine[:options].to_a.join
         end
       end
-      Hamlit::Filters.register_tilt_filter "Foo", :template_class => filter
-      Hamlit::Filters::Foo.options[:foo] = "bar"
+      Haml::Filters.register_tilt_filter "Foo", :template_class => filter
+      Haml::Filters::Foo.options[:foo] = "bar"
       haml = ":foo"
       assert_equal "foobar\n", render(haml)
     ensure
-      Hamlit::Filters.remove_filter "Foo"
+      Haml::Filters.remove_filter "Foo"
     end
   end
 

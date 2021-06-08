@@ -1,12 +1,12 @@
-describe Hamlit::DynamicMerger do
+describe Haml::DynamicMerger do
   describe '#call' do
     def assert_compile(expected, input)
-      actual = Hamlit::DynamicMerger.new.compile(input)
+      actual = Haml::DynamicMerger.new.compile(input)
       assert_equal expected, actual
     end
 
     def assert_noop(input)
-      actual = Hamlit::DynamicMerger.new.compile(input)
+      actual = Haml::DynamicMerger.new.compile(input)
       assert_equal input, actual
     end
 

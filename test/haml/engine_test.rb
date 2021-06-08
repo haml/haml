@@ -110,7 +110,7 @@ class EngineTest < Haml::TestCase
 
   def engine(text, options = {})
     options = use_test_tracing(options)
-    Hamlit::Template.new(hamlit_base.merge(options)) { text }
+    Haml::Template.new(haml_base.merge(options)) { text }
   end
 
   def setup
@@ -155,11 +155,11 @@ class EngineTest < Haml::TestCase
     assert_equal("<p class='css b'>foo</p>\n", render("%p.css{:class => %w[css b]} foo")) # merge uniquely
     assert_equal("<p class='a b c d'>foo</p>\n", render("%p{:class => [%w[a b], %w[c d]]} foo")) # flatten
     assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => [:a, :b] } foo")) # stringify
-    # [INCOMPATIBILITY] Hamlit limits boolean attributes
+    # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:class => [nil, false] } foo")) # strip falsey
     assert_equal("<p class=''>foo</p>\n", render("%p{:class => [nil, false] } foo")) # strip falsey
     assert_equal("<p class='a'>foo</p>\n", render("%p{:class => :a} foo")) # single stringify
-    # [INCOMPATIBILITY] Hamlit limits boolean attributes
+    # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:class => false} foo")) # single falsey
     assert_equal("<p class=''>foo</p>\n", render("%p{:class => false} foo")) # single falsey
     assert_equal("<p class='html a b'>foo</p>\n", render("%p(class='html'){:class => %w[a b]} foo")) # html attrs
@@ -170,11 +170,11 @@ class EngineTest < Haml::TestCase
     assert_equal("<p id='css_a_b'>foo</p>\n", render("%p#css{:id => %w[a b]} foo")) # merge with css
     assert_equal("<p id='a_b_c_d'>foo</p>\n", render("%p{:id => [%w[a b], %w[c d]]} foo")) # flatten
     assert_equal("<p id='a_b'>foo</p>\n", render("%p{:id => [:a, :b] } foo")) # stringify
-    # [INCOMPATIBILITY] Hamlit limits boolean attributes
+    # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:id => [nil, false] } foo")) # strip falsey
     assert_equal("<p id=''>foo</p>\n", render("%p{:id => [nil, false] } foo")) # strip falsey
     assert_equal("<p id='a'>foo</p>\n", render("%p{:id => :a} foo")) # single stringify
-    # [INCOMPATIBILITY] Hamlit limits boolean attributes
+    # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:id => false} foo")) # single falsey
     assert_equal("<p id=''>foo</p>\n", render("%p{:id => false} foo")) # single falsey
     assert_equal("<p id='html_a_b'>foo</p>\n", render("%p(id='html'){:id => %w[a b]} foo")) # html attrs
@@ -210,7 +210,7 @@ HAML
   end
 
   def test_nil_should_render_empty_tag
-    # [INCOMPATIBILITY] Hamlit limits boolean attributes
+    # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<div class='no_attributes'></div>",
     #              render(".no_attributes{:nil => nil}").chomp)
     assert_equal("<div class='no_attributes' nil=''></div>",
@@ -300,15 +300,6 @@ HAML
     assert_equal("<p>\n  2\n</p>\n", render("%p\n  \#@foo", :scope => scope))
   end
 
-  def test_interpolation_with_global_at_the_beginning_of_a_line; skip # special interpolation
-    $global_var_for_testing = 2
-
-    assert_equal("<p>2</p>\n", render('%p #$global_var_for_testing'))
-    assert_equal("<p>\n  2\n</p>\n", render("%p\n  \#$global_var_for_testing"))
-  ensure
-    $global_var_for_testing = nil
-  end
-
   def test_escaped_interpolation
     assert_equal("<p>Foo &amp; Bar & Baz</p>\n", render('%p& Foo #{"&"} Bar & Baz'))
   end
@@ -326,7 +317,7 @@ HAML
   end
 
   def test_dynamic_attributes_with_empty_attr
-    # [INCOMPATIBILITY] Hamlit limits boolean attributes
+    # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<img alt='' src='/foo.png'>\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
     assert_equal("<img alt='' src='/foo.png' width=''>\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
   end
@@ -418,7 +409,7 @@ HAML
   end
 
   def test_boolean_attributes
-    # [INCOMPATIBILITY] Hamlit limits boolean attributes
+    # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<p bar baz='true' foo='bar'></p>\n",
     #              render("%p{:foo => 'bar', :bar => true, :baz => 'true'}", :format => :html4))
     # assert_equal("<p bar='bar' baz='true' foo='bar'></p>\n",
@@ -1171,7 +1162,7 @@ HAML
   end
 
   def test_nil_attrs
-    skip '[INCOMPATIBILITY] Hamlit limits boolean attributes'
+    skip '[INCOMPATIBILITY] Haml limits boolean attributes'
     assert_equal("<p>nil</p>\n", render("%p{ :attr => nil } nil"))
     assert_equal("<p>nil</p>\n", render("%p{ :attr => x } nil", :locals => {:x => nil}))
   end
@@ -1263,8 +1254,8 @@ HAML
 
   def test_unbalanced_brackets; skip # error
     render('foo #{1 + 5} foo #{6 + 7 bar #{8 + 9}')
-  rescue Hamlit::SyntaxError => e
-    assert_equal(Hamlit::Error.message(:unbalanced_brackets), e.message)
+  rescue Haml::SyntaxError => e
+    assert_equal(Haml::Error.message(:unbalanced_brackets), e.message)
   end
 
   def test_single_line_comments_are_interpolated; skip # comment
@@ -1377,7 +1368,7 @@ HAML
 
   def test_haml_buffer_gets_reset_even_with_exception; skip # haml_buffer
     scope = Object.new
-    render("- raise Hamlit::Error", :scope => scope)
+    render("- raise Haml::Error", :scope => scope)
     assert(false, "Expected exception")
   rescue Exception
     skip
@@ -1386,7 +1377,7 @@ HAML
 
   def test_def_method_haml_buffer_gets_reset_even_with_exception; skip # def_method
     scope = Object.new
-    engine("- raise Hamlit::Error").def_method(scope, :render)
+    engine("- raise Haml::Error").def_method(scope, :render)
     scope.render
     assert(false, "Expected exception")
   rescue Exception; skip
@@ -1395,23 +1386,11 @@ HAML
 
   def test_render_proc_haml_buffer_gets_reset_even_with_exception; skip # render_proc
     scope = Object.new
-    proc = engine("- raise Hamlit::Error").render_proc(scope)
+    proc = engine("- raise Haml::Error").render_proc(scope)
     proc.call
     assert(false, "Expected exception")
   rescue Exception; skip
     assert_nil(scope.send(:haml_buffer))
-  end
-
-  def test_render_proc_should_raise_haml_syntax_error_not_ruby_syntax_error
-    assert_raises(Haml::SyntaxError) do
-      Haml::Engine.new("%p{:foo => !}").render_proc(Object.new, :foo).call
-    end
-  end
-
-  def test_render_should_raise_haml_syntax_error_not_ruby_syntax_error
-    assert_raises(Haml::SyntaxError) do
-      Haml::Engine.new("%p{:foo => !}").render
-    end
   end
 
   def test_ugly_true
@@ -1452,7 +1431,7 @@ HAML
   end
 
   def test_arbitrary_output_option; skip # error
-    assert_raises_message(Hamlit::Error, "Invalid output format :html1") do
+    assert_raises_message(Haml::Error, "Invalid output format :html1") do
       engine("%br", :format => :html1)
     end
   end
@@ -1473,15 +1452,6 @@ HAML
     scope = Object.new
     scope.instance_variable_set :@foo, 'bar'
     assert_haml_ugly('%a{:b => "a #@foo b"}', :scope => scope)
-  end
-
-  def test_interpolates_global_vars_in_attribute_values
-    # make sure the value isn't just interpolated in during template compilation
-    engine = Haml::Engine.new('%a{:b => "a #$global_var_for_testing b"}')
-    $global_var_for_testing = 'bar'
-    assert_equal("<a b='a bar b'></a>\n", engine.to_html)
-  ensure
-    $global_var_for_testing = nil
   end
 
   def test_utf8_attrs
@@ -1549,7 +1519,7 @@ HAML
   end
 
 	def test_html5_arbitrary_hash_valued_attributes_with
-    skip '[INCOMPATIBILITY] Hamlit supports hyphenation only for data attributes'
+    skip '[INCOMPATIBILITY] Haml supports hyphenation only for data attributes'
     assert_equal("<div aria-foo='blip'></div>\n",
       render("%div{:aria => {:foo => 'blip'}}"))
     assert_equal("<div foo-baz='bang'></div>\n",
@@ -1557,7 +1527,7 @@ HAML
 	end
 
   def test_arbitrary_attribute_hash_merging
-    skip '[INCOMPATIBILITY] Hamlit supports hyphenation only for data attributes'
+    skip '[INCOMPATIBILITY] Haml supports hyphenation only for data attributes'
     assert_equal(%Q{<a aria-baz='qux' aria-foo='bar'></a>\n}, render(<<-HAML))
 - h1 = {:aria => {:foo => :bar}}
 - h2 = {:baz => :qux}
@@ -1983,26 +1953,10 @@ HTML
 HAML
   end
 
-  def test_convert_template_render_proc
-    assert_converts_template_properly {|e| e.render_proc.call}
-  end
-
-  def test_convert_template_render
-    assert_converts_template_properly {|e| e.render}
-  end
-
-  def test_convert_template_def_method
-    assert_converts_template_properly do |e|
-      o = Object.new
-      e.def_method(o, :render)
-      o.render
-    end
-  end
-
   def test_encoding_error # encoding
     render("foo\nbar\nb\xFEaz".dup.force_encoding("utf-8"))
     assert(false, "Expected exception")
-  rescue Hamlit::Error => e
+  rescue Haml::Error => e
     assert_equal(3, e.line)
     assert_match(/Invalid .* character/, e.message)
   end
@@ -2012,7 +1966,7 @@ HAML
     template[9] = "\xFE".force_encoding("utf-16le")
     render(template)
     assert(false, "Expected exception")
-  rescue Hamlit::Error => e
+  rescue Haml::Error => e
     assert_equal(3, e.line)
     assert_match(/Invalid .* character/, e.message)
   end
@@ -2085,17 +2039,6 @@ HTML
 HAML
   end
 
-  def assert_converts_template_properly
-    engine = Haml::Engine.new(<<HAML.encode("iso-8859-1"), :encoding => "macRoman")
-%p bâr
-%p föö
-HAML
-    assert_encoded_equal(<<HTML.encode("macRoman"), yield(engine))
-<p>bâr</p>
-<p>föö</p>
-HTML
-  end
-
   def assert_renders_encoded(html, haml)
     result = render(haml)
     assert_encoded_equal html, result
@@ -2105,4 +2048,4 @@ HTML
     assert_equal expected.encoding, actual.encoding
     assert_equal expected, actual
   end
-end if RUBY_ENGINE != 'truffleruby' # truffleruby cannot run Haml
+end

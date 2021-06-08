@@ -1,12 +1,12 @@
-describe Hamlit::RubyExpression do
+describe Haml::RubyExpression do
   describe '.syntax_error?' do
-    it { assert_equal(true,  Hamlit::RubyExpression.syntax_error?('{ hash }')) }
-    it { assert_equal(false, Hamlit::RubyExpression.syntax_error?('{ a: b }')) }
+    it { assert_equal(true,  Haml::RubyExpression.syntax_error?('{ hash }')) }
+    it { assert_equal(false, Haml::RubyExpression.syntax_error?('{ a: b }')) }
   end
 
   describe '.string_literal?' do
     def assert_literal(expected, code)
-      actual = Hamlit::RubyExpression.string_literal?(code)
+      actual = Haml::RubyExpression.string_literal?(code)
       assert_equal expected, actual
     end
 

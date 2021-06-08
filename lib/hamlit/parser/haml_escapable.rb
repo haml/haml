@@ -1,1 +1,0 @@
-class Hamlit::HamlEscapable; end

@@ -1,6 +1,6 @@
 require_relative '../../test_helper'
 
-describe Hamlit::Engine do
+describe Haml::Engine do
   include RenderHelper
 
   describe 'old attributes' do
@@ -119,7 +119,7 @@ describe Hamlit::Engine do
         end
 
         assert_raises ArgumentError do
-          render_hamlit("%div{ nil }")
+          render_haml("%div{ nil }")
         end
       end
     end

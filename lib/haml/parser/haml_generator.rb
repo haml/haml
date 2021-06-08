@@ -1,0 +1,1 @@
+class Haml::HamlGenerator; end

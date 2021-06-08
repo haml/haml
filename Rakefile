@@ -19,9 +19,9 @@ end
 require 'rake/testtask'
 if /java/ === RUBY_PLATFORM
   # require 'rake/javaextensiontask'
-  # Rake::JavaExtensionTask.new(:hamlit) do |ext|
+  # Rake::JavaExtensionTask.new(:haml) do |ext|
   #   ext.ext_dir = 'ext/java'
-  #   ext.lib_dir = 'lib/hamlit'
+  #   ext.lib_dir = 'lib/haml'
   # end
 
   task :compile do
@@ -29,8 +29,8 @@ if /java/ === RUBY_PLATFORM
   end
 else
   require 'rake/extensiontask'
-  Rake::ExtensionTask.new(:hamlit) do |ext|
-    ext.lib_dir = 'lib/hamlit'
+  Rake::ExtensionTask.new(:haml) do |ext|
+    ext.lib_dir = 'lib/haml'
   end
 end
 

@@ -1,4 +1,4 @@
-describe Hamlit::Engine do
+describe Haml::Engine do
   include RenderHelper
 
   describe 'script' do
