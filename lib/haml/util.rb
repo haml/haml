@@ -198,7 +198,7 @@ MSG
       /#[\{$@]/ === str
     end
 
-    def unescape_interpolation(str, escape_html = nil)
+    def unescape_interpolation(str, escape_html = nil, use_html_safe = false)
       res = ''.dup
       rest = Haml::Util.handle_interpolation str.dump do |scan|
         escapes = (scan[2].size - 1) / 2
@@ -214,7 +214,7 @@ MSG
           end
           content = eval("\"#{interpolated}\"")
           content = "#{char}#{content}" if char == '@' || char == '$'
-          content = "Haml::Helpers.html_escape((#{content}))" if escape_html
+          content = "Haml::Helpers.html_escape#{('_safe' if use_html_safe)}((#{content}))" if escape_html
 
           res << "\#{#{content}}"
         end

@@ -312,7 +312,7 @@ module Haml
       end
 
       escape_html = @options.escape_html && @options.mime_type != 'text/plain' if escape_html.nil?
-      line.text = unescape_interpolation(line.text, escape_html)
+      line.text = unescape_interpolation(line.text, escape_html, @options[:use_html_safe])
       script(line, false)
     end
 
@@ -400,7 +400,7 @@ module Haml
       when '='
         parse = true
         if value[0] == ?=
-          value = unescape_interpolation(value[1..-1].strip, escape_html)
+          value = unescape_interpolation(value[1..-1].strip, escape_html, @options[:use_html_safe])
           escape_html = false
         end
       when '&', '!'
@@ -408,19 +408,19 @@ module Haml
           parse = true
           preserve_script = (value[0] == ?~)
           if value[1] == ?=
-            value = unescape_interpolation(value[2..-1].strip, escape_html)
+            value = unescape_interpolation(value[2..-1].strip, escape_html, @options[:use_html_safe])
             escape_html = false
           else
             value = value[1..-1].strip
           end
         elsif contains_interpolation?(value)
-          value = unescape_interpolation(value, escape_html)
+          value = unescape_interpolation(value, escape_html, @options[:use_html_safe])
           parse = true
           escape_html = false
         end
       else
         if contains_interpolation?(value)
-          value = unescape_interpolation(value, escape_html)
+          value = unescape_interpolation(value, escape_html, @options[:use_html_safe])
           parse = true
           escape_html = false
         end
@@ -483,7 +483,7 @@ module Haml
 
       if contains_interpolation?(text)
         parse = true
-        text = unescape_interpolation(text)
+        text = unescape_interpolation(text, nil, @options[:use_html_safe])
       else
         parse = false
       end
@@ -659,7 +659,7 @@ module Haml
 
       begin
         # Old attributes often look like a valid Hash literal, but it sometimes allow code like
-        # `{ hash, foo: bar }`, which is compiled to `_hamlout.attributes({}, nil, hash, foo: bar)`.
+        # `{ hash, foo: bar }`, which is compiled to `Haml::AttributeBuilder.build(..., hash, foo: bar)`.
         #
         # To scan such code correctly, this scans `a( hash, foo: bar }` instead, stops when there is
         # 1 more :on_embexpr_end (the last '}') than :on_embexpr_beg, and resurrects '{' afterwards.

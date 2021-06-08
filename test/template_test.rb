@@ -9,9 +9,9 @@ require 'template_test_helper'
 class TemplateTest < Haml::TestCase
   TEMPLATES = %w{          very_basic        standard
     original_engine        list             helpful
-    silent_script          tag_parsing       just_stuff  partials
+    silent_script          tag_parsing       just_stuff
     nuke_inner_whitespace  bemit
-    render_layout partial_layout_erb escape_safe_buffer}.freeze
+    escape_safe_buffer}.freeze
 
   def setup
     @base = create_base
@@ -85,22 +85,6 @@ class TemplateTest < Haml::TestCase
     end
   end
 
-  def test_render_method_returning_null
-    @base.instance_eval do
-      def empty
-        nil
-      end
-      def render_something(&block)
-        capture(self, &block)
-      end
-    end
-
-    content_to_render = "%h1 This is part of the broken view.\n= render_something do |thing|\n  = thing.empty do\n    = 'test'"
-    result = render(content_to_render)
-    expected_result = "<h1>This is part of the broken view.</h1>\n"
-    assert_equal(expected_result, result)
-  end
-
   def test_simple_rendering
     content_to_render = "%p test\n= capture { 'foo' }"
     result = render(content_to_render)
@@ -160,67 +144,6 @@ class TemplateTest < Haml::TestCase
     Haml::Template.options = old_options
   end
 
-  def test_with_output_buffer
-    assert_equal(<<HTML, render(<<HAML))
-<p>
-foo
-baz
-</p>
-HTML
-%p
-  foo
-  -# Parenthesis required due to Rails 3.0 deprecation of block helpers
-  -# that return strings.
-  - (with_output_buffer do
-    bar
-    = "foo".gsub(/./) do |s|
-      - "flup"
-  - end)
-  baz
-HAML
-  end
-
-  def test_exceptions_should_work_correctly
-    begin
-      render("- raise 'oops!'")
-    rescue Exception => e
-      assert_equal("oops!", e.message)
-      assert_match(/^\(haml\):1/, e.backtrace[0])
-    else
-      assert false
-    end
-
-    template = <<END
-%p
-  %h1 Hello!
-  = "lots of lines"
-  = "even more!"
-  - raise 'oh no!'
-  %p
-    this is after the exception
-    %strong yes it is!
-ho ho ho.
-END
-
-    begin
-      render(template.chomp)
-    rescue Exception => e
-      assert_match(/^\(haml\):5/, e.backtrace[0])
-    else
-      assert false
-    end
-  end
-
-  def test_form_builder_label_with_block
-    output = render(<<HAML, :action_view)
-= form_for @article, :as => :article, :html => {:class => nil, :id => nil}, :url => '' do |f|
-  = f.label :title do
-    Block content
-HAML
-    fragment = Nokogiri::HTML.fragment output
-    assert_equal "Block content", fragment.css('form label').first.content.strip
-  end
-
   ## XSS Protection Tests
 
   def test_escape_html_option_set
@@ -255,44 +178,6 @@ HAML
     assert_equal("Foo & Bar\n", render('Foo #{Haml::Util.html_safe("&")} Bar', :action_view))
   end
 
-  def test_xss_protection_with_mixed_strings_in_interpolation
-    assert_equal("Foo & Bar &amp; Baz\n", render('Foo #{Haml::Util.html_safe("&")} Bar #{"&"} Baz', :action_view))
-  end
-
-  def test_xss_protection_with_erb_filter
-    if defined?(Haml::SafeErubiTemplate)
-      assert_equal("&lt;img&gt;\n\n", render(":erb\n  <%= '<img>' %>", :action_view))
-      assert_equal("<img>\n\n", render(":erb\n  <%= '<img>'.html_safe %>", :action_view))
-    else # For Haml::SafeErubisTemplate
-      assert_equal("&lt;img&gt;\n", render(":erb\n  <%= '<img>' %>", :action_view))
-      assert_equal("<img>\n", render(":erb\n  <%= '<img>'.html_safe %>", :action_view))
-    end
-  end
-
-  def test_rendered_string_is_html_safe
-    assert(render("Foo").html_safe?)
-  end
-
-  def test_rendered_string_is_html_safe_with_action_view
-    assert(render("Foo", :action_view).html_safe?)
-  end
-
-  def test_xss_html_escaping_with_non_strings
-    assert_equal("4\n", render("= html_escape(4)"))
-  end
-
-  def test_xss_protection_with_concat
-    assert_equal("Foo &amp; Bar", render('- concat "Foo & Bar"', :action_view))
-  end
-
-  def test_xss_protection_with_concat_with_safe_string
-    assert_equal("Foo & Bar", render('- concat(Haml::Util.html_safe("Foo & Bar"))', :action_view))
-  end
-
-  def test_xss_protection_with_safe_concat
-    assert_equal("Foo & Bar", render('- safe_concat "Foo & Bar"', :action_view))
-  end
-
   ## Regression
 
   if defined?(ActionView::Helpers::PrototypeHelper)
@@ -319,9 +204,4 @@ HAML
 
   class ::TosUnsafeObject; def to_s; '<hr>'; end; end
   class ::TosSafeObject; def to_s; '<hr>'.html_safe; end; end
-
-  def test_object_that_returns_safe_buffer
-    assert_equal("<hr>\n", render('= ::TosSafeObject.new', escape_html: true))
-    assert_equal("&lt;hr&gt;\n", render('= ::TosUnsafeObject.new', escape_html: true))
-  end
 end

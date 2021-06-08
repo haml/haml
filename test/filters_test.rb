@@ -123,22 +123,6 @@ class FiltersTest < Haml::TestCase
 
 end
 
-class ErbFilterTest < Haml::TestCase
-  test "multiline expressions should work" do
-    html = "foobarbaz\n\n"
-    haml = %Q{:erb\n  <%= "foo" +\n      "bar" +\n      "baz" %>}
-    assert_equal(html, render(haml))
-  end
-
-  test "should evaluate in the same context as Haml" do
-    haml  = ":erb\n  <%= foo %>"
-    html  = "bar\n\n"
-    scope = Object.new.instance_eval {foo = "bar"; nil if foo; binding}
-    assert_equal(html, render(haml, :scope => scope))
-  end
-
-end
-
 class JavascriptFilterTest < Haml::TestCase
   test "should interpolate" do
     scope = Object.new.instance_eval {foo = "bar"; nil if foo; binding}
@@ -253,18 +237,6 @@ class EscapedFilterTest < Haml::TestCase
 end
 
 class RubyFilterTest < Haml::TestCase
-  test "can write to haml_io" do
-    haml = ":ruby\n  haml_io.puts 'hello'\n"
-    html = "hello\n"
-    assert_equal(html, render(haml))
-  end
-
-  test "haml_io appends to output" do
-    haml = "hello\n:ruby\n  haml_io.puts 'hello'\n"
-    html = "hello\nhello\n"
-    assert_equal(html, render(haml))
-  end
-
   test "can create local variables" do
     haml = ":ruby\n  a = 7\n=a"
     html = "7\n"

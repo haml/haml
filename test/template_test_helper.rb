@@ -4,12 +4,6 @@ module TemplateTestHelper
   TEMPLATE_PATH = File.join(__dir__, "templates")
 end
 
-module Haml::Helpers
-  def test_partial(name, locals = {})
-    Haml::Engine.new(File.read(File.join(TemplateTestHelper::TEMPLATE_PATH, "_#{name}.haml")), Haml::Template.options).render(self, locals)
-  end
-end
-
 class Egocentic
   def method_missing(*)
     self

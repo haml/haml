@@ -32,6 +32,8 @@ class TempleLineCounterTest < Haml::TestCase
         case symbol
         when :Parser, :Compiler
           exp
+        when :Generator
+          Temple::Generators::ArrayBuffer.new.call(exp)
         else
           filter.call(Haml::TempleEngine).call(exp)
         end

@@ -169,7 +169,7 @@ module Haml
             # `escape_filter_interpolations` defaults to `escape_html` if unset.
             escape = options[:escape_html] if escape.nil?
 
-            text = unescape_interpolation(text, escape).gsub(/(\\+)n/) do |s|
+            text = unescape_interpolation(text, escape, options[:use_html_safe]).gsub(/(\\+)n/) do |s|
               escapes = $1.size
               next s if escapes % 2 == 0
               "#{'\\' * (escapes - 1)}\n"
@@ -182,7 +182,7 @@ module Haml
             # too many.
             text = %[\n#{text.sub(/\n"\Z/, "\\n\"")}]
             push_script <<RUBY.rstrip, :escape_html => false
-::Haml::Helpers.find_and_preserve(#{filter.inspect}.render_with_options(#{text}, _hamlout.options), #{compiler.options[:preserve].inspect})
+::Haml::Helpers.find_and_preserve(#{filter.inspect}.render_with_options(#{text}, #{compiler.options.for_buffer.inspect}), #{compiler.options[:preserve].inspect})
 RUBY
             return
           end
@@ -277,22 +277,11 @@ RUBY
     # the Haml template.
     module Ruby
       include Base
-      require 'stringio'
 
       # @see Base#compile
       def compile(compiler, text)
         return if compiler.options[:suppress_eval]
-        compiler.instance_eval do
-          push_silent "#{<<-FIRST.tr("\n", ';')}#{text}#{<<-LAST.tr("\n", ';')}"
-            begin
-              haml_io = StringIO.new(_hamlout.buffer, 'a')
-          FIRST
-            ensure
-              haml_io.close
-              haml_io = nil
-            end
-          LAST
-        end
+        compiler.send(:push_silent, "#{text}")
       end
     end
 

@@ -9,6 +9,7 @@ module Haml
 
     def initialize(*)
       super
+      @use_html_safe = options[:use_html_safe]
       @escape = false
       @escape_safe_buffer = false
     end
@@ -51,27 +52,27 @@ module Haml
     private
 
     def escape_once(value)
-      if @escape_safe_buffer
-        ::Haml::Helpers.escape_once_without_haml_xss(value)
+      if @use_html_safe && !@escape_safe_buffer
+        ::Haml::Helpers.escape_once_safe(value)
       else
         ::Haml::Helpers.escape_once(value)
       end
     end
 
     def escape(value)
-      if @escape_safe_buffer
-        ::Haml::Helpers.html_escape_without_haml_xss(value)
+      if @use_html_safe && !@escape_safe_buffer
+        ::Haml::Helpers.html_escape_safe(value)
       else
         ::Haml::Helpers.html_escape(value)
       end
     end
 
     def escape_once_code(value)
-      "::Haml::Helpers.escape_once#{('_without_haml_xss' if @escape_safe_buffer)}((#{value}))"
+      "::Haml::Helpers.escape_once#{('_safe' if @use_html_safe && !@escape_safe_buffer)}((#{value}))"
     end
 
     def escape_code(value)
-      "::Haml::Helpers.html_escape#{('_without_haml_xss' if @escape_safe_buffer)}((#{value}))"
+      "::Haml::Helpers.html_escape#{('_safe' if @use_html_safe && !@escape_safe_buffer)}((#{value}))"
     end
   end
 end
