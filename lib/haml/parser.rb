@@ -724,7 +724,7 @@ module Haml
     end
 
     def parse_new_attribute(scanner)
-      unless (name = scanner.scan(/[\.-:@#\w]+/))
+      unless (name = scanner.scan(/[-:@#\w\.]+/))
         return if scanner.scan(/\)/)
         return false
       end
