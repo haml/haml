@@ -11,11 +11,6 @@ class CommentTest < TestBase
                  render('/ Hello #{1 + 1}', :suppress_eval => true))
   end
 
-  def test_single_line_comments_with_interpolation_dont_break_tabulation
-    assert_equal("<!-- Hello 2 -->\nconcatted\n",
-                 render("/ Hello \#{1 + 1}\n- haml_concat 'concatted'"))
-  end
-
   def test_balanced_conditional_comments
     assert_equal("<!--[if !(IE 6)|(IE 7)]> Bracket: ] <![endif]-->\n",
                  render("/[if !(IE 6)|(IE 7)] Bracket: ]"))

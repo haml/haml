@@ -41,32 +41,6 @@ class HelpersForRailsTest < Haml::TestCase
     super
   end
 
-  def test_rendering_with_escapes
-    def @base.render_something_with_haml_concat
-      haml_concat "<p>"
-    end
-    def @base.render_something_with_haml_tag_and_concat
-      haml_tag 'p' do
-        haml_concat '<foo>'
-      end
-    end
-
-    output = render(<<-HAML, :action_view)
-- render_something_with_haml_concat
-- render_something_with_haml_tag_and_concat
-- render_something_with_haml_concat
-HAML
-    assert_equal("&lt;p&gt;\n<p>\n  &lt;foo&gt;\n</p>\n&lt;p&gt;\n", output)
-  end
-
-  def test_with_raw_haml_concat
-    haml = <<HAML
-- with_raw_haml_concat do
-  - haml_concat "<>&"
-HAML
-    assert_equal("<>&\n", render(haml, :action_view))
-  end
-
   def test_form_tag
     def @base.protect_against_forgery?; false; end
     rendered = render(<<HAML, :action_view)
@@ -161,13 +135,6 @@ HAML
     assert_equal '/foo', fragment.css('form').first.attributes['action'].to_s
   end
 
-  def test_haml_concat_inside_haml_tag_escaped_with_xss
-    assert_equal("<p>\n  &lt;&gt;&amp;\n</p>\n", render(<<HAML, :action_view))
-- haml_tag :p do
-  - haml_concat "<>&"
-HAML
-  end
-
   def test_is_haml
     assert(!ActionView::Base.new(ActionView::LookupContext.new(''), {}, nil).is_haml?)
     assert_equal("true\n", render("= is_haml?", :action_view))
@@ -201,58 +168,6 @@ HAML
     assert_equal("\n", render("= check_capture_returns_nil { 2 }", :action_view))
   end
 
-
-  class HomemadeViewContext
-    include ActionView::Context
-    include ActionView::Helpers::FormHelper
-
-    def initialize
-      _prepare_context
-    end
-
-    def url_for(*)
-      "/"
-    end
-
-    def dom_class(*)
-    end
-
-    def dom_id(*)
-    end
-
-    def m # I have to inject the model into the view using an instance method, using locals doesn't work.
-      FormModel.new
-    end
-
-    def protect_against_forgery?
-    end
-
-    def compiled_method_container
-      self.class
-    end
-
-    def _run(method, template, locals, buffer, add_to_stack: true, &block)
-      @current_template = template
-      @output_buffer = buffer
-      send(method, locals, buffer, &block)
-    end
-
-    # def capture(*args, &block)
-    #   capture_haml(*args, &block)
-    # end
-  end
-
-  def test_form_for_with_homemade_view_context
-    handler  = ActionView::Template.handler_for_extension("haml")
-    template = ActionView::Template.new(<<HAML, "inline template", handler, locals: [])
-= form_for(m, :url => "/") do
-  %b Bold!
-HAML
-
-    # see if Bold is within form tags:
-    assert_match(/<form.*>.*<b>Bold!<\/b>.*<\/form>/m, template.render(HomemadeViewContext.new, {}))
-  end
-
   def test_content_tag_nested
     assert_equal "<span><div>something</div></span>", render("= nested_tag", :action_view).strip
   end
@@ -269,20 +184,5 @@ HAML
 
   def test_random_class_includes_tag_helper
     assert_equal "<p>some tag content</p>", ActsLikeTag.new.to_s
-  end
-
-  def test_capture_with_nuke_outer
-    assert_equal "<div></div>\n*<div>hi there!</div>\n", render(<<HAML)
-%div
-= precede("*") do
-  %div> hi there!
-HAML
-
-    assert_equal "<div></div>\n*<div>hi there!</div>\n", render(<<HAML)
-%div
-= precede("*") do
-  = "  "
-  %div> hi there!
-HAML
   end
 end
