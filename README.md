@@ -162,35 +162,34 @@ on a specific area:
 ruby -Itest test/helper_test.rb -n test_buffer_access
 ~~~
 
-Haml currently supports Ruby 2.0.0 and higher, so please make sure your changes run on 2.0+.
+Haml currently supports Ruby 2.7.0 and higher, so please make sure your changes run on 2.7+.
 
 ## Team
 
 ### Current Maintainers
 
-* [Akira Matsuda](https://github.com/amatsuda)
-* [Matt Wildig](https://github.com/mattwildig)
-* [Tee Parham](https://github.com/teeparham)
+* [Hampton Catlin](https://github.com/hcatlin)
 * [Takashi Kokubun](https://github.com/k0kubun)
+* [Akira Matsuda](https://github.com/amatsuda)
 
 ### Alumni
 
 Haml was created by [Hampton Catlin](http://hamptoncatlin.com), the author of
-the original implementation. Hampton is no longer involved in day-to-day coding,
-but still consults on language issues.
+the original implementation.
 
-[Natalie Weizenbaum](http://nex-3.com) was for many years the primary developer
+[Natalie Weizenbaum](https://github.com/nex3) was for many years the primary developer
 and architect of the "modern" Ruby implementation of Haml.
 
-[Norman Clarke](http://github.com/norman) was the primary maintainer of Haml from 2012 to 2016.
+This project's been around for many years, and we have many amazing people who kept the project 
+alive! as former maintainers like:
+
+[Norman Clarke](http://github.com/norman)
+[Matt Wildig](https://github.com/mattwildig)
+[Tee Parham](https://github.com/teeparham)
 
 ## License
 
-Some of Natalie's work on Haml was supported by Unspace Interactive.
-
-Beyond that, the implementation is licensed under the MIT License.
-
-Copyright (c) 2006-2019 Hampton Catlin, Natalie Weizenbaum and the Haml team
+Copyright (c) 2006-2021 Hampton Catlin, Natalie Weizenbaum and the Haml team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
