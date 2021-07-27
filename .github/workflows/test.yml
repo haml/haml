@@ -31,6 +31,6 @@ jobs:
       - name: bundle install --gemfile=test/gemfiles/Gemfile.rails-${{matrix.rails}}.x
         run: bundle config path vendor/bundle && bundle install -j$(nproc) --retry 3
       - name: rake test
-        run: bundle exec rake test
+        run: bundle exec rake test submodules
         env:
           RUBYOPT: "--enable-frozen-string-literal"
