@@ -5,6 +5,7 @@ cache:
   bundler: true
 rvm:
   - ruby-head
+  - 3.0
   - 2.7
   - 2.6
   - 2.5
@@ -15,76 +16,9 @@ env:
 gemfile:
   - test/gemfiles/Gemfile.rails-6.0.x
   - test/gemfiles/Gemfile.rails-5.2.x
-  - test/gemfiles/Gemfile.rails-5.1.x
-  - test/gemfiles/Gemfile.rails-5.0.x
-  - test/gemfiles/Gemfile.rails-5.0.x.erubi
-  - test/gemfiles/Gemfile.rails-4.2.x
-  - test/gemfiles/Gemfile.rails-4.1.x
-  - test/gemfiles/Gemfile.rails-4.0.x
 matrix:
-  exclude:
-    - rvm: 2.5
-      gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.5
-      gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.5
-      gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: 2.5
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x
-      env: RUBYOPT="--enable-frozen-string-literal"
-    - rvm: 2.5
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
-      env: RUBYOPT="--enable-frozen-string-literal"
-    - rvm: 2.5
-      gemfile: test/gemfiles/Gemfile.rails-5.1.x
-      env: RUBYOPT="--enable-frozen-string-literal"
-    - rvm: 2.6
-      gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.6
-      gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.6
-      gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: 2.6
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x
-      env: RUBYOPT="--enable-frozen-string-literal"
-    - rvm: 2.6
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
-      env: RUBYOPT="--enable-frozen-string-literal"
-    - rvm: 2.6
-      gemfile: test/gemfiles/Gemfile.rails-5.1.x
-      env: RUBYOPT="--enable-frozen-string-literal"
-    - rvm: 2.7
-      gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: 2.7
-      gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: 2.7
-      gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: 2.7
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x
-      env: RUBYOPT="--enable-frozen-string-literal"
-    - rvm: 2.7
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
-      env: RUBYOPT="--enable-frozen-string-literal"
-    - rvm: 2.7
-      gemfile: test/gemfiles/Gemfile.rails-5.1.x
-      env: RUBYOPT="--enable-frozen-string-literal"
-    - rvm: ruby-head
-      gemfile: test/gemfiles/Gemfile.rails-4.0.x
-    - rvm: ruby-head
-      gemfile: test/gemfiles/Gemfile.rails-4.1.x
-    - rvm: ruby-head
-      gemfile: test/gemfiles/Gemfile.rails-4.2.x
-    - rvm: jruby-9.2
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x
-      env: RUBYOPT="--enable-frozen-string-literal"
-    - rvm: jruby-9.2
-      gemfile: test/gemfiles/Gemfile.rails-5.0.x.erubi
-      env: RUBYOPT="--enable-frozen-string-literal"
-    - rvm: jruby-9.2
-      gemfile: test/gemfiles/Gemfile.rails-5.1.x
-      env: RUBYOPT="--enable-frozen-string-literal"
   include:
-    - rvm: 2.7
+    - rvm: 3.0
       gemfile: test/gemfiles/Gemfile.rails-edge
   allow_failures:
     - rvm: ruby-head
