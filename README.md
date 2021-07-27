@@ -10,6 +10,13 @@ more pleasant to write HTML documents, by eliminating redundancy, reflecting the
 underlying structure that the document represents, and providing an elegant syntax
 that's both powerful and easy to understand.
 
+### Supported Versions
+
+* Ruby 2.6+
+* Rails 5.1+
+
+Other versions may likely work, but we don't test against them.
+
 ## Basic Usage
 
 Haml can be used from the command line or as part of a Ruby web framework. The
