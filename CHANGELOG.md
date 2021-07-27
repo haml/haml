@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## Unreleased
+
+* Support for adding Annotations to Haml output (a Rails feature 6.1+)
+
 ## 5.2.1
 
 Released on November 30, 2020
