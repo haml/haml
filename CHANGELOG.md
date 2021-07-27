@@ -1,8 +1,12 @@
 # Haml Changelog
 
-## Unreleased
+## 5.2.2
+Released on July 27, 2021
+([diff](https://github.com/haml/haml/compare/v5.2.1...v5.2.2)).
 
 * Support for adding Annotations to Haml output (a Rails feature 6.1+)
+* Expanded test matrix to include Ruby 3.0 and Rails 6.1
+* Only testing Ruby 2.7+ and Rails 5.2+
 
 ## 5.2.1
 
