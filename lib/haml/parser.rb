@@ -9,7 +9,6 @@ require 'haml/parser/haml_util'
 require 'haml/parser/haml_helpers'
 require 'haml/parser/haml_options'
 require 'haml/parser/haml_escapable'
-require 'haml/parser/haml_generator'
 
 module Haml
   class Parser
