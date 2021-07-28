@@ -4,7 +4,6 @@ require 'ripper'
 require 'strscan'
 
 # haml/parser/haml_* are a copy of Haml 5. Most of them should be removed.
-require 'haml/parser/haml_attribute_builder'
 require 'haml/parser/haml_error'
 require 'haml/parser/haml_util'
 require 'haml/parser/haml_helpers'
@@ -474,13 +473,13 @@ module Haml
 
       if attributes_hashes[:new]
         static_attributes, attributes_hash = attributes_hashes[:new]
-        HamlAttributeBuilder.merge_attributes!(attributes, static_attributes) if static_attributes
+        AttributeMerger.merge_attributes!(attributes, static_attributes) if static_attributes
         dynamic_attributes.new = attributes_hash
       end
 
       if attributes_hashes[:old]
         static_attributes = parse_static_hash(attributes_hashes[:old])
-        HamlAttributeBuilder.merge_attributes!(attributes, static_attributes) if static_attributes
+        AttributeMerger.merge_attributes!(attributes, static_attributes) if static_attributes
         dynamic_attributes.old = attributes_hashes[:old] unless static_attributes || @options.suppress_eval
       end
 
@@ -896,5 +895,76 @@ module Haml
     def flat?
       @flat
     end
+
+    class << AttributeMerger = Object.new
+      # Merges two attribute hashes.
+      # This is the same as `to.merge!(from)`,
+      # except that it merges id, class, and data attributes.
+      #
+      # ids are concatenated with `"_"`,
+      # and classes are concatenated with `" "`.
+      # data hashes are simply merged.
+      #
+      # Destructively modifies `to`.
+      #
+      # @param to [{String => String,Hash}] The attribute hash to merge into
+      # @param from [{String => Object}] The attribute hash to merge from
+      # @return [{String => String,Hash}] `to`, after being merged
+      def merge_attributes!(to, from)
+        from.keys.each do |key|
+          to[key] = merge_value(key, to[key], from[key])
+        end
+        to
+      end
+
+      private
+
+      # @return [String, nil]
+      def filter_and_join(value, separator)
+        return '' if (value.respond_to?(:empty?) && value.empty?)
+
+        if value.is_a?(Array)
+          value = value.flatten
+          value.map! {|item| item ? item.to_s : nil}
+          value.compact!
+          value = value.join(separator)
+        else
+          value = value ? value.to_s : nil
+        end
+        !value.nil? && !value.empty? && value
+      end
+
+      # Merge a couple of values to one attribute value. No destructive operation.
+      #
+      # @param to [String,Hash,nil]
+      # @param from [Object]
+      # @return [String,Hash]
+      def merge_value(key, to, from)
+        if from.kind_of?(Hash) || to.kind_of?(Hash)
+          from = { nil => from } if !from.is_a?(Hash)
+          to   = { nil => to }   if !to.is_a?(Hash)
+          to.merge(from)
+        elsif key == 'id'
+          merged_id = filter_and_join(from, '_')
+          if to && merged_id
+            merged_id = "#{to}_#{merged_id}"
+          elsif to || merged_id
+            merged_id ||= to
+          end
+          merged_id
+        elsif key == 'class'
+          merged_class = filter_and_join(from, ' ')
+          if to && merged_class
+            merged_class = (to.split(' ') | merged_class.split(' ')).join(' ')
+          elsif to || merged_class
+            merged_class ||= to
+          end
+          merged_class
+        else
+          from
+        end
+      end
+    end
+    private_constant :AttributeMerger
   end
 end
