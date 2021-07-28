@@ -13,7 +13,6 @@ require 'haml/parser/haml_compiler'
 require 'haml/parser/haml_options'
 require 'haml/parser/haml_escapable'
 require 'haml/parser/haml_generator'
-require 'haml/parser/haml_temple_engine'
 
 module Haml
   class Parser
