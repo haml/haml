@@ -8,7 +8,6 @@ require 'haml/parser/haml_error'
 require 'haml/parser/haml_util'
 require 'haml/parser/haml_helpers'
 require 'haml/parser/haml_options'
-require 'haml/parser/haml_escapable'
 
 module Haml
   class Parser
