@@ -65,7 +65,7 @@ module Haml
       def static_compile(node)
         str = eval(node.value[:text]).to_s
         if node.value[:escape_html]
-          str = Haml::Utils.escape_html(str)
+          str = Haml::Util.escape_html(str)
         elsif node.value[:preserve]
           str = ScriptCompiler.find_and_preserve(str, %w(textarea pre code))
         end

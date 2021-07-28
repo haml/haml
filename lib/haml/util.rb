@@ -11,8 +11,24 @@ require 'strscan'
 
 module Haml
   # A module containing various useful functions.
-  module HamlUtil
+  module Util
     extend self
+
+    # Java extension is not implemented for JRuby yet.
+    # TruffleRuby does not implement `rb_ary_sort_bang`, etc.
+    if /java/ === RUBY_PLATFORM || RUBY_ENGINE == 'truffleruby'
+      require 'cgi/escape'
+
+      def self.escape_html(html)
+        CGI.escapeHTML(html.to_s)
+      end
+    else
+      require 'haml/haml' # Haml::Util.escape_html
+    end
+
+    def self.escape_html_safe(html)
+      html.html_safe? ? html : escape_html(html)
+    end
 
     # Silence all output to STDERR within a block.
     #
@@ -33,20 +49,6 @@ module Haml
     # @return [Boolean]
     def rails_xss_safe?
       false
-    end
-
-    # Returns the given text, marked as being HTML-safe.
-    # With older versions of the Rails XSS-safety mechanism,
-    # this destructively modifies the HTML-safety of `text`.
-    #
-    # It only works if you are using ActiveSupport or the parameter `text`
-    # implements the #html_safe method.
-    #
-    # @param text [String, nil]
-    # @return [String, nil] `text`, marked as HTML-safe
-    def html_safe(text)
-      return unless text
-      text.html_safe
     end
 
     # Checks that the encoding of a string is valid
@@ -200,7 +202,7 @@ MSG
 
     def unescape_interpolation(str, escape_html = nil)
       res = ''.dup
-      rest = Haml::HamlUtil.handle_interpolation str.dump do |scan|
+      rest = Haml::Util.handle_interpolation str.dump do |scan|
         escapes = (scan[2].size - 1) / 2
         char = scan[3] # '{', '@' or '$'
         res << scan.matched[0...-3 - escapes]

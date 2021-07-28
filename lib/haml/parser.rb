@@ -3,14 +3,14 @@
 require 'ripper'
 require 'strscan'
 require 'haml/haml_error'
+require 'haml/util'
 
 # haml/parser/haml_* are a copy of Haml 5. Most of them should be removed.
-require 'haml/parser/haml_util'
 require 'haml/parser/haml_options'
 
 module Haml
   class Parser
-    include Haml::HamlUtil
+    include Haml::Util
 
     attr_reader :root
 
@@ -125,7 +125,7 @@ module Haml
     end
 
     def call(template)
-      template = Haml::HamlUtil.check_haml_encoding(template) do |msg, line|
+      template = Haml::Util.check_haml_encoding(template) do |msg, line|
         raise Haml::Error.new(msg, line)
       end
 
@@ -342,12 +342,12 @@ module Haml
         raise HamlSyntaxError.new(HamlError.message(:illegal_nesting_plain), @next_line.index)
       end
 
-      unless contains_interpolation?(line.text)
+      unless Util.contains_interpolation?(line.text)
         return ParseNode.new(:plain, line.index + 1, :text => line.text)
       end
 
       escape_html = @options.escape_html && @options.mime_type != 'text/plain' if escape_html.nil?
-      line.text = unescape_interpolation(line.text)
+      line.text = Util.unescape_interpolation(line.text)
       script(line, false).tap { |n| n.value[:escape_interpolation] = true if escape_html }
     end
 
@@ -435,7 +435,7 @@ module Haml
       when '='
         parse = true
         if value[0] == ?=
-          value = unescape_interpolation(value[1..-1].strip)
+          value = Util.unescape_interpolation(value[1..-1].strip)
           escape_interpolation = true if escape_html
           escape_html = false
         end
@@ -444,21 +444,21 @@ module Haml
           parse = true
           preserve_script = (value[0] == ?~)
           if value[1] == ?=
-            value = unescape_interpolation(value[2..-1].strip)
+            value = Util.unescape_interpolation(value[2..-1].strip)
             escape_interpolation = true if escape_html
             escape_html = false
           else
             value = value[1..-1].strip
           end
-        elsif contains_interpolation?(value)
-          value = unescape_interpolation(value)
+        elsif Util.contains_interpolation?(value)
+          value = Util.unescape_interpolation(value)
           escape_interpolation = true if escape_html
           parse = true
           escape_html = false
         end
       else
-        if contains_interpolation?(value)
-          value = unescape_interpolation(value, escape_html)
+        if Util.contains_interpolation?(value)
+          value = Util.unescape_interpolation(value, escape_html)
           parse = true
           escape_html = false
         end
@@ -520,9 +520,9 @@ module Haml
       conditional, text = balance(text, ?[, ?]) if text[0] == ?[
       text.strip!
 
-      if contains_interpolation?(text)
+      if Util.contains_interpolation?(text)
         parse = true
-        text = unescape_interpolation(text)
+        text = Util.unescape_interpolation(text)
       else
         parse = false
       end
@@ -732,7 +732,7 @@ module Haml
         break if name.nil?
 
         if name == false
-          scanned = Haml::HamlUtil.balance(text, ?(, ?))
+          scanned = Haml::Util.balance(text, ?(, ?))
           text = scanned ? scanned.first : text
           raise Haml::HamlSyntaxError.new(HamlError.message(:invalid_attribute_list, text.inspect), last_line - 1)
         end
@@ -753,7 +753,7 @@ module Haml
         if type == :static
           static_attributes[name] = val
         else
-          dynamic_attributes << "#{inspect_obj(name)} => #{val},"
+          dynamic_attributes << "#{Util.inspect_obj(name)} => #{val},"
         end
       end
       dynamic_attributes << "}"
@@ -788,7 +788,7 @@ module Haml
 
       return name, [:static, content.first[1]] if content.size == 1
       return name, [:dynamic,
-        %!"#{content.each_with_object(''.dup) {|(t, v), s| s << (t == :str ? inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
+        %!"#{content.each_with_object(''.dup) {|(t, v), s| s << (t == :str ? Util.inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
     end
 
     def next_line
@@ -856,7 +856,7 @@ module Haml
     end
 
     def balance(*args)
-      Haml::HamlUtil.balance(*args) or raise(HamlSyntaxError.new(HamlError.message(:unbalanced_brackets)))
+      Haml::Util.balance(*args) or raise(HamlSyntaxError.new(HamlError.message(:unbalanced_brackets)))
     end
 
     # Unlike #balance, this balances Ripper tokens to balance something like `{ a: "}" }` correctly.

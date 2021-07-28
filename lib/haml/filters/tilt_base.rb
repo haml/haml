@@ -18,7 +18,7 @@ module Haml
       private
 
       def compile_with_tilt(node, name, indent_width: 0)
-        if ::Haml::HamlUtil.contains_interpolation?(node.value[:text])
+        if ::Haml::Util.contains_interpolation?(node.value[:text])
           dynamic_compile(node, name, indent_width: indent_width)
         else
           static_compile(node, name, indent_width: indent_width)
@@ -35,7 +35,7 @@ module Haml
 
       def dynamic_compile(node, name, indent_width: 0)
         # original: Haml::Filters#compile
-        text = ::Haml::HamlUtil.unescape_interpolation(node.value[:text]).gsub(/(\\+)n/) do |s|
+        text = ::Haml::Util.unescape_interpolation(node.value[:text]).gsub(/(\\+)n/) do |s|
           escapes = $1.size
           next s if escapes % 2 == 0
           "#{'\\' * (escapes - 1)}\n"

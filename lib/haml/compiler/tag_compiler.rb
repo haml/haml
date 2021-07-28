@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'haml/parser/haml_util'
+require 'haml/util'
 require 'haml/attribute_compiler'
 require 'haml/string_splitter'
 

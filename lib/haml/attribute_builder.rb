@@ -158,7 +158,7 @@ module Haml::AttributeBuilder
 
       def escape_html(escape_attrs, str)
         if escape_attrs
-          Haml::Utils.escape_html(str)
+          Haml::Util.escape_html(str)
         else
           str
         end

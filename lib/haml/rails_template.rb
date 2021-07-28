@@ -2,7 +2,7 @@
 require 'temple'
 require 'haml/engine'
 require 'haml/rails_helpers'
-require 'haml/parser/haml_util'
+require 'haml/util'
 
 module Haml
   class RailsTemplate
@@ -45,11 +45,6 @@ module Haml
     end
   end
   ActionView::Template.register_template_handler(:haml, RailsTemplate.new)
-
-  module HamlUtil
-    undef :rails_xss_safe? if defined? rails_xss_safe?
-    def rails_xss_safe?; true; end
-  end
 end
 
 # Haml extends Haml::Helpers in ActionView each time.

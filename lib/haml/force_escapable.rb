@@ -14,7 +14,7 @@ module Haml
   class ForceEscapable < Escapable
     def initialize(opts = {})
       super
-      @escape_code = options[:escape_code] || "::Haml::Utils.escape_html((%s))"
+      @escape_code = options[:escape_code] || "::Haml::Util.escape_html((%s))"
       @escaper = eval("proc {|v| #{@escape_code % 'v'} }")
     end
 

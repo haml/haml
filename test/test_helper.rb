@@ -79,7 +79,7 @@ class Haml::TestCase < BASE_TEST_CLASS
   end
 
   def silence_warnings(&block)
-    Haml::HamlUtil.silence_warnings(&block)
+    Haml::Util.silence_warnings(&block)
   end
 
   def assert_raises_message(klass, message)

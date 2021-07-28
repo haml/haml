@@ -11,8 +11,8 @@ module Haml
       private
 
       def compile_text(text)
-        if ::Haml::HamlUtil.contains_interpolation?(text)
-          [:dynamic, ::Haml::HamlUtil.unescape_interpolation(text)]
+        if ::Haml::Util.contains_interpolation?(text)
+          [:dynamic, ::Haml::Util.unescape_interpolation(text)]
         else
           [:static, text]
         end
