@@ -3,8 +3,20 @@
 require 'ripper'
 require 'strscan'
 
+# haml/parser/haml_* are a copy of Haml 5. Most of them should be removed.
+require 'haml/parser/haml_attribute_builder'
+require 'haml/parser/haml_error'
+require 'haml/parser/haml_util'
+require 'haml/parser/haml_helpers'
+require 'haml/parser/haml_buffer'
+require 'haml/parser/haml_compiler'
+require 'haml/parser/haml_options'
+require 'haml/parser/haml_escapable'
+require 'haml/parser/haml_generator'
+require 'haml/parser/haml_temple_engine'
+
 module Haml
-  class HamlParser
+  class Parser
     include Haml::HamlUtil
 
     attr_reader :root
@@ -94,8 +106,24 @@ module Haml
     # Used for scanning old attributes, substituting the first '{'
     METHOD_CALL_PREFIX = 'a('
 
+    # A list of options that are actually used in this parser
+    AVAILABLE_OPTIONS = %i[
+      autoclose
+      escape_html
+      filename
+      line
+      mime_type
+      preserve
+      remove_whitespace
+    ]
+
     def initialize(options)
-      @options = HamlOptions.wrap(options)
+      @options = HamlOptions.defaults.dup
+      AVAILABLE_OPTIONS.each do |key|
+        @options[key] = options[key]
+      end
+      @options = HamlOptions.new(@options)
+
       # Record the indent levels of "if" statements to validate the subsequent
       # elsif and else statements are indented at the appropriate level.
       @script_level_stack = []
@@ -104,6 +132,10 @@ module Haml
     end
 
     def call(template)
+      template = Haml::HamlUtil.check_haml_encoding(template) do |msg, line|
+        raise Haml::Error.new(msg, line)
+      end
+
       match = template.rstrip.scan(/(([ \t]+)?(.*?))(?:\Z|\r\n|\r|\n)/m)
       # discard the last match which is always blank
       match.pop
@@ -152,7 +184,7 @@ module Haml
       @root
     rescue Haml::HamlError => e
       e.backtrace.unshift "#{@options.filename}:#{(e.line ? e.line + 1 : @line.index + 1) + @options.line - 1}"
-      raise
+      error_with_lineno(e)
     end
 
     def compute_tabs(line)
@@ -181,6 +213,16 @@ module Haml
     end
 
     private
+
+    def error_with_lineno(error)
+      return error if error.line
+
+      trace = error.backtrace.first
+      return error unless trace
+
+      line = trace.match(/\d+\z/).to_s.to_i
+      HamlSyntaxError.new(error.message, line)
+    end
 
     # @private
     Line = Struct.new(:whitespace, :text, :full, :index, :parser, :eod) do
@@ -429,7 +471,7 @@ module Haml
         end
       end
 
-      attributes = HamlParser.parse_class_and_id(attributes)
+      attributes = Parser.parse_class_and_id(attributes)
       dynamic_attributes = DynamicAttributes.new
 
       if attributes_hashes[:new]

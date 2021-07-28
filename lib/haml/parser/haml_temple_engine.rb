@@ -24,7 +24,7 @@ module Haml
       remove_whitespace:    false,
       suppress_eval:        false,
       cdata:                false,
-      parser_class:         ::Haml::HamlParser,
+      # parser_class:         ::Haml::Parser,
       compiler_class:       ::Haml::HamlCompiler,
       trace:                false,
       filters:              {},
