@@ -57,27 +57,6 @@ MESSAGE
       @@action_view_defined
     end
 
-    # Note: this does **not** need to be called when using Haml helpers
-    # normally in Rails.
-    #
-    # Initializes the current object as though it were in the same context
-    # as a normal ActionView instance using Haml.
-    # This is useful if you want to use the helpers in a context
-    # other than the normal setup with ActionView.
-    # For example:
-    #
-    #     context = Object.new
-    #     class << context
-    #       include Haml::HamlHelpers
-    #     end
-    #     context.init_haml_helpers
-    #     context.haml_tag :p, "Stuff"
-    #
-    def init_haml_helpers
-      @haml_buffer = Haml::HamlBuffer.new(haml_buffer, HamlOptions.new.for_buffer)
-      nil
-    end
-
     # Runs a block of code in a non-Haml context
     # (i.e. \{#is\_haml?} will return false).
     #
