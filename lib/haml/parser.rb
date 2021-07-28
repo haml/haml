@@ -5,9 +5,6 @@ require 'strscan'
 require 'haml/haml_error'
 require 'haml/util'
 
-# haml/parser/haml_* are a copy of Haml 5. Most of them should be removed.
-require 'haml/parser/haml_options'
-
 module Haml
   class Parser
     include Haml::Util
@@ -99,24 +96,8 @@ module Haml
     # Used for scanning old attributes, substituting the first '{'
     METHOD_CALL_PREFIX = 'a('
 
-    # A list of options that are actually used in this parser
-    AVAILABLE_OPTIONS = %i[
-      autoclose
-      escape_html
-      filename
-      line
-      mime_type
-      preserve
-      remove_whitespace
-    ]
-
     def initialize(options)
-      @options = HamlOptions.defaults.dup
-      AVAILABLE_OPTIONS.each do |key|
-        @options[key] = options[key]
-      end
-      @options = HamlOptions.new(@options)
-
+      @options = ParserOptions.new(options)
       # Record the indent levels of "if" statements to validate the subsequent
       # elsif and else statements are indented at the appropriate level.
       @script_level_stack = []
@@ -962,5 +943,44 @@ module Haml
       end
     end
     private_constant :AttributeMerger
+
+    class ParserOptions
+      # A list of options that are actually used in the parser
+      AVAILABLE_OPTIONS = %i[
+        autoclose
+        escape_html
+        filename
+        line
+        mime_type
+        preserve
+        remove_whitespace
+        suppress_eval
+      ].each do |option|
+        attr_reader option
+      end
+
+      DEFAULTS = {
+        autoclose:         %w(area base basefont br col command embed frame
+                              hr img input isindex keygen link menuitem meta
+                              param source track wbr),
+        escape_html:       false,
+        filename:          '(haml)',
+        line:              1,
+        mime_type:         'text/html',
+        preserve:          %w(textarea pre code),
+        remove_whitespace: false,
+        suppress_eval:     false,
+      }
+
+      def initialize(values = {})
+        DEFAULTS.each {|k, v| instance_variable_set :"@#{k}", v}
+        AVAILABLE_OPTIONS.each do |key|
+          if values.key?(key)
+            instance_variable_set :"@#{key}", values[key]
+          end
+        end
+      end
+    end
+    private_constant :ParserOptions
   end
 end
