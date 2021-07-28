@@ -6,7 +6,6 @@ require 'strscan'
 # haml/parser/haml_* are a copy of Haml 5. Most of them should be removed.
 require 'haml/parser/haml_error'
 require 'haml/parser/haml_util'
-require 'haml/parser/haml_helpers'
 require 'haml/parser/haml_options'
 
 module Haml

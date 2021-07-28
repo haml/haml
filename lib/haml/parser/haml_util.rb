@@ -214,7 +214,7 @@ MSG
           end
           content = eval("\"#{interpolated}\"")
           content = "#{char}#{content}" if char == '@' || char == '$'
-          content = "Haml::HamlHelpers.html_escape((#{content}))" if escape_html
+          content = "CGI.escapeHTML((#{content}).to_s)" if escape_html
 
           res << "\#{#{content}}"
         end

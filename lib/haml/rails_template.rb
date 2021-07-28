@@ -2,7 +2,6 @@
 require 'temple'
 require 'haml/engine'
 require 'haml/rails_helpers'
-require 'haml/parser/haml_helpers'
 require 'haml/parser/haml_util'
 
 module Haml
@@ -46,12 +45,6 @@ module Haml
     end
   end
   ActionView::Template.register_template_handler(:haml, RailsTemplate.new)
-
-  # https://github.com/haml/haml/blob/4.0.7/lib/haml/template.rb
-  module HamlHelpers
-    require 'haml/parser/haml_helpers/xss_mods'
-    include Haml::HamlHelpers::XssMods
-  end
 
   module HamlUtil
     undef :rails_xss_safe? if defined? rails_xss_safe?
