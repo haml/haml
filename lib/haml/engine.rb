@@ -37,4 +37,16 @@ module Haml
     use DynamicMerger
     use :Generator, -> { options[:generator] }
   end
+
+  # For backward compatibility of Tilt integration. TODO: We should deprecate this
+  # and let Tilt have a native support of Haml 6. At least it generates warnings now.
+  class TempleEngine < Engine
+    def compile(template)
+      @precompiled = call(template)
+    end
+
+    def precompiled_with_ambles(_local_names, after_preamble:)
+      "#{after_preamble.tr("\n", ';')}#{@precompiled}".dup
+    end
+  end
 end
