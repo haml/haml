@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 module Haml
+  # TODO: unify Haml::Error (former Hamlit::Error) and Haml::HamlError (former Haml::Error)
   class Error < StandardError
     attr_reader :line
 

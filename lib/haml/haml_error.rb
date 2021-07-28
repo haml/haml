@@ -2,6 +2,7 @@
 
 module Haml
   # An exception raised by Haml code.
+  # TODO: unify Haml::Error (former Hamlit::Error) and Haml::HamlError (former Haml::Error)
   class HamlError < StandardError
 
     MESSAGES = {
