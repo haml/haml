@@ -58,7 +58,7 @@ describe Haml::Engine do
     end
 
     it 'renders block script' do
-      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent, disable_capture: true)
         0
         1
         2
@@ -71,7 +71,7 @@ describe Haml::Engine do
     end
 
     it 'renders tag internal block script' do
-      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent, disable_capture: true)
         <span>
         0
         1</span>

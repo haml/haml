@@ -14,6 +14,7 @@ module Haml
           use_html_safe: true,
           streaming:     true,
           buffer_class:  'ActionView::OutputBuffer',
+          disable_capture: true,
         }
       end
 
@@ -33,8 +34,10 @@ module Haml
       end
 
       if ActionView::Base.try(:annotate_rendered_view_with_filenames) && template.format == :html
-        options[:preamble] = "<!-- BEGIN #{template.short_identifier} -->\n"
-        options[:postamble] = "<!-- END #{template.short_identifier} -->\n"
+        options = options.merge(
+          preamble: "<!-- BEGIN #{template.short_identifier} -->\n",
+          postamble: "<!-- END #{template.short_identifier} -->\n",
+        )
       end
 
       Engine.new(options).call(source)

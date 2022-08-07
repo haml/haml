@@ -15,8 +15,9 @@ module Haml
         end
       end
 
-      def initialize(identity)
+      def initialize(identity, options)
         @identity = identity
+        @disable_capture = options[:disable_capture]
       end
 
       def compile(node, &block)
@@ -88,7 +89,7 @@ module Haml
         else
           [:multi,
            [:block, "#{var} = #{node.value[:text]}",
-            [:multi, [:newline], yield(node)],
+            [:multi, [:newline], @disable_capture ? yield(node) : [:capture, Temple::Utils.unique_name, yield(node)]]
            ],
           ]
         end

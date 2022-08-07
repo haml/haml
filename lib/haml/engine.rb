@@ -21,6 +21,7 @@ module Haml
                        hr img input isindex keygen link menuitem meta
                        param source track wbr),
       filename:     "",
+      disable_capture: false,
     )
 
     use Parser
