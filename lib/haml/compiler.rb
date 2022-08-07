@@ -16,7 +16,7 @@ module Haml
       @comment_compiler       = CommentCompiler.new
       @doctype_compiler       = DoctypeCompiler.new(options)
       @filter_compiler        = Filters.new(options)
-      @script_compiler        = ScriptCompiler.new(identity)
+      @script_compiler        = ScriptCompiler.new(identity, options)
       @silent_script_compiler = SilentScriptCompiler.new
       @tag_compiler           = TagCompiler.new(identity, options)
     end

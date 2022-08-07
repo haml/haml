@@ -41,7 +41,7 @@ describe Haml::Engine do
     end
 
     it 'removes whitespaces inside block script' do
-      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent, disable_capture: true)
         <span>foofoo2<span>bar</span></span>
       HTML
         %span<
@@ -62,7 +62,7 @@ describe Haml::Engine do
     end
 
     it 'removes whitespace inside script recursively' do
-      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+      assert_render(<<-HTML.unindent, <<-HAML.unindent, disable_capture: true)
         <div class='foo'>bar1bar1bar1bar12</div>
       HTML
         .foo<
@@ -104,7 +104,7 @@ describe Haml::Engine do
     end
 
     it 'does not nuke inside script' do
-      assert_render(%Q|<div><span>\nhello\n</span>1</div>|, <<-HAML.unindent)
+      assert_render(%Q|<div><span>\nhello\n</span>1</div>|, <<-HAML.unindent, disable_capture: true)
         %div><
           = 1.times do
             %span>
