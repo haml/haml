@@ -18,7 +18,6 @@ else
   gem 'redcarpet'
 
   if RUBY_PLATFORM !~ /mswin|mingw/ && RUBY_ENGINE != 'truffleruby'
-    gem 'faml'
     gem 'stackprof'
   end
 end
