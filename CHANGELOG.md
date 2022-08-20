@@ -1,5 +1,23 @@
 # Haml Changelog
 
+## 6.0.0
+
+Not released yet
+([diff](https://github.com/haml/haml/compare/v5.2.2...main)).
+
+* Replace the implementation with Hamlit
+  * Haml 6 is about 1.7x faster than Haml 5 in [this benchmark](benchmark/slim/run-benchmarks.rb).
+  * The parser is kept as is, but everything else is replaced.
+  * All Haml helpers except for `preserve` are removed.
+  * Some legacy Rails integration is removed.
+
+## 5.2.2
+
+Released on July 27, 2021
+([diff](https://github.com/haml/haml/compare/v5.2.1...v5.2.2)).
+
+* Support `config.action_view.annotate_rendered_view_with_filenames = true` of Rails 6.1
+
 ## 5.2.1
 
 Released on November 30, 2020
