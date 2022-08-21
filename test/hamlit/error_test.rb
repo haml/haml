@@ -1,8 +1,8 @@
 describe Haml::Engine do
-  describe 'HamlSyntaxError' do
+  describe 'SyntaxError' do
     it 'raises on runtime' do
       code = Haml::Engine.new.call("  %a")
-      assert_raises(Haml::HamlSyntaxError) do
+      assert_raises(Haml::SyntaxError) do
         eval code
       end
     end
@@ -11,7 +11,7 @@ describe Haml::Engine do
       code = Haml::Engine.new.call("\n\n  %a")
       begin
         eval code
-      rescue Haml::HamlSyntaxError => e
+      rescue Haml::SyntaxError => e
         assert_equal(2, e.line)
       end
     end
@@ -27,7 +27,7 @@ describe Haml::Engine do
         HAML
         begin
           eval code
-        rescue Haml::HamlSyntaxError => e
+        rescue Haml::SyntaxError => e
           assert_equal(3, e.line)
         end
       end

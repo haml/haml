@@ -22,7 +22,7 @@ module Haml
     end
 
     def call(ast)
-      return runtime_error(ast) if ast.is_a?(HamlError)
+      return runtime_error(ast) if ast.is_a?(Error)
       compile(ast)
     rescue Error => e
       runtime_error(e)

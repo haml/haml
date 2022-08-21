@@ -100,6 +100,6 @@ class Haml::TestCase < BASE_TEST_CLASS
   end
 
   def self.error(*args)
-    Haml::HamlError.message(*args)
+    Haml::Error.message(*args)
   end
 end

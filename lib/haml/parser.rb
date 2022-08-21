@@ -2,7 +2,7 @@
 
 require 'ripper'
 require 'strscan'
-require 'haml/haml_error'
+require 'haml/error'
 require 'haml/util'
 
 module Haml
@@ -125,7 +125,7 @@ module Haml
       @indentation = nil
       @line = next_line
 
-      raise HamlSyntaxError.new(HamlError.message(:indenting_at_start), @line.index) if @line.tabs != 0
+      raise SyntaxError.new(Error.message(:indenting_at_start), @line.index) if @line.tabs != 0
 
       loop do
         next_line
@@ -148,7 +148,7 @@ module Haml
         end
 
         if !flat? && @next_line.tabs - @line.tabs > 1
-          raise HamlSyntaxError.new(HamlError.message(:deeper_indenting, @next_line.tabs - @line.tabs), @next_line.index)
+          raise SyntaxError.new(Error.message(:deeper_indenting, @next_line.tabs - @line.tabs), @next_line.index)
         end
 
         @line = @next_line
@@ -156,7 +156,7 @@ module Haml
       # Close all the open tags
       close until @parent.type == :root
       @root
-    rescue Haml::HamlError => e
+    rescue Haml::Error => e
       e.backtrace.unshift "#{@options.filename}:#{(e.line ? e.line + 1 : @line.index + 1) + @options.line - 1}"
       error_with_lineno(e)
     end
@@ -168,7 +168,7 @@ module Haml
         @indentation = line.whitespace
 
         if @indentation.include?(?\s) && @indentation.include?(?\t)
-          raise HamlSyntaxError.new(HamlError.message(:cant_use_tabs_and_spaces), line.index)
+          raise SyntaxError.new(Error.message(:cant_use_tabs_and_spaces), line.index)
         end
 
         @flat_spaces = @indentation * (@template_tabs+1) if flat?
@@ -179,11 +179,11 @@ module Haml
       return tabs if line.whitespace == @indentation * tabs
       return @template_tabs + 1 if flat? && line.whitespace =~ /^#{@flat_spaces}/
 
-      message = HamlError.message(:inconsistent_indentation,
+      message = Error.message(:inconsistent_indentation,
         human_indentation(line.whitespace),
         human_indentation(@indentation)
       )
-      raise HamlSyntaxError.new(message, line.index)
+      raise SyntaxError.new(message, line.index)
     end
 
     private
@@ -195,7 +195,7 @@ module Haml
       return error unless trace
 
       line = trace.match(/\d+\z/).to_s.to_i
-      HamlSyntaxError.new(error.message, line)
+      SyntaxError.new(error.message, line)
     end
 
     # @private
@@ -320,7 +320,7 @@ module Haml
 
     def plain(line, escape_html = nil)
       if block_opened?
-        raise HamlSyntaxError.new(HamlError.message(:illegal_nesting_plain), @next_line.index)
+        raise SyntaxError.new(Error.message(:illegal_nesting_plain), @next_line.index)
       end
 
       unless Util.contains_interpolation?(line.text)
@@ -333,7 +333,7 @@ module Haml
     end
 
     def script(line, escape_html = nil, preserve = false)
-      raise HamlSyntaxError.new(HamlError.message(:no_ruby_code, '=')) if line.text.empty?
+      raise SyntaxError.new(Error.message(:no_ruby_code, '=')) if line.text.empty?
       line = handle_ruby_multiline(line)
       escape_html = @options.escape_html if escape_html.nil?
 
@@ -345,12 +345,12 @@ module Haml
     end
 
     def flat_script(line, escape_html = nil)
-      raise HamlSyntaxError.new(HamlError.message(:no_ruby_code, '~')) if line.text.empty?
+      raise SyntaxError.new(Error.message(:no_ruby_code, '~')) if line.text.empty?
       script(line, escape_html, :preserve)
     end
 
     def silent_script(line)
-      raise HamlSyntaxError.new(HamlError.message(:no_end), line.index) if line.text[1..-1].strip == 'end'
+      raise SyntaxError.new(Error.message(:no_end), line.index) if line.text[1..-1].strip == 'end'
 
       line = handle_ruby_multiline(line)
       keyword = block_keyword(line.text)
@@ -359,7 +359,7 @@ module Haml
 
       if ["else", "elsif", "when"].include?(keyword)
         if @script_level_stack.empty?
-          raise Haml::HamlSyntaxError.new(HamlError.message(:missing_if, keyword), @line.index)
+          raise Haml::SyntaxError.new(Error.message(:missing_if, keyword), @line.index)
         end
 
         if keyword == 'when' and !@script_level_stack.last[2]
@@ -370,8 +370,8 @@ module Haml
         end
 
         if @script_level_stack.last[1] != @line.tabs
-          message = HamlError.message(:bad_script_indent, keyword, @script_level_stack.last[1], @line.tabs)
-          raise Haml::HamlSyntaxError.new(message, @line.index)
+          message = Error.message(:bad_script_indent, keyword, @script_level_stack.last[1], @line.tabs)
+          raise Haml::SyntaxError.new(message, @line.index)
         end
       end
 
@@ -460,12 +460,12 @@ module Haml
         dynamic_attributes.old = attributes_hashes[:old] unless static_attributes || @options.suppress_eval
       end
 
-      raise HamlSyntaxError.new(HamlError.message(:illegal_nesting_self_closing), @next_line.index) if block_opened? && self_closing
-      raise HamlSyntaxError.new(HamlError.message(:no_ruby_code, action), last_line - 1) if parse && value.empty?
-      raise HamlSyntaxError.new(HamlError.message(:self_closing_content), last_line - 1) if self_closing && !value.empty?
+      raise SyntaxError.new(Error.message(:illegal_nesting_self_closing), @next_line.index) if block_opened? && self_closing
+      raise SyntaxError.new(Error.message(:no_ruby_code, action), last_line - 1) if parse && value.empty?
+      raise SyntaxError.new(Error.message(:self_closing_content), last_line - 1) if self_closing && !value.empty?
 
       if block_opened? && !value.empty? && !is_ruby_multiline?(value)
-        raise HamlSyntaxError.new(HamlError.message(:illegal_nesting_line, tag_name), @next_line.index)
+        raise SyntaxError.new(Error.message(:illegal_nesting_line, tag_name), @next_line.index)
       end
 
       self_closing ||= !!(!block_opened? && value.empty? && @options.autoclose.any? {|t| t === tag_name})
@@ -509,7 +509,7 @@ module Haml
       end
 
       if block_opened? && !text.empty?
-        raise HamlSyntaxError.new(Haml::HamlError.message(:illegal_nesting_content), @next_line.index)
+        raise SyntaxError.new(Haml::Error.message(:illegal_nesting_content), @next_line.index)
       end
 
       ParseNode.new(:comment, @line.index + 1, :conditional => conditional, :text => text, :revealed => revealed, :parse => parse)
@@ -517,13 +517,13 @@ module Haml
 
     # Renders an XHTML doctype or XML shebang.
     def doctype(text)
-      raise HamlSyntaxError.new(HamlError.message(:illegal_nesting_header), @next_line.index) if block_opened?
+      raise SyntaxError.new(Error.message(:illegal_nesting_header), @next_line.index) if block_opened?
       version, type, encoding = text[3..-1].strip.downcase.scan(DOCTYPE_REGEX)[0]
       ParseNode.new(:doctype, @line.index + 1, :version => version, :type => type, :encoding => encoding)
     end
 
     def filter(name)
-      raise HamlError.new(HamlError.message(:invalid_filter_name, name)) unless name =~ /^\w+$/
+      raise Error.new(Error.message(:invalid_filter_name, name)) unless name =~ /^\w+$/
 
       if filter_opened?
         @flat = true
@@ -621,12 +621,12 @@ module Haml
     # Parses a line into tag_name, attributes, attributes_hash, object_ref, action, value
     def parse_tag(text)
       match = text.scan(/%([-:\w]+)([-:\w.#\@]*)(.+)?/)[0]
-      raise HamlSyntaxError.new(HamlError.message(:invalid_tag, text)) unless match
+      raise SyntaxError.new(Error.message(:invalid_tag, text)) unless match
 
       tag_name, attributes, rest = match
 
       if !attributes.empty? && (attributes =~ /[.#](\.|#|\z)/)
-        raise HamlSyntaxError.new(HamlError.message(:illegal_element))
+        raise SyntaxError.new(Error.message(:illegal_element))
       end
 
       new_attributes_hash = old_attributes_hash = last_line = nil
@@ -685,8 +685,8 @@ module Haml
         # 1 more :on_embexpr_end (the last '}') than :on_embexpr_beg, and resurrects '{' afterwards.
         balanced, rest = balance_tokens(text.sub(?{, METHOD_CALL_PREFIX), :on_embexpr_beg, :on_embexpr_end, count: 1)
         attributes_hash = balanced.sub(METHOD_CALL_PREFIX, ?{)
-      rescue HamlSyntaxError => e
-        if e.message == HamlError.message(:unbalanced_brackets) && !@template.empty?
+      rescue SyntaxError => e
+        if e.message == Error.message(:unbalanced_brackets) && !@template.empty?
           text << "\n#{@next_line.text}"
           last_line += 1
           next_line
@@ -715,7 +715,7 @@ module Haml
         if name == false
           scanned = Haml::Util.balance(text, ?(, ?))
           text = scanned ? scanned.first : text
-          raise Haml::HamlSyntaxError.new(HamlError.message(:invalid_attribute_list, text.inspect), last_line - 1)
+          raise Haml::SyntaxError.new(Error.message(:invalid_attribute_list, text.inspect), last_line - 1)
         end
         attributes[name] = value
         scanner.scan(/\s*/)
@@ -837,7 +837,7 @@ module Haml
     end
 
     def balance(*args)
-      Haml::Util.balance(*args) or raise(HamlSyntaxError.new(HamlError.message(:unbalanced_brackets)))
+      Haml::Util.balance(*args) or raise(SyntaxError.new(Error.message(:unbalanced_brackets)))
     end
 
     # Unlike #balance, this balances Ripper tokens to balance something like `{ a: "}" }` correctly.
@@ -856,7 +856,7 @@ module Haml
           return text, buf.sub(text, '')
         end
       end
-      raise HamlSyntaxError.new(HamlError.message(:unbalanced_brackets))
+      raise SyntaxError.new(Error.message(:unbalanced_brackets))
     end
 
     def block_opened?
