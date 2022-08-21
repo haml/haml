@@ -103,6 +103,10 @@ module Haml
       @script_level_stack = []
       @template_index     = 0
       @template_tabs      = 0
+      # When used in Haml::Engine, which gives options[:generator] to every filter
+      # in the engine, including Haml::Parser, we don't want to throw exceptions.
+      # However, when Haml::Parser is used as a library, we want to throw exceptions.
+      @raise_error = !options.key?(:generator)
     end
 
     def call(template)
@@ -158,6 +162,7 @@ module Haml
       @root
     rescue Haml::Error => e
       e.backtrace.unshift "#{@options.filename}:#{(e.line ? e.line + 1 : @line.index + 1) + @options.line - 1}"
+      raise if @raise_error
       error_with_lineno(e)
     end
 

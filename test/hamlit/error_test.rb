@@ -1,4 +1,12 @@
 describe Haml::Engine do
+  describe 'Error' do
+    it 'raises an error when Haml::Parser is used independently' do
+      assert_raises(Haml::Error) do
+        Haml::Parser.new({}).call("%body\n  %div\n        %p")
+      end
+    end
+  end
+
   describe 'SyntaxError' do
     it 'raises on runtime' do
       code = Haml::Engine.new.call("  %a")
