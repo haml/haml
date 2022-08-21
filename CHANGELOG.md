@@ -8,6 +8,7 @@ Not released yet
 * Replace the implementation with Hamlit
   * Haml 6 is about 1.7x faster than Haml 5 in [this benchmark](benchmark/slim/run-benchmarks.rb).
   * The parser is kept as is, but everything else is replaced.
+  * The `haml` CLI interface was also replaced.
   * All Haml helpers except for `preserve` are removed.
   * Some legacy Rails integration is removed.
 
