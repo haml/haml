@@ -2,8 +2,8 @@
 
 ## 6.0.0
 
-Not released yet
-([diff](https://github.com/haml/haml/compare/v5.2.2...main)).
+Released on September 21, 2022
+([diff](https://github.com/haml/haml/compare/v5.2.2...v6.0.0)).
 
 * Replace the implementation with Hamlit
   * Haml 6 is about 1.7x faster than Haml 5 in [this benchmark](benchmark/slim/run-benchmarks.rb).
