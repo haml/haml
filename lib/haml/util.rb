@@ -26,8 +26,9 @@ module Haml
       require 'haml/haml' # Haml::Util.escape_html
     end
 
+    # TODO: Remove unescape_interpolation's workaround and get rid of `respond_to?`.
     def self.escape_html_safe(html)
-      html.html_safe? ? html : escape_html(html)
+      (html.respond_to?(:html_safe?) && html.html_safe?) ? html : escape_html(html)
     end
 
     # Silence all output to STDERR within a block.
@@ -216,7 +217,7 @@ MSG
           end
           content = eval("\"#{interpolated}\"")
           content = "#{char}#{content}" if char == '@' || char == '$'
-          content = "CGI.escapeHTML((#{content}).to_s)" if escape_html
+          content = "Haml::Util.escape_html_safe((#{content}).to_s)" if escape_html
 
           res << "\#{#{content}}"
         end
