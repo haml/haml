@@ -22,7 +22,7 @@ gem install haml
 After you write some Haml, you can run
 
 ~~~sh
-haml document.haml
+haml render document.haml
 ~~~
 
 to compile it to HTML. For more information on these commands, check out
