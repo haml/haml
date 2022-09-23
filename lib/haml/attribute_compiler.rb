@@ -14,7 +14,7 @@ module Haml
 
     def compile(node)
       hashes = []
-      if node.value[:object_ref] != :nil || !Ripper.respond_to?(:lex) # No Ripper.lex in truffleruby
+      if node.value[:object_ref] != :nil || !AttributeParser.available?
         return runtime_compile(node)
       end
       [node.value[:dynamic_attributes].new, node.value[:dynamic_attributes].old].compact.each do |attribute_str|

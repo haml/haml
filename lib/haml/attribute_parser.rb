@@ -6,13 +6,19 @@ module Haml
     class ParseSkip < StandardError
     end
 
+    # @return [TrueClass, FalseClass] - return true if AttributeParser.parse can be used.
+    def self.available?
+      # TruffleRuby doesn't have Ripper.lex
+      defined?(Ripper) && Ripper.respond_to?(:lex) && Temple::StaticAnalyzer.available?
+    end
+
     def self.parse(text)
       self.new.parse(text)
     end
 
     def parse(text)
       exp = wrap_bracket(text)
-      return if RubyExpression.syntax_error?(exp)
+      return if Temple::StaticAnalyzer.syntax_error?(exp)
 
       hash = {}
       tokens = Ripper.lex(exp)[1..-2] || []
