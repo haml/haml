@@ -1,7 +1,7 @@
 # Haml
 
 [![Gem Version](https://badge.fury.io/rb/haml.svg)](http://rubygems.org/gems/haml)
-[![Build Status](https://travis-ci.org/haml/haml.svg?branch=main)](http://travis-ci.org/haml/haml)
+[![test](https://github.com/haml/haml/actions/workflows/test.yml/badge.svg)](https://github.com/haml/haml/actions/workflows/test.yml)
 [![Code Climate](https://codeclimate.com/github/haml/haml/badges/gpa.svg)](https://codeclimate.com/github/haml/haml)
 [![Inline docs](http://inch-ci.org/github/haml/haml.png)](http://inch-ci.org/github/haml/haml)
 
