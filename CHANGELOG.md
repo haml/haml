@@ -1,5 +1,13 @@
 # Haml Changelog
 
+## 6.0.1
+
+Released on September 23, 2022
+([diff](https://github.com/haml/haml/compare/v6.0.0...v6.0.1)).
+
+* Unescape HTML-safe interpolation on Rails [#1084](https://github.com/haml/haml/issues/1084)
+* Resurrect Haml 5's `AttributeParser.available?` for syntax\_tree-haml [#1085](https://github.com/haml/haml/issues/1085)
+
 ## 6.0.0
 
 Released on September 21, 2022
