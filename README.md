@@ -42,7 +42,7 @@ gem 'haml'
 ~~~
 
 If you'd like to replace Rails's ERB-based generators with Haml, add
-[haml-rails](https://github.com/indirect/haml-rails) to your Gemfile as well.
+[haml-rails](https://github.com/haml/haml-rails) to your Gemfile as well.
 
 ## Formatting
 
