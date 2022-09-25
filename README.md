@@ -41,7 +41,7 @@ To use Haml with Rails, simply add Haml to your Gemfile and run `bundle`.
 gem 'haml'
 ~~~
 
-If you'd like to replace Rails's Erb-based generators with Haml, add
+If you'd like to replace Rails's ERB-based generators with Haml, add
 [haml-rails](https://github.com/indirect/haml-rails) to your Gemfile as well.
 
 ## Formatting
