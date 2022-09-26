@@ -75,8 +75,8 @@ this, install the gem with RubyGems:
 
     gem install haml
 
-You can then use it by including the "haml" gem in Ruby code, and using
-{Haml::Engine} like so:
+You can then use it by including the `haml` gem in Ruby code, and using
+{Haml::Template} like so:
 
     engine = Haml::Template.new { "%p Haml code!" }
     engine.render #=> "<p>Haml code!</p>\n"
