@@ -17,6 +17,9 @@ Released on September 21, 2022
   * Haml 6 is about 1.7x faster than Haml 5 in [this benchmark](benchmark/slim/run-benchmarks.rb).
   * The parser is kept as is, but everything else is replaced.
   * The `haml` CLI interface was also replaced.
+  * Most Haml helpers are removed.
+     * On Rails, only `find_and_reserve`, `preserve`, `surround`, `precede`, `succeed`, and `capture_haml` are left.
+     * On Tilt, only `preserve` is left.
   * All Haml helpers except for `preserve` are removed.
   * Some legacy Rails integration is removed.
 
