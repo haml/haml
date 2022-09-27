@@ -293,6 +293,9 @@ or using `true` and `false`:
 
     %input(selected=true)
 
+This feature works only for attributes that are included in
+[`Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES`](https://github.com/haml/haml/blob/main/lib/haml/attribute_builder.rb).
+
 <!-- The title to the next section (Prefixed Attributes) has changed. This
 <a> tag is so old links to here still work. -->
 <a id="html5_custom_data_attributes" style="border:0;"></a>
