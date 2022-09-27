@@ -294,7 +294,7 @@ or using `true` and `false`:
     %input(selected=true)
 
 This feature works only for attributes that are included in
-[`Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES`](https://github.com/haml/haml/blob/main/lib/haml/attribute_builder.rb).
+[`Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES`](lib/haml/attribute_builder.rb).
 
 <!-- The title to the next section (Prefixed Attributes) has changed. This
 <a> tag is so old links to here still work. -->
@@ -1160,7 +1160,10 @@ default. This filter is implemented using Tilt.
 
 ### Custom Filters
 
-You can also define your own filters. See {Haml::Filters} for details.
+You can also define your own filters.
+`Haml::Filters::YourCustomFilter#compile` should return
+[a Temple expression](https://github.com/judofyr/temple/blob/master/EXPRESSIONS.md).
+See {Haml::Filters} for examples.
 
 ## Multiline: `|` {#multiline}
 
