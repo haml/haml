@@ -1,5 +1,12 @@
 # Haml Changelog
 
+## 6.0.3
+
+Released on September 28, 2022
+([diff](https://github.com/haml/haml/compare/v6.0.2...v6.0.3)).
+
+* For Wasm, fallback to Ruby when C extension is not available.
+
 ## 6.0.2
 
 Released on September 28, 2022
