@@ -1,5 +1,13 @@
 # Haml Changelog
 
+## 6.0.2
+
+Released on September 28, 2022
+([diff](https://github.com/haml/haml/compare/v6.0.1...v6.0.2)).
+
+* Unescape HTML-safe arguments for `surround`, `succeed`, and `precede` on Rails
+  [#1088](https://github.com/haml/haml/issues/1088)
+
 ## 6.0.1
 
 Released on September 23, 2022
