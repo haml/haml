@@ -243,6 +243,30 @@ END
     end
   end
 
+  def test_surround
+    output = render(<<HAML, :action_view)
+= surround '<div />'.html_safe do
+  %span
+HAML
+    assert_equal "<div /><span></span><div />\n", output
+  end
+
+  def test_precede
+    output = render(<<HAML, :action_view)
+= precede '<div />'.html_safe do
+  %span
+HAML
+    assert_equal "<div /><span></span>\n", output
+  end
+
+  def test_succeed
+    output = render(<<HAML, :action_view)
+= succeed '<div />'.html_safe do
+  %span
+HAML
+    assert_equal "<span></span><div />\n", output
+  end
+
   def test_form_builder_label_with_block; skip
     output = render(<<HAML, :action_view)
 = form_for @article, :as => :article, :html => {:class => nil, :id => nil}, :url => '' do |f|

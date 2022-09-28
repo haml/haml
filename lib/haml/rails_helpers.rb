@@ -1,8 +1,7 @@
 # frozen_string_literal: false
 require 'haml/helpers'
 
-# Currently this Haml::Helpers depends on
-# ActionView internal implementation. (not desired)
+# There are only helpers that depend on ActionView internals.
 module Haml
   module RailsHelpers
     include Helpers
@@ -32,16 +31,19 @@ module Haml
 
     def surround(front, back = front, &block)
       output = capture_haml(&block)
-
-      "#{escape_once(front)}#{output.chomp}#{escape_once(back)}\n".html_safe
+      front  = escape_once(front) unless front.html_safe?
+      back   = escape_once(back)  unless back.html_safe?
+      "#{front}#{output.chomp}#{back}\n".html_safe
     end
 
     def precede(str, &block)
-      "#{escape_once(str)}#{capture_haml(&block).chomp}\n".html_safe
+      str = escape_once(str) unless str.html_safe?
+      "#{str}#{capture_haml(&block).chomp}\n".html_safe
     end
 
     def succeed(str, &block)
-      "#{capture_haml(&block).chomp}#{escape_once(str)}\n".html_safe
+      str = escape_once(str) unless str.html_safe?
+      "#{capture_haml(&block).chomp}#{str}\n".html_safe
     end
 
     def capture_haml(*args, &block)
