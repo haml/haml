@@ -34,8 +34,15 @@ Released on September 21, 2022
   * The `haml` CLI interface was also replaced.
   * The interface of `Haml::Engine` is changed. `Haml::Template` is most likely what you need now.
   * Most Haml helpers are removed.
-     * On Rails, only `find_and_reserve`, `preserve`, `surround`, `precede`, `succeed`, and `capture_haml` are left.
-     * On Tilt, only `preserve` is left.
+     * Rails:
+         * Kept: `find_and_reserve`, `preserve`, `surround`, `precede`, `succeed`, `capture_haml`
+         * Removed: `block_is_haml?`, `flatten`, `haml_concat`, `haml_indent`, `haml_tag`, `haml_tag_if`, `html_attrs`,
+           `html_escape`, `init_haml_helpers`, `is_haml?`, `list_of`, `non_haml`, `tab_down`, `tab_up`, `with_tabs`
+     * Tilt:
+         * Kept: `preserve`
+         * Removed: `block_is_haml?`, `capture_haml`, `escape_once`, `find_and_preserve`, `flatten`, `haml_concat`,
+           `haml_indent`, `haml_tag`, `haml_tag_if`, `html_attrs`, `html_escape`, `init_haml_helpers`, `is_haml?`,
+           `list_of`, `non_haml`, `precede`, `succeed`, `surround`, `tab_down`, `tab_up`, `with_tabs`
   * Only the attributes in [`Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES`](lib/haml/attribute_builder.rb)
     are handled as boolean attributes.
   * Some legacy Rails integration is removed.
