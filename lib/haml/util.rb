@@ -14,16 +14,15 @@ module Haml
   module Util
     extend self
 
-    # Java extension is not implemented for JRuby yet.
-    # TruffleRuby does not implement `rb_ary_sort_bang`, etc.
-    if /java/ === RUBY_PLATFORM || RUBY_ENGINE == 'truffleruby'
+    begin
+      require 'haml/haml' # Haml::Util.escape_html
+    rescue LoadError
+      # For JRuby and Wasm, fallback to Ruby implementation when C extension is not available.
       require 'cgi/escape'
 
       def self.escape_html(html)
         CGI.escapeHTML(html.to_s)
       end
-    else
-      require 'haml/haml' # Haml::Util.escape_html
     end
 
     # TODO: Remove unescape_interpolation's workaround and get rid of `respond_to?`.
