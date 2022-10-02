@@ -3,6 +3,7 @@ require 'temple'
 require 'haml/parser'
 require 'haml/compiler'
 require 'haml/html'
+require 'haml/string_splitter'
 require 'haml/escapable'
 require 'haml/force_escapable'
 require 'haml/dynamic_merger'
@@ -27,7 +28,7 @@ module Haml
     use Parser
     use Compiler
     use HTML
-    filter :StringSplitter
+    use StringSplitter
     filter :StaticAnalyzer
     use Escapable
     use ForceEscapable
