@@ -5,6 +5,7 @@ describe Haml::Engine do
 
   describe 'id attributes' do
     describe 'compatilibity' do
+      # TODO: assert_haml tests nothing since migration to haml repository. Use assert_render instead.
       it { assert_haml(%q|#a|) }
       it { assert_haml(%q|#a{ id: nil }|) }
       it { assert_haml(%q|#a{ id: nil }(id=nil)|) }
@@ -39,6 +40,7 @@ describe Haml::Engine do
     end
 
     describe 'incompatibility' do
+      # TODO: assert_haml tests nothing since migration to haml repository. Use assert_render instead.
       it { assert_render(%Q|<div id='a'></div>\n|,   %q|#a{ id: [] }|) }
       it { assert_render(%Q|<div id=''></div>\n|,    %q|%div{ id: [nil, false] }|) }
       it { assert_render(%Q|<div id='c_a'></div>\n|, %q|#d#c{ id: [] }(id=id)|, locals: { id: 'a' }) }
@@ -51,6 +53,7 @@ describe Haml::Engine do
 
   describe 'class attributes' do
     describe 'compatibility' do
+      # TODO: assert_haml tests nothing since migration to haml repository. Use assert_render instead.
       it { assert_haml(%q|.bar.foo|) }
       it { assert_haml(%q|.foo.bar|) }
       it { assert_haml(%q|%div(class='bar foo')|) }
@@ -127,6 +130,7 @@ describe Haml::Engine do
   end
 
   describe 'data attributes' do
+    # TODO: assert_haml tests nothing since migration to haml repository. Use assert_render instead.
     it { assert_haml(%q|#foo.bar{ data: { disabled: val } }|, locals: { val: false }) }
     it { skip; assert_haml(%q|%div{:data => hash}|, locals: { hash: { :a => { :b => 'c' } }.tap { |h| h[:d] = h } }) }
     it { skip; assert_haml(%q|%div{ hash }|, locals: { hash: { data: { :a => { :b => 'c' } }.tap { |h| h[:d] = h } } }) }
@@ -170,6 +174,7 @@ describe Haml::Engine do
   end
 
   describe 'boolean attributes' do
+    # TODO: assert_haml tests nothing since migration to haml repository. Use assert_render instead.
     it { assert_haml(%q|%input{ disabled: nil }|) }
     it { assert_haml(%q|%input{ disabled: false }|) }
     it { assert_haml(%q|%input{ disabled: true }|) }
@@ -224,6 +229,7 @@ describe Haml::Engine do
 
   describe 'common attributes' do
     describe 'compatibility' do
+      # TODO: assert_haml tests nothing since migration to haml repository. Use assert_render instead.
       it { assert_haml(%Q|%a{ href: '/search?foo=bar&hoge=<fuga>' }|) }
       it { assert_haml(%Q|- h = {foo: 1, 'foo' => 2}\n%span{ h }|) }
       it { assert_haml(%q|%span(foo='new'){ foo: 'old' }|, locals: { new: 'new', old: 'old' }) }
