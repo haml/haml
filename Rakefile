@@ -42,6 +42,7 @@ Rake::TestTask.new do |t|
   t.test_files = files
   t.verbose = true
 end
+task test: :compile
 
 desc 'bench task for CI'
 task bench: :compile do
