@@ -1,5 +1,13 @@
 # Haml Changelog
 
+## 6.0.4
+
+Released on October 2, 2022
+([diff](https://github.com/haml/haml/compare/v6.0.3...v6.0.4)).
+
+* Fix a parse failure of `%` in attributes [#1096](https://github.com/haml/haml/issues/1096)
+* Add another fallback from C to Ruby for Wasm.
+
 ## 6.0.3
 
 Released on September 28, 2022
