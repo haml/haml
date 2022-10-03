@@ -78,6 +78,15 @@ describe Haml::Engine do
       HAML
     end
 
+    it 'renders %() string attributes' do
+      assert_render(<<-'HTML'.unindent, <<-'HAML'.unindent)
+        <p title='foo(a)'></p>
+      HTML
+        - some_local_variable = 'a'
+        %p{ title: %(foo(#{some_local_variable})) }
+      HAML
+    end
+
     describe 'runtime attributes' do
       it 'renders runtime hash attribute' do
         assert_render(<<-HTML.unindent, <<-HAML.unindent)
