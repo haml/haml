@@ -294,7 +294,19 @@ or using `true` and `false`:
     %input(selected=true)
 
 This feature works only for attributes that are included in
-[`Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES`](lib/haml/attribute_builder.rb).
+[`Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES`](lib/haml/attribute_builder.rb),
+as well as `data-` and `aria-` attributes.
+
+    %input{'data-hidden' => false}
+    %input{'aria-hidden' => false}
+    %input{'xyz-hidden' => false}
+
+will render as:
+
+    <input>
+    <input>
+    <input xyz-hidden='false'>
+
 
 <!-- The title to the next section (Prefixed Attributes) has changed. This
 <a> tag is so old links to here still work. -->
