@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## Unreleased
+
+* Stop warning `remove_whitespace: true` option.
+
 ## 6.0.4
 
 Released on October 2, 2022
