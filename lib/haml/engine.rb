@@ -23,6 +23,7 @@ module Haml
                        param source track wbr),
       filename:     "",
       disable_capture: false,
+      remove_whitespace: false,
     )
 
     use Parser

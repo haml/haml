@@ -1404,7 +1404,7 @@ HAML
                  render("%p= 's' * 75", :ugly => true))
   end
 
-  def test_remove_whitespace_true; skip # options
+  def test_remove_whitespace_true
     assert_equal("<div id='outer'><div id='inner'><p>hello world</p></div></div>",
                  render("#outer\n  #inner\n    %p hello world", :remove_whitespace => true))
     assert_equal("<p>hello world<pre>foo   bar\nbaz</pre></p>", render(<<HAML, :remove_whitespace => true))
