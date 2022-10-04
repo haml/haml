@@ -81,6 +81,32 @@ You can then use it by including the `haml` gem in Ruby code, and using
     engine = Haml::Template.new { "%p Haml code!" }
     engine.render #=> "<p>Haml code!</p>\n"
 
+### Options
+
+Haml understands various configuration options that affect its performance and
+output.
+
+In Rails, options can be set by using `Haml::RailsTemplate.set_options` in an initializer:
+
+```ruby
+# config/initializers/haml.rb
+Haml::RailsTemplate.set_options(escape_html: false)
+```
+
+Outside Rails, you can set them by configuring them globally in `Haml::Template.options`:
+
+```ruby
+Haml::Template.options[:escape_html] = false
+```
+
+In sinatra specifically, you can set them in global config with:
+```ruby
+set :haml, { escape_html: false }
+```
+
+Finally, you can also set them by passing an options hash to `Haml::Engine.new` or `Haml::Template.new`.
+For the complete list of available options, please see `Haml::Engine`.
+
 ## Plain Text
 
 A substantial portion of any HTML document is its content, which is plain old
