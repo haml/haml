@@ -1,7 +1,9 @@
 # Haml Changelog
 
-## Unreleased
+## 6.0.5
 
+* Resurrect `#haml_object_ref` support in an object reference [#1097](https://github.com/haml/haml/issues/1097)
+  * This was removed in 6.0.0, and added back in this version.
 * Stop warning `remove_whitespace: true` option.
 
 ## 6.0.4
