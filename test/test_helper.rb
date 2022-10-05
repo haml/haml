@@ -58,12 +58,14 @@ class Haml::TestCase < BASE_TEST_CLASS
     eval Haml::Engine.new(options).call(text), scope
   end
 
-  def assert_haml_ugly(text, options = {})
+  def render_template(text, options = {})
     haml_base = { escape_html: true }
     scope  = options.delete(:scope) || Object.new
     locals = options.delete(:locals) || {}
     Haml::Template.new(haml_base.merge(options)) { text }.render(scope, locals)
   end
+  # TODO: fix the usages of assert_haml_ugly
+  alias :assert_haml_ugly :render_template
 
   def assert_warning(message)
     the_real_stderr, $stderr = $stderr, StringIO.new

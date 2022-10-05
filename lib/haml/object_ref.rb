@@ -6,7 +6,12 @@ module Haml
         object, prefix = args
         return {} unless object
 
-        suffix = underscore(object.class)
+        suffix =
+          if object.respond_to?(:haml_object_ref)
+            object.haml_object_ref
+          else
+            underscore(object.class)
+          end
         {
           'class' => [prefix, suffix].compact.join('_'),
           'id'    => [prefix, suffix, object.id || 'new'].compact.join('_'),

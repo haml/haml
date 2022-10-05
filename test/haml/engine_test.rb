@@ -1299,22 +1299,22 @@ HAML
                  render("%p[user] New User", :locals => {:user => user}))
   end
 
-  def test_object_ref_before_attrs; skip # object reference
+  def test_object_ref_before_attrs
     user = User.new 42
     assert_equal("<p class='struct_user' id='struct_user_42' style='width: 100px;'>New User</p>\n",
-                 render("%p[user]{:style => 'width: 100px;'} New User", :locals => {:user => user}))
+                 render_template("%p[user]{:style => 'width: 100px;'} New User", locals: { user: user }))
   end
 
-  def test_object_ref_with_custom_haml_class; skip # object reference
+  def test_object_ref_with_custom_haml_class
     custom = CustomHamlClass.new 42
     assert_equal("<p class='my_thing' id='my_thing_42' style='width: 100px;'>My Thing</p>\n",
-                 render("%p[custom]{:style => 'width: 100px;'} My Thing", :locals => {:custom => custom}))
+                 render_template("%p[custom]{:style => 'width: 100px;'} My Thing", locals: { custom: custom }))
   end
 
-  def test_object_ref_with_multiple_ids; skip # object reference
+  def test_object_ref_with_multiple_ids
     cpk_record = CpkRecord.new([42,6,9])
     assert_equal("<p class='struct_cpk_record' id='struct_cpk_record_42_6_9' style='width: 100px;'>CPK Record</p>\n",
-                 render("%p[cpk_record]{:style => 'width: 100px;'} CPK Record", :locals => {:cpk_record => cpk_record}))
+                 render_template("%p[cpk_record]{:style => 'width: 100px;'} CPK Record", locals: { cpk_record: cpk_record }))
   end
 
   def test_non_literal_attributes
