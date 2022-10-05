@@ -1201,6 +1201,44 @@ default. This filter is implemented using Tilt.
 You can also define your own filters.
 `Haml::Filters::YourCustomFilter#compile` should return
 [a Temple expression](https://github.com/judofyr/temple/blob/master/EXPRESSIONS.md).
+
+The simplest example of a filter might be something like:
+
+```ruby
+class HelloFilter < Haml::Filters::Base
+  def compile(_node)
+    [:static, "hello world"]
+  end
+end
+
+Haml::Filters.registered[:hello] ||= HelloFilter
+```
+
+A more complex complex example
+
+```ruby
+class BetterFilter < Haml::Filters::Base
+  def compile(node)
+    temple = [:multi]
+    temple << [:static, "hello "]
+    temple << compile_text(node.value[:text])
+    temple << [:static, " world"]
+    temple
+  end
+
+  private
+  def compile_text(text)
+    if ::Haml::Util.contains_interpolation?(text)
+      [:dynamic, ::Haml::Util.unescape_interpolation(text)]
+    else
+      [:static, text]
+    end
+  end
+end
+
+Haml::Filters.registered[:better] ||= BetterFilter
+```
+
 See {Haml::Filters} for examples.
 
 ## Multiline: `|` {#multiline}
