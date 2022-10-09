@@ -9,8 +9,8 @@ module Haml::AttributeBuilder
                        itemscope allowfullscreen default inert sortable
                        truespeed typemustmatch download].freeze
 
-  # For JRuby and Wasm, fallback to Ruby implementation.
-  if /java|wasm/ === RUBY_PLATFORM
+  # For JRuby, TruffleRuby, and Wasm, fallback to Ruby implementation.
+  if /java|wasm/ === RUBY_PLATFORM || RUBY_ENGINE == 'truffleruby'
     class << self
       def build(escape_attrs, quote, format, boolean_attributes, object_ref, *hashes)
         hashes << Haml::ObjectRef.parse(object_ref) if object_ref

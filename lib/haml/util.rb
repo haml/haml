@@ -14,8 +14,8 @@ module Haml
   module Util
     extend self
 
-    # For JRuby and Wasm, fallback to Ruby implementation.
-    if /java|wasm/ === RUBY_PLATFORM
+    # For JRuby, TruffleRuby, and Wasm, fallback to Ruby implementation.
+    if /java|wasm/ === RUBY_PLATFORM || RUBY_ENGINE == 'truffleruby'
       require 'cgi/escape'
 
       def self.escape_html(html)
