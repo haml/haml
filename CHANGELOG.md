@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 6.0.6
+
+* Prevent CRuby from accidentally using the Ruby implementation fallback
+  * Reversing what v6.0.3 and v6.0.4 did, but still supporting Wasm.
+
 ## 6.0.5
 
 * Resurrect `#haml_object_ref` support in an object reference [#1097](https://github.com/haml/haml/issues/1097)
