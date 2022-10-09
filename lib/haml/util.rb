@@ -14,15 +14,15 @@ module Haml
   module Util
     extend self
 
-    begin
-      require 'haml/haml' # Haml::Util.escape_html
-    rescue LoadError
-      # For JRuby and Wasm, fallback to Ruby implementation when C extension is not available.
+    # For JRuby and Wasm, fallback to Ruby implementation.
+    if /java|wasm/ === RUBY_PLATFORM
       require 'cgi/escape'
 
       def self.escape_html(html)
         CGI.escapeHTML(html.to_s)
       end
+    else
+      require 'haml/haml' # Haml::Util.escape_html
     end
 
     # TODO: Remove unescape_interpolation's workaround and get rid of `respond_to?`.

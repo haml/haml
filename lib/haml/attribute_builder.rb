@@ -9,15 +9,8 @@ module Haml::AttributeBuilder
                        itemscope allowfullscreen default inert sortable
                        truespeed typemustmatch download].freeze
 
-  begin
-    # Haml::AttributeBuilder.build
-    # Haml::AttributeBuilder.build_id
-    # Haml::AttributeBuilder.build_class
-    # Haml::AttributeBuilder.build_data
-    # Haml::AttributeBuilder.build_aria
-    require 'haml/haml'
-  rescue LoadError
-    # For JRuby and Wasm, fallback to Ruby implementation when C extension is not available.
+  # For JRuby and Wasm, fallback to Ruby implementation.
+  if /java|wasm/ === RUBY_PLATFORM
     class << self
       def build(escape_attrs, quote, format, boolean_attributes, object_ref, *hashes)
         hashes << Haml::ObjectRef.parse(object_ref) if object_ref
@@ -170,5 +163,12 @@ module Haml::AttributeBuilder
         end
       end
     end
+  else
+    # Haml::AttributeBuilder.build
+    # Haml::AttributeBuilder.build_id
+    # Haml::AttributeBuilder.build_class
+    # Haml::AttributeBuilder.build_data
+    # Haml::AttributeBuilder.build_aria
+    require 'haml/haml'
   end
 end
