@@ -1,5 +1,11 @@
 # Haml Changelog
 
+## 6.0.7
+
+* `Haml::Engine` and `Haml::Template` use StringBuffer instead of ArrayBuffer
+  * It seems more performant in many cases with recent Ruby versions.
+  * `Haml::RailsTemplate` is not affected.
+
 ## 6.0.6
 
 * Prevent CRuby from accidentally using the Ruby implementation fallback
