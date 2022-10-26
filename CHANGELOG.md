@@ -72,6 +72,7 @@ Released on September 21, 2022
     are handled as boolean attributes.
   * Some legacy Rails integration is removed.
   * The default value of `escape_html` option became true.
+  * `-` script lines no longer support capturing. Only `=` lines are supported to yield a nested block.
 
 ## 5.2.2
 
