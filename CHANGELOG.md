@@ -71,6 +71,7 @@ Released on September 21, 2022
   * Only the attributes in [`Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES`](lib/haml/attribute_builder.rb)
     are handled as boolean attributes.
   * Some legacy Rails integration is removed.
+  * The default value of `escape_html` option became true.
 
 ## 5.2.2
 
