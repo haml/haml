@@ -68,8 +68,11 @@ Released on September 21, 2022
          * Removed: `block_is_haml?`, `capture_haml`, `escape_once`, `find_and_preserve`, `flatten`, `haml_concat`,
            `haml_indent`, `haml_tag`, `haml_tag_if`, `html_attrs`, `html_escape`, `init_haml_helpers`, `is_haml?`,
            `list_of`, `non_haml`, `precede`, `succeed`, `surround`, `tab_down`, `tab_up`, `with_tabs`
-  * Only the attributes in [`Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES`](lib/haml/attribute_builder.rb)
-    are handled as boolean attributes.
+  * Only the following attributes and `aria`/`data` attributes are considered boolean attributes:
+     * `allowfullscreen`, `async`, `autobuffer`, `autofocus`, `autoplay`, `checked`, `controls`, `default`,
+       `defer`, `disabled`, `download`, `formnovalidate`, `hidden`, `inert`, `ismap`, `itemscope`, `loop`,
+       `multiple`, `muted`, `novalidate`, `open`, `pubdate`, `readonly`, `required`, `reversed`, `scoped`,
+       `seamless`, `selected`, `sortable`, `truespeed`, `typemustmatch`
   * Some legacy Rails integration is removed.
   * The default value of `escape_html` option became true.
   * `-` script lines no longer support capturing. Only `=` lines are supported to yield a nested block.
