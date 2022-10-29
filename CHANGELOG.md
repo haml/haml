@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 6.0.8
+
+* Support interpolation in HTML comments, which has not been working since 6.0.0
+  [#1107](https://github.com/haml/haml/issues/1107)
+
 ## 6.0.7
 
 * `Haml::Engine` and `Haml::Template` use StringBuffer instead of ArrayBuffer
