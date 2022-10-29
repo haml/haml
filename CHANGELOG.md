@@ -73,6 +73,8 @@ Released on September 21, 2022
   * Some legacy Rails integration is removed.
   * The default value of `escape_html` option became true.
   * `-` script lines no longer support capturing. Only `=` lines are supported to yield a nested block.
+  * Overriding `data` attributes with another falsy `data-*` attribute that has the same name
+    is no longer supported. [#1105](https://github.com/haml/haml/issues/1105)
 
 ## 5.2.2
 
