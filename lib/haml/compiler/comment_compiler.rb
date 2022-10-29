@@ -14,7 +14,7 @@ module Haml
 
       def compile_html_comment(node, &block)
         if node.children.empty?
-          [:html, :comment, [:static, " #{node.value[:text]} "]]
+          [:html, :comment, compile_text(node)]
         else
           [:html, :comment, yield(node)]
         end
@@ -28,11 +28,23 @@ module Haml
 
         content =
           if node.children.empty?
-            [:static, " #{node.value[:text]} "]
+            compile_text(node)
           else
             yield(node)
           end
         [:html, :condcomment, condition, content, node.value[:revealed]]
+      end
+
+      def compile_text(node)
+        text =
+          if node.value[:parse]
+            # Just always escaping the result for safety. We could respect
+            # escape_html, but I don't see any use case for it.
+            [:escape, true, [:dynamic, node.value[:text]]]
+          else
+            [:static, node.value[:text]]
+          end
+        [:multi, [:static, ' '], text, [:static, ' ']]
       end
     end
   end

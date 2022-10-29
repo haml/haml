@@ -6,6 +6,10 @@ describe Haml::Engine do
       assert_render(%Q|<!-- comments -->\n|, '/ comments')
     end
 
+    it 'renders intepolation' do
+      assert_render(%Q|<!-- comments -->\n|, '/ #{"comments"}')
+    end
+
     it 'strips html comment ignoring around spcaes' do
       assert_render(%Q|<!-- comments -->\n|, '/   comments    ')
     end
@@ -61,6 +65,7 @@ describe Haml::Engine do
           world
       HAML
     end
+
     it 'renders conditional comment' do
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         <!--[if lt IE 9]>
