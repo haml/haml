@@ -63,6 +63,8 @@ Released on September 21, 2022
   * The parser is kept as is, but everything else is replaced.
   * The `haml` CLI interface was also replaced.
   * The interface of `Haml::Engine` is changed. `Haml::Template` is most likely what you need now.
+     * before: `Haml::Engine.new("%p Haml code!").render`
+     * after: `Haml::Template.new { "%p Haml code!" }.render`
   * Most Haml helpers are removed.
      * Rails:
          * Kept: `find_and_reserve`, `preserve`, `surround`, `precede`, `succeed`, `capture_haml`
