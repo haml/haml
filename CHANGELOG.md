@@ -80,6 +80,8 @@ Released on September 21, 2022
        `defer`, `disabled`, `download`, `formnovalidate`, `hidden`, `inert`, `ismap`, `itemscope`, `loop`,
        `multiple`, `muted`, `novalidate`, `open`, `pubdate`, `readonly`, `required`, `reversed`, `scoped`,
        `seamless`, `selected`, `sortable`, `truespeed`, `typemustmatch`
+  * Only `data` and `aria` attributes support using a nested Hash to render hyphenated attributes, e.g.
+    `data: { foo: 'bar' }` becomes `data-foo="bar"`, but this no longer works for non-`data`/`aria` attributes.
   * Some legacy Rails integration is removed.
   * The default value of `escape_html` option became true.
   * `-` script lines no longer support capturing. Only `=` lines are supported to yield a nested block.
