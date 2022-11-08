@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 6.0.9
+
+* Support sass-embedded [#1112](https://github.com/haml/haml/issues/1112)
+
 ## 6.0.8
 
 * Support interpolation in HTML comments, which has not been working since 6.0.0
