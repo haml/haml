@@ -7,7 +7,11 @@ module Haml
       def self.render(name, source, indent_width: 0)
         text = ::Tilt["t.#{name}"].new { source }.render
         return text if indent_width == 0
-        text.gsub!(/^/, ' ' * indent_width)
+        if text.frozen?
+          text.gsub(/^/, ' ' * indent_width)
+        else
+          text.gsub!(/^/, ' ' * indent_width)
+        end
       end
 
       def explicit_require?(needed_registration)
