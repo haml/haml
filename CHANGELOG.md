@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 6.0.10
+
+* Evaluate :erb filter in the template context
+
 ## 6.0.9
 
 * Support sass-embedded [#1112](https://github.com/haml/haml/issues/1112)
