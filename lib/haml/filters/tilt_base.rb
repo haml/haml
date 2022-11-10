@@ -21,6 +21,12 @@ module Haml
 
       private
 
+      # TODO: support interpolation
+      def precompiled_with_tilt(node, name)
+        src = ::Tilt["t.#{name}"].new { node.value[:text] }.send(:precompiled, {}).first
+        [:dynamic, src]
+      end
+
       def compile_with_tilt(node, name, indent_width: 0)
         if ::Haml::Util.contains_interpolation?(node.value[:text])
           dynamic_compile(node, name, indent_width: indent_width)

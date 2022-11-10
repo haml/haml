@@ -126,11 +126,10 @@ class ErbFilterTest < Haml::TestCase
     assert_haml_ugly(%Q{:erb\n  <%= "foo" +\n      "bar" +\n      "baz" %>})
   end
 
-  test "should evaluate in the same context as Haml" do; skip
-    haml  = ":erb\n  <%= foo %>"
-    html  = "bar\n"
-    scope = Object.new.instance_eval {foo = "bar"; nil if foo; binding}
-    assert_equal(html, render(haml, :scope => scope))
+  test "should evaluate in the same context as Haml" do
+    haml  = "- foo = 'bar'\n:erb\n  <%= foo %>"
+    html  = "bar\n\n"
+    assert_equal(html, render(haml))
   end
 
   test "should use Rails's XSS safety features" do; skip

@@ -3,7 +3,7 @@ module Haml
   class Filters
     class Erb < TiltBase
       def compile(node)
-        compile_with_tilt(node, 'erb')
+        precompiled_with_tilt(node, 'erb')
       end
     end
   end
