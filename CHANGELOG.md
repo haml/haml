@@ -2,7 +2,7 @@
 
 ## 6.0.10
 
-* Evaluate :erb filter in the template context
+* Evaluate :erb filter in the template context like Haml 5
 
 ## 6.0.9
 
@@ -95,6 +95,7 @@ Released on September 21, 2022
   * `-` script lines no longer support capturing. Only `=` lines are supported to yield a nested block.
   * Overriding `data` attributes with another falsy `data-*` attribute that has the same name
     is no longer supported. [#1105](https://github.com/haml/haml/issues/1105)
+  * :erb filter is not executed in the template context (fixed in 6.0.10)
 
 ## 5.2.2
 
