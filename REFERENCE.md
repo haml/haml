@@ -338,20 +338,19 @@ will render as:
 <a> tag is so old links to here still work. -->
 <a id="html5_custom_data_attributes" style="border:0;"></a>
 
-#### Prefixed Attributes
+#### Data Attributes
 
 HTML5 allows for adding
 [custom non-visible data attributes](http://www.whatwg.org/specs/web-apps/current-work/multipage/elements.html#embedding-custom-non-visible-data-with-the-data-*-attributes)
 to elements using attribute names beginning with `data-`. The
 [Accessible Rich Internet Applications](http://www.w3.org/WAI/intro/aria)
-specification makes use of attributes beginning with `aria-`. There are also
-frameworks that use non-standard attributes with a common prefix.
+specification makes use of attributes beginning with `aria-`.
 
 Haml can help generate collections of attributes that share a prefix like
-these. Any entry in an attribute hash that has a Hash as its value is expanded
-into a series of attributes, one for each key/value pair in the hash, with the
-attribute name formed by joining the “parent” key name to the key name with a
-hyphen.
+these. Any entry in an `data` or `aria` attribute hash that has a Hash as its
+value is expanded into a series of attributes, one for each key/value pair in
+the hash, with the attribute name formed by joining the “parent” key name to
+the key name with a hyphen. This works only for `data` or `aria`.
 
 For example:
 
