@@ -89,8 +89,14 @@ module Haml
       end
 
       def rstrip_whitespace!(temple)
-        if temple[-1] == [:whitespace]
-          temple.delete_at(-1)
+        case temple[0]
+        when :multi, :block
+          case temple[-1][0]
+          when :multi, :block
+            rstrip_whitespace!(temple[-1])
+          when :whitespace
+            temple.delete_at(-1)
+          end
         end
       end
 
