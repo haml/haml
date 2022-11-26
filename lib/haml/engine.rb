@@ -8,6 +8,7 @@ require 'haml/escapable'
 require 'haml/force_escapable'
 require 'haml/dynamic_merger'
 require 'haml/ambles'
+require 'haml/whitespace'
 
 module Haml
   class Engine < Temple::Engine
@@ -36,6 +37,7 @@ module Haml
     filter :ControlFlow
     use Ambles
     filter :MultiFlattener
+    use Whitespace
     filter :StaticMerger
     use DynamicMerger
     use :Generator, -> { options[:generator] }
