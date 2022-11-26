@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 6.0.11
+
+* Fix a whitespace removal with `>` and an `if` statement [#1114](https://github.com/haml/haml/issues/1114)
+
 ## 6.0.10
 
 * Evaluate :erb filter in the template context like Haml 5

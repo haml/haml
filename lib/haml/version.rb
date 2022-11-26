@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 module Haml
-  VERSION = '6.0.10'
+  VERSION = '6.0.11'
 end
