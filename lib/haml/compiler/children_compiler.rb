@@ -12,15 +12,15 @@ module Haml
         temple = [:multi]
         return temple if node.children.empty?
 
-        temple << :whitespace if prepend_whitespace?(node)
+        temple << [:whitespace] if prepend_whitespace?(node)
         node.children.each do |n|
           rstrip_whitespace!(temple) if nuke_prev_whitespace?(n)
           insert_newlines!(temple, n)
           temple << moving_lineno(n) { block.call(n) }
-          temple << :whitespace if insert_whitespace?(n)
+          temple << [:whitespace] if insert_whitespace?(n)
         end
         rstrip_whitespace!(temple) if nuke_inner_whitespace?(node)
-        confirm_whitespace(temple)
+        temple
       end
 
       private
@@ -56,17 +56,6 @@ module Haml
         temple
       end
 
-      def confirm_whitespace(temple)
-        temple.map do |exp|
-          case exp
-          when :whitespace
-            [:static, "\n"]
-          else
-            exp
-          end
-        end
-      end
-
       def prepend_whitespace?(node)
         return false unless %i[comment tag].include?(node.type)
         !nuke_inner_whitespace?(node)
@@ -100,8 +89,14 @@ module Haml
       end
 
       def rstrip_whitespace!(temple)
-        if temple[-1] == :whitespace
-          temple.delete_at(-1)
+        case temple[0]
+        when :multi, :block
+          case temple[-1][0]
+          when :multi, :block
+            rstrip_whitespace!(temple[-1])
+          when :whitespace
+            temple.delete_at(-1)
+          end
         end
       end
 
