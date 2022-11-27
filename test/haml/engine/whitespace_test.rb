@@ -34,6 +34,19 @@ describe Haml::Engine do
       HAML
     end
 
+    it 'removes top-level outer whitespaces with >' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        a<br>c
+      HTML
+        - if true
+          a
+        - else
+          b
+        %br>
+        c
+      HAML
+    end
+
     it 'removes outer whitespace by > from inside of block' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
         <span>a</span><span>

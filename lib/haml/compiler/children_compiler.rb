@@ -6,6 +6,7 @@ module Haml
     class ChildrenCompiler
       def initialize
         @lineno = 1
+        @multi_flattener = Temple::Filters::MultiFlattener.new
       end
 
       def compile(node, &block)
@@ -89,15 +90,48 @@ module Haml
       end
 
       def rstrip_whitespace!(temple)
+        return if temple.size == 1
+
         case temple[0]
-        when :multi, :block
+        when :multi
           case temple[-1][0]
-          when :multi, :block
-            rstrip_whitespace!(temple[-1])
           when :whitespace
             temple.delete_at(-1)
+          when :multi, :block
+            rstrip_whitespace!(temple[-1])
+          end
+        when :block
+          _block, code, exp = temple
+          if code.start_with?(/\s*if\s/)
+            # Remove [:whitespace] before `end`
+            exp.replace(@multi_flattener.call(exp))
+            rstrip_whitespace!(exp)
+
+            # Remove [:whitespace] before `else` if exists
+            else_index = find_else_index(exp)
+            if else_index
+              whitespace_index = else_index - 1
+              while exp[whitespace_index] == [:newline]
+                whitespace_index -= 1
+              end
+              if exp[whitespace_index] == [:whitespace]
+                exp.delete_at(whitespace_index)
+              end
+            end
           end
         end
+      end
+
+      def find_else_index(temple)
+        multi, *args = temple
+        return nil if multi != :multi
+
+        args.each_with_index do |arg, index|
+          if arg[0] == :code && arg[1].match?(/\A\s*else\s*\z/)
+            return index + 1
+          end
+        end
+        nil
       end
 
       def insert_whitespace?(node)
