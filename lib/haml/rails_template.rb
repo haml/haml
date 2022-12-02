@@ -52,4 +52,6 @@ end
 
 # Haml extends Haml::Helpers in ActionView each time.
 # It costs much, so Haml includes a compatible module at first.
-ActionView::Base.send :include, Haml::RailsHelpers
+ActiveSupport.on_load(:action_view) do
+  include Haml::RailsHelpers
+end
