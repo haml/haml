@@ -2,7 +2,7 @@
 require 'haml/util'
 
 module Haml
-  class Escapable < Temple::Filters::Escapable
+  class Escape < Temple::Filters::Escapable
     def initialize(opts = {})
       super
       @escape_code = options[:escape_code] ||

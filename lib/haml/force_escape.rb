@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'haml/escapable'
+require 'haml/escape'
 
 module Haml
   # This module allows Temple::Filter to dispatch :fescape on `#compile`.
@@ -10,8 +10,8 @@ module Haml
   end
   ::Temple::Filter.include FescapeDispathcer
 
-  # Unlike Haml::Escapable, this escapes value even if it's html_safe.
-  class ForceEscapable < Escapable
+  # Unlike Haml::Escape, this escapes value even if it's html_safe.
+  class ForceEscape < Escape
     def initialize(opts = {})
       super
       @escape_code = options[:escape_code] || "::Haml::Util.escape_html((%s))"
@@ -20,8 +20,8 @@ module Haml
 
     alias_method :on_fescape, :on_escape
 
-    # ForceEscapable doesn't touch :escape expression.
-    # This method is not used if it's inserted after Haml::Escapable.
+    # ForceEscape doesn't touch :escape expression.
+    # This method is not used if it's inserted after Haml::Escape.
     def on_escape(flag, exp)
       [:escape, flag, compile(exp)]
     end

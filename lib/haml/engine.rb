@@ -4,8 +4,9 @@ require 'haml/parser'
 require 'haml/compiler'
 require 'haml/html'
 require 'haml/string_splitter'
-require 'haml/escapable'
-require 'haml/force_escapable'
+require 'haml/escape'
+require 'haml/escape_any'
+require 'haml/force_escape'
 require 'haml/dynamic_merger'
 require 'haml/ambles'
 require 'haml/whitespace'
@@ -32,8 +33,9 @@ module Haml
     use HTML
     use StringSplitter
     filter :StaticAnalyzer
-    use Escapable
-    use ForceEscapable
+    use Escape
+    use EscapeAny
+    use ForceEscape
     filter :ControlFlow
     use Ambles
     filter :MultiFlattener

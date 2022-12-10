@@ -98,10 +98,8 @@ module Haml
       def compile_script_result(result, node)
         if !node.value[:escape_html] && node.value[:preserve]
           result = find_and_preserve(result)
-        else
-          result = "(#{result}).to_s"
         end
-        [:escape, node.value[:escape_html], [:dynamic, result]]
+        [:escapeany, node.value[:escape_html], [:dynamic, result]]
       end
 
       def find_and_preserve(code)
