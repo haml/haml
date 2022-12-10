@@ -27,6 +27,7 @@ module Haml
 
     # TODO: Remove unescape_interpolation's workaround and get rid of `respond_to?`.
     def self.escape_html_safe(html)
+      html = html.to_s
       (html.respond_to?(:html_safe?) && html.html_safe?) ? html : escape_html(html)
     end
 

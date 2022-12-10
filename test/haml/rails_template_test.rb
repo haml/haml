@@ -148,6 +148,8 @@ describe Haml::RailsTemplate do
 
     assert_equal %Q|<hr>\n|, render(%q|= ::TosSafeObject.new|)
     assert_equal %Q|&lt;hr&gt;\n|, render(%q|= ::TosUnsafeObject.new|)
+    assert_equal %Q|<p><hr></p>\n|, render(%Q|%p= ::TosSafeObject.new|)
+    assert_equal %Q|<p>\n<hr>\n</p>\n|, render(%Q|%p\n  = ::TosSafeObject.new|)
   end
 
   specify 'encoding' do
