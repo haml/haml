@@ -44,6 +44,15 @@ describe Haml::Engine do
       HAML
     end
 
+    it 'renders value-less attributes' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div class='foo' data-doo='yep' data-yabba='dabba'></div>
+      HTML
+        - data = { yabba: 'dabba', doo: 'yep' }
+        .foo{ data: }
+      HAML
+    end if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1')
+
     it 'accepts method call including comma' do
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         <body class='bb' data-confirm='really?' data-disabled id='a'></body>

@@ -19,7 +19,7 @@ module Haml
       end
       [node.value[:dynamic_attributes].new, node.value[:dynamic_attributes].old].compact.each do |attribute_str|
         hash = AttributeParser.parse(attribute_str)
-        return runtime_compile(node) unless hash
+        return runtime_compile(node) if hash.nil? || hash.any? { |_key, value| value.empty? }
         hashes << hash
       end
       static_compile(node.value[:attributes], hashes)
