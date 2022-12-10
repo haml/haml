@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 6.1.0
+
+* Optimize away a `to_s` call on `=` scripts
+* Fix escaping for objects that return an `html_safe` string on `to_s` [#1117](https://github.com/haml/haml/issues/1117)
+
 ## 6.0.12
 
 * Fix a whitespace removal with `>` and an `if`-`else` statement [#1114](https://github.com/haml/haml/issues/1114)
