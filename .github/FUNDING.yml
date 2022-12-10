@@ -1,1 +1,3 @@
-github: haml
+github:
+  - haml
+  - k0kubun
