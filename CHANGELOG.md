@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 6.1.1
+
+* Fix an empty output of Ruby 3.1's Hash shorthand syntax [#1083](https://github.com/haml/haml/issues/1083)
+
 ## 6.1.0
 
 * Optimize away a `to_s` call on `=` scripts
