@@ -180,10 +180,10 @@ closing tags for any element.
 
 ### Attributes: `{}` or `()` {#attributes}
 
-Brackets represent a Ruby hash that is used for specifying the attributes of an
+Braces represent a Ruby hash that is used for specifying the attributes of an
 element. It is literally evaluated as a Ruby hash, so logic will work in it and
 local variables may be used. Quote characters within the attribute will be
-replaced by appropriate escape sequences. The hash is placed after the tag is
+replaced with appropriate escape sequences. The hash is placed after the tag is
 defined. For example:
 
     %html{:xmlns => "http://www.w3.org/1999/xhtml", "xml:lang" => "en", :lang => "en"}
@@ -247,7 +247,7 @@ could render as either of:
 #### HTML-style Attributes: `()`
 
 Haml also supports a terser, less Ruby-specific attribute syntax based on HTML's
-attributes. These are used with parentheses instead of brackets, like so:
+attributes. These are used with parentheses instead of braces, like so:
 
     %html(xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en")
 
@@ -360,7 +360,7 @@ will render as:
 
     <a data-author-id='123' data-category='7' href='/posts'>Posts By Author</a>
 
-Notice that the underscore in `author_id` was replaced by a hyphen. If you wish
+Notice that the underscore in `author_id` was replaced with a hyphen. If you wish
 to suppress this behavior, you can set Haml's
 {Haml::Options#hyphenate_data_attrs `:hyphenate_data_attrs` option} to `false`,
 and the output will be rendered as:
@@ -992,7 +992,7 @@ most code but you may have errors with code like the following:
 
     %span #{'{'}
 
-This code will generate a syntax error, complaining about unbalanced brackets.
+This code will generate a syntax error, complaining about unbalanced braces.
 In cases like this, the recommended workaround is output the code as a Ruby
 string to force Haml to parse the code with Ruby.
 
