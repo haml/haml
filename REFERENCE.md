@@ -320,7 +320,7 @@ or using `true` and `false`:
     %input(selected=true)
 
 This feature works only for attributes that are included in
-[`Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES`](lib/haml/attribute_builder.rb),
+[`Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES`](https://github.com/haml/haml/blob/main/lib/haml/attribute_builder.rb#L5),
 as well as `data-` and `aria-` attributes.
 
     %input{'data-hidden' => false}
@@ -1093,7 +1093,7 @@ uses to implement many of its filters:
 
     Tilt.prefer Tilt::RedCarpetTemplate
 
-See the [Tilt documentation](https://github.com/rtomayko/tilt#fallback-mode) for
+See the [Tilt documentation](https://github.com/rtomayko/tilt) for
 more info.
 
 Haml comes with the following filters defined:
@@ -1145,7 +1145,7 @@ implemented using Tilt.
 
 ### `:maruku` {#maruku-filter}
 
-Parses the filtered text with [Maruku](https://github.com/nex3/maruku), which
+Parses the filtered text with [Maruku](https://github.com/bhollis/maruku), which
 has some non-standard extensions to Markdown.
 
 As of Haml 4.0, this filter is defined in [Haml
@@ -1213,7 +1213,7 @@ end
 Haml::Filters.registered[:hello] ||= HelloFilter
 ```
 
-A more complex complex example
+A more complex example:
 
 ```ruby
 class BetterFilter < Haml::Filters::Base
@@ -1285,7 +1285,7 @@ can be wrapped over multiple lines,
 as long as each line but the last ends in a comma
 (see [Inserting Ruby](#inserting_ruby)).
 
-## Whitespace Preservation
+## Whitespace Preservation {#whitespace_preservation}
 
 Sometimes you don't want Haml to indent all your text.
 For example, tags like `pre` and `textarea` are whitespace-sensitive;
