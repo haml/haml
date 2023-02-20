@@ -3,7 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/haml.svg)](http://rubygems.org/gems/haml)
 [![test](https://github.com/haml/haml/actions/workflows/test.yml/badge.svg)](https://github.com/haml/haml/actions/workflows/test.yml)
 [![Code Climate](https://codeclimate.com/github/haml/haml/badges/gpa.svg)](https://codeclimate.com/github/haml/haml)
-[![Inline docs](http://inch-ci.org/github/haml/haml.png)](http://inch-ci.org/github/haml/haml)
+[![Inline docs](https://inch-ci.org/github/haml/haml.svg)](https://inch-ci.org/github/haml/haml)
 
 Haml is a templating engine for HTML. It's designed to make it both easier and
 more pleasant to write HTML documents, by eliminating redundancy, reflecting the
