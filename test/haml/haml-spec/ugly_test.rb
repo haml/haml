@@ -6,14 +6,14 @@ require 'minitest/autorun'
 
 # This is a spec converted by haml-spec.
 # See: https://github.com/haml/haml-spec
-class UglyTest < MiniTest::Test
+class UglyTest < Minitest::Test
   HAML_DEFAULT_OPTIONS = { escape_html: true }.freeze
 
   def self.haml_result(haml, options, locals)
     Haml::Template.new(HAML_DEFAULT_OPTIONS.merge(options)) { haml }.render(Object.new, locals).rstrip
   end
 
-  class Headers < MiniTest::Test
+  class Headers < Minitest::Test
     def test_an_XHTML_XML_prolog
       haml    = %q{!!! XML}
       html    = %q{<?xml version='1.0' encoding='utf-8' ?>}
@@ -132,7 +132,7 @@ class UglyTest < MiniTest::Test
     end
   end
 
-  class Basichamltagsandcss < MiniTest::Test
+  class Basichamltagsandcss < Minitest::Test
     def test_a_simple_Haml_tag
       haml    = %q{%p}
       html    = %q{<p></p>}
@@ -275,7 +275,7 @@ class UglyTest < MiniTest::Test
     end
   end
 
-  class Tagswithunusualhtmlcharacters < MiniTest::Test
+  class Tagswithunusualhtmlcharacters < Minitest::Test
     def test_a_tag_with_colons
       haml    = %q{%ns:tag}
       html    = %q{<ns:tag></ns:tag>}
@@ -322,7 +322,7 @@ class UglyTest < MiniTest::Test
     end
   end
 
-  class Tagswithunusualcssidentifiers < MiniTest::Test
+  class Tagswithunusualcssidentifiers < Minitest::Test
     def test_an_all_numeric_class
       haml    = %q{.123}
       html    = %q{<div class='123'></div>}
@@ -351,7 +351,7 @@ class UglyTest < MiniTest::Test
     end
   end
 
-  class Tagswithinlinecontent < MiniTest::Test
+  class Tagswithinlinecontent < Minitest::Test
     def test_Inline_content_simple_tag
       haml    = %q{%p hello}
       html    = %q{<p>hello</p>}
@@ -386,7 +386,7 @@ class UglyTest < MiniTest::Test
     end
   end
 
-  class Tagswithnestedcontent < MiniTest::Test
+  class Tagswithnestedcontent < Minitest::Test
     def test_Nested_content_simple_tag
       haml    = %q{%p
   hello}
@@ -430,7 +430,7 @@ text
     end
   end
 
-  class Tagswithhtmlstyleattributes < MiniTest::Test
+  class Tagswithhtmlstyleattributes < Minitest::Test
     def test_html_style_one_attribute
       haml    = %q{%p(a='b')}
       html    = %q{<p a='b'></p>}
@@ -543,7 +543,7 @@ text
     end
   end
 
-  class Tagswithrubystyleattributes < MiniTest::Test
+  class Tagswithrubystyleattributes < Minitest::Test
     def test_Ruby_style_one_attribute
       haml    = %q{%p{:a => 'b'}}
       html    = %q{<p a='b'></p>}
@@ -664,7 +664,7 @@ text
     end
   end
 
-  class Silentcomments < MiniTest::Test
+  class Silentcomments < Minitest::Test
     def test_an_inline_silent_comment
       haml    = %q{-# hello}
       html    = %q{}
@@ -707,7 +707,7 @@ text
     end
   end
 
-  class Markupcomments < MiniTest::Test
+  class Markupcomments < Minitest::Test
     def test_an_inline_markup_comment
       haml    = %q{/ comment}
       html    = %q{<!-- comment -->}
@@ -732,7 +732,7 @@ comment2
     end
   end
 
-  class Conditionalcomments < MiniTest::Test
+  class Conditionalcomments < Minitest::Test
     def test_a_conditional_comment
       haml    = %q{/[if IE]
   %p a}
@@ -746,7 +746,7 @@ comment2
     end
   end
 
-  class Internalfilters < MiniTest::Test
+  class Internalfilters < Minitest::Test
     def test_content_in_an_escaped_filter
       haml    = %q{:escaped
   <&">}
@@ -846,7 +846,7 @@ comment2
     end
   end
 
-  class Rubystyleinterpolation < MiniTest::Test
+  class Rubystyleinterpolation < Minitest::Test
     def test_interpolation_inside_inline_content
       haml    = %q{%p #{var}}
       html    = %q{<p>value</p>}
@@ -886,7 +886,7 @@ comment2
     end
   end
 
-  class Htmlescaping < MiniTest::Test
+  class Htmlescaping < Minitest::Test
     def test_code_following_
       haml    = %q{&= '<"&>'}
       html    = %q{&lt;&quot;&amp;&gt;}
@@ -915,7 +915,7 @@ comment2
     end
   end
 
-  class Booleanattributes < MiniTest::Test
+  class Booleanattributes < Minitest::Test
     def test_boolean_attribute_with_XHTML
       haml    = %q{%input(checked=true)}
       html    = %q{<input checked='checked' />}
@@ -935,7 +935,7 @@ comment2
     end
   end
 
-  class Whitespacepreservation < MiniTest::Test
+  class Whitespacepreservation < Minitest::Test
     def test_following_the_operator
       skip 'This test is probably not compatible with Haml 5. So the test is outdated.'
       haml    = %q{~ "Foo\n<pre>Bar\nBaz</pre>"}
@@ -972,7 +972,7 @@ hello</pre>}
     end
   end
 
-  class Whitespaceremoval < MiniTest::Test
+  class Whitespaceremoval < Minitest::Test
     def test_a_tag_with_appended_and_inline_content
       haml    = %q{%li hello
 %li> world
