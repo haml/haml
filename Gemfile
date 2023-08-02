@@ -21,3 +21,7 @@ else
     gem 'stackprof'
   end
 end
+
+if RUBY_VERSION < '2.6'
+  gem 'rake-compiler', '< 1.2.4'
+end
