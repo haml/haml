@@ -100,6 +100,8 @@ Released on September 21, 2022
          * Removed: `block_is_haml?`, `capture_haml`, `escape_once`, `find_and_preserve`, `flatten`, `haml_concat`,
            `haml_indent`, `haml_tag`, `haml_tag_if`, `html_attrs`, `html_escape`, `init_haml_helpers`, `is_haml?`,
            `list_of`, `non_haml`, `precede`, `succeed`, `surround`, `tab_down`, `tab_up`, `with_tabs`
+     * `:ruby` filter
+         * Removed: `haml_io`
   * Only the following attributes and `aria`/`data` attributes are considered boolean attributes:
      * `allowfullscreen`, `async`, `autobuffer`, `autofocus`, `autoplay`, `checked`, `controls`, `default`,
        `defer`, `disabled`, `download`, `formnovalidate`, `hidden`, `inert`, `ismap`, `itemscope`, `loop`,
