@@ -16,7 +16,7 @@ def generate_spec(mode)
 
     # This is a spec converted by haml-spec.
     # See: https://github.com/haml/haml-spec
-    class #{mode.capitalize}Test < MiniTest::Test
+    class #{mode.capitalize}Test < Minitest::Test
       HAML_DEFAULT_OPTIONS = { ugly: #{mode == :ugly}, escape_html: true }.freeze
       HAMLIT_DEFAULT_OPTIONS = { escape_html: true }.freeze
 
@@ -33,7 +33,7 @@ def generate_spec(mode)
   contexts = YAML.load(File.read(File.expand_path('./tests.yml', __dir__)))
   contexts.each_with_index do |context, index|
     spec += "\n" if index != 0
-    spec += "  class #{escape_name(context[0], '').capitalize} < MiniTest::Test\n"
+    spec += "  class #{escape_name(context[0], '').capitalize} < Minitest::Test\n"
 
     tests = []
     context[1].each do |name, test|

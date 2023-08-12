@@ -17,7 +17,7 @@ ENV['BACKTRACE'] ||= '1'
 BASE_TEST_CLASS = if defined?(Minitest::Test)
                     Minitest::Test
                   else
-                    MiniTest::Unit::TestCase
+                    Minitest::Unit::TestCase
                   end
 
 module Declarative
