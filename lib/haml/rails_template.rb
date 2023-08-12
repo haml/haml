@@ -28,7 +28,9 @@ module Haml
       options = RailsTemplate.options
 
       # Make the filename available in parser etc.
-      options[:filename] = template.identifier
+      if template.respond_to?(:identifier)
+        options = options.merge(filename: template.identifier)
+      end
 
       # https://github.com/haml/haml/blob/4.0.7/lib/haml/template/plugin.rb#L19-L20
       # https://github.com/haml/haml/blob/4.0.7/lib/haml/options.rb#L228
