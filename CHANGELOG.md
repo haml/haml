@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 6.1.2
+
+* Use the rails template path as `filename` [#1140](https://github.com/haml/haml/issues/1140)
+
 ## 6.1.1
 
 * Fix an empty output of Ruby 3.1's Hash shorthand syntax [#1083](https://github.com/haml/haml/issues/1083)
