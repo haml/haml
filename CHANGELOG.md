@@ -106,6 +106,12 @@ Released on September 21, 2022
            `list_of`, `non_haml`, `precede`, `succeed`, `surround`, `tab_down`, `tab_up`, `with_tabs`
      * `:ruby` filter
          * Removed: `haml_io`
+     * Alternatives to the removed helpers:
+         * Some simple ones could work by copying [the original definition](https://github.com/haml/haml/blob/v5.2.2/lib/haml/helpers.rb).
+         * For helpers generating general HTML tags, also consider using what your framework provides, e.g. Rails `content_tag`.
+           Same applies to `capture_haml`, e.g. Rails `capture`.
+         * Ones that rely on `Haml::Buffer` have no direct alternative by design. They existed at the cost of performance.
+           You need to define a helper, instantiate a String buffer in it, append stuff to it, and call it inside `=`.
   * Only the following attributes and `aria`/`data` attributes are considered boolean attributes:
      * `allowfullscreen`, `async`, `autobuffer`, `autofocus`, `autoplay`, `checked`, `controls`, `default`,
        `defer`, `disabled`, `download`, `formnovalidate`, `hidden`, `inert`, `ismap`, `itemscope`, `loop`,
