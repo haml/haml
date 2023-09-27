@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 6.2.0
+
+* Drop the C extension [#1146](https://github.com/haml/haml/issues/1146)
+
 ## 6.1.4
 
 * Let `Haml::Util.escape_html` use `ERB::Escape` if available [#1145](https://github.com/haml/haml/issues/1145)
