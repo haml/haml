@@ -78,12 +78,6 @@ escape_attribute(VALUE escape_attrs, VALUE str)
 }
 
 static VALUE
-rb_escape_html(RB_UNUSED_VAR(VALUE self), VALUE value)
-{
-  return escape_html(to_s(value));
-}
-
-static VALUE
 haml_build_id(VALUE escape_attrs, VALUE values)
 {
   VALUE attr_value;
@@ -504,14 +498,12 @@ rb_haml_build(int argc, VALUE *argv, RB_UNUSED_VAR(VALUE self))
 void
 Init_haml(void)
 {
-  VALUE mHaml, mUtil;
+  VALUE mHaml;
 
   mHaml             = rb_define_module("Haml");
   mObjectRef        = rb_define_module_under(mHaml, "ObjectRef");
-  mUtil             = rb_define_module_under(mHaml, "Util");
   mAttributeBuilder = rb_define_module_under(mHaml, "AttributeBuilder");
 
-  rb_define_singleton_method(mUtil, "escape_html", rb_escape_html, 1);
   rb_define_singleton_method(mAttributeBuilder, "build", rb_haml_build, -1);
   rb_define_singleton_method(mAttributeBuilder, "build_id", rb_haml_build_id, -1);
   rb_define_singleton_method(mAttributeBuilder, "build_class", rb_haml_build_class, -1);
