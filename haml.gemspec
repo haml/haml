@@ -21,12 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.metadata      = { 'rubygems_mfa_required' => 'true' }
 
-  if /java/ === RUBY_PLATFORM
-    spec.platform = 'java'
-  else
-    spec.extensions = ['ext/haml/extconf.rb']
-    spec.required_ruby_version = '>= 2.1.0'
-  end
+  spec.required_ruby_version = '>= 2.1.0'
 
   spec.add_dependency 'temple', '>= 0.8.2'
   spec.add_dependency 'thor'
@@ -41,7 +36,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'minitest-reporters', '~> 1.1'
   spec.add_development_dependency 'rails', '>= 4.0'
   spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rake-compiler'
   spec.add_development_dependency 'sass'
   spec.add_development_dependency 'slim'
   spec.add_development_dependency 'string_template'

@@ -1,39 +1,5 @@
 require 'bundler/gem_tasks'
-
-#
-# Prepend DevKit into compilation phase
-#
-if Gem.win_platform?
-  desc 'Activates DevKit'
-  task :devkit do
-    begin
-      require 'devkit'
-    rescue LoadError
-      abort 'Failed to load DevKit required for compilation'
-    end
-  end
-  task compile: :devkit
-end
-
 require 'rake/testtask'
-if /java/ === RUBY_PLATFORM
-  # require 'rake/javaextensiontask'
-  # Rake::JavaExtensionTask.new(:haml) do |ext|
-  #   ext.ext_dir = 'ext/java'
-  #   ext.lib_dir = 'lib/haml'
-  # end
-
-  task :compile do
-    # dummy for now
-  end
-else
-  require 'rake/extensiontask'
-  Rake::ExtensionTask.new(:haml) do |ext|
-    ext.lib_dir = 'lib/haml'
-  end
-end
-
-Dir['benchmark/*.rake'].each { |b| import(b) }
 
 Rake::TestTask.new do |t|
   t.libs << 'lib' << 'test'
@@ -42,10 +8,10 @@ Rake::TestTask.new do |t|
   t.test_files = files
   t.verbose = true
 end
-task test: :compile
+task :test
 
 desc 'bench task for CI'
-task bench: :compile do
+task :bench do
   if ENV['SLIM_BENCH'] == '1'
     cmd = %w[bundle exec ruby benchmark/slim/run-benchmarks.rb]
   else
@@ -79,4 +45,4 @@ task(:doc => 'doc:sass') {sh "yard"}
 desc "Generate documentation incrementally"
 task(:redoc) {sh "yard -c"}
 
-task default: %w[compile test]
+task default: :test
