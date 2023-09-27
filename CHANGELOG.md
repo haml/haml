@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 6.1.4
+
+* Let `Haml::Util.escape_html` use `ERB::Escape` if available [#1145](https://github.com/haml/haml/issues/1145)
+
 ## 6.1.3
 
 * Add `Haml::RailsTemplate#default_format` for Turbo compatibility [#1144](https://github.com/haml/haml/issues/1144)
