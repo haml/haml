@@ -14,15 +14,16 @@ module Haml
   module Util
     extend self
 
-    # For JRuby, TruffleRuby, and Wasm, fallback to Ruby implementation.
-    if /java|wasm/ === RUBY_PLATFORM || RUBY_ENGINE == 'truffleruby'
+    begin # Ruby 3.2+ or ERB 4+
+      require 'erb/escape'
+
+      define_singleton_method(:escape_html, ERB::Escape.instance_method(:html_escape))
+    rescue LoadError
       require 'cgi/escape'
 
       def self.escape_html(html)
         CGI.escapeHTML(html.to_s)
       end
-    else
-      require 'haml/haml' # Haml::Util.escape_html
     end
 
     # TODO: Remove unescape_interpolation's workaround and get rid of `respond_to?`.
