@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 6.1.3
+
+* Add `Haml::RailsTemplate#default_format` for Turbo compatibility [#1144](https://github.com/haml/haml/issues/1144)
+
 ## 6.1.2
 
 * Use the rails template path as `filename` [#1140](https://github.com/haml/haml/issues/1140)
