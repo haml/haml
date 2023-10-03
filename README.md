@@ -1,6 +1,6 @@
 # Haml
 
-[![Gem Version](https://badge.fury.io/rb/haml.svg)](http://rubygems.org/gems/haml)
+[![Gem Version](https://badge.fury.io/rb/haml.svg)](https://rubygems.org/gems/haml)
 [![test](https://github.com/haml/haml/actions/workflows/test.yml/badge.svg)](https://github.com/haml/haml/actions/workflows/test.yml)
 [![Code Climate](https://codeclimate.com/github/haml/haml/badges/gpa.svg)](https://codeclimate.com/github/haml/haml)
 [![Inline docs](https://inch-ci.org/github/haml/haml.svg)](https://inch-ci.org/github/haml/haml)
@@ -31,7 +31,7 @@ to compile it to HTML. For more information on these commands, check out
 haml --help
 ~~~
 
-To use Haml programmatically, check out the [YARD documentation](http://haml.info/docs/yardoc/).
+To use Haml programmatically, check out the [YARD documentation](https://haml.info/docs/yardoc/).
 
 ## Using Haml with Rails
 
@@ -120,7 +120,7 @@ output the result. You can even use control statements like `if` and `while`:
 ~~~
 
 Haml provides far more tools than those presented here. Check out the [reference
-documentation](http://haml.info/docs/yardoc/file.REFERENCE.html)
+documentation](https://haml.info/docs/yardoc/file.REFERENCE.html)
 for full details.
 
 ### Indentation
@@ -132,7 +132,7 @@ can't be mixed, and the same number of tabs or spaces must be used throughout.
 ## Contributing
 
 Contributions are welcomed, but before you get started please read the
-[guidelines](http://haml.info/development.html#contributing).
+[guidelines](https://haml.info/development.html#contributing).
 
 After forking and then cloning the repo locally, install Bundler and then use it
 to install the development gem dependencies:
@@ -182,7 +182,7 @@ but still consults on language issues.
 [Natalie Weizenbaum](http://nex-3.com) was for many years the primary developer
 and architect of the "modern" Ruby implementation of Haml.
 
-[Norman Clarke](http://github.com/norman) was the primary maintainer of Haml from 2012 to 2016.
+[Norman Clarke](https://github.com/norman) was the primary maintainer of Haml from 2012 to 2016.
 
 ## License
 
