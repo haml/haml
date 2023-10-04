@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 6.2.2
+
+* Allow adding custom attributes to `Haml::BOOLEAN_ATTRIBUTES` [#1148](https://github.com/haml/haml/issues/1148)
+* Consider `aria-xxx: false` as a boolean attribute
+
 ## 6.2.1
 
 * Fix v6.2.0's bug in rendering dynamic `aria` attributes [#1149](https://github.com/haml/haml/issues/1149)
