@@ -19,7 +19,7 @@ module Haml::AttributeBuilder
           buf << build_data(escape_attrs, quote, *hash[key])
         when 'aria'
           buf << build_aria(escape_attrs, quote, *hash[key])
-        when *Haml::BOOLEAN_ATTRIBUTES, /\Adata-/
+        when *Haml::BOOLEAN_ATTRIBUTES, /\Adata-/, /\Aaria-/
           build_boolean!(escape_attrs, quote, format, buf, key, hash[key])
         else
           buf << " #{key}=#{quote}#{escape_html(escape_attrs, hash[key].to_s)}#{quote}"

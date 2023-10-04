@@ -302,6 +302,34 @@ describe Haml::Engine do
           HAML
         end
       end
+
+      it 'deletes data- attributes' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <div></div>
+          <div></div>
+          <div></div>
+        HTML
+          %div{ "data-foo" => false }
+          - foo = false
+          %div{ "data-foo" => foo }
+          - hash = { "data-foo" => foo }
+          %div{ hash }
+        HAML
+      end
+
+      it 'deletes aria- attributes' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <div></div>
+          <div></div>
+          <div></div>
+        HTML
+          %div{ "aria-foo" => false }
+          - foo = false
+          %div{ "aria-foo" => foo }
+          - hash = { "aria-foo" => foo }
+          %div{ hash }
+        HAML
+      end
     end
 
     describe 'html escape' do
