@@ -8,10 +8,12 @@ module Haml
 
       def compile(node)
         case node.value[:type]
-        when 'xml'
-          xml_doctype
         when ''
           html_doctype(node)
+        when 'xml'
+          xml_doctype
+        when 'rdfa'
+          rdfa_doctype
         else
           [:html, :doctype, node.value[:type]]
         end
@@ -40,6 +42,10 @@ module Haml
         else
           [:multi]
         end
+      end
+
+      def rdfa_doctype
+        [:static, '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">']
       end
     end
   end
