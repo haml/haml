@@ -190,6 +190,16 @@ describe Haml::Engine do
     end
 
     describe 'deletable attributes' do
+      def with_custom_attributes(*attributes, &block)
+        begin
+          old_attributes = Haml::BOOLEAN_ATTRIBUTES.dup
+          Haml::BOOLEAN_ATTRIBUTES.push(*attributes)
+          block.call
+        ensure
+          Haml::BOOLEAN_ATTRIBUTES.replace(old_attributes)
+        end
+      end
+
       it 'deletes attributes whose value is nil or false' do
         assert_render(<<-HTML.unindent, <<-HAML.unindent)
           <input>
@@ -271,6 +281,26 @@ describe Haml::Engine do
           - hash = { disabled: nil }
           %a{ hash }
         HAML
+      end
+
+      it 'deletes custom attributes in BOOLEAN_ATTRIBUTES' do
+        with_custom_attributes('custom') do
+          assert_render(<<-HTML.unindent, <<-HAML.unindent)
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          HTML
+            %div(custom=false)
+            - custom = false
+            %div(custom=custom)
+            %div{ custom: false }
+            %div{ custom: custom }
+            - hash = { custom: custom }
+            %div{ hash }
+          HAML
+        end
       end
     end
 

@@ -2,15 +2,8 @@
 require 'haml/object_ref'
 
 module Haml::AttributeBuilder
-  BOOLEAN_ATTRIBUTES = %w[disabled readonly multiple checked autobuffer
-                       autoplay controls loop selected hidden scoped async
-                       defer reversed ismap seamless muted required
-                       autofocus novalidate formnovalidate open pubdate
-                       itemscope allowfullscreen default inert sortable
-                       truespeed typemustmatch download].freeze
-
   class << self
-    def build(escape_attrs, quote, format, boolean_attributes, object_ref, *hashes)
+    def build(escape_attrs, quote, format, object_ref, *hashes)
       hashes << Haml::ObjectRef.parse(object_ref) if object_ref
       buf  = []
       hash = merge_all_attrs(hashes)
@@ -26,7 +19,7 @@ module Haml::AttributeBuilder
           buf << build_data(escape_attrs, quote, *hash[key])
         when 'aria'
           buf << build_aria(escape_attrs, quote, *hash[key])
-        when *boolean_attributes, /\Adata-/
+        when *Haml::BOOLEAN_ATTRIBUTES, /\Adata-/
           build_boolean!(escape_attrs, quote, format, buf, key, hash[key])
         else
           buf << " #{key}=#{quote}#{escape_html(escape_attrs, hash[key].to_s)}#{quote}"

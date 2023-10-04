@@ -4,6 +4,14 @@ require 'haml/attribute_parser'
 require 'haml/ruby_expression'
 
 module Haml
+  # The list of boolean attributes. You may add custom attributes to this constant.
+  BOOLEAN_ATTRIBUTES = %w[disabled readonly multiple checked autobuffer
+                       autoplay controls loop selected hidden scoped async
+                       defer reversed ismap seamless muted required
+                       autofocus novalidate formnovalidate open pubdate
+                       itemscope allowfullscreen default inert sortable
+                       truespeed typemustmatch download]
+
   class AttributeCompiler
     def initialize(identity, options)
       @identity = identity
@@ -31,10 +39,7 @@ module Haml
       attrs = []
       attrs.unshift(node.value[:attributes].inspect) if node.value[:attributes] != {}
 
-      args = [
-        @escape_attrs.inspect, "#{@quote.inspect}.freeze", @format.inspect,
-        '::Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES', node.value[:object_ref],
-      ] + attrs
+      args = [@escape_attrs.inspect, "#{@quote.inspect}.freeze", @format.inspect, node.value[:object_ref]] + attrs
       [:html, :attrs, [:dynamic, "::Haml::AttributeBuilder.build(#{args.join(', ')}, #{node.value[:dynamic_attributes].to_literal})"]]
     end
 
@@ -52,7 +57,7 @@ module Haml
           compile_class!(temple, key, values)
         when 'data', 'aria'
           compile_data!(temple, key, values)
-        when *AttributeBuilder::BOOLEAN_ATTRIBUTES, /\Adata-/, /\Aaria-/
+        when *BOOLEAN_ATTRIBUTES, /\Adata-/, /\Aaria-/
           compile_boolean!(temple, key, values)
         else
           compile_common!(temple, key, values)
