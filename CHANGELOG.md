@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 6.2.1
+
+* Fix v6.2.0's bug in rendering dynamic `aria` attributes [#1149](https://github.com/haml/haml/issues/1149)
+
 ## 6.2.0
 
 * Drop the C extension [#1146](https://github.com/haml/haml/issues/1146)
