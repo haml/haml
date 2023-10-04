@@ -400,6 +400,15 @@ describe Haml::Engine do
           %div{ aria: hash }
         HAML
       end
+
+      it 'renders hash-only dynamic attributes' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <div aria-label='foo'></div>
+        HTML
+          - hash = { aria: { label: 'foo' } }
+          %div{ hash }
+        HAML
+      end
     end if RUBY_ENGINE != 'truffleruby' # aria attribute is not working in truffleruby
 
     describe 'element class with attribute class' do

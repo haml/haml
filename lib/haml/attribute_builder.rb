@@ -18,12 +18,14 @@ module Haml::AttributeBuilder
       keys = hash.keys.sort!
       keys.each do |key|
         case key
-        when 'id'.freeze
+        when 'id'
           buf << " id=#{quote}#{build_id(escape_attrs, *hash[key])}#{quote}"
-        when 'class'.freeze
+        when 'class'
           buf << " class=#{quote}#{build_class(escape_attrs, *hash[key])}#{quote}"
-        when 'data'.freeze
+        when 'data'
           buf << build_data(escape_attrs, quote, *hash[key])
+        when 'aria'
+          buf << build_aria(escape_attrs, quote, *hash[key])
         when *boolean_attributes, /\Adata-/
           build_boolean!(escape_attrs, quote, format, buf, key, hash[key])
         else
@@ -129,7 +131,7 @@ module Haml::AttributeBuilder
         hash.each do |key, value|
           key = key.to_s
           case key
-          when 'id'.freeze, 'class'.freeze, 'data'.freeze
+          when 'id', 'class', 'data', 'aria'
             merged[key] ||= []
             merged[key] << value
           else
