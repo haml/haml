@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 6.2.3
+
+* Resurrect RDFa doctype support [#1147](https://github.com/haml/haml/issues/1147)
+
 ## 6.2.2
 
 * Allow adding custom attributes to `Haml::BOOLEAN_ATTRIBUTES` [#1148](https://github.com/haml/haml/issues/1148)
