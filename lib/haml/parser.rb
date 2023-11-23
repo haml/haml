@@ -78,7 +78,7 @@ module Haml
     #
     BLOCK_WITH_SPACES = /do\s*\|\s*[^\|]*\s+\|\z/
 
-    MID_BLOCK_KEYWORDS = %w[else elsif rescue ensure end when].freeze
+    MID_BLOCK_KEYWORDS = %w[else elsif rescue ensure end when in].freeze
     START_BLOCK_KEYWORDS = %w[if begin case unless].freeze
     # Try to parse assignments to block starters as best as possible
     START_BLOCK_KEYWORD_REGEX = /(?:\w+(?:,\s*\w+)*\s*=\s*)?(#{START_BLOCK_KEYWORDS.join('|')})/
