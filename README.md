@@ -146,12 +146,6 @@ Once this is complete, you should be able to run the test suite:
 rake
 ~~~
 
-You'll get a warning that you need to install haml-spec, so run this:
-
-~~~sh
-git submodule update --init
-~~~
-
 At this point `rake` should run without error or warning and you are ready to
 start working on your patch!
 
