@@ -22,6 +22,7 @@ class HelperTest < Haml::TestCase
   end
 
   def setup
+    template_path = File.expand_path("../templates", __FILE__)
     @base = Class.new(ActionView::Base) do
       def nested_tag
         content_tag(:span) {content_tag(:div) {"something"}}
@@ -34,8 +35,7 @@ class HelperTest < Haml::TestCase
       def compiled_method_container
         self.class
       end
-    end.new(ActionView::LookupContext.new(''), {}, ActionController::Base.new)
-    @base.view_paths << File.expand_path("../templates", __FILE__)
+    end.new(ActionView::LookupContext.new(template_path), {}, ActionController::Base.new)
     @base.instance_variable_set(:@post, Post.new("Foo bar\nbaz", nil, PostErrors.new))
   end
 
