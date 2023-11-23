@@ -164,6 +164,19 @@ describe Haml::Engine do
       HAML
     end
 
+    it 'renders case-in' do
+      skip 'pattern-matching not supported' if RUBY_VERSION < '2.7' || RUBY_ENGINE == 'truffleruby'
+      assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+        ok
+      HTML
+        - case [:foo, 'ok']
+        - in [:foo, msg]
+          = msg
+        - else
+          ng
+      HAML
+    end
+
     it 'renders begin-rescue' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
         hello
