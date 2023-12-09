@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 6.2.4
+
+* Support case-in statement [#1155](https://github.com/haml/haml/issues/1155)
+
 ## 6.2.3
 
 * Resurrect RDFa doctype support [#1147](https://github.com/haml/haml/issues/1147)
