@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 6.2.5
+
+* Deprecate `Haml::RailsTemplate#default_format` that was added in v6.1.3
+  * See [the reference](https://github.com/haml/haml/blob/v6.2.5/REFERENCE.md#turbo) for suggested alternatives.
+
 ## 6.2.4
 
 * Support case-in statement [#1155](https://github.com/haml/haml/issues/1155)
