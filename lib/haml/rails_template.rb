@@ -50,6 +50,9 @@ module Haml
 
     # Rails Turbo looks for this
     def default_format
+      warn "warning: Haml::RailsTemplate#default_format is deprecated and will be removed in the next Haml version 6.3.0. "\
+        "Please monkey-patch this method yourself, or simply use appropriate HTML extensions. "\
+        "See https://github.com/haml/haml/blob/v6.2.5/REFERENCE.md#turbo for details."
       :html
     end
 
