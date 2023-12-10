@@ -1298,7 +1298,7 @@ Blocks of literal text can be preserved using the [`:preserve` filter](#preserve
 
 ## Turbo
 
-For people using Turbo-rails and Haml 6+ need to either:
+For people using Turbo-rails need to either:
 *  follow the naming convention with the html format (ie. ensure any `.haml` files end `.html.haml`), or
 *  add a monkey patch as follows:
 
