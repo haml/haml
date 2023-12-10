@@ -1295,3 +1295,22 @@ automatically, and so should be passed through
 same effect.
 
 Blocks of literal text can be preserved using the [`:preserve` filter](#preserve-filter).
+
+## Turbo
+
+For people using Turbo-rails and Haml 6+ need to either:
+*  follow the naming convention with the html format (ie. ensure any `.haml` files end `.html.haml`), or
+*  add a monkey patch as follows:
+
+```rb
+# config/initializers/haml.rb
+require "haml/rails_template"
+
+module Haml
+  class RailsTemplate
+    def default_format
+      :html
+    end
+  end
+end
+```
