@@ -1,8 +1,13 @@
 # Haml Changelog
 
+## 6.3.0
+
+* Remove `Haml::RailsTemplate#default_format` that was added in v6.1.3 for Turbo [#1152](https://github.com/haml/haml/issues/1152), [#1154](https://github.com/haml/haml/issues/1154) ([discussion](https://github.com/haml/haml/pull/1144#issuecomment-1755088572))
+  * See [the reference](https://github.com/haml/haml/blob/v6.3.0/REFERENCE.md#turbo) for suggested alternatives.
+
 ## 6.2.5
 
-* Deprecate `Haml::RailsTemplate#default_format` that was added in v6.1.3
+* Deprecate `Haml::RailsTemplate#default_format` that was added in v6.1.3 for Turbo ([discussion](https://github.com/haml/haml/pull/1144#issuecomment-1755088572))
   * See [the reference](https://github.com/haml/haml/blob/v6.2.5/REFERENCE.md#turbo) for suggested alternatives.
 
 ## 6.2.4
