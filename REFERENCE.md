@@ -320,7 +320,7 @@ or using `true` and `false`:
     %input(selected=true)
 
 This feature works only for attributes that are included in
-[`Haml::AttributeBuilder::BOOLEAN_ATTRIBUTES`](https://github.com/haml/haml/blob/main/lib/haml/attribute_builder.rb#L5),
+[`Haml::BOOLEAN_ATTRIBUTES`](https://github.com/haml/haml/blob/main/lib/haml/attribute_compiler.rb#L8),
 as well as `data-` and `aria-` attributes.
 
     %input{'data-hidden' => false}
