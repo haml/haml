@@ -21,6 +21,8 @@ Gem::Specification.new do |spec|
 
   spec.metadata      = { 'rubygems_mfa_required' => 'true' }
 
+  spec.metadata["changelog_uri"] = spec.homepage + "/blob/main/CHANGELOG.md"
+
   spec.required_ruby_version = '>= 2.1.0'
 
   spec.add_dependency 'temple', '>= 0.8.2'
