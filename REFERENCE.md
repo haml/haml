@@ -105,7 +105,7 @@ set :haml, { escape_html: false }
 ```
 
 Finally, you can also set them by passing an options hash to `Haml::Engine.new` or `Haml::Template.new`.
-For the complete list of available options, please see `Haml::Engine`.
+For the complete list of available options, please see [`Haml::Engine`](https://github.com/haml/haml/blob/main/lib/haml/engine.rb).
 
 ## Plain Text
 
