@@ -568,7 +568,7 @@ prefix for both the id and class attributes. For example:
     # file: app/controllers/users_controller.rb
 
     def show
-      @user = CrazyUser.find(15)
+      @user = FriendlyUser.find(15)
     end
 
     -# file: app/views/users/show.haml
@@ -579,7 +579,7 @@ prefix for both the id and class attributes. For example:
 
 is compiled to:
 
-    <div class='greeting_crazy_user' id='greeting_crazy_user_15'>
+    <div class='greeting_friendly_user' id='greeting_friendly_user_15'>
       <bar class='fixnum' id='fixnum_581' />
       Hello!
     </div>
@@ -587,11 +587,11 @@ is compiled to:
 If you require that the class be something other than the underscored object's
 class, you can implement the `haml_object_ref` method on the object.
 
-    # file: app/models/crazy_user.rb
+    # file: app/models/friendly_user.rb
 
-    class CrazyUser < ActiveRecord::Base
+    class FriendlyUser < ActiveRecord::Base
       def haml_object_ref
-        "a_crazy_user"
+        "a_friendly_user"
       end
     end
 
@@ -602,7 +602,7 @@ class, you can implement the `haml_object_ref` method on the object.
 
 is compiled to:
 
-    <div class='a_crazy_user' id='a_crazy_user_15'>
+    <div class='a_friendly_user' id='a_friendly_user_15'>
       Hello!
     </div>
 

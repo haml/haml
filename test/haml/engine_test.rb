@@ -455,7 +455,7 @@ SOURCE
     assert_equal("<p foo='bar'></p>\n", render('%p{:foo => "bar"}', :attr_wrapper => nil))
   end
 
-  def test_comment_with_crazy_nesting
+  def test_comment_with_wild_nesting
     assert_equal(<<HTML, render(<<HAML))
 foo
 bar
