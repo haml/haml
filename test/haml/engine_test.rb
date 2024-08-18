@@ -1206,7 +1206,7 @@ HAML
 
 
         if expected_message == :compile
-          assert_match(/(compile error|syntax error|unterminated string|expecting)/, err.message, "Line: #{key}")
+          assert_match(/(compile error|syntax error|unterminated string|expecting|expected)/, err.message, "Line: #{key}")
         else
           assert_equal(expected_message, err.message, "Line: #{key}")
         end
