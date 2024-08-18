@@ -97,7 +97,7 @@ class EngineTest < Haml::TestCase
     unless options[:filename]
       # use caller method name as fake filename. useful for debugging
       i = -1
-      caller[i+=1] =~ /`(.+?)'/ until $1 and $1.index('test_') == 0
+      caller[i+=1] =~ /[`'](?:.+?#)?(.+?)'/ until $1 and $1.index('test_') == 0
       options[:filename] = "(#{$1})"
     end
     options
