@@ -105,7 +105,7 @@ module Haml::AttributeBuilder
             if k.nil?
               flattened[key] = v
             else
-              flattened["#{key}-#{k.to_s.gsub(/_/, '-')}"] = v
+              flattened["#{key}-#{k.to_s.tr('_', '-')}"] = v
             end
           end
         else
