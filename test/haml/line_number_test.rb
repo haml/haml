@@ -283,6 +283,20 @@ describe Haml::Engine do
           = __LINE__
         HAML
       end
+
+      it 'renders interpolated line numbers correctly' do
+        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+          hello2
+
+          3
+          4
+        HTML
+          :plain
+            hello#{__LINE__}
+          = 3
+          = __LINE__
+        HAML
+      end
     end
 
     describe 'preserve filter' do
@@ -308,6 +322,16 @@ describe Haml::Engine do
             _ = 1
 
           = __LINE__
+        HAML
+      end
+
+      it 'renders line numbers within a ruby script correctly' do
+        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+          2:3
+        HTML
+          :ruby
+            a = __LINE__
+          = "#{a}:#{__LINE__}"
         HAML
       end
     end
