@@ -807,7 +807,11 @@ module Haml
         break if new_line.eod?
         next @template.shift if new_line.text.strip.empty?
         break unless is_multiline?(new_line.text.strip)
-        line.text << new_line.text.strip[0...-1]
+        stripped_new_line = new_line.text.strip[0...-1]
+        if stripped_new_line[0] == DIV_CLASS || stripped_new_line[0] == DIV_ID
+          line.text.rstrip!
+        end
+        line.text << stripped_new_line
         @template.shift
       end
     end
