@@ -1,3 +1,5 @@
+require_relative '../../test_helper'
+
 describe Haml::Engine do
   include RenderHelper
 
@@ -106,6 +108,27 @@ describe Haml::Engine do
         <span class='b d' id='c'>hello</span>
       HTML
         %span#a.b#c.d hello
+      HAML
+    end
+
+    it 'renders multiline classes with inline content' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <span class='a b c d e'>hello</span>
+      HTML
+        %span.a.b.c     |
+             .d.e hello |
+      HAML
+    end
+
+    it 'renders multiline classes with nested content' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <span class='a b c d e'>
+        hello
+        </span>
+      HTML
+        %span.a.b.c |
+             .d.e   |
+          hello
       HAML
     end
 
