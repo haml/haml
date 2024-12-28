@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Haml::AttributeParser do
   describe '.parse' do
     def assert_parse(expected, haml)
