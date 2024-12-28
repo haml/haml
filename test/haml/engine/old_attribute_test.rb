@@ -182,7 +182,7 @@ describe Haml::Engine do
 
       it 'does not join others' do
         assert_render(<<-HTML.unindent, <<-HAML.unindent)
-          <a data-value='[{:count=&gt;1}]'></a>
+          <a data-value='[#{render_hash({ count: 1 })}]'></a>
         HTML
           %a{ data: { value: [count: 1] } }
         HAML

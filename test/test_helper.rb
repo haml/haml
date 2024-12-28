@@ -46,6 +46,11 @@ module RenderHelper
     actual = render_haml(haml, options)
     assert_equal expected, actual
   end
+
+  # See haml/haml#1173 and ruby/ruby@a8a0591
+  def render_hash(hash)
+    Haml::Util.escape_html(hash)
+  end
 end
 
 class Haml::TestCase < BASE_TEST_CLASS

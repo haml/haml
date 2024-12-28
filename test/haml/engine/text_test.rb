@@ -6,7 +6,7 @@ describe Haml::Engine do
       skip 'escape is not working well in truffleruby' if RUBY_ENGINE == 'truffleruby'
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         a3aa" [&quot;1&quot;, 2] b " !
-        a{:a=&gt;3}
+        a#{render_hash({ a: 3 })}
         <ht2ml>
       HTML
         #{ "a#{3}a" }a" #{["1", 2]} b " !
