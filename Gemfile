@@ -14,6 +14,10 @@ gem 'pry'
 
 if /java/ === RUBY_PLATFORM # JRuby
   gem 'pandoc-ruby'
+
+  # TODO: unpin when JRuby 9.4.10.0 will be released and available on CI
+  # Ref: https://github.com/jruby/jruby/issues/7262
+  gem 'jar-dependencies', '0.4.1'
 else
   gem 'redcarpet'
 
