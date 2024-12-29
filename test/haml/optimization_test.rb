@@ -11,6 +11,11 @@ describe 'optimization' do
       assert_equal true, compiled_code(haml).include?(%|href='1'|)
     end
 
+    it 'renders html attributes statically' do
+      haml = %|%span(data-boolean data-string="str")|
+      assert_equal true, compiled_code(haml).include?(%|<span data-boolean data-string='str'>|)
+    end
+
     it 'renders static script statically' do
       haml = <<-HAML.unindent
         %span
