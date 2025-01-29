@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Haml::Filters do
   include RenderHelper
 

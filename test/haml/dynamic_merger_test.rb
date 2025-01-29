@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Haml::DynamicMerger do
   describe '#call' do
     def assert_compile(expected, input)

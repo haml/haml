@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $:.unshift __dir__
 
 require_relative '../test_helper'

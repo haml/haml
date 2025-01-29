@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'unindent'
 require 'bundler/setup'
 require 'minitest/autorun'

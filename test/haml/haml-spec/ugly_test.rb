@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $:.unshift File.expand_path('../../test', __dir__)
 
 require 'test_helper'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Haml::RubyExpression do
   describe '.syntax_error?' do
     it { assert_equal(true,  Haml::RubyExpression.syntax_error?('{ hash }')) }

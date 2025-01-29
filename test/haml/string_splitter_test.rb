@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Haml::StringSplitter do
   describe '.compile' do
     def assert_compile(expected, code)
