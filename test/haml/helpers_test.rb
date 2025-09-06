@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Haml::Helpers do
   describe '.preserve' do
     it 'works without block' do

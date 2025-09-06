@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Explicitly requiring rails_template because rails initializers is not executed here.
 require 'haml/rails_template'
 

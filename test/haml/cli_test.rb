@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'haml/cli'
 
 describe Haml::CLI do

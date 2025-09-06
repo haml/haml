@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Haml::Engine do
   describe 'Error' do
     it 'raises an error when Haml::Parser is used independently' do

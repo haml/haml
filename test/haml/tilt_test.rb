@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Tilt::HamlTemplate do
   describe '#render' do
     def suppress_warning(&block)
