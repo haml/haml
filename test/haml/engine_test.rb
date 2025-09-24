@@ -156,6 +156,7 @@ class EngineTest < Haml::TestCase
     assert_equal("<p class='css a b'>foo</p>\n", render("%p.css{:class => %w[a b]} foo")) # merge with css
     assert_equal("<p class='css b'>foo</p>\n", render("%p.css{:class => %w[css b]} foo")) # merge uniquely
     assert_equal("<p class='a b c d'>foo</p>\n", render("%p{:class => [%w[a b], %w[c d]]} foo")) # flatten
+    assert_equal("<p class='css a b'>foo</p>\n", render("%p.css{:class => [%w[a b]]} foo")) # flatten
     assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => [:a, :b] } foo")) # stringify
     # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:class => [nil, false] } foo")) # strip falsey
