@@ -10,7 +10,6 @@ gemspec
 
 gem 'benchmark-ips', '2.3.0'
 gem 'maxitest'
-gem 'pry'
 gem 'base64'
 gem 'bigdecimal'
 gem 'mutex_m'
