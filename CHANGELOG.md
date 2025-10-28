@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 7.0.0
+
+* Change the default `attr_quote` from `'` to `"` https://github.com/haml/haml/issues/1188
+* Bump required Ruby version to 3.2 https://github.com/haml/haml/issues/1176
+
 ## 6.4.0
 
 * Authorize characters in attribute name for vuejs https://github.com/haml/haml/pull/1172
