@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  push:
+    if: github.repository_owner == 'haml'
+    runs-on: ubuntu-latest
+
+    environment:
+      name: rubygems.org
+      url: https://rubygems.org/gems/haml
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@eaecf785f6a34567a6d97f686bbb7bccc1ac1e5c # v1.237.0
+        with:
+          bundler-cache: true
+          ruby-version: ruby
+
+      - name: Publish to RubyGems
+        uses: rubygems/release-gem@a25424ba2ba8b387abc8ef40807c2c85b96cbe32 # v1.1.1
+
+      - name: Create GitHub release
+        run: |
+          tag_name="$(git describe --tags --abbrev=0)"
+          gh release create "${tag_name}" --verify-tag --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
