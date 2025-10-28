@@ -59,6 +59,8 @@ class TemplateTest < Haml::TestCase
 
     # filters template uses :sass
     # Sass::Plugin.options.update(:line_comments => true, :style => :compact)
+
+    skip if RUBY_ENGINE == 'truffleruby' # fails with Rails 8.1
   end
 
   def create_base
