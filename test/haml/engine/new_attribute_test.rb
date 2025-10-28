@@ -36,6 +36,30 @@ describe Haml::Engine do
       HAML
     end
 
+    it 'renders @ attributes properly' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <p @foo='bar'>bar</p>
+      HTML
+        %p(@foo='bar') bar
+      HAML
+    end
+
+    it 'renders # attributes properly' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <p #foo='bar'>bar</p>
+      HTML
+        %p(#foo='bar') bar
+      HAML
+    end
+
+    it 'renders . attributes properly' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div :visible.sync='bar'>bar</div>
+      HTML
+        %div(:visible.sync='bar') bar
+      HAML
+    end
+
     describe 'html escape' do
       it 'escapes attribute values on static attributes' do
         assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
