@@ -79,9 +79,9 @@ HAML
     assert_equal("<li>[1]</li>\n", render("= list_of([[1]]) do |i|\n  = i.inspect"))
     assert_equal("<li>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>\n",
       render("= list_of(['Fee', 'Fi', 'Fo', 'Fum']) do |title|\n  %h1= title\n  %p A word!"))
-    assert_equal("<li c='3'>1</li>\n<li c='3'>2</li>\n", render("= list_of([1, 2], {:c => 3}) do |i|\n  = i"))
-    assert_equal("<li c='3'>[1]</li>\n", render("= list_of([[1]], {:c => 3}) do |i|\n  = i.inspect"))
-    assert_equal("<li c='3'>\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li c='3'>\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>\n",
+    assert_equal("<li c=\"3\">1</li>\n<li c=\"3\">2</li>\n", render("= list_of([1, 2], {:c => 3}) do |i|\n  = i"))
+    assert_equal("<li c=\"3\">[1]</li>\n", render("= list_of([[1]], {:c => 3}) do |i|\n  = i.inspect"))
+    assert_equal("<li c=\"3\">\n  <h1>Fee</h1>\n  <p>A word!</p>\n</li>\n<li c=\"3\">\n  <h1>Fi</h1>\n  <p>A word!</p>\n</li>\n<li c=\"3\">\n  <h1>Fo</h1>\n  <p>A word!</p>\n</li>\n<li c=\"3\">\n  <h1>Fum</h1>\n  <p>A word!</p>\n</li>\n",
       render("= list_of(['Fee', 'Fi', 'Fo', 'Fum'], {:c => 3}) do |title|\n  %h1= title\n  %p A word!"))
   end
 
@@ -239,81 +239,81 @@ HAML
   end
 
   def test_haml_tag_name_attribute_with_id; skip
-    assert_equal("<p id='some_id'></p>\n", render("- haml_tag 'p#some_id'"))
+    assert_equal("<p id=\"some_id\"></p>\n", render("- haml_tag 'p#some_id'"))
   end
 
   def test_haml_tag_name_attribute_with_colon_id; skip
-    assert_equal("<p id='some:id'></p>\n", render("- haml_tag 'p#some:id'"))
+    assert_equal("<p id=\"some:id\"></p>\n", render("- haml_tag 'p#some:id'"))
   end
 
   def test_haml_tag_without_name_but_with_id; skip
-    assert_equal("<div id='some_id'></div>\n", render("- haml_tag '#some_id'"))
+    assert_equal("<div id=\"some_id\"></div>\n", render("- haml_tag '#some_id'"))
   end
 
   def test_haml_tag_without_name_but_with_class; skip
-    assert_equal("<div class='foo'></div>\n", render("- haml_tag '.foo'"))
+    assert_equal("<div class=\"foo\"></div>\n", render("- haml_tag '.foo'"))
   end
 
   def test_haml_tag_without_name_but_with_colon_class; skip
-    assert_equal("<div class='foo:bar'></div>\n", render("- haml_tag '.foo:bar'"))
+    assert_equal("<div class=\"foo:bar\"></div>\n", render("- haml_tag '.foo:bar'"))
   end
 
   def test_haml_tag_name_with_id_and_class; skip
-    assert_equal("<p class='foo' id='some_id'></p>\n", render("- haml_tag 'p#some_id.foo'"))
+    assert_equal("<p class=\"foo\" id=\"some_id\"></p>\n", render("- haml_tag 'p#some_id.foo'"))
   end
 
   def test_haml_tag_name_with_class; skip
-    assert_equal("<p class='foo'></p>\n", render("- haml_tag 'p.foo'"))
+    assert_equal("<p class=\"foo\"></p>\n", render("- haml_tag 'p.foo'"))
   end
 
   def test_haml_tag_name_with_class_and_id; skip
-    assert_equal("<p class='foo' id='some_id'></p>\n", render("- haml_tag 'p.foo#some_id'"))
+    assert_equal("<p class=\"foo\" id=\"some_id\"></p>\n", render("- haml_tag 'p.foo#some_id'"))
   end
 
   def test_haml_tag_name_with_id_and_multiple_classes; skip
-    assert_equal("<p class='foo bar' id='some_id'></p>\n", render("- haml_tag 'p#some_id.foo.bar'"))
+    assert_equal("<p class=\"foo bar\" id=\"some_id\"></p>\n", render("- haml_tag 'p#some_id.foo.bar'"))
   end
 
   def test_haml_tag_name_with_multiple_classes_and_id; skip
-    assert_equal("<p class='foo bar' id='some_id'></p>\n", render("- haml_tag 'p.foo.bar#some_id'"))
+    assert_equal("<p class=\"foo bar\" id=\"some_id\"></p>\n", render("- haml_tag 'p.foo.bar#some_id'"))
   end
 
   def test_haml_tag_name_and_attribute_classes_merging_with_id; skip
-    assert_equal("<p class='bar foo' id='some_id'></p>\n", render("- haml_tag 'p#some_id.foo', :class => 'bar'"))
+    assert_equal("<p class=\"bar foo\" id=\"some_id\"></p>\n", render("- haml_tag 'p#some_id.foo', :class => 'bar'"))
   end
 
   def test_haml_tag_name_and_attribute_classes_merging; skip
-    assert_equal("<p class='bar foo'></p>\n", render("- haml_tag 'p.foo', :class => 'bar'"))
+    assert_equal("<p class=\"bar foo\"></p>\n", render("- haml_tag 'p.foo', :class => 'bar'"))
   end
 
   def test_haml_tag_name_merges_id_and_attribute_id; skip
-    assert_equal("<p id='foo_bar'></p>\n", render("- haml_tag 'p#foo', :id => 'bar'"))
+    assert_equal("<p id=\"foo_bar\"></p>\n", render("- haml_tag 'p#foo', :id => 'bar'"))
   end
 
   def test_haml_tag_attribute_html_escaping; skip
-    assert_equal("<p id='foo&amp;bar'>baz</p>\n", render("%p{:id => 'foo&bar'} baz", :escape_html => true))
+    assert_equal("<p id=\"foo&amp;bar\">baz</p>\n", render("%p{:id => 'foo&bar'} baz", :escape_html => true))
   end
 
   def test_haml_tag_autoclosed_tags_are_closed_xhtml; skip
-    assert_equal("<br class='foo' />\n", render("- haml_tag :br, :class => 'foo'", :format => :xhtml))
+    assert_equal("<br class=\"foo\" />\n", render("- haml_tag :br, :class => 'foo'", :format => :xhtml))
   end
 
   def test_haml_tag_autoclosed_tags_are_closed_html; skip
-    assert_equal("<br class='foo'>\n", render("- haml_tag :br, :class => 'foo'", :format => :html5))
+    assert_equal("<br class=\"foo\">\n", render("- haml_tag :br, :class => 'foo'", :format => :html5))
   end
 
   def test_haml_tag_with_class_array; skip
-    assert_equal("<p class='a b'>foo</p>\n", render("- haml_tag :p, 'foo', :class => %w[a b]"))
-    assert_equal("<p class='a b c d'>foo</p>\n", render("- haml_tag 'p.c.d', 'foo', :class => %w[a b]"))
+    assert_equal("<p class=\"a b\">foo</p>\n", render("- haml_tag :p, 'foo', :class => %w[a b]"))
+    assert_equal("<p class=\"a b c d\">foo</p>\n", render("- haml_tag 'p.c.d', 'foo', :class => %w[a b]"))
   end
 
   def test_haml_tag_with_id_array; skip
-    assert_equal("<p id='a_b'>foo</p>\n", render("- haml_tag :p, 'foo', :id => %w[a b]"))
-    assert_equal("<p id='c_a_b'>foo</p>\n", render("- haml_tag 'p#c', 'foo', :id => %w[a b]"))
+    assert_equal("<p id=\"a_b\">foo</p>\n", render("- haml_tag :p, 'foo', :id => %w[a b]"))
+    assert_equal("<p id=\"c_a_b\">foo</p>\n", render("- haml_tag 'p#c', 'foo', :id => %w[a b]"))
   end
 
   def test_haml_tag_with_data_hash; skip
-    assert_equal("<p data-baz data-foo='bar'>foo</p>\n",
+    assert_equal("<p data-baz data-foo=\"bar\">foo</p>\n",
       render("- haml_tag :p, 'foo', :data => {:foo => 'bar', :baz => true}"))
   end
 
@@ -432,7 +432,7 @@ HAML
     controller = Struct.new(:controller_name, :action_name).new('troller', 'tion')
     scope = Struct.new(:controller).new(controller)
     result = render("%div{:class => page_class} MyDiv", :scope => scope)
-    expected = "<div class='troller tion'>MyDiv</div>\n"
+    expected = "<div class=\"troller tion\">MyDiv</div>\n"
     assert_equal expected, result
   end
 
@@ -597,32 +597,32 @@ HAML
   end
 
   def test_html_attrs_xhtml; skip
-    assert_equal("<html lang='en-US' xml:lang='en-US' xmlns='http://www.w3.org/1999/xhtml'></html>\n",
+    assert_equal("<html lang=\"en-US\" xml:lang='en-US' xmlns=\"http://www.w3.org/1999/xhtml\"></html>\n",
                   render("%html{html_attrs}", :format => :xhtml))
   end
 
   def test_html_attrs_html4; skip
-    assert_equal("<html lang='en-US'></html>\n",
+    assert_equal("<html lang=\"en-US\"></html>\n",
                   render("%html{html_attrs}", :format => :html4))
   end
 
   def test_html_attrs_html5; skip
-    assert_equal("<html lang='en-US'></html>\n",
+    assert_equal("<html lang=\"en-US\"></html>\n",
                   render("%html{html_attrs}", :format => :html5))
   end
 
   def test_html_attrs_xhtml_other_lang; skip
-    assert_equal("<html lang='es-AR' xml:lang='es-AR' xmlns='http://www.w3.org/1999/xhtml'></html>\n",
+    assert_equal("<html lang=\"es-AR\" xml:lang='es-AR' xmlns=\"http://www.w3.org/1999/xhtml\"></html>\n",
                   render("%html{html_attrs('es-AR')}", :format => :xhtml))
   end
 
   def test_html_attrs_html4_other_lang; skip
-    assert_equal("<html lang='es-AR'></html>\n",
+    assert_equal("<html lang=\"es-AR\"></html>\n",
                   render("%html{html_attrs('es-AR')}", :format => :html4))
   end
 
   def test_html_attrs_html5_other_lang; skip
-    assert_equal("<html lang='es-AR'></html>\n",
+    assert_equal("<html lang=\"es-AR\"></html>\n",
                   render("%html{html_attrs('es-AR')}", :format => :html5))
   end
 

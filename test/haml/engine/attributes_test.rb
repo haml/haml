@@ -43,13 +43,13 @@ describe Haml::Engine do
 
     describe 'incompatibility' do
       # TODO: assert_haml tests nothing since migration to haml repository. Use assert_render instead.
-      it { assert_render(%Q|<div id='a'></div>\n|,   %q|#a{ id: [] }|) }
-      it { assert_render(%Q|<div id=''></div>\n|,    %q|%div{ id: [nil, false] }|) }
-      it { assert_render(%Q|<div id='c_a'></div>\n|, %q|#d#c{ id: [] }(id=id)|, locals: { id: 'a' }) }
-      it { assert_render(%Q|<div id=''></div>\n|,    %q|%div{ id: nil }|) }
-      it { assert_render(%Q|<input id=''>\n|,        %q|%input{ id: false }|) }
-      it { assert_render(%Q|<input id=''>\n|,        %q|%input{ id: val }|, locals: { val: false }) }
-      it { assert_render(%Q|<input id=''>\n|,        %q|%input{ hash }|, locals: { hash: { id: false } }) }
+      it { assert_render(%Q|<div id="a"></div>\n|,   %q|#a{ id: [] }|) }
+      it { assert_render(%Q|<div id=""></div>\n|,    %q|%div{ id: [nil, false] }|) }
+      it { assert_render(%Q|<div id="c_a"></div>\n|, %q|#d#c{ id: [] }(id=id)|, locals: { id: 'a' }) }
+      it { assert_render(%Q|<div id=""></div>\n|,    %q|%div{ id: nil }|) }
+      it { assert_render(%Q|<input id="">\n|,        %q|%input{ id: false }|) }
+      it { assert_render(%Q|<input id="">\n|,        %q|%input{ id: val }|, locals: { val: false }) }
+      it { assert_render(%Q|<input id="">\n|,        %q|%input{ hash }|, locals: { hash: { id: false } }) }
     end
   end
 
@@ -123,11 +123,11 @@ describe Haml::Engine do
     end
 
     describe 'incompatibility' do
-      it { assert_render(%Q|<div class=''></div>\n|, %q|%div{ class: nil }|) }
-      it { assert_render(%Q|<div class=''></div>\n|, %q|%div{ class: false }|) }
-      it { assert_render(%Q|<div class=''></div>\n|, %q|%div{ class: false }|) }
-      it { assert_render(%Q|<div class=''></div>\n|, %q|%div{ class: val }|, locals: { val: false }) }
-      it { assert_render(%Q|<div class=''></div>\n|, %q|%div{ hash }|, locals: { hash: { class: false } }) }
+      it { assert_render(%Q|<div class=""></div>\n|, %q|%div{ class: nil }|) }
+      it { assert_render(%Q|<div class=""></div>\n|, %q|%div{ class: false }|) }
+      it { assert_render(%Q|<div class=""></div>\n|, %q|%div{ class: false }|) }
+      it { assert_render(%Q|<div class=""></div>\n|, %q|%div{ class: val }|, locals: { val: false }) }
+      it { assert_render(%Q|<div class=""></div>\n|, %q|%div{ hash }|, locals: { hash: { class: false } }) }
     end
   end
 
@@ -257,13 +257,13 @@ describe Haml::Engine do
     end
 
     describe 'incompatibility' do
-      it { assert_render(%Q|<a href='&#39;&quot;'></a>\n|, %q|%a{ href: "'\"" }|) }
-      it { assert_render(%Q|<input value=''>\n|,      %q|%input{ value: nil }|) }
-      it { assert_render(%Q|<input value='false'>\n|, %q|%input{ value: false }|) }
-      it { assert_render(%Q|<input value='false'>\n|, %q|%input{ value: val }|, locals: { val: false }) }
-      it { assert_render(%Q|<input value='false'>\n|, %q|%input{ hash }|, locals: { hash: { value: false } }) }
+      it { assert_render(%Q|<a href="&#39;&quot;"></a>\n|, %q|%a{ href: "'\"" }|) }
+      it { assert_render(%Q|<input value="">\n|,      %q|%input{ value: nil }|) }
+      it { assert_render(%Q|<input value="false">\n|, %q|%input{ value: false }|) }
+      it { assert_render(%Q|<input value="false">\n|, %q|%input{ value: val }|, locals: { val: false }) }
+      it { assert_render(%Q|<input value="false">\n|, %q|%input{ hash }|, locals: { hash: { value: false } }) }
       it do
-        assert_render(%Q|<div foo=''></div>\n|, <<-HAML.unindent)
+        assert_render(%Q|<div foo=""></div>\n|, <<-HAML.unindent)
           - h1 = { foo: 'should be overwritten' }
           - h2 = { foo: nil }
           %div{ h1, h2 }
@@ -275,15 +275,15 @@ describe Haml::Engine do
   describe 'object reference' do
     ::TestObject = Struct.new(:id) unless defined?(::TestObject)
 
-    it { assert_render(%Q|<a class='test_object' id='test_object_10'></a>\n|, %q|%a[foo]|,      locals: { foo: TestObject.new(10) }) }
-    it { assert_render(%Q|<a class='test_object' id='test_object_10'></a>\n|, %q|%a[foo, nil]|, locals: { foo: TestObject.new(10) }) }
-    it { assert_render(%Q|<a class='test_object' id='test_object_new'></a>\n|, %q|%a[foo]|,     locals: { foo: TestObject.new(nil) }) }
-    it { assert_render(%Q|<a class='pre_test_object' id='pre_test_object_10'></a>\n|, %q|%a[foo, 'pre']|, locals: { foo: TestObject.new(10) }) }
-    it { assert_render(%Q|<div class='static test_object' id='static_test_object_10'></div>\n|, %q|.static#static[TestObject.new(10)]|) }
-    it { assert_render(%Q|<div class='static' id='static'></div>\n|, %q|.static#static[nil]|) }
+    it { assert_render(%Q|<a class="test_object" id="test_object_10"></a>\n|, %q|%a[foo]|,      locals: { foo: TestObject.new(10) }) }
+    it { assert_render(%Q|<a class="test_object" id="test_object_10"></a>\n|, %q|%a[foo, nil]|, locals: { foo: TestObject.new(10) }) }
+    it { assert_render(%Q|<a class="test_object" id="test_object_new"></a>\n|, %q|%a[foo]|,     locals: { foo: TestObject.new(nil) }) }
+    it { assert_render(%Q|<a class="pre_test_object" id="pre_test_object_10"></a>\n|, %q|%a[foo, 'pre']|, locals: { foo: TestObject.new(10) }) }
+    it { assert_render(%Q|<div class="static test_object" id="static_test_object_10"></div>\n|, %q|.static#static[TestObject.new(10)]|) }
+    it { assert_render(%Q|<div class="static" id="static"></div>\n|, %q|.static#static[nil]|) }
     it do
       assert_render(
-        %Q|<a class='static dynamic pre_test_object' id='static_dynamic_pre_test_object_10'></a>\n|,
+        %Q|<a class="static dynamic pre_test_object" id="static_dynamic_pre_test_object_10"></a>\n|,
         %q|%a.static#static[foo, 'pre']{ id: dynamic, class: dynamic }|,
         locals: { foo: TestObject.new(10), dynamic: 'dynamic' },
       )
@@ -292,7 +292,7 @@ describe Haml::Engine do
 
   describe 'engine options' do
     describe 'attr_quote' do
-      it { assert_render(%Q|<a href='/'></a>\n|, %q|%a{ href: '/' }|) }
+      it { assert_render(%Q|<a href="/"></a>\n|, %q|%a{ href: '/' }|) }
       it { assert_render(%Q|<a href='/'></a>\n|, %q|%a{ href: '/' }|, attr_quote: ?') }
       it { assert_render(%Q|<a href=*/*></a>\n|, %q|%a{ href: '/' }|, attr_quote: ?*) }
 
@@ -321,49 +321,49 @@ describe Haml::Engine do
     end
 
     describe 'escape_attrs' do
-      it { assert_render(%Q|<a id='&<>"/'></a>\n|,                %q|%a{ id: '&<>"/' }|, escape_attrs: false) }
-      it { assert_render(%Q|<a id='&<>"/'></a>\n|,                %Q|%a{ id: val }|,     escape_attrs: false, locals: { val: '&<>"/' }) }
-      it { assert_render(%Q|<a id='&<>"/'></a>\n|,                %Q|%a{ hash }|,        escape_attrs: false, locals: { hash: { id: '&<>"/' } }) }
-      it { assert_render(%Q|<a id='&amp;&lt;&gt;&quot;/'></a>\n|, %q|%a{ id: '&<>"/' }|, escape_attrs: true) }
-      it { assert_render(%Q|<a id='&amp;&lt;&gt;&quot;/'></a>\n|, %Q|%a{ id: val }|,     escape_attrs: true, locals: { val: '&<>"/' }) }
-      it { assert_render(%Q|<a id='&amp;&lt;&gt;&quot;/'></a>\n|, %Q|%a{ hash }|,        escape_attrs: true, locals: { hash: { id: '&<>"/' } }) }
+      it { assert_render(%Q|<a id="&<>"/"></a>\n|,                %q|%a{ id: '&<>"/' }|, escape_attrs: false) }
+      it { assert_render(%Q|<a id="&<>"/"></a>\n|,                %Q|%a{ id: val }|,     escape_attrs: false, locals: { val: '&<>"/' }) }
+      it { assert_render(%Q|<a id="&<>"/"></a>\n|,                %Q|%a{ hash }|,        escape_attrs: false, locals: { hash: { id: '&<>"/' } }) }
+      it { assert_render(%Q|<a id="&amp;&lt;&gt;&quot;/"></a>\n|, %q|%a{ id: '&<>"/' }|, escape_attrs: true) }
+      it { assert_render(%Q|<a id="&amp;&lt;&gt;&quot;/"></a>\n|, %Q|%a{ id: val }|,     escape_attrs: true, locals: { val: '&<>"/' }) }
+      it { assert_render(%Q|<a id="&amp;&lt;&gt;&quot;/"></a>\n|, %Q|%a{ hash }|,        escape_attrs: true, locals: { hash: { id: '&<>"/' } }) }
 
-      it { assert_render(%Q|<a class='&<>"/'></a>\n|,                %q|%a{ class: '&<>"/' }|, escape_attrs: false) }
-      it { assert_render(%Q|<a class='&<>"/'></a>\n|,                %Q|%a{ class: val }|,     escape_attrs: false, locals: { val: '&<>"/' }) }
-      it { assert_render(%Q|<a class='&<>"/'></a>\n|,                %Q|%a{ hash }|,           escape_attrs: false, locals: { hash: { class: '&<>"/' } }) }
-      it { assert_render(%Q|<a class='&amp;&lt;&gt;&quot;/'></a>\n|, %q|%a{ class: '&<>"/' }|, escape_attrs: true) }
-      it { assert_render(%Q|<a class='&amp;&lt;&gt;&quot;/'></a>\n|, %Q|%a{ class: val }|,     escape_attrs: true, locals: { val: '&<>"/' }) }
-      it { assert_render(%Q|<a class='&amp;&lt;&gt;&quot;/'></a>\n|, %Q|%a{ hash }|,           escape_attrs: true, locals: { hash: { class: '&<>"/' } }) }
+      it { assert_render(%Q|<a class="&<>"/"></a>\n|,                %q|%a{ class: '&<>"/' }|, escape_attrs: false) }
+      it { assert_render(%Q|<a class="&<>"/"></a>\n|,                %Q|%a{ class: val }|,     escape_attrs: false, locals: { val: '&<>"/' }) }
+      it { assert_render(%Q|<a class="&<>"/"></a>\n|,                %Q|%a{ hash }|,           escape_attrs: false, locals: { hash: { class: '&<>"/' } }) }
+      it { assert_render(%Q|<a class="&amp;&lt;&gt;&quot;/"></a>\n|, %q|%a{ class: '&<>"/' }|, escape_attrs: true) }
+      it { assert_render(%Q|<a class="&amp;&lt;&gt;&quot;/"></a>\n|, %Q|%a{ class: val }|,     escape_attrs: true, locals: { val: '&<>"/' }) }
+      it { assert_render(%Q|<a class="&amp;&lt;&gt;&quot;/"></a>\n|, %Q|%a{ hash }|,           escape_attrs: true, locals: { hash: { class: '&<>"/' } }) }
 
-      it { assert_render(%Q|<a data='&<>"/'></a>\n|,                %q|%a{ data: '&<>"/' }|, escape_attrs: false) }
-      it { assert_render(%Q|<a data='&<>"/'></a>\n|,                %Q|%a{ data: val }|,     escape_attrs: false, locals: { val: '&<>"/' }) }
-      it { assert_render(%Q|<a data='&<>"/'></a>\n|,                %Q|%a{ hash }|,          escape_attrs: false, locals: { hash: { data: '&<>"/' } }) }
-      it { assert_render(%Q|<a data='&amp;&lt;&gt;&quot;/'></a>\n|, %q|%a{ data: '&<>"/' }|, escape_attrs: true) }
-      it { assert_render(%Q|<a data='&amp;&lt;&gt;&quot;/'></a>\n|, %Q|%a{ data: val }|,     escape_attrs: true, locals: { val: '&<>"/' }) }
-      it { assert_render(%Q|<a data='&amp;&lt;&gt;&quot;/'></a>\n|, %Q|%a{ hash }|,          escape_attrs: true, locals: { hash: { data: '&<>"/' } }) }
+      it { assert_render(%Q|<a data="&<>"/"></a>\n|,                %q|%a{ data: '&<>"/' }|, escape_attrs: false) }
+      it { assert_render(%Q|<a data="&<>"/"></a>\n|,                %Q|%a{ data: val }|,     escape_attrs: false, locals: { val: '&<>"/' }) }
+      it { assert_render(%Q|<a data="&<>"/"></a>\n|,                %Q|%a{ hash }|,          escape_attrs: false, locals: { hash: { data: '&<>"/' } }) }
+      it { assert_render(%Q|<a data="&amp;&lt;&gt;&quot;/"></a>\n|, %q|%a{ data: '&<>"/' }|, escape_attrs: true) }
+      it { assert_render(%Q|<a data="&amp;&lt;&gt;&quot;/"></a>\n|, %Q|%a{ data: val }|,     escape_attrs: true, locals: { val: '&<>"/' }) }
+      it { assert_render(%Q|<a data="&amp;&lt;&gt;&quot;/"></a>\n|, %Q|%a{ hash }|,          escape_attrs: true, locals: { hash: { data: '&<>"/' } }) }
 
-      it { assert_render(%Q|<a disabled='&<>"/'></a>\n|,                %q|%a{ disabled: '&<>"/' }|, escape_attrs: false) }
-      it { assert_render(%Q|<a disabled='&<>"/'></a>\n|,                %Q|%a{ disabled: val }|,     escape_attrs: false, locals: { val: '&<>"/' }) }
-      it { assert_render(%Q|<a disabled='&<>"/'></a>\n|,                %Q|%a{ hash }|,              escape_attrs: false, locals: { hash: { disabled: '&<>"/' } }) }
-      it { assert_render(%Q|<a disabled='&amp;&lt;&gt;&quot;/'></a>\n|, %q|%a{ disabled: '&<>"/' }|, escape_attrs: true) }
-      it { assert_render(%Q|<a disabled='&amp;&lt;&gt;&quot;/'></a>\n|, %Q|%a{ disabled: val }|,     escape_attrs: true, locals: { val: '&<>"/' }) }
-      it { assert_render(%Q|<a disabled='&amp;&lt;&gt;&quot;/'></a>\n|, %Q|%a{ hash }|,              escape_attrs: true, locals: { hash: { disabled: '&<>"/' } }) }
+      it { assert_render(%Q|<a disabled="&<>"/"></a>\n|,                %q|%a{ disabled: '&<>"/' }|, escape_attrs: false) }
+      it { assert_render(%Q|<a disabled="&<>"/"></a>\n|,                %Q|%a{ disabled: val }|,     escape_attrs: false, locals: { val: '&<>"/' }) }
+      it { assert_render(%Q|<a disabled="&<>"/"></a>\n|,                %Q|%a{ hash }|,              escape_attrs: false, locals: { hash: { disabled: '&<>"/' } }) }
+      it { assert_render(%Q|<a disabled="&amp;&lt;&gt;&quot;/"></a>\n|, %q|%a{ disabled: '&<>"/' }|, escape_attrs: true) }
+      it { assert_render(%Q|<a disabled="&amp;&lt;&gt;&quot;/"></a>\n|, %Q|%a{ disabled: val }|,     escape_attrs: true, locals: { val: '&<>"/' }) }
+      it { assert_render(%Q|<a disabled="&amp;&lt;&gt;&quot;/"></a>\n|, %Q|%a{ hash }|,              escape_attrs: true, locals: { hash: { disabled: '&<>"/' } }) }
 
-      it { assert_render(%Q|<a href='&<>"/'></a>\n|,                %q|%a{ href: '&<>"/' }|, escape_attrs: false) }
-      it { assert_render(%Q|<a href='&<>"/'></a>\n|,                %Q|%a{ href: val }|,     escape_attrs: false, locals: { val: '&<>"/' }) }
-      it { assert_render(%Q|<a href='&<>"/'></a>\n|,                %Q|%a{ hash }|,          escape_attrs: false, locals: { hash: { href: '&<>"/' } }) }
-      it { assert_render(%Q|<a href='&amp;&lt;&gt;&quot;/'></a>\n|, %q|%a{ href: '&<>"/' }|, escape_attrs: true) }
-      it { assert_render(%Q|<a href='&amp;&lt;&gt;&quot;/'></a>\n|, %Q|%a{ href: val }|,     escape_attrs: true, locals: { val: '&<>"/' }) }
-      it { assert_render(%Q|<a href='&amp;&lt;&gt;&quot;/'></a>\n|, %Q|%a{ hash }|,          escape_attrs: true, locals: { hash: { href: '&<>"/' } }) }
+      it { assert_render(%Q|<a href="&<>"/"></a>\n|,                %q|%a{ href: '&<>"/' }|, escape_attrs: false) }
+      it { assert_render(%Q|<a href="&<>"/"></a>\n|,                %Q|%a{ href: val }|,     escape_attrs: false, locals: { val: '&<>"/' }) }
+      it { assert_render(%Q|<a href="&<>"/"></a>\n|,                %Q|%a{ hash }|,          escape_attrs: false, locals: { hash: { href: '&<>"/' } }) }
+      it { assert_render(%Q|<a href="&amp;&lt;&gt;&quot;/"></a>\n|, %q|%a{ href: '&<>"/' }|, escape_attrs: true) }
+      it { assert_render(%Q|<a href="&amp;&lt;&gt;&quot;/"></a>\n|, %Q|%a{ href: val }|,     escape_attrs: true, locals: { val: '&<>"/' }) }
+      it { assert_render(%Q|<a href="&amp;&lt;&gt;&quot;/"></a>\n|, %Q|%a{ hash }|,          escape_attrs: true, locals: { hash: { href: '&<>"/' } }) }
     end
 
     describe 'format' do
       it { assert_render(%Q|<a disabled></a>\n|,            %q|%a{ disabled: true }|, format: :html) }
       it { assert_render(%Q|<a disabled></a>\n|,            %q|%a{ disabled: val }|,  format: :html, locals: { val: true }) }
       it { assert_render(%Q|<a disabled></a>\n|,            %q|%a{ hash }|,           format: :html, locals: { hash: { disabled: true } }) }
-      it { assert_render(%Q|<a disabled='disabled'></a>\n|, %q|%a{ disabled: true }|, format: :xhtml) }
-      it { assert_render(%Q|<a disabled='disabled'></a>\n|, %q|%a{ disabled: val }|,  format: :xhtml, locals: { val: true }) }
-      it { assert_render(%Q|<a disabled='disabled'></a>\n|, %q|%a{ hash }|,           format: :xhtml, locals: { hash: { disabled: true } }) }
+      it { assert_render(%Q|<a disabled="disabled"></a>\n|, %q|%a{ disabled: true }|, format: :xhtml) }
+      it { assert_render(%Q|<a disabled="disabled"></a>\n|, %q|%a{ disabled: val }|,  format: :xhtml, locals: { val: true }) }
+      it { assert_render(%Q|<a disabled="disabled"></a>\n|, %q|%a{ hash }|,           format: :xhtml, locals: { hash: { disabled: true } }) }
     end
   end
 end

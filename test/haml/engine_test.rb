@@ -139,56 +139,56 @@ class EngineTest < Haml::TestCase
   end
 
   def test_attributes_should_render_correctly
-    assert_equal("<div class='atlantis' style='ugly'></div>", render(".atlantis{:style => 'ugly'}").chomp)
+    assert_equal("<div class=\"atlantis\" style=\"ugly\"></div>", render(".atlantis{:style => 'ugly'}").chomp)
   end
 
   def test_css_id_as_attribute_should_be_appended_with_underscore
-    assert_equal("<div id='my_id_1'></div>", render("#my_id{:id => '1'}").chomp)
-    assert_equal("<div id='my_id_1'></div>", render("#my_id{:id => 1}").chomp)
+    assert_equal("<div id=\"my_id_1\"></div>", render("#my_id{:id => '1'}").chomp)
+    assert_equal("<div id=\"my_id_1\"></div>", render("#my_id{:id => 1}").chomp)
   end
 
   def test_ruby_code_should_work_inside_attributes
-    assert_equal("<p class='3'>foo</p>", render("%p{:class => 1+2} foo").chomp)
+    assert_equal("<p class=\"3\">foo</p>", render("%p{:class => 1+2} foo").chomp)
   end
 
   def test_class_attr_with_array
-    assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => %w[a b]} foo")) # basic
-    assert_equal("<p class='css a b'>foo</p>\n", render("%p.css{:class => %w[a b]} foo")) # merge with css
-    assert_equal("<p class='css b'>foo</p>\n", render("%p.css{:class => %w[css b]} foo")) # merge uniquely
-    assert_equal("<p class='a b c d'>foo</p>\n", render("%p{:class => [%w[a b], %w[c d]]} foo")) # flatten
-    assert_equal("<p class='css a b'>foo</p>\n", render("%p.css{:class => [%w[a b]]} foo")) # flatten
-    assert_equal("<p class='a b'>foo</p>\n", render("%p{:class => [:a, :b] } foo")) # stringify
+    assert_equal("<p class=\"a b\">foo</p>\n", render("%p{:class => %w[a b]} foo")) # basic
+    assert_equal("<p class=\"css a b\">foo</p>\n", render("%p.css{:class => %w[a b]} foo")) # merge with css
+    assert_equal("<p class=\"css b\">foo</p>\n", render("%p.css{:class => %w[css b]} foo")) # merge uniquely
+    assert_equal("<p class=\"a b c d\">foo</p>\n", render("%p{:class => [%w[a b], %w[c d]]} foo")) # flatten
+    assert_equal("<p class=\"css a b\">foo</p>\n", render("%p.css{:class => [%w[a b]]} foo")) # flatten
+    assert_equal("<p class=\"a b\">foo</p>\n", render("%p{:class => [:a, :b] } foo")) # stringify
     # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:class => [nil, false] } foo")) # strip falsey
-    assert_equal("<p class=''>foo</p>\n", render("%p{:class => [nil, false] } foo")) # strip falsey
-    assert_equal("<p class='a'>foo</p>\n", render("%p{:class => :a} foo")) # single stringify
+    assert_equal("<p class=\"\">foo</p>\n", render("%p{:class => [nil, false] } foo")) # strip falsey
+    assert_equal("<p class=\"a\">foo</p>\n", render("%p{:class => :a} foo")) # single stringify
     # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:class => false} foo")) # single falsey
-    assert_equal("<p class=''>foo</p>\n", render("%p{:class => false} foo")) # single falsey
-    assert_equal("<p class='html a b'>foo</p>\n", render("%p(class='html'){:class => %w[a b]} foo")) # html attrs
+    assert_equal("<p class=\"\">foo</p>\n", render("%p{:class => false} foo")) # single falsey
+    assert_equal("<p class=\"html a b\">foo</p>\n", render("%p(class='html'){:class => %w[a b]} foo")) # html attrs
   end
 
   def test_id_attr_with_array
-    assert_equal("<p id='a_b'>foo</p>\n", render("%p{:id => %w[a b]} foo")) # basic
-    assert_equal("<p id='css_a_b'>foo</p>\n", render("%p#css{:id => %w[a b]} foo")) # merge with css
-    assert_equal("<p id='a_b_c_d'>foo</p>\n", render("%p{:id => [%w[a b], %w[c d]]} foo")) # flatten
-    assert_equal("<p id='a_b'>foo</p>\n", render("%p{:id => [:a, :b] } foo")) # stringify
+    assert_equal("<p id=\"a_b\">foo</p>\n", render("%p{:id => %w[a b]} foo")) # basic
+    assert_equal("<p id=\"css_a_b\">foo</p>\n", render("%p#css{:id => %w[a b]} foo")) # merge with css
+    assert_equal("<p id=\"a_b_c_d\">foo</p>\n", render("%p{:id => [%w[a b], %w[c d]]} foo")) # flatten
+    assert_equal("<p id=\"a_b\">foo</p>\n", render("%p{:id => [:a, :b] } foo")) # stringify
     # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:id => [nil, false] } foo")) # strip falsey
-    assert_equal("<p id=''>foo</p>\n", render("%p{:id => [nil, false] } foo")) # strip falsey
-    assert_equal("<p id='a'>foo</p>\n", render("%p{:id => :a} foo")) # single stringify
+    assert_equal("<p id=\"\">foo</p>\n", render("%p{:id => [nil, false] } foo")) # strip falsey
+    assert_equal("<p id=\"a\">foo</p>\n", render("%p{:id => :a} foo")) # single stringify
     # [INCOMPATIBILITY] Haml limits boolean attributes
     # assert_equal("<p>foo</p>\n", render("%p{:id => false} foo")) # single falsey
-    assert_equal("<p id=''>foo</p>\n", render("%p{:id => false} foo")) # single falsey
-    assert_equal("<p id='html_a_b'>foo</p>\n", render("%p(id='html'){:id => %w[a b]} foo")) # html attrs
+    assert_equal("<p id=\"\">foo</p>\n", render("%p{:id => false} foo")) # single falsey
+    assert_equal("<p id=\"html_a_b\">foo</p>\n", render("%p(id='html'){:id => %w[a b]} foo")) # html attrs
   end
 
   def test_colon_in_class_attr
-    assert_equal("<p class='foo:bar'>\n", render("%p.foo:bar/"))
+    assert_equal("<p class=\"foo:bar\">\n", render("%p.foo:bar/"))
   end
 
   def test_colon_in_id_attr
-    assert_equal("<p id='foo:bar'>\n", render("%p#foo:bar/"))
+    assert_equal("<p id=\"foo:bar\">\n", render("%p#foo:bar/"))
   end
 
   def test_dynamic_attributes_with_no_content
@@ -200,10 +200,10 @@ HAML
 
   def test_attributes_with_to_s
     assert_equal(<<HTML, render(<<HAML))
-<p id='foo_2'></p>
-<p class='foo 2'></p>
-<p blaz='2'></p>
-<p 2='2'></p>
+<p id="foo_2"></p>
+<p class="foo 2"></p>
+<p blaz="2"></p>
+<p 2="2"></p>
 HTML
 %p#foo{:id => 1+1}
 %p.foo{:class => 1+1}
@@ -214,14 +214,14 @@ HAML
 
   def test_nil_should_render_empty_tag
     # [INCOMPATIBILITY] Haml limits boolean attributes
-    # assert_equal("<div class='no_attributes'></div>",
+    # assert_equal("<div class=\"no_attributes\"></div>",
     #              render(".no_attributes{:nil => nil}").chomp)
-    assert_equal("<div class='no_attributes' nil=''></div>",
+    assert_equal("<div class=\"no_attributes\" nil=\"\"></div>",
                  render(".no_attributes{:nil => nil}").chomp)
   end
 
   def test_strings_should_get_stripped_inside_tags
-    assert_equal("<div class='stripped'>This should have no spaces in front of it</div>",
+    assert_equal("<div class=\"stripped\">This should have no spaces in front of it</div>",
                  render(".stripped    This should have no spaces in front of it").chomp)
   end
 
@@ -316,13 +316,13 @@ HAML
   end
 
   def test_static_attributes_with_empty_attr
-    assert_equal("<img alt='' src='/foo.png'>\n", render("%img{:src => '/foo.png', :alt => ''}"))
+    assert_equal("<img alt=\"\" src=\"/foo.png\">\n", render("%img{:src => '/foo.png', :alt => ''}"))
   end
 
   def test_dynamic_attributes_with_empty_attr
     # [INCOMPATIBILITY] Haml limits boolean attributes
-    # assert_equal("<img alt='' src='/foo.png'>\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
-    assert_equal("<img alt='' src='/foo.png' width=''>\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
+    # assert_equal("<img alt=\"\" src=\"/foo.png\">\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
+    assert_equal("<img alt=\"\" src=\"/foo.png\" width=\"\">\n", render("%img{:width => nil, :src => '/foo.png', :alt => String.new}"))
   end
 
   def test_attribute_hash_with_newlines
@@ -348,15 +348,15 @@ HAML
 
   def test_ugly_semi_prerendered_tags
     assert_equal(<<HTML, render(<<HAML, :ugly => true))
-<p a='2'></p>
-<p a='2'>foo</p>
-<p a='2'>
-<p a='2'>foo</p>
-<p a='2'>foo
+<p a="2"></p>
+<p a="2">foo</p>
+<p a="2">
+<p a="2">foo</p>
+<p a="2">foo
 bar</p>
-<p a='2'>foo
+<p a="2">foo
 bar</p>
-<p a='2'>
+<p a="2">
 foo
 </p>
 HTML
@@ -413,24 +413,24 @@ HAML
 
   def test_boolean_attributes
     # [INCOMPATIBILITY] Haml limits boolean attributes
-    # assert_equal("<p bar baz='true' foo='bar'></p>\n",
+    # assert_equal("<p bar baz=\"true\" foo=\"bar\"></p>\n",
     #              render("%p{:foo => 'bar', :bar => true, :baz => 'true'}", :format => :html4))
-    # assert_equal("<p bar='bar' baz='true' foo='bar'></p>\n",
+    # assert_equal("<p bar=\"bar\" baz=\"true\" foo='bar'></p>\n",
     #              render("%p{:foo => 'bar', :bar => true, :baz => 'true'}", :format => :xhtml))
     #
-    # assert_equal("<p baz='false' foo='bar'></p>\n",
+    # assert_equal("<p baz=\"false\" foo=\"bar\"></p>\n",
     #              render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :html4))
-    # assert_equal("<p baz='false' foo='bar'></p>\n",
+    # assert_equal("<p baz=\"false\" foo=\"bar\"></p>\n",
     #              render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :xhtml))
 
-    assert_equal("<p bar='true' baz='true' foo='bar'></p>\n",
+    assert_equal("<p bar=\"true\" baz=\"true\" foo=\"bar\"></p>\n",
                  render("%p{:foo => 'bar', :bar => true, :baz => 'true'}", :format => :html4))
-    assert_equal("<p bar='true' baz='true' foo='bar'></p>\n",
+    assert_equal("<p bar=\"true\" baz=\"true\" foo=\"bar\"></p>\n",
                  render("%p{:foo => 'bar', :bar => true, :baz => 'true'}", :format => :xhtml))
 
-    assert_equal("<p bar='false' baz='false' foo='bar'></p>\n",
+    assert_equal("<p bar=\"false\" baz=\"false\" foo=\"bar\"></p>\n",
                  render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :html4))
-    assert_equal("<p bar='false' baz='false' foo='bar'></p>\n",
+    assert_equal("<p bar=\"false\" baz=\"false\" foo=\"bar\"></p>\n",
                  render("%p{:foo => 'bar', :bar => false, :baz => 'false'}", :format => :xhtml))
   end
 
@@ -455,7 +455,7 @@ SOURCE
   end
 
   def test_nil_option
-    assert_equal("<p foo='bar'></p>\n", render('%p{:foo => "bar"}', :attr_wrapper => nil))
+    assert_equal("<p foo=\"bar\"></p>\n", render('%p{:foo => "bar"}', :attr_wrapper => nil))
   end
 
   def test_comment_with_wild_nesting
@@ -753,7 +753,7 @@ HAML
   end
 
   def test_new_attrs_with_hash
-    assert_equal("<a href='#'></a>\n", render('%a(href="#")'))
+    assert_equal("<a href=\"#\"></a>\n", render('%a(href="#")'))
   end
 
   def test_silent_script_with_hyphen_case
@@ -797,12 +797,12 @@ HAML
   end
 
   def test_html_attributes_with_hash; skip # attribute escape
-    assert_equal("<a href='#' rel='top'>Foo</a>\n",
+    assert_equal("<a href=\"#\" rel=\"top\">Foo</a>\n",
       render('%a(href="#" rel="top") Foo'))
-    assert_equal("<a href='#'>Foo</a>\n",
+    assert_equal("<a href=\"#\">Foo</a>\n",
       render('%a(href="#") #{"Foo"}'))
 
-    assert_equal("<a href='#\"'></a>\n", render('%a(href="#\\"")'))
+    assert_equal("<a href=\"#\"\"></a>\n", render('%a(href="#\\"")'))
   end
 
   def test_case_assigned_to_var
@@ -951,24 +951,24 @@ HAML
   end
 
   def test_static_attributes_should_be_escaped; skip # attribute escape
-    assert_equal("<img class='atlantis' style='ugly&amp;stupid'>\n",
+    assert_equal("<img class=\"atlantis\" style=\"ugly&amp;stupid\">\n",
                  render("%img.atlantis{:style => 'ugly&stupid'}"))
-    assert_equal("<div class='atlantis' style='ugly&amp;stupid'>foo</div>\n",
+    assert_equal("<div class=\"atlantis\" style=\"ugly&amp;stupid\">foo</div>\n",
                  render(".atlantis{:style => 'ugly&stupid'} foo"))
-    assert_equal("<p class='atlantis' style='ugly&amp;stupid'>foo</p>\n",
+    assert_equal("<p class=\"atlantis\" style=\"ugly&amp;stupid\">foo</p>\n",
                 render("%p.atlantis{:style => 'ugly&stupid'}= 'foo'"))
-    assert_equal("<p class='atlantis' style='ugly&#x000A;stupid'></p>\n",
+    assert_equal("<p class=\"atlantis\" style=\"ugly&#x000A;stupid\"></p>\n",
                 render("%p.atlantis{:style => \"ugly\\nstupid\"}"))
   end
 
   def test_dynamic_attributes_should_be_escaped; skip # script bug
-    assert_equal("<img alt='' src='&amp;foo.png'>\n",
+    assert_equal("<img alt=\"\" src=\"&amp;foo.png\">\n",
                  render("%img{:width => nil, :src => '&foo.png', :alt => String.new}"))
-    assert_equal("<p alt='' src='&amp;foo.png'>foo</p>\n",
+    assert_equal("<p alt=\"\" src=\"&amp;foo.png\">foo</p>\n",
                  render("%p{:width => nil, :src => '&foo.png', :alt => String.new} foo"))
-    assert_equal("<div alt='' src='&amp;foo.png'>foo</div>\n",
+    assert_equal("<div alt=\"\" src=\"&amp;foo.png\">foo</div>\n",
                  render("%div{:width => nil, :src => '&foo.png', :alt => String.new}= 'foo'"))
-    assert_equal("<img alt='' src='foo&#x000A;.png'>\n",
+    assert_equal("<img alt=\"\" src=\"foo&#x000A;.png\">\n",
                  render("%img{:width => nil, :src => \"foo\\n.png\", :alt => String.new}"))
   end
 
@@ -1079,8 +1079,8 @@ HAML
   def test_stop_eval; skip # options
     assert_equal("", render("= 'Hello'", :suppress_eval => true))
     assert_equal("", render("- haml_concat 'foo'", :suppress_eval => true))
-    assert_equal("<div id='foo' yes='no'>\n", render("#foo{:yes => 'no'}/", :suppress_eval => true))
-    assert_equal("<div id='foo'>\n", render("#foo{:yes => 'no', :call => a_function() }/", :suppress_eval => true))
+    assert_equal("<div id=\"foo\" yes=\"no\">\n", render("#foo{:yes => 'no'}/", :suppress_eval => true))
+    assert_equal("<div id=\"foo\">\n", render("#foo{:yes => 'no', :call => a_function() }/", :suppress_eval => true))
     assert_equal("<div>\n", render("%div[1]/", :suppress_eval => true))
     assert_equal("", render(":ruby\n  Kernel.puts 'hello'", :suppress_eval => true))
   end
@@ -1113,14 +1113,14 @@ HAML
 
   def test_attr_wrapper; skip # options
     assert_equal("<p strange=*attrs*></p>\n", render("%p{ :strange => 'attrs'}", :attr_wrapper => '*'))
-    assert_equal("<p escaped='quo\"te'></p>\n", render("%p{ :escaped => 'quo\"te'}", :attr_wrapper => '"'))
+    assert_equal("<p escaped=\"quo\"te\"></p>\n", render("%p{ :escaped => 'quo\"te'}", :attr_wrapper => '"'))
     assert_equal("<p escaped=\"quo'te\"></p>\n", render("%p{ :escaped => 'quo\\'te'}", :attr_wrapper => '"'))
     assert_equal("<p escaped=\"q'uo&#x0022;te\"></p>\n", render("%p{ :escaped => 'q\\'uo\"te'}", :attr_wrapper => '"'))
     assert_equal("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n", render("!!! XML", :attr_wrapper => '"', :format => :xhtml))
   end
 
   def test_autoclose_option
-    assert_equal("<flaz foo='bar'>\n", render("%flaz{:foo => 'bar'}", :autoclose => ["flaz"]))
+    assert_equal("<flaz foo=\"bar\">\n", render("%flaz{:foo => 'bar'}", :autoclose => ["flaz"]))
     assert_equal(<<HTML, render(<<HAML, :autoclose => [/^flaz/]))
 <flaz>
 <flaznicate>
@@ -1135,27 +1135,27 @@ HAML
   def test_attrs_parsed_correctly; skip # attribute escape
     assert_equal("<p boom=>biddly='bar =&gt; baz'></p>\n", render("%p{'boom=>biddly' => 'bar => baz'}"))
     assert_equal("<p foo,bar='baz, qux'></p>\n", render("%p{'foo,bar' => 'baz, qux'}"))
-    assert_equal("<p escaped='quo&#x000A;te'></p>\n", render("%p{ :escaped => \"quo\\nte\"}"))
-    assert_equal("<p escaped='quo4te'></p>\n", render("%p{ :escaped => \"quo\#{2 + 2}te\"}"))
+    assert_equal("<p escaped=\"quo&#x000A;te\"></p>\n", render("%p{ :escaped => \"quo\\nte\"}"))
+    assert_equal("<p escaped=\"quo4te\"></p>\n", render("%p{ :escaped => \"quo\#{2 + 2}te\"}"))
   end
 
   def test_correct_parsing_with_brackets; skip # script bug
-    assert_equal("<p class='foo'>{tada} foo</p>\n", render("%p{:class => 'foo'} {tada} foo"))
-    assert_equal("<p class='foo'>deep {nested { things }}</p>\n", render("%p{:class => 'foo'} deep {nested { things }}"))
-    assert_equal("<p class='bar foo'>{a { d</p>\n", render("%p{{:class => 'foo'}, :class => 'bar'} {a { d"))
-    assert_equal("<p foo='bar'>a}</p>\n", render("%p{:foo => 'bar'} a}"))
+    assert_equal("<p class=\"foo\">{tada} foo</p>\n", render("%p{:class => 'foo'} {tada} foo"))
+    assert_equal("<p class=\"foo\">deep {nested { things }}</p>\n", render("%p{:class => 'foo'} deep {nested { things }}"))
+    assert_equal("<p class=\"bar foo\">{a { d</p>\n", render("%p{{:class => 'foo'}, :class => 'bar'} {a { d"))
+    assert_equal("<p foo=\"bar\">a}</p>\n", render("%p{:foo => 'bar'} a}"))
 
     foo = []
     foo[0] = Struct.new('Foo', :id).new
-    assert_equal("<p class='struct_foo' id='struct_foo_new'>New User]</p>\n",
+    assert_equal("<p class=\"struct_foo\" id=\"struct_foo_new\">New User]</p>\n",
                  render("%p[foo[0]] New User]", :locals => {:foo => foo}))
-    assert_equal("<p class='prefix_struct_foo' id='prefix_struct_foo_new'>New User]</p>\n",
+    assert_equal("<p class=\"prefix_struct_foo\" id=\"prefix_struct_foo_new\">New User]</p>\n",
                  render("%p[foo[0], :prefix] New User]", :locals => {:foo => foo}))
 
     foo[0].id = 1
-    assert_equal("<p class='struct_foo' id='struct_foo_1'>New User]</p>\n",
+    assert_equal("<p class=\"struct_foo\" id=\"struct_foo_1\">New User]</p>\n",
                  render("%p[foo[0]] New User]", :locals => {:foo => foo}))
-    assert_equal("<p class='prefix_struct_foo' id='prefix_struct_foo_1'>New User]</p>\n",
+    assert_equal("<p class=\"prefix_struct_foo\" id=\"prefix_struct_foo_1\">New User]</p>\n",
                  render("%p[foo[0], :prefix] New User]", :locals => {:foo => foo}))
   end
 
@@ -1171,16 +1171,16 @@ HAML
   end
 
   def test_nil_id_with_syntactic_id
-    assert_equal("<p id='foo'>nil</p>\n", render("%p#foo{:id => nil} nil"))
-    assert_equal("<p id='foo_bar'>nil</p>\n", render("%p#foo{{:id => 'bar'}, :id => nil} nil"))
-    assert_equal("<p id='foo_bar'>nil</p>\n", render("%p#foo{{:id => nil}, :id => 'bar'} nil"))
+    assert_equal("<p id=\"foo\">nil</p>\n", render("%p#foo{:id => nil} nil"))
+    assert_equal("<p id=\"foo_bar\">nil</p>\n", render("%p#foo{{:id => 'bar'}, :id => nil} nil"))
+    assert_equal("<p id=\"foo_bar\">nil</p>\n", render("%p#foo{{:id => nil}, :id => 'bar'} nil"))
   end
 
   def test_nil_class_with_syntactic_class
-    assert_equal("<p class='foo'>nil</p>\n", render("%p.foo{:class => nil} nil"))
-    assert_equal("<p class='bar foo'>nil</p>\n", render("%p.bar.foo{:class => nil} nil"))
-    assert_equal("<p class='foo bar'>nil</p>\n", render("%p.foo{{:class => 'bar'}, :class => nil} nil"))
-    assert_equal("<p class='foo bar'>nil</p>\n", render("%p.foo{{:class => nil}, :class => 'bar'} nil"))
+    assert_equal("<p class=\"foo\">nil</p>\n", render("%p.foo{:class => nil} nil"))
+    assert_equal("<p class=\"bar foo\">nil</p>\n", render("%p.bar.foo{:class => nil} nil"))
+    assert_equal("<p class=\"foo bar\">nil</p>\n", render("%p.foo{{:class => 'bar'}, :class => nil} nil"))
+    assert_equal("<p class=\"foo bar\">nil</p>\n", render("%p.foo{{:class => nil}, :class => 'bar'} nil"))
   end
 
   def test_locals
@@ -1188,12 +1188,12 @@ HAML
   end
 
   def test_dynamic_attrs_shouldnt_register_as_literal_values
-    assert_equal("<p a='b2c'></p>\n", render('%p{:a => "b#{1 + 1}c"}'))
-    assert_equal("<p a='b2c'></p>\n", render("%p{:a => 'b' + (1 + 1).to_s + 'c'}"))
+    assert_equal("<p a=\"b2c\"></p>\n", render('%p{:a => "b#{1 + 1}c"}'))
+    assert_equal("<p a=\"b2c\"></p>\n", render("%p{:a => 'b' + (1 + 1).to_s + 'c'}"))
   end
 
   def test_dynamic_attrs_with_self_closed_tag
-    assert_equal("<a b='2'>\nc\n", render("%a{'b' => 1 + 1}/\n= 'c'\n"))
+    assert_equal("<a b=\"2\">\nc\n", render("%a{'b' => 1 + 1}/\n= 'c'\n"))
   end
 
   EXCEPTION_MAP.each do |key, value|
@@ -1298,25 +1298,25 @@ HAML
 
   def test_object_ref_with_nil_id; skip # object reference
     user = User.new
-    assert_equal("<p class='struct_user' id='struct_user_new'>New User</p>\n",
+    assert_equal("<p class=\"struct_user\" id=\"struct_user_new\">New User</p>\n",
                  render("%p[user] New User", :locals => {:user => user}))
   end
 
   def test_object_ref_before_attrs
     user = User.new 42
-    assert_equal("<p class='struct_user' id='struct_user_42' style='width: 100px;'>New User</p>\n",
+    assert_equal("<p class=\"struct_user\" id=\"struct_user_42\" style=\"width: 100px;\">New User</p>\n",
                  render_template("%p[user]{:style => 'width: 100px;'} New User", locals: { user: user }))
   end
 
   def test_object_ref_with_custom_haml_class
     custom = CustomHamlClass.new 42
-    assert_equal("<p class='my_thing' id='my_thing_42' style='width: 100px;'>My Thing</p>\n",
+    assert_equal("<p class=\"my_thing\" id=\"my_thing_42\" style=\"width: 100px;\">My Thing</p>\n",
                  render_template("%p[custom]{:style => 'width: 100px;'} My Thing", locals: { custom: custom }))
   end
 
   def test_object_ref_with_multiple_ids
     cpk_record = CpkRecord.new([42,6,9])
-    assert_equal("<p class='struct_cpk_record' id='struct_cpk_record_42_6_9' style='width: 100px;'>CPK Record</p>\n",
+    assert_equal("<p class=\"struct_cpk_record\" id=\"struct_cpk_record_42_6_9\" style=\"width: 100px;\">CPK Record</p>\n",
                  render_template("%p[cpk_record]{:style => 'width: 100px;'} CPK Record", locals: { cpk_record: cpk_record }))
   end
 
@@ -1357,12 +1357,12 @@ HAML
   def test_def_method_locals; skip # def_method
     obj = Object.new
     engine("%p= foo\n.bar{:baz => baz}= boom").def_method(obj, :render, :foo, :baz, :boom)
-    assert_equal("<p>1</p>\n<div baz='2' class='bar'>3</div>\n", obj.render(:foo => 1, :baz => 2, :boom => 3))
+    assert_equal("<p>1</p>\n<div baz=\"2\" class=\"bar\">3</div>\n", obj.render(:foo => 1, :baz => 2, :boom => 3))
   end
 
   def test_render_proc_locals; skip # render_proc
     proc = engine("%p= foo\n.bar{:baz => baz}= boom").render_proc(Object.new, :foo, :baz, :boom)
-    assert_equal("<p>1</p>\n<div baz='2' class='bar'>3</div>\n", proc[:foo => 1, :baz => 2, :boom => 3])
+    assert_equal("<p>1</p>\n<div baz=\"2\" class=\"bar\">3</div>\n", proc[:foo => 1, :baz => 2, :boom => 3])
   end
 
   def test_render_proc_with_binding; skip # render_proc
@@ -1397,7 +1397,7 @@ HAML
   end
 
   def test_ugly_true
-    assert_equal("<div id='outer'>\n<div id='inner'>\n<p>hello world</p>\n</div>\n</div>\n",
+    assert_equal("<div id=\"outer\">\n<div id=\"inner\">\n<p>hello world</p>\n</div>\n</div>\n",
                  render("#outer\n  #inner\n    %p hello world", :ugly => true))
 
     assert_equal("<p>#{'s' * 75}</p>\n",
@@ -1408,7 +1408,7 @@ HAML
   end
 
   def test_remove_whitespace_true
-    assert_equal("<div id='outer'><div id='inner'><p>hello world</p></div></div>",
+    assert_equal("<div id=\"outer\"><div id=\"inner\"><p>hello world</p></div></div>",
                  render("#outer\n  #inner\n    %p hello world", :remove_whitespace => true))
     assert_equal("<p>hello world<pre>foo   bar\nbaz</pre></p>", render(<<HAML, :remove_whitespace => true))
 %p
@@ -1440,11 +1440,11 @@ HAML
   end
 
   def test_static_hashes
-    assert_equal("<a b='a =&gt; b'></a>\n", render("%a{:b => 'a => b'}", :suppress_eval => true))
-    assert_equal("<a b='a, b'></a>\n", render("%a{:b => 'a, b'}", :suppress_eval => true))
-    assert_equal("<a b='a\tb'></a>\n", render('%a{:b => "a\tb"}', :suppress_eval => true))
-    assert_equal("<a b='a\#{foo}b'></a>\n", render('%a{:b => "a\\#{foo}b"}', :suppress_eval => true))
-    assert_equal("<a b='#f00'></a>\n", render("%a{:b => '#f00'}", :suppress_eval => true))
+    assert_equal("<a b=\"a =&gt; b\"></a>\n", render("%a{:b => 'a => b'}", :suppress_eval => true))
+    assert_equal("<a b=\"a, b\"></a>\n", render("%a{:b => 'a, b'}", :suppress_eval => true))
+    assert_equal("<a b=\"a\tb\"></a>\n", render('%a{:b => "a\tb"}', :suppress_eval => true))
+    assert_equal("<a b=\"a\#{foo}b\"></a>\n", render('%a{:b => "a\\#{foo}b"}', :suppress_eval => true))
+    assert_equal("<a b=\"#f00\"></a>\n", render("%a{:b => '#f00'}", :suppress_eval => true))
   end
 
   def test_dynamic_hashes_with_suppress_eval; skip # options
@@ -1458,8 +1458,8 @@ HAML
   end
 
   def test_utf8_attrs
-    assert_equal("<a href='héllo'></a>\n", render("%a{:href => 'héllo'}"))
-    assert_equal("<a href='héllo'></a>\n", render("%a(href='héllo')"))
+    assert_equal("<a href=\"héllo\"></a>\n", render("%a{:href => 'héllo'}"))
+    assert_equal("<a href=\"héllo\"></a>\n", render("%a(href='héllo')"))
   end
 
   # HTML 4.0
@@ -1470,14 +1470,14 @@ HAML
   end
 
   def test_html_renders_empty_node_with_closing_tag
-    assert_equal "<div class='foo'></div>\n", render(".foo", :format => :html4)
+    assert_equal "<div class=\"foo\"></div>\n", render(".foo", :format => :html4)
   end
 
   def test_html_doesnt_add_slash_to_self_closing_tags
     assert_equal "<a>\n", render("%a/", :format => :html4)
-    assert_equal "<a foo='2'>\n", render("%a{:foo => 1 + 1}/", :format => :html4)
+    assert_equal "<a foo=\"2\">\n", render("%a{:foo => 1 + 1}/", :format => :html4)
     assert_equal "<meta>\n", render("%meta", :format => :html4)
-    assert_equal "<meta foo='2'>\n", render("%meta{:foo => 1 + 1}", :format => :html4)
+    assert_equal "<meta foo=\"2\">\n", render("%meta{:foo => 1 + 1}", :format => :html4)
   end
 
   def test_html_ignores_xml_prolog_declaration
@@ -1500,15 +1500,15 @@ HAML
   end
 
   def test_html5_data_attributes_with_hyphens
-    assert_equal("<div data-foo-bar='blip'></div>\n",
+    assert_equal("<div data-foo-bar=\"blip\"></div>\n",
       render("%div{:data => {:foo_bar => 'blip'}}"))
-    assert_equal("<div data-baz='bang' data-foo-bar='blip'></div>\n",
+    assert_equal("<div data-baz=\"bang\" data-foo-bar=\"blip\"></div>\n",
       render("%div{:data => {:foo_bar => 'blip', :baz => 'bang'}}"))
   end
 
 	def test_html5_arbitrary_hash_valued_attributes_with
     skip '[INCOMPATIBILITY] Haml supports hyphenation only for data attributes'
-    assert_equal("<div aria-foo='blip'></div>\n",
+    assert_equal("<div aria-foo=\"blip\"></div>\n",
       render("%div{:aria => {:foo => 'blip'}}"))
     assert_equal("<div foo-baz='bang'></div>\n",
       render("%div{:foo => {:baz => 'bang'}}"))
@@ -1534,9 +1534,9 @@ HAML
 
   def test_html5_data_attributes_with_multiple_defs; skip # hyphenate
     # Should always use the more-explicit attribute
-    assert_equal("<div data-foo='second'></div>\n",
+    assert_equal("<div data-foo=\"second\"></div>\n",
       render("%div{:data => {:foo => 'first'}, 'data-foo' => 'second'}"))
-    assert_equal("<div data-foo='first'></div>\n",
+    assert_equal("<div data-foo=\"first\"></div>\n",
       render("%div{'data-foo' => 'first', :data => {:foo => 'second'}}"))
   end
 
@@ -1550,18 +1550,18 @@ HAML
       {:data => "dat"}
     end
 
-    assert_equal("<div data-baz='bang' data-brat='wurst' data-foo='blip'></div>\n",
+    assert_equal("<div data-baz=\"bang\" data-brat=\"wurst\" data-foo='blip'></div>\n",
       render("%div{data_hash, :data => {:foo => 'blip', :brat => 'wurst'}}", scope: obj))
-    assert_equal("<div data-baz='bang' data-foo='blip'></div>\n",
+    assert_equal("<div data-baz=\"bang\" data-foo=\"blip\"></div>\n",
       render("%div{data_hash, 'data-foo' => 'blip'}", scope: obj))
-    assert_equal("<div data-baz='bang' data-foo='bar' data='dat'></div>\n",
+    assert_equal("<div data-baz=\"bang\" data-foo=\"bar\" data='dat'></div>\n",
       render("%div{data_hash, :data => 'dat'}", scope: obj))
-    assert_equal("<div data-brat='wurst' data-foo='blip' data='dat'></div>\n",
+    assert_equal("<div data-brat=\"wurst\" data-foo=\"blip\" data='dat'></div>\n",
       render("%div{data_val, :data => {:foo => 'blip', :brat => 'wurst'}}", scope: obj))
   end
 
   def test_html5_data_attributes_with_identical_attribute_values
-    assert_equal("<div data-x='50' data-y='50'></div>\n",
+    assert_equal("<div data-x=\"50\" data-y=\"50\"></div>\n",
       render("%div{:data => {:x => 50, :y => 50}}"))
   end
 
@@ -1599,35 +1599,35 @@ HAML
 
   def test_basic_new_attributes
     assert_equal("<a>bar</a>\n", render("%a() bar"))
-    assert_equal("<a href='foo'>bar</a>\n", render("%a(href='foo') bar"))
-    assert_equal("<a b='c' c='d' d='e'>baz</a>\n", render(%q{%a(b="c" c='d' d="e") baz}))
+    assert_equal("<a href=\"foo\">bar</a>\n", render("%a(href='foo') bar"))
+    assert_equal("<a b=\"c\" c=\"d\" d=\"e\">baz</a>\n", render(%q{%a(b="c" c='d' d="e") baz}))
   end
 
   def test_new_attribute_ids; skip # object reference
-    assert_equal("<div id='foo_bar'></div>\n", render("#foo(id='bar')"))
-    assert_equal("<div id='foo_baz_bar'></div>\n", render("#foo{:id => 'bar'}(id='baz')"))
-    assert_equal("<div id='foo_baz_bar'></div>\n", render("#foo(id='baz'){:id => 'bar'}"))
+    assert_equal("<div id=\"foo_bar\"></div>\n", render("#foo(id='bar')"))
+    assert_equal("<div id=\"foo_baz_bar\"></div>\n", render("#foo{:id => 'bar'}(id='baz')"))
+    assert_equal("<div id=\"foo_baz_bar\"></div>\n", render("#foo(id='baz'){:id => 'bar'}"))
     foo = User.new(42)
-    assert_equal("<div class='struct_user' id='foo_baz_bar_struct_user_42'></div>\n",
+    assert_equal("<div class=\"struct_user\" id=\"foo_baz_bar_struct_user_42\"></div>\n",
       render("#foo(id='baz'){:id => 'bar'}[foo]", :locals => {:foo => foo}))
-    assert_equal("<div class='struct_user' id='foo_baz_bar_struct_user_42'></div>\n",
+    assert_equal("<div class=\"struct_user\" id=\"foo_baz_bar_struct_user_42\"></div>\n",
       render("#foo(id='baz')[foo]{:id => 'bar'}", :locals => {:foo => foo}))
-    assert_equal("<div class='struct_user' id='foo_baz_bar_struct_user_42'></div>\n",
+    assert_equal("<div class=\"struct_user\" id=\"foo_baz_bar_struct_user_42\"></div>\n",
       render("#foo[foo](id='baz'){:id => 'bar'}", :locals => {:foo => foo}))
-    assert_equal("<div class='struct_user' id='foo_baz_bar_struct_user_42'></div>\n",
+    assert_equal("<div class=\"struct_user\" id=\"foo_baz_bar_struct_user_42\"></div>\n",
       render("#foo[foo]{:id => 'bar'}(id='baz')", :locals => {:foo => foo}))
   end
 
   def test_new_attribute_classes; skip # object reference
-    assert_equal("<div class='bar foo'></div>\n", render(".foo(class='bar')"))
-    assert_equal("<div class='bar baz foo'></div>\n", render(".foo{:class => 'bar'}(class='baz')"))
-    assert_equal("<div class='bar baz foo'></div>\n", render(".foo(class='baz'){:class => 'bar'}"))
+    assert_equal("<div class=\"bar foo\"></div>\n", render(".foo(class='bar')"))
+    assert_equal("<div class=\"bar baz foo\"></div>\n", render(".foo{:class => 'bar'}(class='baz')"))
+    assert_equal("<div class=\"bar baz foo\"></div>\n", render(".foo(class='baz'){:class => 'bar'}"))
     foo = User.new(42)
-    assert_equal("<div class='bar baz foo struct_user' id='struct_user_42'></div>\n",
+    assert_equal("<div class=\"bar baz foo struct_user\" id=\"struct_user_42\"></div>\n",
       render(".foo(class='baz'){:class => 'bar'}[foo]", :locals => {:foo => foo}))
-    assert_equal("<div class='bar baz foo struct_user' id='struct_user_42'></div>\n",
+    assert_equal("<div class=\"bar baz foo struct_user\" id=\"struct_user_42\"></div>\n",
       render(".foo[foo](class='baz'){:class => 'bar'}", :locals => {:foo => foo}))
-    assert_equal("<div class='bar baz foo struct_user' id='struct_user_42'></div>\n",
+    assert_equal("<div class=\"bar baz foo struct_user\" id=\"struct_user_42\"></div>\n",
       render(".foo[foo]{:class => 'bar'}(class='baz')", :locals => {:foo => foo}))
   end
 
@@ -1643,35 +1643,35 @@ HAML
   end
 
   def test_truthy_new_attributes; skip # xhtml
-    assert_equal("<a href='href'>bar</a>\n", render("%a(href) bar", :format => :xhtml))
-    assert_equal("<a bar='baz' href>bar</a>\n", render("%a(href bar='baz') bar", :format => :html5))
+    assert_equal("<a href=\"href\">bar</a>\n", render("%a(href) bar", :format => :xhtml))
+    assert_equal("<a bar=\"baz\" href>bar</a>\n", render("%a(href bar='baz') bar", :format => :html5))
     assert_equal("<a href>bar</a>\n", render("%a(href=true) bar"))
     assert_equal("<a>bar</a>\n", render("%a(href=false) bar"))
   end
 
   def test_new_attribute_parsing; skip # attribute escape
-    assert_equal("<a a2='b2'>bar</a>\n", render("%a(a2=b2) bar", :locals => {:b2 => 'b2'}))
-    assert_equal(%Q{<a a='foo"bar'>bar</a>\n}, render(%q{%a(a="#{'foo"bar'}") bar})) #'
+    assert_equal("<a a2=\"b2\">bar</a>\n", render("%a(a2=b2) bar", :locals => {:b2 => 'b2'}))
+    assert_equal(%Q{<a a="foo"bar">bar</a>\n}, render(%q{%a(a="#{'foo"bar'}") bar})) #'
     assert_equal(%Q{<a a="foo'bar">bar</a>\n}, render(%q{%a(a="#{"foo'bar"}") bar})) #'
-    assert_equal(%Q{<a a='foo"bar'>bar</a>\n}, render(%q{%a(a='foo"bar') bar}))
+    assert_equal(%Q{<a a="foo"bar">bar</a>\n}, render(%q{%a(a='foo"bar') bar}))
     assert_equal(%Q{<a a="foo'bar">bar</a>\n}, render(%q{%a(a="foo'bar") bar}))
     assert_equal("<a a:b='foo'>bar</a>\n", render("%a(a:b='foo') bar"))
-    assert_equal("<a a='foo' b='bar'>bar</a>\n", render("%a(a = 'foo' b = 'bar') bar"))
-    assert_equal("<a a='foo' b='bar'>bar</a>\n", render("%a(a = foo b = bar) bar", :locals => {:foo => 'foo', :bar => 'bar'}))
-    assert_equal("<a a='foo'>(b='bar')</a>\n", render("%a(a='foo')(b='bar')"))
-    assert_equal("<a a='foo)bar'>baz</a>\n", render("%a(a='foo)bar') baz"))
-    assert_equal("<a a='foo'>baz</a>\n", render("%a( a = 'foo' ) baz"))
+    assert_equal("<a a=\"foo\" b=\"bar\">bar</a>\n", render("%a(a = 'foo' b = 'bar') bar"))
+    assert_equal("<a a=\"foo\" b=\"bar\">bar</a>\n", render("%a(a = foo b = bar) bar", :locals => {:foo => 'foo', :bar => 'bar'}))
+    assert_equal("<a a=\"foo\">(b='bar')</a>\n", render("%a(a='foo')(b='bar')"))
+    assert_equal("<a a=\"foo)bar\">baz</a>\n", render("%a(a='foo)bar') baz"))
+    assert_equal("<a a=\"foo\">baz</a>\n", render("%a( a = 'foo' ) baz"))
   end
 
   def test_new_attribute_escaping; skip # attribute escape
-    assert_equal(%Q{<a a='foo " bar'>bar</a>\n}, render(%q{%a(a="foo \" bar") bar}))
-    assert_equal(%Q{<a a='foo \\" bar'>bar</a>\n}, render(%q{%a(a="foo \\\\\" bar") bar}))
+    assert_equal(%Q{<a a="foo " bar">bar</a>\n}, render(%q{%a(a="foo \" bar") bar}))
+    assert_equal(%Q{<a a="foo \\" bar">bar</a>\n}, render(%q{%a(a="foo \\\\\" bar") bar}))
 
     assert_equal(%Q{<a a="foo ' bar">bar</a>\n}, render(%q{%a(a='foo \' bar') bar}))
     assert_equal(%Q{<a a="foo \\' bar">bar</a>\n}, render(%q{%a(a='foo \\\\\' bar') bar}))
 
-    assert_equal(%Q{<a a='foo \\ bar'>bar</a>\n}, render(%q{%a(a="foo \\\\ bar") bar}))
-    assert_equal(%Q{<a a='foo \#{1 + 1} bar'>bar</a>\n}, render(%q{%a(a="foo \#{1 + 1} bar") bar}))
+    assert_equal(%Q{<a a="foo \\ bar">bar</a>\n}, render(%q{%a(a="foo \\\\ bar") bar}))
+    assert_equal(%Q{<a a="foo \#{1 + 1} bar">bar</a>\n}, render(%q{%a(a="foo \#{1 + 1} bar") bar}))
   end
 
   def test_multiline_new_attribute
@@ -1907,7 +1907,7 @@ HAML
 
   def test_utf_8_bom; # encoding
     assert_equal <<HTML, render(<<HAML)
-<div class='foo'>
+<div class="foo">
 <p>baz</p>
 </div>
 HTML
@@ -2003,7 +2003,7 @@ HAML
 
   def test_tracing; skip # options
     result = render('%p{:class => "hello"}', :trace => true, :filename => 'foo').strip
-    assert_equal "<p class='hello' data-trace='foo:1'></p>", result
+    assert_equal "<p class=\"hello\" data-trace=\"foo:1\"></p>", result
   end
 
   private

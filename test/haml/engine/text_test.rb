@@ -68,8 +68,8 @@ describe Haml::Engine do
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         <div>
         foo
-        <div class='test'>- bar</div>
-        <div class='test'>- baz</div>
+        <div class="test">- bar</div>
+        <div class="test">- baz</div>
         </div>
       HTML
         %div

@@ -67,7 +67,7 @@ describe Haml::Engine do
   describe 'old attributes' do
     it 'renders multi-line old attributes' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <span a='1' b='2'>2</span>
+        <span a="1" b="2">2</span>
         3
       HTML
         %span{ a: __LINE__,
@@ -78,9 +78,9 @@ describe Haml::Engine do
 
     it 'renders optimized old attributes' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <span a='a' b='b'></span>
+        <span a="a" b="b"></span>
         3
-        <span a='a' b='b'>5</span>
+        <span a="a" b="b">5</span>
         6
       HTML
         %span{ a: 'a',
@@ -96,7 +96,7 @@ describe Haml::Engine do
   describe 'new attributes' do
     it 'renders multi-line new attributes' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <span a='1' b='1'>1</span>
+        <span a="1" b="1">1</span>
         3
       HTML
         %span(a=__LINE__

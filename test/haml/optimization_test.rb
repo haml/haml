@@ -10,12 +10,12 @@ describe 'optimization' do
   describe 'static analysis' do
     it 'renders static value for href statically' do
       haml = %|%a{ href: 1 }|
-      assert_equal true, compiled_code(haml).include?(%|href='1'|)
+      assert_equal true, compiled_code(haml).include?("href=\\\"1\\\"")
     end
 
     it 'renders html attributes statically' do
       haml = %|%span(data-boolean data-string="str")|
-      assert_equal true, compiled_code(haml).include?(%|<span data-boolean data-string='str'>|)
+      assert_equal true, compiled_code(haml).include?("<span data-boolean data-string=\\\"str\\\">")
     end
 
     it 'renders static script statically' do
@@ -35,7 +35,7 @@ describe 'optimization' do
   describe 'string interpolation' do
     it 'renders a static part of string literal statically' do
       haml = %q|%input{ value: "jruby#{9000}#{dynamic}" }|
-      assert_equal true, compiled_code(haml).include?(%|value='jruby9000|)
+      assert_equal true, compiled_code(haml).include?("value=\\\"jruby9000")
 
       haml = %q|%span= "jruby#{9000}#{dynamic}"|
       assert_equal true, compiled_code(haml).include?(%|<span>jruby9000|)
@@ -48,7 +48,7 @@ describe 'optimization' do
 
     it 'detects a static part recursively' do
       haml = %q|%input{ value: "#{ "hello#{ hello }" }" }|
-      assert_equal true, compiled_code(haml).include?(%|value='hello|)
+      assert_equal true, compiled_code(haml).include?("value=\\\"hello")
     end
   end
 end if RUBY_ENGINE != 'truffleruby' # truffleruby does not implement major Ripper features

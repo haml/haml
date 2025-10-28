@@ -86,7 +86,7 @@ describe Haml::Engine do
 
     it 'renders classes' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <span class='foo-1 bar_A'>hello</span>
+        <span class="foo-1 bar_A">hello</span>
       HTML
         %span.foo-1.bar_A hello
       HAML
@@ -94,7 +94,7 @@ describe Haml::Engine do
 
     it 'renders ids only last one' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <span id='bar-'>
+        <span id="bar-">
         hello
         </span>
       HTML
@@ -105,7 +105,7 @@ describe Haml::Engine do
 
     it 'renders ids and classes' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <span class='b d' id='c'>hello</span>
+        <span class="b d" id="c">hello</span>
       HTML
         %span#a.b#c.d hello
       HAML
@@ -113,7 +113,7 @@ describe Haml::Engine do
 
     it 'renders implicit div tag starting with id' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <div class='world' id='hello'></div>
+        <div class="world" id="hello"></div>
       HTML
         #hello.world
       HAML
@@ -121,7 +121,7 @@ describe Haml::Engine do
 
     it 'renders implicit div tag starting with class' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <div class='world' id='hello'>
+        <div class="world" id="hello">
         foo
         </div>
       HTML
@@ -167,7 +167,7 @@ describe Haml::Engine do
 
     it 'renders a text just after attributes' do
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
-        <span a='2'>a</span>
+        <span a="2">a</span>
       HTML
         %span{a: 2}a
       HAML

@@ -79,7 +79,7 @@ describe Haml::Engine do
 
     it 'removes whitespace inside script inside silent script' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <div class='bar'>foofoofoo</div>
+        <div class="bar">foofoofoo</div>
       HTML
         .bar<
           - 3.times do
@@ -89,7 +89,7 @@ describe Haml::Engine do
 
     it 'removes whitespace inside script recursively' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent, disable_capture: true)
-        <div class='foo'>bar1bar1bar1bar12</div>
+        <div class="foo">bar1bar1bar1bar12</div>
       HTML
         .foo<
           - 1.times do
@@ -112,7 +112,7 @@ describe Haml::Engine do
 
     it 'removes whitespace inside script inside silent script' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <div class='bar'>12</div>
+        <div class="bar">12</div>
       HTML
         .bar<
           - 1.times do
