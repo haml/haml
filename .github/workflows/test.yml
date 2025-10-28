@@ -27,7 +27,7 @@ jobs:
           - '3.4'
           - ruby-head
           - jruby
-          - truffleruby-head
+          - truffleruby
     steps:
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y nodejs libxslt-dev # nodejs for execjs, libxslt for TruffleRuby nokogiri
