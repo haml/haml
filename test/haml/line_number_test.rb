@@ -149,7 +149,7 @@ describe Haml::Engine do
           = __LINE__
         HAML
       end
-    end unless /java/ === RUBY_PLATFORM # execjs is not working with Travis JRuby environment
+    end unless /java/.match?(RUBY_PLATFORM) # execjs is not working with Travis JRuby environment
 
     describe 'css filter' do
       it 'renders static filter' do
@@ -244,7 +244,7 @@ describe Haml::Engine do
           = __LINE__
         HAML
       end
-    end unless /java/ === RUBY_PLATFORM # execjs is not working with Travis JRuby environment
+    end unless /java/.match?(RUBY_PLATFORM) # execjs is not working with Travis JRuby environment
 
     describe 'plain filter' do
       it 'renders line numbers with an empty line correctly' do

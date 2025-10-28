@@ -60,5 +60,5 @@ describe Haml::Filters do
             alert("#{'<&>'}")
       HAML
     end
-  end unless /java/ === RUBY_PLATFORM # execjs is not working with Travis JRuby environment
+  end unless /java/.match?(RUBY_PLATFORM) # execjs is not working with Travis JRuby environment
 end
