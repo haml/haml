@@ -98,7 +98,7 @@ module Haml
     def compile_boolean!(temple, key, values)
       exp = literal_for(values.last)
 
-      if Temple::StaticAnalyzer.static?(exp)
+      if values.last.first == :static || Temple::StaticAnalyzer.static?(exp)
         value = eval(exp)
         case value
         when true then temple << [:html, :attr, key, @format == :xhtml ? [:static, key] : [:multi]]
