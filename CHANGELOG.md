@@ -1,5 +1,13 @@
 # Haml Changelog
 
+## 6.4.0
+
+* Authorize characters in attribute name for vuejs https://github.com/haml/haml/pull/1172
+* Compile new-style attributes statically https://github.com/haml/haml/pull/1165
+* Remove newlines from template annotation comments https://github.com/haml/haml/pull/1186
+* Fix line numbers within a :ruby filter https://github.com/haml/haml/pull/1166
+* Fix .class + nested class array bug https://github.com/haml/haml/pull/1191
+
 ## 6.3.1
 
 * Optimize string transformation using `String#tr` https://github.com/haml/haml/pull/1168
