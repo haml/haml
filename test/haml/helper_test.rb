@@ -24,6 +24,8 @@ class HelperTest < Haml::TestCase
   end
 
   def setup
+    skip if RUBY_ENGINE == 'truffleruby' # fails with Rails 8.1
+
     template_path = File.expand_path("../templates", __FILE__)
     @base = Class.new(ActionView::Base) do
       def nested_tag
