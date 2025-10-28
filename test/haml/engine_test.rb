@@ -1499,21 +1499,6 @@ HAML
     assert_equal %{<!DOCTYPE html>\n}, render('!!!', :format => :html5)
   end
 
-  # HTML5 custom data attributes
-  def test_html5_data_attributes_without_hyphenation; skip # hyphenate
-    assert_equal("<div data-author_id='123' data-biz='baz' data-foo='bar'></div>\n",
-      render("%div{:data => {:author_id => 123, :foo => 'bar', :biz => 'baz'}}",
-        :hyphenate_data_attrs => false))
-
-    assert_equal("<div data-one_plus_one='2'></div>\n",
-      render("%div{:data => {:one_plus_one => 1+1}}",
-        :hyphenate_data_attrs => false))
-
-    assert_equal("<div data-foo='Here&#x0027;s a \"quoteful\" string.'></div>\n",
-      render(%{%div{:data => {:foo => %{Here's a "quoteful" string.}}}},
-        :hyphenate_data_attrs => false)) #'
-  end
-
   def test_html5_data_attributes_with_hyphens
     assert_equal("<div data-foo-bar='blip'></div>\n",
       render("%div{:data => {:foo_bar => 'blip'}}"))
@@ -1541,14 +1526,6 @@ HAML
 
   def test_html5_data_attributes_with_nested_hash; skip # cyclic reference
     assert_equal("<div data-a-b='c'></div>\n", render(<<-HAML))
-- hash = {:a => {:b => 'c'}}
-- hash[:d] = hash
-%div{:data => hash}
-HAML
-  end
-
-  def test_html5_data_attributes_with_nested_hash_and_without_hyphenation; skip # hyphenate
-    assert_equal("<div data-a_b='c'></div>\n", render(<<-HAML, :hyphenate_data_attrs => false))
 - hash = {:a => {:b => 'c'}}
 - hash[:d] = hash
 %div{:data => hash}

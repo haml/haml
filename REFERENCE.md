@@ -360,13 +360,6 @@ will render as:
 
     <a data-author-id='123' data-category='7' href='/posts'>Posts By Author</a>
 
-Notice that the underscore in `author_id` was replaced with a hyphen. If you wish
-to suppress this behavior, you can set Haml's
-{Haml::Options#hyphenate_data_attrs `:hyphenate_data_attrs` option} to `false`,
-and the output will be rendered as:
-
-    <a data-author_id='123' data-category='7' href='/posts'>Posts By Author</a>
-
 This expansion of hashes is recursive – any value of the child hash that is
 itself a hash will create an attribute for each entry, with the attribute name
 prefixed with all ancestor keys. For example:
