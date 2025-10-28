@@ -7,7 +7,7 @@ module Haml
       def compile(node)
         text = node.value[:text]
         text = text.rstrip unless ::Haml::Util.contains_interpolation?(text) # for compatibility
-        [:multi, *compile_plain(text)]
+        [:multi, [:newline], *compile_plain(text)]
       end
 
       private
