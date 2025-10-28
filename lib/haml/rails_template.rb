@@ -40,8 +40,8 @@ module Haml
 
       if ActionView::Base.try(:annotate_rendered_view_with_filenames) && template.format == :html
         options = options.merge(
-          preamble: "<!-- BEGIN #{template.short_identifier} -->\n",
-          postamble: "<!-- END #{template.short_identifier} -->\n",
+          preamble: "<!-- BEGIN #{template.short_identifier} -->",
+          postamble: "<!-- END #{template.short_identifier} -->",
         )
       end
 
