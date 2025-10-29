@@ -65,16 +65,14 @@ describe Haml::AttributeParser do
       it { assert_parse(nil, '%Q[f#{o}o] => bar ') }
     end
 
-    if RUBY_VERSION >= '2.2.0'
-      describe '"foo": bar' do
-        it { assert_parse({ 'foo' => '()' }, '"foo":()') }
-        it { assert_parse({ 'foo' => 'nya' }, " 'foo': nya ") }
-        it { assert_parse({ 'foo' => '()' }, ' { "foo":() , }') }
-        it { assert_parse({ 'foo' => 'nya' }, " {  'foo': nya , }") }
-        it { assert_parse(nil, '"f#{o}o": bar') }
-        it { assert_parse(nil, '"#{f}oo": bar') }
-        it { assert_parse(nil, '"#{foo}": bar') }
-      end
+    describe '"foo": bar' do
+      it { assert_parse({ 'foo' => '()' }, '"foo":()') }
+      it { assert_parse({ 'foo' => 'nya' }, " 'foo': nya ") }
+      it { assert_parse({ 'foo' => '()' }, ' { "foo":() , }') }
+      it { assert_parse({ 'foo' => 'nya' }, " {  'foo': nya , }") }
+      it { assert_parse(nil, '"f#{o}o": bar') }
+      it { assert_parse(nil, '"#{f}oo": bar') }
+      it { assert_parse(nil, '"#{foo}": bar') }
     end
 
     describe 'nested array' do

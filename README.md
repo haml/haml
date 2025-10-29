@@ -157,7 +157,7 @@ on a specific area:
 ruby -Itest test/helper_test.rb -n test_buffer_access
 ~~~
 
-Haml currently supports Ruby 2.0.0 and higher, so please make sure your changes run on 2.0+.
+Haml currently supports Ruby 3.2.0 and higher, so please make sure your changes run on 3.2+.
 
 ## Team
 
