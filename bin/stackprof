@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'bundler/setup'
-require 'hamlit'
+require 'haml'
 require 'stackprof'
 
 def open_flamegraph(report)
@@ -20,7 +20,7 @@ end
 
 haml = File.read(ARGV.first)
 StackProf.start(mode: :wall, interval: 1, raw: false)
-Hamlit::Engine.new.call(haml)
+Haml::Engine.new.call(haml)
 StackProf.stop
 
 report = StackProf::Report.new(StackProf.results)

@@ -7,7 +7,7 @@ Benchmark.driver(repeat_count: 8) do |x|
     require 'action_view'
     require 'string_template'
     StringTemplate::Railtie.run_initializers
-    require 'hamlit'
+    require 'haml'
     Haml::Railtie.run_initializers
     Haml::RailsTemplate.set_options(escape_html: false, generator: Temple::Generators::ArrayBuffer)
     require 'action_view/base'
@@ -20,6 +20,6 @@ Benchmark.driver(repeat_count: 8) do |x|
     view.render(template: hello, handlers: 'haml')
   }
   x.report 'string', %{ view.render(template: hello, handlers: 'string') }
-  x.report 'hamlit', %{ view.render(template: hello, handlers: 'haml') }
+  x.report 'haml', %{ view.render(template: hello, handlers: 'haml') }
   x.loop_count 100_000
 end
