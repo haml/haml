@@ -40,7 +40,7 @@ describe Haml::StringSplitter do
       end
 
       it 'raises internal error' do
-        if /java/ === RUBY_PLATFORM
+        if /java/.match?(RUBY_PLATFORM)
           skip 'Ripper of JRuby is behaving in a different way'
         end
 

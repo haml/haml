@@ -131,7 +131,7 @@ describe Haml::Engine do
       end
 
       it 'does not crash when nil is given' do
-        if /java/ === RUBY_PLATFORM
+        if /java/.match?(RUBY_PLATFORM)
           skip 'maybe due to Ripper of JRuby'
         end
 

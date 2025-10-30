@@ -14,7 +14,7 @@ gem 'base64'
 gem 'bigdecimal'
 gem 'mutex_m'
 
-if /java/ === RUBY_PLATFORM # JRuby
+if /java/.match?(RUBY_PLATFORM) # JRuby
   gem 'pandoc-ruby'
 else
   gem 'redcarpet'

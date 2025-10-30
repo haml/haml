@@ -236,7 +236,7 @@ module Haml
     DynamicAttributes = Struct.new(:new, :old) do
       undef :old=
       def old=(value)
-        unless value =~ /\A{.*}\z/m
+        unless /\A{.*}\z/m.match?(value)
           raise ArgumentError.new('Old attributes must start with "{" and end with "}"')
         end
         self[:old] = value
@@ -528,7 +528,7 @@ module Haml
     end
 
     def filter(name)
-      raise Error.new(Error.message(:invalid_filter_name, name)) unless name =~ /^\w+$/
+      raise Error.new(Error.message(:invalid_filter_name, name)) unless /^\w+$/.match?(name)
 
       if filter_opened?
         @flat = true
