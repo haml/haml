@@ -53,7 +53,7 @@ describe Haml::Engine do
         - data = { yabba: 'dabba', doo: 'yep' }
         .foo{ data: }
       HAML
-    end if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1')
+    end
 
     it 'accepts method call including comma' do
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
@@ -536,24 +536,22 @@ describe Haml::Engine do
       end
     end
 
-    if RUBY_VERSION >= "2.2.0"
-      describe 'Ruby 2.2 syntax' do
-        it 'renders static attributes' do
-          assert_render(<<-HTML.unindent, <<-HAML.unindent)
-            <meta content="IE=edge" http-equiv="X-UA-Compatible">
-          HTML
-            %meta{ content: 'IE=edge', 'http-equiv': 'X-UA-Compatible' }
-          HAML
-        end
+    describe 'Ruby 2.2 syntax' do
+      it 'renders static attributes' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <meta content="IE=edge" http-equiv="X-UA-Compatible">
+        HTML
+          %meta{ content: 'IE=edge', 'http-equiv': 'X-UA-Compatible' }
+        HAML
+      end
 
-        it 'renders dynamic attributes' do
-          assert_render(<<-HTML.unindent, <<-HAML.unindent)
-            <meta content="IE=edge" http-equiv="X-UA-Compatible">
-          HTML
-            - hash = { content: 'IE=edge' }
-            %meta{ hash, 'http-equiv': 'X-UA-Compatible' }
-          HAML
-        end
+      it 'renders dynamic attributes' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <meta content="IE=edge" http-equiv="X-UA-Compatible">
+        HTML
+          - hash = { content: 'IE=edge' }
+          %meta{ hash, 'http-equiv': 'X-UA-Compatible' }
+        HAML
       end
     end
   end

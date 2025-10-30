@@ -15,9 +15,7 @@ describe Haml::Engine do
       it { assert_haml(%q|#a{ id: 'b' }|) }
       it { assert_haml(%q|#b{ id: 'a' }|) }
       it { assert_haml(%q|%a{ 'id' => 60 }|) }
-      if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.4.0')
-        it { assert_haml(%q|%p{class: "a #{["1", "2", "3"].join}"} foo|) }
-      end
+      it { assert_haml(%q|%p{class: "a #{["1", "2", "3"].join}"} foo|) }
 
       it { assert_haml(%q|#a{ id: 'b' }(id=id)|,       locals: { id: 'c' }) }
       it { assert_haml(%q|#c{ id: a = 'a' }(id=id)|,   locals: { id: 'b' }) }
