@@ -12,20 +12,14 @@ def generate_spec(mode)
   spec = <<-SPEC.unindent
     require "minitest/autorun"
     require "haml"
-    require "haml"
 
     # This is a spec converted by haml-spec.
     # See: https://github.com/haml/haml-spec
     class #{mode.capitalize}Test < Minitest::Test
       HAML_DEFAULT_OPTIONS = { ugly: #{mode == :ugly}, escape_html: true }.freeze
-      HAMLIT_DEFAULT_OPTIONS = { escape_html: true }.freeze
 
       def self.haml_result(haml, options, locals)
         Haml::Engine.new(haml, HAML_DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
-      end
-
-      def self.haml_result(haml, options, locals)
-        eval Haml::Engine.new(haml, HAMLIT_DEFAULT_OPTIONS.merge(options)).render(Object.new, locals)
       end
 
   SPEC
