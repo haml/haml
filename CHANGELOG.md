@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 7.0.1
+
+* Use `Regexp#match?` predicate where possible https://github.com/haml/haml/pull/1194
+* Fix the 'Changelog' link on rubygems.org/gems/haml https://github.com/haml/haml/pull/1192
+
 ## 7.0.0
 
 * Change the default `attr_quote` from `'` to `"` https://github.com/haml/haml/issues/1188
