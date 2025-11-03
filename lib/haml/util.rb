@@ -252,7 +252,7 @@ MSG
       # From Ruby's parse.y
       return unless scanner.scan(/([^\s'":;]+)\s*:\s*("(?:\\.|[^"])*"|[^"\s;]+?)[\s;]*-\*-/n)
       name, val = scanner[1], scanner[2]
-      return unless name =~ /(en)?coding/in
+      return unless /(en)?coding/in.match?(name)
       val = $1 if val =~ /^"(.*)"$/n
       return val
     ensure
