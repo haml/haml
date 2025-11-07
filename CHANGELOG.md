@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 7.0.2
+
+* Replace usages of `=~` with `.match?` where possible https://github.com/haml/haml/pull/1196
+* Add source code URI to gemspec metadata https://github.com/haml/haml/pull/1197
+
 ## 7.0.1
 
 * Use `Regexp#match?` predicate where possible https://github.com/haml/haml/pull/1194
