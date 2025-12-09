@@ -16,9 +16,9 @@ module Haml::AttributeBuilder
         when 'class'
           buf << " class=#{quote}#{build_class(escape_attrs, *hash[key])}#{quote}"
         when 'data'
-          buf << build_data(escape_attrs, quote, *hash[key])
+          buf << build_data(escape_attrs, quote, format, *hash[key])
         when 'aria'
-          buf << build_aria(escape_attrs, quote, *hash[key])
+          buf << build_aria(escape_attrs, quote, format, *hash[key])
         when *Haml::BOOLEAN_ATTRIBUTES, /\Adata-/, /\Aaria-/
           build_boolean!(escape_attrs, quote, format, buf, key, hash[key])
         else
@@ -62,17 +62,17 @@ module Haml::AttributeBuilder
       escape_html(escape_attrs, classes.map(&:to_s).uniq.join(' '))
     end
 
-    def build_data(escape_attrs, quote, *hashes)
-      build_data_attribute(:data, escape_attrs, quote, *hashes)
+    def build_data(escape_attrs, quote, format, *hashes)
+      build_data_attribute(:data, escape_attrs, quote, format, *hashes)
     end
 
-    def build_aria(escape_attrs, quote, *hashes)
-      build_data_attribute(:aria, escape_attrs, quote, *hashes)
+    def build_aria(escape_attrs, quote, format, *hashes)
+      build_data_attribute(:aria, escape_attrs, quote, format, *hashes)
     end
 
     private
 
-    def build_data_attribute(key, escape_attrs, quote, *hashes)
+    def build_data_attribute(key, escape_attrs, quote, format, *hashes)
       attrs = []
       if hashes.size > 1 && hashes.all? { |h| h.is_a?(Hash) }
         data_value = merge_all_attrs(hashes)
@@ -84,7 +84,7 @@ module Haml::AttributeBuilder
       hash.sort_by(&:first).each do |key, value|
         case value
         when true
-          attrs << " #{key}"
+          build_boolean!(escape_attrs, quote, format, attrs, key, value)
         when nil, false
           # noop
         else
