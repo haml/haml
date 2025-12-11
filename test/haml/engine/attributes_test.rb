@@ -171,6 +171,11 @@ describe Haml::Engine do
         %div{ h1, h2 }
       HAML
     end
+
+    it { assert_render(%Q|<input data-foo>\n|, %q|%input{ data: { foo: true } }|) }
+    it { assert_render(%Q|<input data-foo="data-foo" />\n|, %q|%input{ data: { foo: true } }|, format: :xhtml) }
+    it { assert_render(%Q|<input data-foo-bar>\n|, %q|%input{ data: { foo: { bar: true } } }|) }
+    it { assert_render(%Q|<input data-foo-bar="data-foo-bar" />\n|, %q|%input{ data: { foo: { bar: true } } }|, format: :xhtml) }
   end
 
   describe 'boolean attributes' do

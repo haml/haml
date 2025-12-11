@@ -85,7 +85,7 @@ module Haml
     end
 
     def compile_data!(temple, key, values)
-      args = [@escape_attrs.inspect, "#{@quote.inspect}.freeze", values.map { |v| literal_for(v) }]
+      args = [@escape_attrs.inspect, "#{@quote.inspect}.freeze", @format.inspect, values.map { |v| literal_for(v) }]
       build_code = "::Haml::AttributeBuilder.build_#{key}(#{args.join(', ')})"
 
       if values.all? { |type, exp| type == :static || Temple::StaticAnalyzer.static?(exp) }
