@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 7.1.0
+
+* Support xhtml format for boolean nested data attributes https://github.com/haml/haml/pull/1200
+
 ## 7.0.2
 
 * Replace usages of `=~` with `.match?` where possible https://github.com/haml/haml/pull/1196
