@@ -5,9 +5,5 @@ require 'haml/version'
 require 'haml/template'
 
 if File.basename($0) != 'haml'
-  begin
-    require 'rails'
-    require 'haml/railtie'
-  rescue LoadError
-  end
+  require 'haml/railtie' if defined?(Rails::Railtie)
 end
