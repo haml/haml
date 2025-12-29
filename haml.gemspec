@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.metadata      = { 'rubygems_mfa_required' => 'true' }
 
-  spec.metadata["changelog_uri"] = spec.homepage + "/docs/yardoc/file.CHANGELOG.html"
+  spec.metadata["changelog_uri"] = "https://github.com/haml/haml/releases"
   spec.metadata["source_code_uri"] = "https://github.com/haml/haml"
 
   spec.required_ruby_version = '>= 3.2.0'
