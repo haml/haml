@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 7.2.0
+
+* Do not require rails when haml is required https://github.com/haml/haml/pull/1201
+* Point `changelog_uri` to GitHub Releases https://github.com/haml/haml/pull/1202
+
 ## 7.1.0
 
 * Support xhtml format for boolean nested data attributes https://github.com/haml/haml/pull/1200
