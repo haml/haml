@@ -5,7 +5,6 @@ begin
 rescue LoadError
   require 'erb'
 end
-require 'set'
 require 'stringio'
 require 'strscan'
 
