@@ -227,7 +227,7 @@ module Haml
       end
 
       def inspect
-        %Q[(#{type} #{value.inspect}#{children.each_with_object(''.dup) {|c, s| s << "\n#{c.inspect.gsub!(/^/, '  ')}"}})].dup
+        %Q[(#{type} #{value.inspect}#{children.each_with_object((+'')) {|c, s| s << "\n#{c.inspect.gsub!(/^/, '  ')}"}})]
       end
     end
 
@@ -397,7 +397,7 @@ module Haml
     def haml_comment(text)
       if filter_opened?
         @flat = true
-        @filter_buffer = String.new
+        @filter_buffer = +''
         @filter_buffer << "#{text}\n" unless text.empty?
         text = @filter_buffer
         # If we don't know the indentation by now, it'll be set in Line#tabs
@@ -532,7 +532,7 @@ module Haml
 
       if filter_opened?
         @flat = true
-        @filter_buffer = String.new
+        @filter_buffer = +''
         # If we don't know the indentation by now, it'll be set in Line#tabs
         @flat_spaces = @indentation * (@template_tabs+1) if @indentation
       end
@@ -734,7 +734,7 @@ module Haml
       end
 
       static_attributes = {}
-      dynamic_attributes = "{".dup
+      dynamic_attributes = +"{"
       attributes.each do |name, (type, val)|
         if type == :static
           static_attributes[name] = val
@@ -774,7 +774,7 @@ module Haml
 
       return name, [:static, content.first[1]] if content.size == 1
       return name, [:dynamic,
-        %!"#{content.each_with_object(''.dup) {|(t, v), s| s << (t == :str ? Util.inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
+        %!"#{content.each_with_object((+'')) {|(t, v), s| s << (t == :str ? Util.inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
     end
 
     def next_line
@@ -847,7 +847,7 @@ module Haml
 
     # Unlike #balance, this balances Ripper tokens to balance something like `{ a: "}" }` correctly.
     def balance_tokens(buf, start, finish, count: 0)
-      text = ''.dup
+      text = +''
       Ripper.lex(buf).each do |_, token, str|
         text << str
         case token

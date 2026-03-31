@@ -53,7 +53,7 @@ module Haml
     end
 
     def precompiled_with_ambles(_local_names, after_preamble:)
-      "#{after_preamble.tr("\n", ';')}#{@precompiled}".dup
+      "#{after_preamble.tr("\n", ';')}#{@precompiled}"
     end
   end
 end

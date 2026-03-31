@@ -36,7 +36,7 @@ module Haml
         return exps
       end
 
-      strlit_body = String.new
+      strlit_body = +''
       exps.each do |type, arg|
         case type
         when :static

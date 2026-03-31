@@ -170,7 +170,7 @@ MSG
     #   and the rest of the string.
     #   `["Foo (Bar (Baz bang) bop)", " (Bang (bop bip))"]` in the example above.
     def balance(scanner, start, finish, count = 0)
-      str = ''.dup
+      str = +''
       scanner = StringScanner.new(scanner) unless scanner.is_a? StringScanner
       regexp = Regexp.new("(.*?)[\\#{start.chr}\\#{finish.chr}]", Regexp::MULTILINE)
       while scanner.scan(regexp)
@@ -203,7 +203,7 @@ MSG
     end
 
     def unescape_interpolation(str, escape_html = nil)
-      res = ''.dup
+      res = +''
       rest = Haml::Util.handle_interpolation str.dump do |scan|
         escapes = (scan[2].size - 1) / 2
         char = scan[3] # '{', '@' or '$'
