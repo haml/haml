@@ -789,7 +789,7 @@ module Haml
 
       return name, [:static, content.first[1]] if content.size == 1
       return name, [:dynamic,
-        %!"#{content.each_with_object((+'')) {|(t, v), s| s << (t == :str ? Util.inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
+        %!"#{content.each_with_object(+'') {|(t, v), s| s << (t == :str ? Util.inspect_obj(v)[1...-1] : "\#{#{v}}")}}"!]
     end
 
     def next_line
