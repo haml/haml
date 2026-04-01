@@ -227,7 +227,7 @@ module Haml
       end
 
       def inspect
-        %Q[(#{type} #{value.inspect}#{children.each_with_object((+'')) {|c, s| s << "\n#{c.inspect.gsub!(/^/, '  ')}"}})]
+        %Q[(#{type} #{value.inspect}#{children.each_with_object(+'') {|c, s| s << "\n#{c.inspect.gsub!(/^/, '  ')}"}})]
       end
     end
 
