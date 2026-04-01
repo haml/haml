@@ -66,7 +66,7 @@ module Haml
         end
 
         def shift_balanced_embexpr(tokens)
-          String.new.tap do |embedded|
+          (+'').tap do |embedded|
             embexpr_open = 1
 
             until tokens.empty?
