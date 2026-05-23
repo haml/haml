@@ -270,5 +270,63 @@ describe Haml::Engine do
         .base!= "<b>bold</b>"
       HAML
     end
+
+    it 'supports Tailwind arbitrary values ([]) in class shorthand' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div class="bg-[#1da1f2]"></div>
+      HTML
+        .bg-[#1da1f2]
+      HAML
+    end
+
+    it 'supports Tailwind arbitrary values ([]) with multiple classes' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div class="text-[14px] font-bold"></div>
+      HTML
+        .text-[14px].font-bold
+      HAML
+    end
+
+    it 'supports Tailwind arbitrary values ([]) on explicit tag' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <span class="w-[320px]">hello</span>
+      HTML
+        %span.w-[320px] hello
+      HAML
+    end
+
+    it 'supports Tailwind arbitrary values with complex expressions' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div class="w-[calc(100%-20px)]"></div>
+      HTML
+        .w-[calc(100%-20px)]
+      HAML
+    end
+
+    it 'supports combining arbitrary values with opacity modifier' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div class="bg-[rgba(0,0,0)]/50"></div>
+      HTML
+        .bg-[rgba(0,0,0)]/50
+      HAML
+    end
+
+    it 'does not consume [] unless preceded by - (leaves object refs intact)' do
+      ::TagTestObject = Struct.new(:id) unless defined?(::TagTestObject)
+      assert_render(
+        %Q|<div class="card tag_test_object" id="tag_test_object_42"></div>\n|,
+        %q|.card[foo]|,
+        locals: { foo: TagTestObject.new(42) },
+      )
+    end
+
+    it 'supports arbitrary value class and object reference on the same element' do
+      ::TagTestObject = Struct.new(:id) unless defined?(::TagTestObject)
+      assert_render(
+        %Q|<div class="bg-[#1da1f2] tag_test_object" id="tag_test_object_42"></div>\n|,
+        %q|.bg-[#1da1f2][foo]|,
+        locals: { foo: TagTestObject.new(42) },
+      )
+    end
   end
 end

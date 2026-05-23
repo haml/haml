@@ -586,7 +586,7 @@ module Haml
       attributes = {}
       return attributes if list.empty?
 
-      list.scan(/([#.])(!?[-:_a-zA-Z0-9\@]+(?:\/\d+)?)/) do |type, property|
+      list.scan(/([#.])(!?[-:_a-zA-Z0-9\@]+(?:(?<=-)\[[^\]]*\])?(?:\/\d+)?)/) do |type, property|
         case type
         when '.'
           if attributes[CLASS_KEY]
@@ -630,7 +630,7 @@ module Haml
         raise SyntaxError.new(Error.message(:illegal_element))
       end
 
-      match = text.scan(/%([-:\w]+)((?:[.#]!?[-:_a-zA-Z0-9\@]+(?:\/\d+)?)*)(.+)?/)[0]
+      match = text.scan(/%([-:\w]+)((?:[.#]!?[-:_a-zA-Z0-9\@]+(?:(?<=-)\[[^\]]*\])?(?:\/\d+)?)*)(.+)?/)[0]
       raise SyntaxError.new(Error.message(:invalid_tag, text)) unless match
 
       tag_name, attributes, rest = match
