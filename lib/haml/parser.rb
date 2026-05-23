@@ -586,7 +586,7 @@ module Haml
       attributes = {}
       return attributes if list.empty?
 
-      list.scan(/([#.])([-:_a-zA-Z0-9\@]+)/) do |type, property|
+      list.scan(/([#.])(!?[-:_a-zA-Z0-9\@]+(?:\/\d+)?)/) do |type, property|
         case type
         when '.'
           if attributes[CLASS_KEY]
@@ -625,14 +625,15 @@ module Haml
 
     # Parses a line into tag_name, attributes, attributes_hash, object_ref, action, value
     def parse_tag(text)
-      match = text.scan(/%([-:\w]+)([-:\w.#\@]*)(.+)?/)[0]
+      # Check for empty class/id names (e.g., "%p..a", ".{}", ".=", ".")
+      if /%([-:\w]+)(?:[.#][!a-zA-Z0-9_\-:@]*)*[.#](?:[.#\{\}(=~<>\s\/]|\z)/.match?(text)
+        raise SyntaxError.new(Error.message(:illegal_element))
+      end
+
+      match = text.scan(/%([-:\w]+)((?:[.#]!?[-:_a-zA-Z0-9\@]+(?:\/\d+)?)*)(.+)?/)[0]
       raise SyntaxError.new(Error.message(:invalid_tag, text)) unless match
 
       tag_name, attributes, rest = match
-
-      if !attributes.empty? && /[.#](\.|#|\z)/.match?(attributes)
-        raise SyntaxError.new(Error.message(:illegal_element))
-      end
 
       new_attributes_hash = old_attributes_hash = last_line = nil
       object_ref = :nil

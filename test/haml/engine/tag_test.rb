@@ -198,5 +198,77 @@ describe Haml::Engine do
         %div
       HAML
     end
+
+    it 'supports Tailwind opacity modifier (/) in class shorthand' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div class="bg-primary/5"></div>
+      HTML
+        .bg-primary/5
+      HAML
+    end
+
+    it 'supports Tailwind opacity modifier (/) with multiple classes' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div class="bg-red-500/10 text-white"></div>
+      HTML
+        .bg-red-500/10.text-white
+      HAML
+    end
+
+    it 'supports Tailwind opacity modifier (/) on explicit tag' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <span class="text-black/50">hello</span>
+      HTML
+        %span.text-black/50 hello
+      HAML
+    end
+
+    it 'does not confuse Tailwind opacity with self-closing slash' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent, format: :xhtml)
+        <input class="border" />
+      HTML
+        %input.border/
+      HAML
+    end
+
+    it 'supports Tailwind important modifier (!) in class shorthand' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div class="!font-bold"></div>
+      HTML
+        .!font-bold
+      HAML
+    end
+
+    it 'supports Tailwind important modifier (!) with other classes' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div class="!font-bold text-red-500"></div>
+      HTML
+        .!font-bold.text-red-500
+      HAML
+    end
+
+    it 'supports Tailwind important modifier (!) on explicit tag' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <p class="!text-lg">hello</p>
+      HTML
+        %p.!text-lg hello
+      HAML
+    end
+
+    it 'supports combining Tailwind opacity and important modifiers' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div class="!font-bold bg-primary/5"></div>
+      HTML
+        .!font-bold.bg-primary/5
+      HAML
+    end
+
+    it 'does not confuse Tailwind ! modifier with unescaped output' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div class="base"><b>bold</b></div>
+      HTML
+        .base!= "<b>bold</b>"
+      HAML
+    end
   end
 end
