@@ -28,10 +28,8 @@ module Haml
           nil
         when node.value[:parse]
           return compile_interpolated_plain(node) if node.value[:escape_interpolation]
-          if Ripper.respond_to?(:lex) # No Ripper.lex in truffleruby
-            return delegate_optimization(node) if RubyExpression.string_literal?(node.value[:value])
-            return delegate_optimization(node) if Temple::StaticAnalyzer.static?(node.value[:value])
-          end
+          return delegate_optimization(node) if RubyExpression.string_literal?(node.value[:value])
+          return delegate_optimization(node) if Temple::StaticAnalyzer.static?(node.value[:value])
 
           var = @identity.generate
           [:multi,

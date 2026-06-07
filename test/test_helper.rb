@@ -41,9 +41,6 @@ module RenderHelper
   end
 
   def assert_haml(haml, options = {})
-    if RUBY_ENGINE == 'truffleruby'
-      skip 'truffleruby cannot run Haml'
-    end
     expected = render_haml(haml, options)
     actual = render_haml(haml, options)
     assert_equal expected, actual

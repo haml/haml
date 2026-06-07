@@ -20,7 +20,7 @@ if /java/.match?(RUBY_PLATFORM) # JRuby
 else
   gem 'redcarpet'
 
-  if RUBY_PLATFORM !~ /mswin|mingw/ && RUBY_ENGINE != 'truffleruby'
+  if RUBY_PLATFORM !~ /mswin|mingw/
     gem 'stackprof'
   end
 end

@@ -55,7 +55,6 @@ class TemplateTest < Haml::TestCase
   ]
 
   def setup
-    skip if RUBY_ENGINE == 'truffleruby' # fails with Rails 8.1
     @base = create_base
 
     # filters template uses :sass

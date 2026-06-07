@@ -14,10 +14,6 @@ describe Haml::RailsTemplate do
     base.render(inline: haml, type: :haml)
   end
 
-  before do
-    skip if RUBY_ENGINE == 'truffleruby' # fails with Rails 8.1
-  end
-
   specify 'html escape' do
     assert_equal %Q|&lt;script&gt;alert(&quot;a&quot;);&lt;/script&gt;\n|, render(<<-HAML.unindent)
       = '<script>alert("a");</script>'
@@ -25,7 +21,6 @@ describe Haml::RailsTemplate do
     assert_equal %Q|<script>alert("a");</script>\n|, render(<<-HAML.unindent)
       = '<script>alert("a");</script>'.html_safe
     HAML
-    skip 'escape is not working well in truffleruby' if RUBY_ENGINE == 'truffleruby'
     assert_equal %Q|&lt;script&gt;alert(&quot;a&quot;);&lt;/script&gt;\n|, render(<<-'HAML'.unindent)
       #{'<script>alert("a");</script>'}
     HAML

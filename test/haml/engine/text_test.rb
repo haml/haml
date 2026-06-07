@@ -5,7 +5,6 @@ describe Haml::Engine do
 
   describe 'text' do
     it 'renders string interpolation' do
-      skip 'escape is not working well in truffleruby' if RUBY_ENGINE == 'truffleruby'
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         a3aa" [&quot;1&quot;, 2] b " !
         a#{render_hash({ a: 3 })}
@@ -31,7 +30,6 @@ describe Haml::Engine do
     end
 
     it 'renders == operator' do
-      skip 'escape is not working well in truffleruby' if RUBY_ENGINE == 'truffleruby'
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         =
         =
@@ -46,7 +44,6 @@ describe Haml::Engine do
     end
 
     it 'renders !== operator' do
-      skip 'escape is not working well in truffleruby' if RUBY_ENGINE == 'truffleruby'
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         &lt;a&gt;
         <a>
@@ -93,7 +90,6 @@ describe Haml::Engine do
       end
 
       it 'renders & operator' do
-        skip 'escape is not working well in truffleruby' if RUBY_ENGINE == 'truffleruby'
         assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
           <span>&lt;nyaa&gt;</span>
           <span>&lt;nyaa&gt;</span>
@@ -176,7 +172,6 @@ describe Haml::Engine do
       end
 
       it 'renders &== operator' do
-        skip 'escape is not working well in truffleruby' if RUBY_ENGINE == 'truffleruby'
         assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
           =
           =
@@ -208,7 +203,7 @@ describe Haml::Engine do
       it { assert_render(%Q{'"!@$%^&*|=1112\n}, %q{'"!@$%^&*|=#{1}1#{1}2}) }
       it { assert_render("あ1\n", 'あ#{1}') }
       it { assert_render("あいう\n", 'あ#{"い"}う') }
-      it { assert_render("a&lt;b&gt;c\n", 'a#{"<b>"}c') } if RUBY_ENGINE != 'truffleruby' # escape is not working in truffleruby
+      it { assert_render("a&lt;b&gt;c\n", 'a#{"<b>"}c') }
     end
   end
 end
