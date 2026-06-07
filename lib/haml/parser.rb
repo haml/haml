@@ -93,9 +93,6 @@ module Haml
     ID_KEY    = 'id'.freeze
     CLASS_KEY = 'class'.freeze
 
-    # Used for scanning old attributes, substituting the first '{'
-    METHOD_CALL_PREFIX = 'a('
-
     def initialize(options)
       @options = ParserOptions.new(options)
       # Record the indent levels of "if" statements to validate the subsequent
@@ -686,10 +683,8 @@ module Haml
         # Old attributes often look like a valid Hash literal, but it sometimes allow code like
         # `{ hash, foo: bar }`, which is compiled to `_hamlout.attributes({}, nil, hash, foo: bar)`.
         #
-        # To scan such code correctly, this scans `a( hash, foo: bar }` instead, stops when there is
-        # 1 more :on_embexpr_end (the last '}') than :on_embexpr_beg, and resurrects '{' afterwards.
-        balanced, rest = balance_tokens(text.sub(?{, METHOD_CALL_PREFIX), :on_embexpr_beg, :on_embexpr_end, count: 1)
-        attributes_hash = balanced.sub(METHOD_CALL_PREFIX, ?{)
+        # Balance Ripper's brace tokens so `{ a: "}" }` is handled correctly.
+        attributes_hash, rest = balance_tokens(text, :on_lbrace, :on_rbrace)
       rescue SyntaxError => e
         if e.message == Error.message(:unbalanced_brackets) && !@template.empty?
           text << "\n#{@next_line.text}"
