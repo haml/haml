@@ -39,6 +39,12 @@ describe Haml::RubyExpression do
       it { assert_literal(false, %q|return ''|) }
     end
 
+    describe 'rejected by the prefilter' do
+      it { assert_literal(false, %q|render partial: 'x'|) }
+      it { assert_literal(false, %q|@user.name|) }
+      it { assert_literal(false, %q|foo('bar')|) }
+    end
+
     describe 'multiple instructions' do
       it { assert_literal(false, %Q|''\n''|) }
     end

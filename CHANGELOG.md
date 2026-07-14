@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## Unreleased
+
+* Skip Ripper parsing with cheap regex prefilters when compiling static expressions and string literals https://github.com/haml/haml/pull/1211
+
 ## 7.2.2
 
 * Remove obsolete TruffleRuby compatibility skips https://github.com/haml/haml/pull/1210
