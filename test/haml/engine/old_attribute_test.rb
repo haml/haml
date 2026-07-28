@@ -554,5 +554,39 @@ describe Haml::Engine do
         HAML
       end
     end
+
+    describe 'brace balancing' do
+      it "recognizes String interpolation" do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <input value="abc">
+        HTML
+          %input{ value: "a#{'b'}c" }
+        HAML
+      end
+
+      it "recognizes Hash literals" do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <input value="abc">
+        HTML
+          %input{ value: {abc: "abc"}[:abc] }
+        HAML
+      end
+
+      it "recognizes block literals" do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <input value="abc">
+        HTML
+          %input{ value: proc { "abc" }.call }
+        HAML
+      end
+
+      it "recognizes lambda literals" do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <input value="abc">
+        HTML
+          %input{ value: -> { "abc" }.call }
+        HAML
+      end
+    end
   end
 end
