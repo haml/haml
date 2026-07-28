@@ -688,8 +688,17 @@ module Haml
         #
         # To scan such code correctly, this scans `a( hash, foo: bar }` instead, stops when there is
         # 1 more :on_embexpr_end (the last '}') than :on_embexpr_beg, and resurrects '{' afterwards.
-        balanced, rest = balance_tokens(text.sub(?{, METHOD_CALL_PREFIX), :on_embexpr_beg, :on_embexpr_end, count: 1)
-        attributes_hash = balanced.sub(METHOD_CALL_PREFIX, ?{)
+        #
+        # Old attributes allow invalid Hash constructs (e.g., `{ hash, foo: bar }`).
+        # Replacing the opening `{` with `a(` makes the syntax look like a method call so
+        # Ripper can lex it reliably.
+
+        attributes_hash, rest = balance_tokens(
+          text.sub(?{, METHOD_CALL_PREFIX),
+          [:on_lbrace, :on_tlambeg, :on_embexpr_beg],
+          [:on_rbrace, :on_embexpr_end],
+          count: 1)
+        attributes_hash = attributes_hash.sub(METHOD_CALL_PREFIX, ?{)
       rescue SyntaxError => e
         if e.message == Error.message(:unbalanced_brackets) && !@template.empty?
           text << "\n#{@next_line.text}"
@@ -850,10 +859,9 @@ module Haml
       text = ''.dup
       Ripper.lex(buf).each do |_, token, str|
         text << str
-        case token
-        when start
+        if start.include?(token)
           count += 1
-        when finish
+        elsif finish.include?(token)
           count -= 1
         end
 
