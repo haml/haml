@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 7.2.1
+
+* Do not rely on Ripper quirk in parsing old-style Haml attributes https://github.com/haml/haml/pull/1212
+
 ## 7.2.0
 
 * Do not require rails when haml is required https://github.com/haml/haml/pull/1201
