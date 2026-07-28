@@ -16,6 +16,7 @@ gem 'mutex_m'
 
 if /java/.match?(RUBY_PLATFORM) # JRuby
   gem 'pandoc-ruby'
+  gem 'rdoc', '< 8' # rdoc 8 depends on rbs, whose native extension doesn't build on JRuby
 else
   gem 'redcarpet'
 
