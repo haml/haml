@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 7.2.2
+
+* Remove obsolete TruffleRuby compatibility skips https://github.com/haml/haml/pull/1210
+
 ## 7.2.1
 
 * Do not rely on Ripper quirk in parsing old-style Haml attributes https://github.com/haml/haml/pull/1212
