@@ -355,4 +355,4 @@ describe Haml::Engine do
       HAML
     end
   end
-end if RUBY_ENGINE != 'truffleruby' # negetive line numbers are broken in truffleruby
+end

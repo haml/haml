@@ -8,8 +8,7 @@ module Haml
 
     # @return [TrueClass, FalseClass] - return true if AttributeParser.parse can be used.
     def self.available?
-      # TruffleRuby doesn't have Ripper.lex
-      defined?(Ripper) && Ripper.respond_to?(:lex) && Temple::StaticAnalyzer.available?
+      Temple::StaticAnalyzer.available?
     end
 
     def self.parse(text)

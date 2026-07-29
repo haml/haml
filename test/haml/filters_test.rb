@@ -121,7 +121,7 @@ class FiltersTest < Haml::TestCase
     assert_haml_ugly(":plain\n  \#{'<script>evil</script>'}")
   end
 
-end if RUBY_ENGINE != 'truffleruby' # truffleruby does not implement Ripper.lex
+end
 
 class ErbFilterTest < Haml::TestCase
   test "multiline expressions should work" do; skip
