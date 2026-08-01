@@ -21,7 +21,9 @@ Gem::Specification.new do |spec|
 
   spec.metadata      = { 'rubygems_mfa_required' => 'true' }
 
-  spec.metadata["changelog_uri"] = "https://github.com/haml/haml/releases"
+  spec.metadata["bug_tracker_uri"] = "https://github.com/haml/haml/issues"
+  spec.metadata["changelog_uri"] = "https://github.com/haml/haml/blob/main/CHANGELOG.md"
+  spec.metadata["homepage_uri"] = "https://haml.info/"
   spec.metadata["source_code_uri"] = "https://github.com/haml/haml"
 
   spec.required_ruby_version = '>= 3.2.0'
