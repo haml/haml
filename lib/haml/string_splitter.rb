@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'ripper'
+require 'haml/ruby_expression'
 
 module Haml
   # Compile [:dynamic, "foo#{bar}"] to [:multi, [:static, 'foo'], [:dynamic, 'bar']]
@@ -82,7 +83,7 @@ module Haml
     end
 
     def on_dynamic(code)
-      return [:dynamic, code] unless string_literal?(code)
+      return [:dynamic, code] unless RubyExpression.string_literal?(code)
       return [:dynamic, code] if code.include?("\n")
 
       temple = [:multi]
@@ -95,36 +96,6 @@ module Haml
         end
       end
       temple
-    end
-
-    private
-
-    def string_literal?(code)
-      return false if SyntaxChecker.syntax_error?(code)
-
-      type, instructions = Ripper.sexp(code)
-      return false if type != :program
-      return false if instructions.size > 1
-
-      type, _ = instructions.first
-      type == :string_literal
-    end
-
-    class SyntaxChecker < Ripper
-      class ParseError < StandardError; end
-
-      def self.syntax_error?(code)
-        self.new(code).parse
-        false
-      rescue ParseError
-        true
-      end
-
-      private
-
-      def on_parse_error(*)
-        raise ParseError
-      end
     end
   end
 end

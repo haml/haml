@@ -1,32 +1,31 @@
 # frozen_string_literal: true
-require 'ripper'
+require 'prism'
 
 module Haml
-  class RubyExpression < Ripper
-    class ParseError < StandardError; end
+  class RubyExpression
+    # A character literal (`?a`) is a StringNode for Prism, but it has no quotes
+    # to split on, so it must not be reported as a string literal.
+    CHAR_LITERAL_OPENING = '?'
 
     def self.syntax_error?(code)
-      self.new(code).parse
-      false
-    rescue ParseError
-      true
+      Prism.parse_failure?(code)
     end
 
     def self.string_literal?(code)
-      return false if syntax_error?(code)
+      result = Prism.parse(code)
+      return false if result.failure?
 
-      type, instructions = Ripper.sexp(code)
-      return false if type != :program
-      return false if instructions.size > 1
+      statements = result.value.statements.body
+      return false if statements.size > 1
 
-      type, _ = instructions.first
-      type == :string_literal
-    end
-
-    private
-
-    def on_parse_error(*)
-      raise ParseError
+      case (node = statements.first)
+      when Prism::StringNode, Prism::InterpolatedStringNode
+        # Adjacent concatenation (`"a" "b"`) is one node without an opening
+        # delimiter of its own, and each of its parts keeps its own quotes.
+        !node.opening.nil? && node.opening != CHAR_LITERAL_OPENING
+      else
+        false
+      end
     end
   end
 end

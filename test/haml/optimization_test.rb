@@ -3,6 +3,8 @@
 require_relative '../test_helper'
 
 describe 'optimization' do
+  include RenderHelper
+
   def compiled_code(haml)
     Haml::Engine.new.call(haml)
   end
@@ -49,6 +51,10 @@ describe 'optimization' do
     it 'detects a static part recursively' do
       haml = %q|%input{ value: "#{ "hello#{ hello }" }" }|
       assert_equal true, compiled_code(haml).include?("value=\\\"hello")
+    end
+
+    it 'leaves adjacent string concatenation alone' do
+      assert_render(%|<span>hello world</span>\n|, %q|%span= "hello" " world"|)
     end
   end
 end
