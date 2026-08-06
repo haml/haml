@@ -1,33 +1,40 @@
 # frozen_string_literal: true
-require 'haml/ruby_expression'
+require 'prism'
 
 module Haml
   class AttributeParser
-    class ParseSkip < StandardError
-    end
-
-    # @return [TrueClass, FalseClass] - return true if AttributeParser.parse can be used.
+    # @deprecated Prism is a hard dependency, so this is always true. Haml itself no longer
+    #   asks, and this will be removed in the future.
+    # @return [TrueClass] - return true if AttributeParser.parse can be used.
     def self.available?
-      Temple::StaticAnalyzer.available?
+      true
     end
 
     def self.parse(text)
       self.new.parse(text)
     end
 
+    # @return [Hash,nil] - keys and values are the attribute source as written, or nil if
+    #   the text is not a Hash literal whose keys are all static.
     def parse(text)
       exp = wrap_bracket(text)
-      return if Temple::StaticAnalyzer.syntax_error?(exp)
+      # A multi-line hash is left to the runtime, which keeps the [:newline] bookkeeping of
+      # the compiled code correct. Compiling it statically is a separate optimization.
+      return if exp.include?("\n")
+
+      node = hash_node(exp)
+      return if node.nil?
 
       hash = {}
-      tokens = Ripper.lex(exp)[1..-2] || []
-      each_attr(tokens) do |attr_tokens|
-        key = parse_key!(attr_tokens)
-        hash[key] = attr_tokens.map { |t| t[2] }.join.strip
+      node.elements.each do |element|
+        return unless element.is_a?(Prism::AssocNode)
+
+        key = static_key(element.key)
+        return if key.nil?
+
+        hash[key] = value_source(element.value)
       end
       hash
-    rescue ParseSkip
-      nil
     end
 
     private
@@ -38,78 +45,32 @@ module Haml
       "{#{text}}"
     end
 
-    def parse_key!(tokens)
-      _, type, str = tokens.shift
-      case type
-      when :on_sp
-        parse_key!(tokens)
-      when :on_label
-        str.tr(':', '')
-      when :on_symbeg
-        _, _, key = tokens.shift
-        assert_type!(tokens.shift, :on_tstring_end) if str != ':'
-        skip_until_hash_rocket!(tokens)
-        key
-      when :on_tstring_beg
-        _, _, key = tokens.shift
-        next_token = tokens.shift
-        unless next_token[1] == :on_label_end
-          assert_type!(next_token, :on_tstring_end)
-          skip_until_hash_rocket!(tokens)
-        end
-        key
-      else
-        raise ParseSkip
+    def hash_node(exp)
+      result = Prism.parse(exp)
+      return if result.failure?
+
+      statements = result.value.statements.body
+      return if statements.size != 1
+
+      node = statements.first
+      node if node.is_a?(Prism::HashNode)
+    end
+
+    # The key as written between its delimiters, not unescaped: an escape has to reach the
+    # attribute name as the source spelled it, like the `\0` of `{ "a\0b" => 1 }`.
+    def static_key(key)
+      case key
+      when Prism::SymbolNode then key.value_loc&.slice
+      when Prism::StringNode then key.content_loc&.slice
       end
     end
 
-    def assert_type!(token, type)
-      raise ParseSkip if token[1] != type
-    end
+    def value_source(value)
+      # Ruby 3.1 value omission (`{ foo: }`). An empty value tells AttributeCompiler to
+      # fall back to the runtime, which is what resolves it.
+      return '' if value.is_a?(Prism::ImplicitNode)
 
-    def skip_until_hash_rocket!(tokens)
-      until tokens.empty?
-        _, type, str = tokens.shift
-        break if type == :on_op && str == '=>'
-      end
-    end
-
-    def each_attr(tokens)
-      attr_tokens = []
-      open_tokens = Hash.new { |h, k| h[k] = 0 }
-
-      tokens.each do |token|
-        _, type, _ = token
-        case type
-        when :on_comma
-          if open_tokens.values.all?(&:zero?)
-            yield(attr_tokens)
-            attr_tokens = []
-            next
-          end
-        when :on_lbracket
-          open_tokens[:array] += 1
-        when :on_rbracket
-          open_tokens[:array] -= 1
-        when :on_lbrace
-          open_tokens[:block] += 1
-        when :on_rbrace
-          open_tokens[:block] -= 1
-        when :on_lparen
-          open_tokens[:paren] += 1
-        when :on_rparen
-          open_tokens[:paren] -= 1
-        when :on_embexpr_beg
-          open_tokens[:embexpr] += 1
-        when :on_embexpr_end
-          open_tokens[:embexpr] -= 1
-        when :on_sp
-          next if attr_tokens.empty?
-        end
-
-        attr_tokens << token
-      end
-      yield(attr_tokens) unless attr_tokens.empty?
+      value.slice
     end
   end
 end

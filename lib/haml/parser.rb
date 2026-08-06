@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'ripper'
+require 'prism'
 require 'strscan'
 require 'haml/error'
 require 'haml/util'
@@ -601,8 +601,7 @@ module Haml
       attributes
     end
 
-    # This method doesn't use Haml::HamlAttributeParser because currently it depends on Ripper and Rubinius doesn't provide it.
-    # Ideally this logic should be placed in Haml::HamlAttributeParser instead of here and this method should use it.
+    # Ideally this logic should be placed in Haml::AttributeParser instead of here and this method should use it.
     #
     # @param  [String] text - Hash literal or text inside old attributes
     # @return [Hash,nil] - Return nil if text is not static Hash literal
@@ -686,17 +685,17 @@ module Haml
         # Old attributes often look like a valid Hash literal, but it sometimes allow code like
         # `{ hash, foo: bar }`, which is compiled to `_hamlout.attributes({}, nil, hash, foo: bar)`.
         #
-        # To scan such code correctly, this scans `a( hash, foo: bar }` instead, stops when there is
-        # 1 more :on_embexpr_end (the last '}') than :on_embexpr_beg, and resurrects '{' afterwards.
+        # To scan such code correctly, this scans `a( hash, foo: bar }` instead, stops on the '}'
+        # that closes one more brace than was opened, and resurrects '{' afterwards.
         #
         # Old attributes allow invalid Hash constructs (e.g., `{ hash, foo: bar }`).
         # Replacing the opening `{` with `a(` makes the syntax look like a method call so
-        # Ripper can lex it reliably.
+        # it can be lexed reliably.
 
         attributes_hash, rest = balance_tokens(
           text.sub(?{, METHOD_CALL_PREFIX),
-          [:on_lbrace, :on_tlambeg, :on_embexpr_beg],
-          [:on_rbrace, :on_embexpr_end],
+          [:BRACE_LEFT, :LAMBDA_BEGIN, :EMBEXPR_BEGIN],
+          [:BRACE_RIGHT, :EMBEXPR_END],
           count: 1)
         attributes_hash = attributes_hash.sub(METHOD_CALL_PREFIX, ?{)
       rescue SyntaxError => e
@@ -854,19 +853,23 @@ module Haml
       Haml::Util.balance(*args) or raise(SyntaxError.new(Error.message(:unbalanced_brackets)))
     end
 
-    # Unlike #balance, this balances Ripper tokens to balance something like `{ a: "}" }` correctly.
+    # Unlike #balance, this balances lexed tokens to balance something like `{ a: "}" }` correctly.
     def balance_tokens(buf, start, finish, count: 0)
-      text = ''.dup
-      Ripper.lex(buf).each do |_, token, str|
-        text << str
-        if start.include?(token)
+      Prism.lex(buf).value.each do |token, _|
+        type = token.type
+        next if type == :EOF
+
+        if start.include?(type)
           count += 1
-        elsif finish.include?(token)
+        elsif finish.include?(type)
           count -= 1
         end
 
         if count == 0
-          return text, buf.sub(text, '')
+          # Splitting on the offset instead of the tokens seen so far: whitespace and comments
+          # are not tokens, so the text cannot be rebuilt by concatenating them.
+          offset = token.location.end_offset
+          return buf.byteslice(0, offset), buf.byteslice(offset..)
         end
       end
       raise SyntaxError.new(Error.message(:unbalanced_brackets))

@@ -22,9 +22,7 @@ module Haml
 
     def compile(node)
       hashes = []
-      if node.value[:object_ref] != :nil || !AttributeParser.available?
-        return runtime_compile(node)
-      end
+      return runtime_compile(node) if node.value[:object_ref] != :nil
       [node.value[:dynamic_attributes].new, node.value[:dynamic_attributes].old].compact.each do |attribute_str|
         hash = AttributeParser.parse(attribute_str)
         return runtime_compile(node) if hash.nil? || hash.any? { |_key, value| value.empty? }

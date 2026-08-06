@@ -55,6 +55,14 @@ describe Haml::Engine do
       HAML
     end
 
+    it 'renders an instance variable interpolated without braces' do
+      scope = Object.new
+      scope.instance_variable_set(:@who, 'world')
+
+      assert_equal(%Q|<span title="world"></span>\n|,
+                   Haml::Template.new({}) { %q|%span{ title: "#@who" }| }.render(scope))
+    end
+
     it 'accepts method call including comma' do
       assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
         <body class="bb" data-confirm="really?" data-disabled id="a"></body>
@@ -131,10 +139,6 @@ describe Haml::Engine do
       end
 
       it 'does not crash when nil is given' do
-        if /java/.match?(RUBY_PLATFORM)
-          skip 'maybe due to Ripper of JRuby'
-        end
-
         assert_raises ArgumentError do
           render_haml("%div{ nil }")
         end
@@ -585,6 +589,39 @@ describe Haml::Engine do
           <input value="abc">
         HTML
           %input{ value: -> { "abc" }.call }
+        HAML
+      end
+
+      it "recognizes block arguments" do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <input value="12">
+        HTML
+          %input{ value: [1, 2].map { |i| i }.join }
+        HAML
+      end
+
+      it "ignores a brace inside a String" do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <input value="}">
+        HTML
+          %input{ value: "}" }
+        HAML
+      end
+
+      it "ignores a brace of a character literal" do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <input value="}">
+        HTML
+          %input{ value: ?} }
+        HAML
+      end
+
+      it "ignores a brace inside a comment" do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <input a="1" b="2">
+        HTML
+          %input{ a: 1, # }
+            b: 2 }
         HAML
       end
     end

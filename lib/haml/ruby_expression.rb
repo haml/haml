@@ -12,19 +12,23 @@ module Haml
     end
 
     def self.string_literal?(code)
+      !string_literal_node(code).nil?
+    end
+
+    # @return [Prism::Node, nil] - the node of a string literal StringSplitter can split, if any.
+    #   Its locations are byte offsets into `code` as given, so `code` must not be stripped here.
+    def self.string_literal_node(code)
       result = Prism.parse(code)
-      return false if result.failure?
+      return if result.failure?
 
       statements = result.value.statements.body
-      return false if statements.size > 1
+      return if statements.size > 1
 
       case (node = statements.first)
       when Prism::StringNode, Prism::InterpolatedStringNode
         # Adjacent concatenation (`"a" "b"`) is one node without an opening
         # delimiter of its own, and each of its parts keeps its own quotes.
-        !node.opening.nil? && node.opening != CHAR_LITERAL_OPENING
-      else
-        false
+        node if !node.opening.nil? && node.opening != CHAR_LITERAL_OPENING
       end
     end
   end

@@ -144,5 +144,23 @@ describe Haml::Engine do
     it 'renders inline script with comment' do
       assert_render(%Q|<span>3</span>\n|, %q|%span= 1 + 2 # comments|)
     end
+
+    it 'renders an escaped delimiter of a percent literal' do
+      assert_render(%Q|a}b\n|, %q|= %q{a\}b}|)
+    end
+
+    it 'renders an instance variable interpolated without braces' do
+      scope = Object.new
+      scope.instance_variable_set(:@who, 'world')
+
+      assert_equal(%Q|hello world\n|, Haml::Template.new({}) { %q|= "hello #@who"| }.render(scope))
+    end
+
+    it 'renders a global variable interpolated without braces' do
+      $global_var_for_testing = 'world'
+      assert_render(%Q|hello world\n|, %q|= "hello #$global_var_for_testing"|)
+    ensure
+      $global_var_for_testing = nil
+    end
   end
 end
