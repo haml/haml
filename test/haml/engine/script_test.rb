@@ -156,6 +156,16 @@ describe Haml::Engine do
       assert_equal(%Q|hello world\n|, Haml::Template.new({}) { %q|= "hello #@who"| }.render(scope))
     end
 
+    it 'renders interpolated plain text calling yield' do
+      haml = <<-'HAML'.unindent
+        %title
+          #{yield(:title)} - #{'ACME'}
+      HAML
+
+      assert_equal(%Q|<title>\nPainel - ACME\n</title>\n|,
+                   Haml::Template.new({}) { haml }.render(Object.new) { |_key| 'Painel' })
+    end
+
     it 'renders a global variable interpolated without braces' do
       $global_var_for_testing = 'world'
       assert_render(%Q|hello world\n|, %q|= "hello #$global_var_for_testing"|)

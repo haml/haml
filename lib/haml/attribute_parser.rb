@@ -46,7 +46,9 @@ module Haml
     end
 
     def hash_node(exp)
-      result = Prism.parse(exp)
+      # partial_script, because an attribute may legitimately call `yield` and the like:
+      # a template is compiled into a method body.
+      result = Prism.parse(exp, partial_script: true)
       return if result.failure?
 
       statements = result.value.statements.body
