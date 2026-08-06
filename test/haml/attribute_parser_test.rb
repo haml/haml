@@ -97,5 +97,33 @@ describe Haml::AttributeParser do
       it { assert_parse({ 'foo' => 'bar(a, b)', 'hoge' => 'piyo(a, b,)' }, 'foo: bar(a, b), hoge: piyo(a, b,),') }
       it { assert_parse({ 'foo' => 'bar(a, b)', 'hoge' => 'piyo(a, b,)' }, ' { foo: bar(a, b), hoge: piyo(a, b,), } ') }
     end
+
+    describe 'splat' do
+      it { assert_parse(nil, '**foo') }
+      it { assert_parse(nil, 'foo: bar, **baz') }
+    end
+
+    describe 'value omission' do
+      it { assert_parse({ 'foo' => '' }, 'foo:') }
+      it { assert_parse({ 'foo' => '', 'bar' => '1' }, 'foo:, bar: 1') }
+    end
+
+    describe 'escape in key' do
+      # The key reaches the attribute name as the source spelled it, unescaped.
+      it { assert_parse({ 'a\0b' => '1' }, '"a\0b" => 1') }
+      it { assert_parse({ 'a\tb' => '1' }, '"a\tb" => 1') }
+      it { assert_parse({ 'a b' => '1' }, ':"a b" => 1') }
+    end
+
+    # A multi-line hash is deliberately left to the runtime: compiling it statically drops a
+    # [:newline] and shifts every __LINE__ after it. See test/haml/line_number_test.rb.
+    describe 'multiline' do
+      it { assert_parse(nil, "foo: 1,\n  bar: 2") }
+      it { assert_parse(nil, " { foo: 1,\n  bar: 2 } ") }
+    end
+  end
+
+  describe '.available?' do
+    it { assert_equal(true, Haml::AttributeParser.available?) }
   end
 end

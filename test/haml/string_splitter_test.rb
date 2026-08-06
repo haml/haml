@@ -26,28 +26,37 @@ describe Haml::StringSplitter do
     it { assert_compile([[:static, '\"']], %q|'\\"'|) }
     it { assert_compile([[:static, '\\"']], %q|'\\\"'|) }
 
+    describe 'paired delimiters' do
+      it { assert_compile([[:static, 'a}b']], %q|%q{a\}b}|) }
+      it { assert_compile([[:static, 'a)b']], %q|%q(a\)b)|) }
+      it { assert_compile([[:static, 'a'], [:dynamic, 'b'], [:static, 'c']], %q|%Q{a#{b}c}|) }
+      it { assert_compile([[:dynamic, ' {x: 1} ']], %q|%Q{#{ {x: 1} }}|) }
+    end
+
+    describe 'interpolated variable' do
+      it { assert_compile([[:dynamic, '@foo']], %q|"#@foo"|) }
+      it { assert_compile([[:dynamic, '$foo']], %q|"#$foo"|) }
+      it { assert_compile([[:dynamic, '@@foo']], %q|"#@@foo"|) }
+      it { assert_compile([[:static, 'a'], [:dynamic, '@foo'], [:static, ' b']], %q|"a#@foo b"|) }
+    end
+
+    describe 'heredoc' do
+      it { assert_compile([[:static, "nya\n"]], %Q|<<~TEXT\n  nya\nTEXT|) }
+    end
+
     describe 'invalid argument' do
-      it 'raises internal error' do
+      def assert_internal_error(code)
         assert_raises Haml::InternalError do
-          Haml::StringSplitter.compile('1')
+          Haml::StringSplitter.compile(code)
         end
       end
 
-      it 'raises internal error' do
-        assert_raises Haml::InternalError do
-          Haml::StringSplitter.compile('[]')
-        end
-      end
-
-      it 'raises internal error' do
-        if /java/.match?(RUBY_PLATFORM)
-          skip 'Ripper of JRuby is behaving in a different way'
-        end
-
-        assert_raises Haml::InternalError do
-          Haml::StringSplitter.compile('"]')
-        end
-      end
+      it { assert_internal_error(%q|1|) }
+      it { assert_internal_error(%q|[]|) }
+      it { assert_internal_error(%q|"]|) }
+      it { assert_internal_error(%q|?a|) }
+      it { assert_internal_error(%q|"a" "b"|) }
+      it { assert_internal_error(%q|# comment|) }
     end
   end
 end

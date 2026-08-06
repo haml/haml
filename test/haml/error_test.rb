@@ -26,6 +26,17 @@ describe Haml::Engine do
       end
     end
 
+    describe 'unbalanced brackets' do
+      def assert_unbalanced_brackets(haml)
+        error = assert_raises(Haml::SyntaxError) { Haml::Parser.new({}).call(haml) }
+        assert_equal(Haml::Error.message(:unbalanced_brackets), error.message)
+      end
+
+      it { assert_unbalanced_brackets(%q|%p{'foo => 'bar'}|) }
+      it { assert_unbalanced_brackets(%q|%p{:foo => 'bar}|) }
+      it { assert_unbalanced_brackets(%q|%p{:foo => 'bar"}|) }
+    end
+
     describe 'Haml v1 syntax' do
       it 'returns an error with proper line number' do
         code = Haml::Engine.new.call(<<-HAML.unindent)

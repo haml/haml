@@ -66,4 +66,17 @@ describe Haml::RubyExpression do
       it { assert_literal(false, %Q|''\n''|) }
     end
   end
+
+  describe '.string_literal_node' do
+    it { assert_kind_of(Prism::StringNode, Haml::RubyExpression.string_literal_node(%q|'nya'|)) }
+    it { assert_kind_of(Prism::InterpolatedStringNode, Haml::RubyExpression.string_literal_node(%q|"n#{y}a"|)) }
+    it { assert_nil(Haml::RubyExpression.string_literal_node(%q|?a|)) }
+    it { assert_nil(Haml::RubyExpression.string_literal_node(%q|123|)) }
+
+    # StringSplitter slices the code with this node's offsets, so they must not be shifted.
+    it 'locates the literal in the code as given' do
+      node = Haml::RubyExpression.string_literal_node(%q|  "nya"  |)
+      assert_equal(%q|"nya"|, node.slice)
+    end
+  end
 end
