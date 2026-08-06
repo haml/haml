@@ -18,6 +18,13 @@ module Haml
         end
       end
 
+      # Like compile, but nil instead of raising, for callers that built `code` themselves
+      # and would rather emit it untouched than fail the whole compilation.
+      def try_compile(code)
+        node = RubyExpression.string_literal_node(code)
+        compile(code, node: node) unless node.nil?
+      end
+
       private
 
       def compile_parts(parts, code)

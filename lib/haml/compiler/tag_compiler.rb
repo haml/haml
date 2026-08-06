@@ -53,8 +53,13 @@ module Haml
 
       # We should handle interpolation here to escape only interpolated values.
       def compile_interpolated_plain(node)
+        compiled = StringSplitter.try_compile(node.value[:value])
+        # Ruby that does not parse: let the generated code report it, rather than failing
+        # the whole compilation with an error that points at Haml instead of the template.
+        return delegate_optimization(node) if compiled.nil?
+
         temple = [:multi]
-        StringSplitter.compile(node.value[:value]).each do |type, value|
+        compiled.each do |type, value|
           case type
           when :static
             temple << [:static, value]

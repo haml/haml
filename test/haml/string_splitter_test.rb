@@ -44,6 +44,12 @@ describe Haml::StringSplitter do
       it { assert_compile([[:static, "nya\n"]], %Q|<<~TEXT\n  nya\nTEXT|) }
     end
 
+    # A template is compiled into a method body, so these are valid where they appear.
+    describe 'jump keyword in interpolation' do
+      it { assert_compile([[:dynamic, 'yield(:title)']], %q|"#{yield(:title)}"|) }
+      it { assert_compile([[:static, 'a'], [:dynamic, 'next']], %q|"a#{next}"|) }
+    end
+
     describe 'invalid argument' do
       def assert_internal_error(code)
         assert_raises Haml::InternalError do
@@ -57,6 +63,12 @@ describe Haml::StringSplitter do
       it { assert_internal_error(%q|?a|) }
       it { assert_internal_error(%q|"a" "b"|) }
       it { assert_internal_error(%q|# comment|) }
+    end
+
+    describe '.try_compile' do
+      it { assert_equal([[:static, 'nya']], Haml::StringSplitter.try_compile(%q|"nya"|)) }
+      it { assert_nil(Haml::StringSplitter.try_compile(%q|"#{1 +}"|)) }
+      it { assert_nil(Haml::StringSplitter.try_compile(%q|1|)) }
     end
   end
 end
