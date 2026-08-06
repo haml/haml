@@ -14,7 +14,12 @@ module Haml
 
       def compile_plain(text)
         string_literal = ::Haml::Util.unescape_interpolation(text)
-        StringSplitter.compile(string_literal).map do |temple|
+        compiled = StringSplitter.try_compile(string_literal)
+        # Ruby that does not parse: let the generated code report it against the template,
+        # rather than failing the whole compilation.
+        return [[:escape, false, [:dynamic, string_literal]]] if compiled.nil?
+
+        compiled.map do |temple|
           type, str = temple
           case type
           when :dynamic
