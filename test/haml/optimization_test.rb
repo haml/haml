@@ -106,4 +106,51 @@ describe 'optimization' do
       assert_render(%|<a href="1/1"></a>\n|, %Q|- href = 1.to_r\n%a{ href: href }|)
     end
   end
+
+  # The runtime path: what AttributeCompiler#runtime_compile emits for hashes it cannot
+  # resolve at compile time.
+  describe 'boolean attributes' do
+    def build(hash, format = :html)
+      Haml::AttributeBuilder.build(true, '"', format, nil, hash)
+    end
+
+    def with_custom_attributes(*attributes)
+      old_attributes = Haml::BOOLEAN_ATTRIBUTES.dup
+      Haml::BOOLEAN_ATTRIBUTES.push(*attributes)
+      yield
+    ensure
+      Haml::BOOLEAN_ATTRIBUTES.replace(old_attributes)
+    end
+
+    it 'omits a known boolean attribute whose value is false or nil' do
+      assert_equal ' disabled', build('disabled' => true)
+      assert_equal '', build('disabled' => false)
+      assert_equal '', build('disabled' => nil)
+      assert_equal ' disabled="disabled"', build({ 'disabled' => true }, :xhtml)
+    end
+
+    it 'treats data- and aria- prefixed attributes as boolean' do
+      assert_equal ' data-foo', build('data-foo' => true)
+      assert_equal ' aria-foo', build('aria-foo' => true)
+      assert_equal '', build('data-foo' => false)
+      assert_equal '', build('aria-foo' => false)
+    end
+
+    it 'keeps other attributes non-boolean' do
+      assert_equal ' href="true"', build('href' => true)
+      assert_equal ' href="false"', build('href' => false)
+      # The prefixes are anchored: only a leading data-/aria- counts.
+      assert_equal ' datax="false"', build('datax' => false)
+      assert_equal ' x-data-foo="false"', build('x-data-foo' => false)
+    end
+
+    it 'picks up attributes added to BOOLEAN_ATTRIBUTES after the first build' do
+      assert_equal ' custom="false"', build('custom' => false)
+      with_custom_attributes('custom') do
+        assert_equal '', build('custom' => false)
+        assert_equal ' custom', build('custom' => true)
+      end
+      assert_equal ' custom="false"', build('custom' => false)
+    end
+  end
 end
