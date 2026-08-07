@@ -1,6 +1,6 @@
 # Haml Changelog
 
-## Unreleased
+## 7.3.0
 
 * Replace Ripper with Prism https://github.com/haml/haml/pull/1214
   * Interpolate `#@ivar`, `#$gvar` and `#@@cvar` in string literals instead of dropping them
