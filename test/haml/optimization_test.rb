@@ -153,4 +153,49 @@ describe 'optimization' do
       assert_equal ' custom="false"', build('custom' => false)
     end
   end
+
+  describe 'attribute keys' do
+    BUILDS = 1000
+
+    def build(*hashes)
+      Haml::AttributeBuilder.build(true, '"', :html, nil, *hashes)
+    end
+
+    def allocations
+      GC.start
+      before = GC.stat(:total_allocated_objects)
+      BUILDS.times { yield }
+      GC.stat(:total_allocated_objects) - before
+    end
+
+    it 'treats a Symbol key the same as the equivalent String key' do
+      assert_equal build('href' => '/x'), build(href: '/x')
+      assert_equal build('id' => 'a'),    build(id: 'a')
+      assert_equal build('class' => 'a'), build(class: 'a')
+      assert_equal build('data' => { 'book_id' => 5432 }), build(data: { book_id: 5432 })
+      assert_equal build('aria' => { 'label' => 'x' }),    build(aria: { label: 'x' })
+    end
+
+    it 'merges Symbol and String spellings of the same key' do
+      assert_equal ' href="/y"',   build({ href: '/x' }, { 'href' => '/y' })
+      assert_equal ' id="a_b"',    build({ id: 'a' }, { 'id' => 'b' })
+      assert_equal ' class="a b"', build({ class: 'a' }, { 'class' => 'b' })
+    end
+
+    it 'stringifies a key which is neither Symbol nor String' do
+      assert_equal ' 1="2"', build(1 => 2)
+    end
+
+    it 'allocates no more for Symbol keys than for the equivalent String keys' do
+      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      symbol_keys = { href: '/x', title: 't' }
+      string_keys = { 'href' => '/x', 'title' => 't' }
+      build(symbol_keys)
+      build(string_keys)
+
+      extra = allocations { build(symbol_keys) } - allocations { build(string_keys) }
+      # Was 2 * BUILDS: key.to_s allocated one String per Symbol key per build.
+      assert_operator extra, :<, BUILDS / 10
+    end
+  end
 end

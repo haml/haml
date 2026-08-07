@@ -144,7 +144,9 @@ module Haml::AttributeBuilder
           raise ArgumentError, "Non-hash object is given to attributes!"
         end
         hash.each do |key, value|
-          key = key.to_s
+          # Hands back the interned frozen String instead of allocating a
+          # fresh one per render.
+          key = key.is_a?(Symbol) ? key.name : key.to_s
           case key
           when 'id', 'class', 'data', 'aria'
             merged[key] ||= []
