@@ -2,9 +2,10 @@
 
 ## Unreleased
 
-* Interpolate `#@ivar`, `#$gvar` and `#@@cvar` in string literals instead of dropping them
-* Keep an escaped delimiter of a percent literal, so `= %q{a\}b}` renders `a}b`
-* Deprecate `Haml::AttributeParser.available?`, which is now always true and will be removed in the future
+* Replace Ripper with Prism https://github.com/haml/haml/pull/1214
+  * Interpolate `#@ivar`, `#$gvar` and `#@@cvar` in string literals instead of dropping them
+  * Keep an escaped delimiter of a percent literal, so `= %q{a\}b}` renders `a}b`
+  * Deprecate `Haml::AttributeParser.available?`, which is now always true and will be removed in the future
 
 ## 7.2.2
 
