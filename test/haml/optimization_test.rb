@@ -5,8 +5,18 @@ require_relative '../test_helper'
 describe 'optimization' do
   include RenderHelper
 
-  def compiled_code(haml)
-    Haml::Engine.new.call(haml)
+  def compiled_code(haml, options = {})
+    Haml::Engine.new(options).call(haml)
+  end
+
+  # Mirrors Haml::RailsTemplate.options without depending on the railtie being loaded.
+  def rails_compiled_code(haml)
+    compiled_code(haml, {
+      generator:       Temple::Generators::RailsOutputBuffer,
+      use_html_safe:   true,
+      buffer_class:    'ActionView::OutputBuffer',
+      disable_capture: true,
+    })
   end
 
   describe 'static analysis' do
@@ -55,6 +65,45 @@ describe 'optimization' do
 
     it 'leaves adjacent string concatenation alone' do
       assert_render(%|<span>hello world</span>\n|, %q|%span= "hello" " world"|)
+    end
+  end
+
+  describe 'to_s' do
+    it 'emits a single to_s per dynamic output' do
+      assert_equal 1, compiled_code(%|%p= @content|).scan('.to_s').size
+      assert_equal 1, compiled_code(%|%p!= @content|).scan('.to_s').size
+    end
+
+    it 'emits a single to_s per dynamic output in rails mode' do
+      code = rails_compiled_code(%|%p= @content|)
+      assert_equal true, code.include?('safe_concat')
+      assert_equal 1, code.scan('.to_s').size
+    end
+
+    it 'does not append to_s to an interpolated attribute value' do
+      code = compiled_code(<<-HAML.unindent)
+        - href = 1
+        %a{ href: href }
+      HAML
+      assert_equal true, code.include?('#{::Haml::Util.escape_html((href))}')
+    end
+
+    it 'appends to_s only to :escapeany nodes' do
+      filter = Haml::EscapeAny.new(use_html_safe: false)
+      assert_equal [:dynamic, '::Haml::Util.escape_html((foo))'],
+                   filter.call([:escapeany, true, [:dynamic, 'foo']])
+      assert_equal [:dynamic, '(foo).to_s'],
+                   filter.call([:escapeany, false, [:dynamic, 'foo']])
+      # An already-escaped node, i.e. what the Escape pass leaves behind.
+      assert_equal [:dynamic, '::Haml::Util.escape_html((foo))'],
+                   filter.call([:dynamic, '::Haml::Util.escape_html((foo))'])
+    end
+
+    it 'still stringifies values which are not String' do
+      assert_render(%|<p>1/1</p>\n|, %|%p= 1.to_r|)
+      assert_render(%|<p>1/1</p>\n|, %|%p!= 1.to_r|)
+      assert_render(%|1/1\n|, %|!= 1.to_r|)
+      assert_render(%|<a href="1/1"></a>\n|, %Q|- href = 1.to_r\n%a{ href: href }|)
     end
   end
 end
