@@ -120,14 +120,18 @@ module Haml::AttributeBuilder
       flattened = {}
 
       attributes.each do |key, value|
+        # Stops a hash which contains itself from recursing forever.
+        next if value.equal?(attributes)
+
         case value
-        when attributes
         when Hash
           flatten_attributes(value).each do |k, v|
             if k.nil?
               flattened[key] = v
             else
-              flattened["#{key}-#{k.to_s.tr('_', '-')}"] = v
+              k = k.is_a?(Symbol) ? k.name : k.to_s
+              k = k.tr('_', '-') if k.include?('_')
+              flattened["#{key}-#{k}"] = v
             end
           end
         else

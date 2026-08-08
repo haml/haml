@@ -198,4 +198,77 @@ describe 'optimization' do
       assert_operator extra, :<, BUILDS / 10
     end
   end
+
+  # The nested keys of data:/aria:, flattened and hyphenated by
+  # AttributeBuilder.flatten_attributes.
+  describe 'nested attribute keys' do
+    def build(*hashes)
+      Haml::AttributeBuilder.build(true, '"', :html, nil, *hashes)
+    end
+
+    def allocations
+      GC.start
+      before = GC.stat(:total_allocated_objects)
+      BUILDS.times { yield }
+      GC.stat(:total_allocated_objects) - before
+    end
+
+    it 'skips a hash which contains itself instead of recursing into it' do
+      data = { a: { b: 'c' } }
+      data[:d] = data
+      assert_equal ' data-a-b="c"', build(data: data)
+
+      aria = { a: { b: 'c' } }
+      aria[:d] = aria
+      assert_equal ' aria-a-b="c"', build(aria: aria)
+    end
+
+    it 'changes underscores in a nested key to hyphens' do
+      assert_equal ' data-raw-src="foo"', build(data: { raw_src: 'foo' })
+      assert_equal ' data-raw-src="foo"', build('data' => { 'raw_src' => 'foo' })
+      assert_equal ' data-a-b-c="1"',     build(data: { a_b_c: 1 })
+      assert_equal ' aria-raw-src="foo"', build(aria: { raw_src: 'foo' })
+    end
+
+    it 'leaves a nested key without an underscore alone' do
+      assert_equal ' data-src="foo"',     build(data: { src: 'foo' })
+      assert_equal ' data-raw-src="foo"', build('data' => { 'raw-src' => 'foo' })
+    end
+
+    it 'hyphenates every level of a nested hash' do
+      assert_equal ' data-raw-src-url="foo"', build(data: { raw_src: { url: 'foo' } })
+      assert_equal ' data-a-b-c-d="1"',       build(data: { a_b: { c_d: 1 } })
+    end
+
+    it 'keeps stringifying a nested key which is neither Symbol nor String' do
+      assert_equal ' data-1="2"',    build(data: { 1 => 2 })
+      assert_equal ' data-false',    build(data: { false => true })
+      # A nil key names the prefix itself rather than a suffix of it.
+      assert_equal ' data="3"',      build(data: { nil => 3 })
+    end
+
+    it 'allocates no more for a Symbol nested key than for the equivalent String key' do
+      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      symbol_key = { 'data' => { ab: 1 } }
+      string_key = { 'data' => { 'ab' => 1 } }
+      build(symbol_key)
+      build(string_key)
+
+      extra = allocations { build(symbol_key) } - allocations { build(string_key) }
+      # Was BUILDS: k.to_s allocated one String per Symbol key per build.
+      assert_operator extra, :<, BUILDS / 10
+    end
+
+    it 'allocates less for a nested key with no underscore to convert' do
+      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      without_underscore = { 'data' => { 'ab' => 1 } }
+      with_underscore    = { 'data' => { 'a_b' => 1 } }
+      build(without_underscore)
+      build(with_underscore)
+
+      saved = allocations { build(with_underscore) } - allocations { build(without_underscore) }
+      # Was 0: tr allocated a String per key per build even with nothing to replace.
+      assert_operator saved, :>, BUILDS / 2
+    end
+  end
 end
