@@ -271,4 +271,60 @@ describe 'optimization' do
       assert_operator saved, :>, BUILDS / 2
     end
   end
+
+  # Whatever Escape emits for `=` when use_html_safe is on, which is the default whenever
+  # ActiveSupport is loaded. test_helper requires rails before haml, so these run against
+  # the variant Util picks when html_safe? exists.
+  describe 'html safe escaping' do
+    class ::TosSafeBufferObject
+      def to_s
+        '<hr>'.html_safe
+      end
+    end
+
+    it 'escapes a value which is not html_safe' do
+      assert_equal '&lt;b&gt;', Haml::Util.escape_html_safe('<b>')
+      assert_equal '', Haml::Util.escape_html_safe(nil)
+      assert_equal '1/1', Haml::Util.escape_html_safe(1.to_r)
+    end
+
+    it 'passes an html_safe value through untouched' do
+      safe = '<b>'.html_safe
+      assert_equal '<b>', Haml::Util.escape_html_safe(safe)
+      assert_same safe, Haml::Util.escape_html_safe(safe)
+    end
+
+    it 'asks html_safe? of to_s, not of the object' do
+      # Kaminari-style object: not html_safe itself, but its to_s is.
+      assert_equal '<hr>', Haml::Util.escape_html_safe(::TosSafeBufferObject.new)
+    end
+
+    it 'does not ask respond_to? per value when html_safe? is available' do
+      skip 'iseq introspection is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      disasm = RubyVM::InstructionSequence.of(Haml::Util.method(:escape_html_safe)).disasm
+      # The guard used to run on every escaped value, though html_safe? is on Object
+      # as soon as ActiveSupport is loaded, so it could never be false here.
+      refute_includes disasm, 'respond_to?'
+      assert_includes disasm, 'html_safe?'
+    end
+
+    it 'keeps the guard when ActiveSupport is not loaded' do
+      skip 'subprocess test is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      script = <<~RUBY
+        require 'haml'
+        abort 'ActiveSupport leaked into the child' if ''.respond_to?(:html_safe?)
+        print Haml::Util.escape_html_safe('<b>')
+        print '|'
+        require 'active_support/core_ext/string/output_safety'
+        print Haml::Util.escape_html_safe('<b>'.html_safe)
+      RUBY
+      lib = File.expand_path('../../lib', __dir__)
+      out = IO.popen([RbConfig.ruby, '-I', lib, '-e', script], &:read)
+
+      assert_predicate $?, :success?
+      # Escapes without ActiveSupport, and still adapts if it shows up later, which is
+      # the only reason the guarded variant exists.
+      assert_equal '&lt;b&gt;|<b>', out
+    end
+  end
 end

@@ -26,10 +26,20 @@ module Haml
       end
     end
 
-    # TODO: Remove unescape_interpolation's workaround and get rid of `respond_to?`.
-    def self.escape_html_safe(html)
-      html = html.to_s
-      (html.respond_to?(:html_safe?) && html.html_safe?) ? html : escape_html(html)
+    # ActiveSupport defines html_safe? on Object, so once it is loaded the guard can never
+    # be false. Without it this is still reachable, because unescape_interpolation below
+    # hard-codes the call outside the use_html_safe decision; fix that and the guarded
+    # variant can go too.
+    if ''.respond_to?(:html_safe?)
+      def self.escape_html_safe(html)
+        html = html.to_s
+        html.html_safe? ? html : escape_html(html)
+      end
+    else
+      def self.escape_html_safe(html)
+        html = html.to_s
+        (html.respond_to?(:html_safe?) && html.html_safe?) ? html : escape_html(html)
+      end
     end
 
     # Silence all output to STDERR within a block.
