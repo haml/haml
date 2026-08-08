@@ -444,7 +444,8 @@ module Haml
         end
       else
         if Util.contains_interpolation?(value)
-          value = Util.unescape_interpolation(value, escape_html)
+          value = Util.unescape_interpolation(value)
+          escape_interpolation = true if escape_html
           parse = true
           escape_html = false
         end
