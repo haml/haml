@@ -528,4 +528,72 @@ describe 'optimization' do
       assert_operator per_line, :<, 20
     end
   end
+
+  # Util.balance built its scanning Regexp on every call, and it is called once per
+  # interpolation, per object reference and per conditional comment.
+  describe 'balance regexes' do
+    BALANCES = 1000
+
+    def balance(*args)
+      Haml::Util.balance(*args)
+    end
+
+    def allocations
+      GC.start
+      before = GC.stat(:total_allocated_objects)
+      BALANCES.times { yield }
+      GC.stat(:total_allocated_objects) - before
+    end
+
+    it 'keeps the regex it used to build per call' do
+      regexes = Haml::Util.const_get(:BALANCE_REGEXES)
+      [['{', '}'], ['[', ']'], ['(', ')']].each do |start, finish|
+        assert_equal Regexp.new("(.*?)[\\#{start}\\#{finish}]", Regexp::MULTILINE),
+                     regexes.dig(start, finish)
+      end
+      # Interpolation and new attribute values use {}, object references and conditional
+      # comments use [], and parse_new_attributes uses () on its way to raising.
+      assert_equal ['(', '[', '{'], regexes.keys.sort
+    end
+
+    it 'stops rebuilding the regex per call' do
+      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      balance('a} b', '{', '}', 1)
+      balance('a> b', '<', '>', 1)
+
+      cached   = allocations { balance('a} b', '{', '}', 1) }
+      fallback = allocations { balance('a> b', '<', '>', 1) }
+      # Was the same on both: every pair went through Regexp.new, 6 objects a call.
+      assert_operator fallback - cached, :>, BALANCES * 5
+    end
+
+    it 'keeps working for a pair it has no regex for' do
+      assert_equal ['<a>', ' rest'], balance('<a> rest', '<', '>')
+      # A mismatched pair has to fall back rather than pick up the regex for '{'.
+      assert_equal ['a]', ' rest'],  balance('a] rest', '{', ']', 1)
+    end
+
+    it 'balances the same pairs as before' do
+      assert_equal ['a}', ' rest'],        balance('a} rest', '{', '}', 1)
+      assert_equal ['[@user]', ' text'],   balance('[@user] text', '[', ']')
+      assert_equal ['(a (b) c)', ' rest'], balance('(a (b) c) rest', '(', ')')
+      assert_nil                           balance('no delimiters here', '{', '}', 1)
+      assert_nil                           balance('a { b { c } d } e', '{', '}', 1)
+
+      # A StringScanner receiver is moved in place; a String is wrapped in a fresh one.
+      scanner = StringScanner.new('user.id} and more')
+      assert_equal ['user.id}', ' and more'], balance(scanner, '{', '}', 1)
+      assert_equal ' and more', scanner.rest
+    end
+
+    it 'renders the shapes that reach balance' do
+      assert_render %Q{<p>1</p>\n},                     %q[%p #{1}]
+      assert_render %Q{<p>1</p>\n},                     %q[%p #{ {a: 1}[:a] }]
+      assert_render %Q{<p>[1, 2]</p>\n},                %q[%p #{ [1,2].map { |i| i } }]
+      assert_render %Q{<p>\#{not_interp}</p>\n},        %q[%p \#{not_interp}]
+      assert_render %Q{<p>[not an object ref]</p>\n},   %q[%p [not an object ref]]
+      assert_render %Q{<!--[if IE]> hi <![endif]-->\n}, %q[/[if IE] hi]
+      assert_render %Q{<a href="/u/1"></a>\n},          %Q{- v = 1\n%a(href="/u/\#{v}")}
+    end
+  end
 end

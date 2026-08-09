@@ -164,6 +164,14 @@ MSG
       scan.rest
     end
 
+    # The Regexes #balance scans with, for the delimiter pairs this codebase uses
+    BALANCE_REGEXES = {
+      '{' => { '}' => /(.*?)[\{\}]/m }.freeze,
+      '[' => { ']' => /(.*?)[\[\]]/m }.freeze,
+      '(' => { ')' => /(.*?)[\(\)]/m }.freeze,
+    }.freeze
+    private_constant :BALANCE_REGEXES
+
     # Moves a scanner through a balanced pair of characters.
     # For example:
     #
@@ -182,7 +190,8 @@ MSG
     def balance(scanner, start, finish, count = 0)
       str = ''.dup
       scanner = StringScanner.new(scanner) unless scanner.is_a? StringScanner
-      regexp = Regexp.new("(.*?)[\\#{start.chr}\\#{finish.chr}]", Regexp::MULTILINE)
+      regexp = BALANCE_REGEXES.dig(start, finish) ||
+        Regexp.new("(.*?)[\\#{start.chr}\\#{finish.chr}]", Regexp::MULTILINE)
       while scanner.scan(regexp)
         str << scanner.matched
         count += 1 if scanner.matched[-1] == start
