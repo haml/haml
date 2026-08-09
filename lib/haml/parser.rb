@@ -90,6 +90,12 @@ module Haml
     # The Regex that matches a literal string or symbol value
     LITERAL_VALUE_REGEX = /:(\w*)|(["'])((?!\\|\#\{|\#@|\#\$|\2).|\\.)*\2/
 
+    # The Regexes that scan a quoted new-syntax attribute value
+    NEW_ATTRIBUTE_VALUE_REGEX = {
+      '"' => /((?:\\.|\#(?!\{)|[^"\\#])*)("|#\{)/,
+      "'" => /((?:\\.|\#(?!\{)|[^'\\#])*)('|#\{)/,
+    }.freeze
+
     ID_KEY    = 'id'.freeze
     CLASS_KEY = 'class'.freeze
 
@@ -125,6 +131,7 @@ module Haml
 
       @root = @parent = ParseNode.new(:root)
       @flat = false
+      @flat_spaces = ''
       @filter_buffer = nil
       @indentation = nil
       @line = next_line
@@ -138,7 +145,9 @@ module Haml
 
         if flat?
           text = @line.full.dup
-          text = "" unless text.gsub!(/^#{@flat_spaces}/, '')
+          # An empty @flat_spaces means the indentation is not known yet: keep the line,
+          # as the /^/ this replaces did by matching the empty prefix.
+          text = "" unless text.delete_prefix!(@flat_spaces) || @flat_spaces.empty?
           @filter_buffer << "#{text}\n"
           @line = @next_line
           next
@@ -182,7 +191,7 @@ module Haml
 
       tabs = line.whitespace.length / @indentation.length
       return tabs if line.whitespace == @indentation * tabs
-      return @template_tabs + 1 if flat? && /^#{@flat_spaces}/.match?(line.whitespace)
+      return @template_tabs + 1 if flat? && line.whitespace.start_with?(@flat_spaces)
 
       message = Error.message(:inconsistent_indentation,
         human_indentation(line.whitespace),
@@ -556,7 +565,7 @@ module Haml
 
     def close_flat_section
       @flat = false
-      @flat_spaces = nil
+      @flat_spaces = ''
       @filter_buffer = nil
     end
 
@@ -771,7 +780,7 @@ module Haml
         return name, [:dynamic, var]
       end
 
-      re = /((?:\\.|\#(?!\{)|[^#{quote}\\#])*)(#{quote}|#\{)/
+      re = NEW_ATTRIBUTE_VALUE_REGEX[quote]
       content = []
       loop do
         return false unless scanner.scan(re)
@@ -794,7 +803,7 @@ module Haml
       line_defined = instance_variable_defined?(:@line)
       @line.tabs if line_defined
       unless (flat? && !closes_flat?(line) && !closes_flat?(@line)) ||
-          (line_defined && @line.text[0] == ?: && %r[^#{@line.full[/^\s+/]}\s].match?(line.full))
+          (line_defined && @line.text[0] == ?: && indented_under_line?(line))
         return next_line if line.text.empty?
 
         handle_multiline(line)
@@ -804,7 +813,16 @@ module Haml
     end
 
     def closes_flat?(line)
-      line && !line.text.empty? && !(/^#{@flat_spaces}/.match?(line.full))
+      line && !line.text.empty? && !line.full.start_with?(@flat_spaces)
+    end
+
+    # Whether `line` repeats @line's indentation and then indents further.
+    def indented_under_line?(line)
+      indent = @line.full[/^\s+/] || ''
+      return false unless line.full.start_with?(indent)
+
+      char = line.full[indent.length]
+      !char.nil? && /\s/.match?(char)
     end
 
     def handle_multiline(line)
@@ -882,7 +900,11 @@ module Haml
     # Same semantics as block_opened?, except that block_opened? uses Line#tabs,
     # which doesn't interact well with filter lines
     def filter_opened?
-      (@indentation ? /^#{@indentation * (@template_tabs + 1)}/ : /^\s/).match?(@next_line.full)
+      if @indentation
+        @next_line.full.start_with?(@indentation * (@template_tabs + 1))
+      else
+        /^\s/.match?(@next_line.full)
+      end
     end
 
     def flat?

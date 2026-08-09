@@ -419,4 +419,113 @@ describe 'optimization' do
       assert_equal '<b>a&#x000A;b</b>', find_and_preserve("<b>a\nb</b>", %w[b])
     end
   end
+
+  # The parser interpolated the flat-block indentation, the current line's indentation and
+  # the attribute quote character straight into regex literals, inside loops that run once
+  # per template line. Compiling benchmark/etc/real_sample.haml built 1200+ Regexps.
+  describe 'parser regexes' do
+    COMPILES = 20
+
+    def parse(haml)
+      Haml::Parser.new({}).call(haml)
+    end
+
+    # The text a filter or -# block collected, wherever it sits in the tree.
+    def flat_text(haml)
+      find = lambda do |node|
+        return node if node.type == :filter || node.type == :haml_comment
+        node.children.each { |child| (found = find.call(child)) and return found }
+        nil
+      end
+      find.call(parse(haml))&.value&.[](:text)
+    end
+
+    def compile_allocations(haml)
+      Haml::Engine.new.call(haml)
+      GC.start
+      before = GC.stat(:total_allocated_objects)
+      COMPILES.times { Haml::Engine.new.call(haml) }
+      (GC.stat(:total_allocated_objects) - before) / COMPILES.to_f
+    end
+
+    it 'compiles no regex while parsing' do
+      skip 'iseq introspection is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      names = Haml::Parser.instance_methods(false) + Haml::Parser.private_instance_methods(false)
+      interpolating = names.select do |name|
+        iseq = RubyVM::InstructionSequence.of(Haml::Parser.instance_method(name))
+        iseq&.disasm&.include?('toregexp')
+      end
+      # toregexp builds a Regexp at runtime. call, compute_tabs, closes_flat?, next_line,
+      # filter_opened? and parse_new_attribute each had one, all of them inside a loop.
+      assert_empty interpolating
+    end
+
+    it 'keeps a whitespace-only line in a filter whose indentation is not known yet' do
+      # Nothing has established the template's indentation when this filter opens, so
+      # @flat_spaces is still empty. The regex was /^/ there: it matched the empty prefix,
+      # so gsub! reported a substitution and the line survived. delete_prefix! reports
+      # nothing for an empty argument, which would have emptied the line instead.
+      assert_equal " \nfoo\n", flat_text(":plain\n \n  foo\n")
+      # Once the indentation is known the same line no longer carries it and is emptied.
+      assert_equal "a\n\nb\n", flat_text("%p\n  :plain\n    a\n \n    b\n")
+    end
+
+    it 'strips the same flat-block indentation as the interpolated anchor did' do
+      assert_equal "a\n\nb\n",        flat_text(":plain\n  a\n\n  b\n")
+      assert_equal "a\n    b\nc\n",   flat_text(":plain\n  a\n      b\n  c\n")
+      assert_equal "a\n\t\tb\n",      flat_text(":plain\n\ta\n\t\t\tb\n")
+      assert_equal "a  \nb\n",        flat_text(":plain\n  a  \n  b\n")
+      assert_equal "%p not haml\n",   flat_text(":plain\n  %p not haml\n")
+      assert_equal "a\nb\n",          flat_text("%div\n  %p\n    :plain\n      a\n      b\n")
+      assert_equal "a\n",             flat_text("%div\n  :plain\n    a\n  %p x\n%p y\n")
+      assert_equal "a\n      b\n",    flat_text("%div\n  :plain\n    a\n          b\n")
+      assert_nil                      flat_text("%p x\n:plain\n%p y\n")
+      # -# runs the same code, without the special case that keeps a blank line after a filter.
+      assert_equal "foo\n",           flat_text("-#\n \n  foo\n%p y\n")
+      assert_equal "a\n\nb\n",        flat_text("-#\n  a\n\n  b\n")
+      assert_equal " text\na\nb\n",   flat_text("-# text\n  a\n  b\n")
+    end
+
+    it 'resets the flat indentation between two blocks' do
+      # close_flat_section clears @flat_spaces, which is now '' rather than nil.
+      assert_equal ["a\n", "b\n"], parse(":plain\n  a\n:plain\n  b\n").children.map { |c| c.value[:text] }
+    end
+
+    it 'keeps the scanner regex it used to interpolate per attribute value' do
+      %w[" '].each do |quote|
+        assert_equal(/((?:\\.|\#(?!\{)|[^#{quote}\\#])*)(#{quote}|#\{)/,
+                     Haml::Parser::NEW_ATTRIBUTE_VALUE_REGEX[quote])
+      end
+      # parse_new_attribute reaches this after scanner.scan(/["']/), so there is no third key.
+      assert_equal ['"', "'"], Haml::Parser::NEW_ATTRIBUTE_VALUE_REGEX.keys.sort
+    end
+
+    it 'scans a quoted attribute value the same for both quote characters' do
+      assert_render %Q{<a href="x"></a>\n},              %q{%a(href="x")}
+      assert_render %Q{<a href="x"></a>\n},              %q{%a(href='x')}
+      assert_render %Q{<a title="it&#39;s"></a>\n},      %q{%a(title="it's")}
+      assert_render %Q{<a title="say &quot;hi&quot;"></a>\n}, %q{%a(title='say "hi"')}
+      assert_render %Q{<a title="a&quot;b"></a>\n},      %q{%a(title="a\\"b")}
+      assert_render %Q{<a title="a&#39;b"></a>\n},       %q{%a(title='a\\'b')}
+      assert_render %Q{<a href="#"></a>\n},              %q{%a(href="#")}
+      assert_render %Q{<a href="#top"></a>\n},           %q{%a(href="#top")}
+      assert_render %Q{<a href=""></a>\n},               %q{%a(href="")}
+      assert_render %Q{<a href="x" title="y"></a>\n},    %q{%a(href="x" title='y')}
+      assert_render %Q{<a title="héllo ☃"></a>\n},       %q{%a(title="héllo ☃")}
+      assert_render %Q{<a href="/u/1"></a>\n},           %Q{- v = 1\n%a(href="/u/\#{v}")}
+      assert_render %Q{<a href="/u/1"></a>\n},           %Q{- v = 1\n%a(href='/u/\#{v}')}
+      assert_render %Q{<a href="#1"></a>\n},             %Q{- v = 1\n%a(href="\#\#{v}")}
+    end
+
+    it 'stops allocating a regex per line of a filter body' do
+      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      short = ":plain\n" + "  content line\n" * 10
+      long  = ":plain\n" + "  content line\n" * 110
+
+      per_line = (compile_allocations(long) - compile_allocations(short)) / 100.0
+      # Was 34: an interpolated Regexp and its source String for the body line, another
+      # pair for closes_flat?, and what gsub! allocates on top of them. Now 10.
+      assert_operator per_line, :<, 20
+    end
+  end
 end
