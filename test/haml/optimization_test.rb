@@ -5,6 +5,10 @@ require_relative '../test_helper'
 describe 'optimization' do
   include RenderHelper
 
+  # Iterations of an allocation measurement, and the yardstick its assertions are written
+  # against: "fewer than RUNS objects" reads as "no longer one per call".
+  RUNS = 1000
+
   def compiled_code(haml, options = {})
     Haml::Engine.new(options).call(haml)
   end
@@ -17,6 +21,32 @@ describe 'optimization' do
       buffer_class:    'ActionView::OutputBuffer',
       disable_capture: true,
     })
+  end
+
+  def parse(haml)
+    Haml::Parser.new({}).call(haml)
+  end
+
+  # The runtime attribute path: what AttributeCompiler#runtime_compile emits for hashes it
+  # cannot resolve at compile time. No keyword parameter here, or a bare `build(href: 'x')`
+  # would arrive as keywords instead of as the Hash under test.
+  def build(*hashes)
+    build_as(:html, *hashes)
+  end
+
+  def build_as(format, *hashes)
+    Haml::AttributeBuilder.build(true, '"', format, nil, *hashes)
+  end
+
+  def allocations(runs = RUNS)
+    GC.start
+    before = GC.stat(:total_allocated_objects)
+    runs.times { yield }
+    GC.stat(:total_allocated_objects) - before
+  end
+
+  def skip_unless_cruby(subject)
+    skip "#{subject} is CRuby-specific" unless RUBY_ENGINE == 'ruby'
   end
 
   describe 'static analysis' do
@@ -107,13 +137,7 @@ describe 'optimization' do
     end
   end
 
-  # The runtime path: what AttributeCompiler#runtime_compile emits for hashes it cannot
-  # resolve at compile time.
   describe 'boolean attributes' do
-    def build(hash, format = :html)
-      Haml::AttributeBuilder.build(true, '"', format, nil, hash)
-    end
-
     def with_custom_attributes(*attributes)
       old_attributes = Haml::BOOLEAN_ATTRIBUTES.dup
       Haml::BOOLEAN_ATTRIBUTES.push(*attributes)
@@ -126,7 +150,7 @@ describe 'optimization' do
       assert_equal ' disabled', build('disabled' => true)
       assert_equal '', build('disabled' => false)
       assert_equal '', build('disabled' => nil)
-      assert_equal ' disabled="disabled"', build({ 'disabled' => true }, :xhtml)
+      assert_equal ' disabled="disabled"', build_as(:xhtml, 'disabled' => true)
     end
 
     it 'treats data- and aria- prefixed attributes as boolean' do
@@ -155,19 +179,6 @@ describe 'optimization' do
   end
 
   describe 'attribute keys' do
-    BUILDS = 1000
-
-    def build(*hashes)
-      Haml::AttributeBuilder.build(true, '"', :html, nil, *hashes)
-    end
-
-    def allocations
-      GC.start
-      before = GC.stat(:total_allocated_objects)
-      BUILDS.times { yield }
-      GC.stat(:total_allocated_objects) - before
-    end
-
     it 'treats a Symbol key the same as the equivalent String key' do
       assert_equal build('href' => '/x'), build(href: '/x')
       assert_equal build('id' => 'a'),    build(id: 'a')
@@ -187,32 +198,21 @@ describe 'optimization' do
     end
 
     it 'allocates no more for Symbol keys than for the equivalent String keys' do
-      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('allocation counting')
       symbol_keys = { href: '/x', title: 't' }
       string_keys = { 'href' => '/x', 'title' => 't' }
       build(symbol_keys)
       build(string_keys)
 
       extra = allocations { build(symbol_keys) } - allocations { build(string_keys) }
-      # Was 2 * BUILDS: key.to_s allocated one String per Symbol key per build.
-      assert_operator extra, :<, BUILDS / 10
+      # Was 2 * RUNS: key.to_s allocated one String per Symbol key per build.
+      assert_operator extra, :<, RUNS / 10
     end
   end
 
   # The nested keys of data:/aria:, flattened and hyphenated by
   # AttributeBuilder.flatten_attributes.
   describe 'nested attribute keys' do
-    def build(*hashes)
-      Haml::AttributeBuilder.build(true, '"', :html, nil, *hashes)
-    end
-
-    def allocations
-      GC.start
-      before = GC.stat(:total_allocated_objects)
-      BUILDS.times { yield }
-      GC.stat(:total_allocated_objects) - before
-    end
-
     it 'skips a hash which contains itself instead of recursing into it' do
       data = { a: { b: 'c' } }
       data[:d] = data
@@ -248,19 +248,19 @@ describe 'optimization' do
     end
 
     it 'allocates no more for a Symbol nested key than for the equivalent String key' do
-      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('allocation counting')
       symbol_key = { 'data' => { ab: 1 } }
       string_key = { 'data' => { 'ab' => 1 } }
       build(symbol_key)
       build(string_key)
 
       extra = allocations { build(symbol_key) } - allocations { build(string_key) }
-      # Was BUILDS: k.to_s allocated one String per Symbol key per build.
-      assert_operator extra, :<, BUILDS / 10
+      # Was RUNS: k.to_s allocated one String per Symbol key per build.
+      assert_operator extra, :<, RUNS / 10
     end
 
     it 'allocates less for a nested key with no underscore to convert' do
-      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('allocation counting')
       without_underscore = { 'data' => { 'ab' => 1 } }
       with_underscore    = { 'data' => { 'a_b' => 1 } }
       build(without_underscore)
@@ -268,7 +268,7 @@ describe 'optimization' do
 
       saved = allocations { build(with_underscore) } - allocations { build(without_underscore) }
       # Was 0: tr allocated a String per key per build even with nothing to replace.
-      assert_operator saved, :>, BUILDS / 2
+      assert_operator saved, :>, RUNS / 2
     end
   end
 
@@ -300,7 +300,7 @@ describe 'optimization' do
     end
 
     it 'does not ask respond_to? per value when html_safe? is available' do
-      skip 'iseq introspection is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('iseq introspection')
       disasm = RubyVM::InstructionSequence.of(Haml::Util.method(:escape_html_safe)).disasm
       # The guard used to run on every escaped value, though html_safe? is on Object
       # as soon as ActiveSupport is loaded, so it could never be false here.
@@ -309,7 +309,7 @@ describe 'optimization' do
     end
 
     it 'keeps the guard when ActiveSupport is not loaded' do
-      skip 'subprocess test is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('subprocess test')
       script = <<~RUBY
         require 'haml'
         abort 'ActiveSupport leaked into the child' if ''.respond_to?(:html_safe?)
@@ -331,17 +331,8 @@ describe 'optimization' do
   # `~` (preserve) used to rebuild its tag regex on every call, and the code the compiler
   # emits carried the tag list as a literal, reallocated per render.
   describe 'preserve regexes' do
-    CALLS = 1000
-
     def find_and_preserve(*args)
       Haml::Compiler::ScriptCompiler.find_and_preserve(*args)
-    end
-
-    def allocations
-      GC.start
-      before = GC.stat(:total_allocated_objects)
-      CALLS.times { yield }
-      GC.stat(:total_allocated_objects) - before
     end
 
     it 'emits a reference to the tag list instead of a literal' do
@@ -363,18 +354,18 @@ describe 'optimization' do
     end
 
     it 'stops rebuilding the regex per call' do
-      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('allocation counting')
       tags = Haml::Helpers::DEFAULT_PRESERVE_TAGS
       Haml::Helpers.preserve_regex(tags)
 
       cached = allocations { Haml::Helpers.preserve_regex(tags) }
       built  = allocations { Haml::Helpers.send(:build_preserve_regex, tags) }
       # Was what building costs: map + Regexp.escape per tag + join + Regexp, ~14 objects.
-      assert_operator built - cached, :>, CALLS * 5
+      assert_operator built - cached, :>, RUNS * 5
     end
 
     it 'renders a preserved value with only haml/engine required' do
-      skip 'subprocess test is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('subprocess test')
       # haml/helpers is loaded by haml/template and haml/rails_helpers, neither of which
       # haml/engine pulls in, so this used to raise NameError at render time.
       script = <<~'RUBY'
@@ -426,10 +417,6 @@ describe 'optimization' do
   describe 'parser regexes' do
     COMPILES = 20
 
-    def parse(haml)
-      Haml::Parser.new({}).call(haml)
-    end
-
     # The text a filter or -# block collected, wherever it sits in the tree.
     def flat_text(haml)
       find = lambda do |node|
@@ -442,14 +429,11 @@ describe 'optimization' do
 
     def compile_allocations(haml)
       Haml::Engine.new.call(haml)
-      GC.start
-      before = GC.stat(:total_allocated_objects)
-      COMPILES.times { Haml::Engine.new.call(haml) }
-      (GC.stat(:total_allocated_objects) - before) / COMPILES.to_f
+      allocations(COMPILES) { Haml::Engine.new.call(haml) } / COMPILES.to_f
     end
 
     it 'compiles no regex while parsing' do
-      skip 'iseq introspection is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('iseq introspection')
       names = Haml::Parser.instance_methods(false) + Haml::Parser.private_instance_methods(false)
       interpolating = names.select do |name|
         iseq = RubyVM::InstructionSequence.of(Haml::Parser.instance_method(name))
@@ -518,7 +502,7 @@ describe 'optimization' do
     end
 
     it 'stops allocating a regex per line of a filter body' do
-      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('allocation counting')
       short = ":plain\n" + "  content line\n" * 10
       long  = ":plain\n" + "  content line\n" * 110
 
@@ -532,17 +516,8 @@ describe 'optimization' do
   # Util.balance built its scanning Regexp on every call, and it is called once per
   # interpolation, per object reference and per conditional comment.
   describe 'balance regexes' do
-    BALANCES = 1000
-
     def balance(*args)
       Haml::Util.balance(*args)
-    end
-
-    def allocations
-      GC.start
-      before = GC.stat(:total_allocated_objects)
-      BALANCES.times { yield }
-      GC.stat(:total_allocated_objects) - before
     end
 
     it 'keeps the regex it used to build per call' do
@@ -557,14 +532,14 @@ describe 'optimization' do
     end
 
     it 'stops rebuilding the regex per call' do
-      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('allocation counting')
       balance('a} b', '{', '}', 1)
       balance('a> b', '<', '>', 1)
 
       cached   = allocations { balance('a} b', '{', '}', 1) }
       fallback = allocations { balance('a> b', '<', '>', 1) }
       # Was the same on both: every pair went through Regexp.new, 6 objects a call.
-      assert_operator fallback - cached, :>, BALANCES * 5
+      assert_operator fallback - cached, :>, RUNS * 5
     end
 
     it 'keeps working for a pair it has no regex for' do
@@ -600,32 +575,19 @@ describe 'optimization' do
   # contains_interpolation? ran Regexp#=== once per line of text, attribute value, comment and
   # filter body, and the lookup tables around it were Array literals rebuilt per line.
   describe 'interpolation and keyword lookups' do
-    CHECKS = 1000
-
     PER_LINE_ARRAY_METHODS = %i[
       process_line silent_script check_push_script_stack close_silent_script parse_old_attributes
     ].freeze
 
-    def parse(haml)
-      Haml::Parser.new({}).call(haml)
-    end
-
-    def allocations
-      GC.start
-      before = GC.stat(:total_allocated_objects)
-      CHECKS.times { yield }
-      GC.stat(:total_allocated_objects) - before
-    end
-
     it 'stops allocating a MatchData per interpolation check' do
-      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('allocation counting')
       hit  = %q{text #{value} more}
       miss = 'text with none of it'
       [hit, miss].each { |s| Haml::Util.contains_interpolation?(s) }
 
       # Regexp#=== cost 3 objects on a match and 1-2 on a miss, for a $~ nothing reads.
-      assert_operator allocations { Haml::Util.contains_interpolation?(hit) },  :<, CHECKS
-      assert_operator allocations { Haml::Util.contains_interpolation?(miss) }, :<, CHECKS
+      assert_operator allocations { Haml::Util.contains_interpolation?(hit) },  :<, RUNS
+      assert_operator allocations { Haml::Util.contains_interpolation?(miss) }, :<, RUNS
     end
 
     it 'keeps the lookup tables it used to rebuild per line' do
@@ -646,7 +608,7 @@ describe 'optimization' do
     end
 
     it 'builds no Array literal in the per-line lookups' do
-      skip 'iseq introspection is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      skip_unless_cruby('iseq introspection')
       # Both opcodes: Ruby <= 3.3 emits duparray, 4.0 folds `[...].include?` into
       # opt_newarray_send. newarray is excluded, its arrays carry data, not lookups.
       building = PER_LINE_ARRAY_METHODS.select do |name|
