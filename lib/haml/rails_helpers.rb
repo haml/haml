@@ -7,17 +7,13 @@ module Haml
     include Helpers
     extend self
 
-    DEFAULT_PRESERVE_TAGS = %w[textarea pre code].freeze
+    # Same object as the compiler emits, so the default takes preserve_regex's fast path.
+    DEFAULT_PRESERVE_TAGS = Helpers::DEFAULT_PRESERVE_TAGS
 
     def find_and_preserve(input = nil, tags = DEFAULT_PRESERVE_TAGS, &block)
       return find_and_preserve(capture_haml(&block), input || tags) if block
 
-      tags = tags.each_with_object('') do |t, s|
-        s << '|' unless s.empty?
-        s << Regexp.escape(t)
-      end
-
-      re = /<(#{tags})([^>]*)>(.*?)(<\/\1>)/im
+      re = Helpers.preserve_regex(tags)
       input.to_s.gsub(re) do |s|
         s =~ re # Can't rely on $1, etc. existing since Rails' SafeBuffer#gsub is incompatible
         "<#{$1}#{$2}>#{preserve($3)}</#{$1}>"

@@ -327,4 +327,96 @@ describe 'optimization' do
       assert_equal '&lt;b&gt;|<b>', out
     end
   end
+
+  # `~` (preserve) used to rebuild its tag regex on every call, and the code the compiler
+  # emits carried the tag list as a literal, reallocated per render.
+  describe 'preserve regexes' do
+    CALLS = 1000
+
+    def find_and_preserve(*args)
+      Haml::Compiler::ScriptCompiler.find_and_preserve(*args)
+    end
+
+    def allocations
+      GC.start
+      before = GC.stat(:total_allocated_objects)
+      CALLS.times { yield }
+      GC.stat(:total_allocated_objects) - before
+    end
+
+    it 'emits a reference to the tag list instead of a literal' do
+      # Only `!~` and escape_html: false reach find_and_preserve; a plain `~` under the
+      # default escape_html: true is escaped instead.
+      [compiled_code(%Q{- x = 1\n!~ x}), rails_compiled_code(%Q{- x = 1\n!~ x})].each do |code|
+        assert_includes code, '::Haml::Helpers::DEFAULT_PRESERVE_TAGS'
+        refute_includes code, '%w(textarea pre code)'
+      end
+    end
+
+    it 'builds one regex per tag list' do
+      default = Haml::Helpers::DEFAULT_PRESERVE_TAGS
+      assert_same Haml::Helpers.preserve_regex(default), Haml::Helpers.preserve_regex(default)
+      # A literal spelled out by a caller is the same list, so it must hit the same entry.
+      assert_same Haml::Helpers.preserve_regex(default), Haml::Helpers.preserve_regex(%w[textarea pre code])
+      assert_same Haml::Helpers.preserve_regex(%w[b]), Haml::Helpers.preserve_regex(%w[b])
+      refute_same Haml::Helpers.preserve_regex(%w[b]), Haml::Helpers.preserve_regex(%w[i])
+    end
+
+    it 'stops rebuilding the regex per call' do
+      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      tags = Haml::Helpers::DEFAULT_PRESERVE_TAGS
+      Haml::Helpers.preserve_regex(tags)
+
+      cached = allocations { Haml::Helpers.preserve_regex(tags) }
+      built  = allocations { Haml::Helpers.send(:build_preserve_regex, tags) }
+      # Was what building costs: map + Regexp.escape per tag + join + Regexp, ~14 objects.
+      assert_operator built - cached, :>, CALLS * 5
+    end
+
+    it 'renders a preserved value with only haml/engine required' do
+      skip 'subprocess test is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      # haml/helpers is loaded by haml/template and haml/rails_helpers, neither of which
+      # haml/engine pulls in, so this used to raise NameError at render time.
+      script = <<~'RUBY'
+        require 'haml/engine'
+        haml = %Q{- x = ["<pre>a\\nb</pre>"].first\n~ x\n}
+        print eval(Haml::Engine.new(escape_html: false).call(haml))
+      RUBY
+      lib = File.expand_path('../../lib', __dir__)
+      out = IO.popen([RbConfig.ruby, '-I', lib, '-e', script], &:read)
+
+      assert_predicate $?, :success?
+      assert_equal %Q{<pre>a&#x000A;b</pre>\n}, out
+    end
+
+    it 'preserves newlines inside the default tags' do
+      assert_render(%Q{<pre>a&#x000A;b</pre>\n}, %Q{- x = ["<pre>a\\nb</pre>"].first\n!~ x})
+      assert_render(%Q{<textarea>a&#x000A;b</textarea>\n},
+                    %Q{- x = ["<textarea>a\\nb</textarea>"].first\n!~ x})
+      # Compiled away by static_compile rather than emitted, but through the same method.
+      assert_render(%Q{<pre>a&#x000A;b</pre>\n}, %Q{~ ["<pre>a\\nb</pre>"][0]}, escape_html: false)
+    end
+
+    it 'matches the same tags as before' do
+      assert_equal '<b>a&#x000A;b</b>', find_and_preserve("<b>a\nb</b>", %w[b])
+      assert_equal '<b>a&#x000A;b</b>', find_and_preserve("<b>a\nb</b>", [:b])
+      assert_equal "<b>a\nb</b>",       find_and_preserve("<b>a\nb</b>")
+      assert_equal '<PRE>a&#x000A;b</PRE>', find_and_preserve("<PRE>a\nb</PRE>")
+      assert_equal '<pre class="x">a&#x000A;b</pre>', find_and_preserve(%Q{<pre class="x">a\nb</pre>})
+      # An empty list still builds a regex, one that needs a </> to close.
+      assert_equal "<pre>a\nb</pre>", find_and_preserve("<pre>a\nb</pre>", [])
+      # Regexp.escape still applies to a tag carrying regex syntax.
+      assert_equal '<a.b>a&#x000A;b</a.b>', find_and_preserve("<a.b>a\nb</a.b>", ['a.b'])
+      assert_equal '13', find_and_preserve(13)
+      assert_equal '',   find_and_preserve(nil)
+    end
+
+    it 'keeps a cached list working after the caller mutates its own array' do
+      tags = %w[b]
+      assert_equal '<b>a&#x000A;b</b>', find_and_preserve("<b>a\nb</b>", tags)
+      tags << 'i'
+      assert_equal '<i>a&#x000A;b</i>', find_and_preserve("<i>a\nb</i>", tags)
+      assert_equal '<b>a&#x000A;b</b>', find_and_preserve("<b>a\nb</b>", %w[b])
+    end
+  end
 end

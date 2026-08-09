@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 require 'temple/static_analyzer'
+require 'haml/helpers'
 require 'haml/ruby_expression'
 require 'haml/string_splitter'
 
 module Haml
   class Compiler
     class ScriptCompiler
-      def self.find_and_preserve(input, tags)
-        tags = tags.map { |tag| Regexp.escape(tag) }.join('|')
-        re = /<(#{tags})([^>]*)>(.*?)(<\/\1>)/im
+      def self.find_and_preserve(input, tags = ::Haml::Helpers::DEFAULT_PRESERVE_TAGS)
+        re = ::Haml::Helpers.preserve_regex(tags)
         input.to_s.gsub(re) do |s|
           s =~ re # Can't rely on $1, etc. existing since Rails' SafeBuffer#gsub is incompatible
           "<#{$1}#{$2}>#{Haml::Helpers.preserve($3)}</#{$1}>"
@@ -69,7 +69,7 @@ module Haml
         if node.value[:escape_html]
           str = Haml::Util.escape_html(str)
         elsif node.value[:preserve]
-          str = ScriptCompiler.find_and_preserve(str, %w(textarea pre code))
+          str = ScriptCompiler.find_and_preserve(str)
         end
         [:multi, [:static, str], [:newline]]
       end
@@ -104,7 +104,7 @@ module Haml
       end
 
       def find_and_preserve(code)
-        %Q[::Haml::Compiler::ScriptCompiler.find_and_preserve(#{code}, %w(textarea pre code))]
+        %Q[::Haml::Compiler::ScriptCompiler.find_and_preserve(#{code}, ::Haml::Helpers::DEFAULT_PRESERVE_TAGS)]
       end
 
       def escape_html(temple)
