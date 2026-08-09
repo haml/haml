@@ -596,4 +596,110 @@ describe 'optimization' do
       assert_render %Q{<a href="/u/1"></a>\n},          %Q{- v = 1\n%a(href="/u/\#{v}")}
     end
   end
+
+  # contains_interpolation? ran Regexp#=== once per line of text, attribute value, comment and
+  # filter body, and the lookup tables around it were Array literals rebuilt per line.
+  describe 'interpolation and keyword lookups' do
+    CHECKS = 1000
+
+    PER_LINE_ARRAY_METHODS = %i[
+      process_line silent_script check_push_script_stack close_silent_script parse_old_attributes
+    ].freeze
+
+    def parse(haml)
+      Haml::Parser.new({}).call(haml)
+    end
+
+    def allocations
+      GC.start
+      before = GC.stat(:total_allocated_objects)
+      CHECKS.times { yield }
+      GC.stat(:total_allocated_objects) - before
+    end
+
+    it 'stops allocating a MatchData per interpolation check' do
+      skip 'allocation counting is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      hit  = %q{text #{value} more}
+      miss = 'text with none of it'
+      [hit, miss].each { |s| Haml::Util.contains_interpolation?(s) }
+
+      # Regexp#=== cost 3 objects on a match and 1-2 on a miss, for a $~ nothing reads.
+      assert_operator allocations { Haml::Util.contains_interpolation?(hit) },  :<, CHECKS
+      assert_operator allocations { Haml::Util.contains_interpolation?(miss) }, :<, CHECKS
+    end
+
+    it 'keeps the lookup tables it used to rebuild per line' do
+      assert_equal %w[{ @ $],           Haml::Parser::INTERPOLATION_CHARS
+      assert_equal %w[if case unless],  Haml::Parser::SCRIPT_STACK_KEYWORDS
+      assert_equal %w[else elsif when], Haml::Parser::SCRIPT_STACK_MID_KEYWORDS
+      assert_equal %i[BRACE_LEFT LAMBDA_BEGIN EMBEXPR_BEGIN], Haml::Parser::OLD_ATTRIBUTE_OPEN_TOKENS
+      assert_equal %i[BRACE_RIGHT EMBEXPR_END], Haml::Parser::OLD_ATTRIBUTE_CLOSE_TOKENS
+
+      %i[INTERPOLATION_CHARS SCRIPT_STACK_KEYWORDS SCRIPT_STACK_MID_KEYWORDS
+         OLD_ATTRIBUTE_OPEN_TOKENS OLD_ATTRIBUTE_CLOSE_TOKENS].each do |name|
+        assert_predicate Haml::Parser.const_get(name), :frozen?, name
+      end
+
+      # Narrower than the block-keyword lists, which also build the block regexes.
+      refute_equal Haml::Parser::START_BLOCK_KEYWORDS, Haml::Parser::SCRIPT_STACK_KEYWORDS
+      refute_equal Haml::Parser::MID_BLOCK_KEYWORDS,   Haml::Parser::SCRIPT_STACK_MID_KEYWORDS
+    end
+
+    it 'builds no Array literal in the per-line lookups' do
+      skip 'iseq introspection is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      # Both opcodes: Ruby <= 3.3 emits duparray, 4.0 folds `[...].include?` into
+      # opt_newarray_send. newarray is excluded, its arrays carry data, not lookups.
+      building = PER_LINE_ARRAY_METHODS.select do |name|
+        disasm = RubyVM::InstructionSequence.of(Haml::Parser.instance_method(name)).disasm
+        disasm.include?('duparray') || disasm.include?('opt_newarray_send')
+      end
+      assert_empty building
+    end
+
+    it 'reports interpolation for the same strings as before' do
+      [%q{a #{1}}, 'a #@ivar', 'a #$global', '#{', '#@', '#$', %q{\#{x}}].each do |str|
+        assert Haml::Util.contains_interpolation?(str), str.inspect
+      end
+      ['a # b', 'plain', '', '#', nil].each do |str|
+        refute Haml::Util.contains_interpolation?(str), str.inspect
+      end
+    end
+
+    it 'still tells a div id from an interpolated line' do
+      assert_render %Q{<div id="main">content</div>\n},          %q{#main content}
+      assert_render %Q{<div class="wide" id="main">x</div>\n},   %q{#main.wide x}
+      assert_render %Q{2\n},                                     %q{#{1 + 1}}
+      assert_render %Q{<p>text 2 more</p>\n},                    %q{%p text #{1 + 1} more}
+      assert_render %Q{<p>a # b</p>\n},                          %q{%p a # b}
+      assert_render %Q{<p>x</p>\n},                              %Q{-# hidden\n%p x}
+      assert_raises(Haml::SyntaxError) { parse(%q{#}) }
+    end
+
+    it 'nests silent scripts against the same keyword sets' do
+      assert_render %Q{<p>b</p>\n}, %Q{- if false\n  %p a\n- elsif true\n  %p b\n}
+      assert_render %Q{<p>c</p>\n}, %Q{- if false\n  %p a\n- elsif false\n  %p b\n- else\n  %p c\n}
+      assert_render %Q{<p>a</p>\n}, %Q{- unless false\n  %p a\n- else\n  %p b\n}
+      assert_render %Q{<p>b</p>\n}, %Q{- case 2\n- when 1\n  %p a\n- when 2\n  %p b\n}
+      assert_render %Q{<p>c</p>\n}, %Q{- case 3\n- when 1\n  %p a\n- else\n  %p c\n}
+      assert_render %Q{<p>a</p>\n}, %Q{- case 1\n  - when 1\n    %p a\n}
+      assert_render %Q{<p>a</p>\n}, %Q{- begin\n  %p a\n- rescue\n  %p b\n}
+      assert_render %Q{<p>a</p>\n<p>c</p>\n}, %Q{- if true\n  - case 1\n  - when 1\n    %p a\n- if true\n  %p c\n}
+
+      # Reusing START_BLOCK_KEYWORDS here would make this shape a Ruby SyntaxError, not a Haml one.
+      assert_raises(Haml::SyntaxError) { parse(%Q{- begin\n  %p a\n- else\n  %p b\n}) }
+      assert_raises(Haml::SyntaxError) { parse(%Q{- else\n  %p a\n}) }
+      assert_raises(Haml::SyntaxError) { parse(%Q{- when 1\n  %p a\n}) }
+      assert_raises(Haml::SyntaxError) { parse(%Q{- if true\n  %p a\n  - else\n    %p b\n}) }
+    end
+
+    it 'balances an old-syntax attribute hash against the same token lists' do
+      assert_render %Q[<p title="a } b">x</p>\n],  %q[%p{ title: "a } b" } x]
+      assert_render %Q{<p title="a 1 b">x</p>\n},  %q{%p{ title: "a #{1} b" } x}
+      assert_render %Q{<p v="[1, 2]">x</p>\n},     %q{%p{ v: [1,2].map { |i| i } } x}
+      assert_render %Q{<p a="1" b="2">x</p>\n},    %Q{%p{ a: 1,\n    b: 2 } x}
+      assert_render %Q{<p data-a="1">x</p>\n},     %q{%p{ data: { a: 1 } } x}
+      assert_render %Q{<p class="a" id="b">x</p>\n}, %q{%p{ class: 'a' }(id='b') x}
+      assert_raises(Haml::SyntaxError) { parse(%q[%p{ class: 'a' x]) }
+    end
+  end
 end

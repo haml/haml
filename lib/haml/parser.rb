@@ -102,6 +102,18 @@ module Haml
     # Used for scanning old attributes, substituting the first '{'
     METHOD_CALL_PREFIX = 'a('
 
+    # The characters after '#' that start an interpolation rather than a div id
+    INTERPOLATION_CHARS = %w[{ @ $].freeze
+
+    # The keywords @script_level_stack tracks. Narrower than the block keyword lists above,
+    # which also build the block regexes.
+    SCRIPT_STACK_KEYWORDS     = %w[if case unless].freeze
+    SCRIPT_STACK_MID_KEYWORDS = %w[else elsif when].freeze
+
+    # The lexer token types that open and close an old-syntax attribute hash
+    OLD_ATTRIBUTE_OPEN_TOKENS  = %i[BRACE_LEFT LAMBDA_BEGIN EMBEXPR_BEGIN].freeze
+    OLD_ATTRIBUTE_CLOSE_TOKENS = %i[BRACE_RIGHT EMBEXPR_END].freeze
+
     def initialize(options)
       @options = ParserOptions.new(options)
       # Record the indent levels of "if" statements to validate the subsequent
@@ -289,7 +301,7 @@ module Haml
       case line.text[0]
       when DIV_CLASS; push div(line)
       when DIV_ID
-        return push plain(line) if %w[{ @ $].include?(line.text[1])
+        return push plain(line) if INTERPOLATION_CHARS.include?(line.text[1])
         push div(line)
       when ELEMENT; push tag(line)
       when COMMENT; push comment(line.text[1..-1].lstrip)
@@ -371,7 +383,7 @@ module Haml
 
       check_push_script_stack(keyword)
 
-      if ["else", "elsif", "when"].include?(keyword)
+      if SCRIPT_STACK_MID_KEYWORDS.include?(keyword)
         if @script_level_stack.empty?
           raise Haml::SyntaxError.new(Error.message(:missing_if, keyword), @line.index)
         end
@@ -394,7 +406,7 @@ module Haml
     end
 
     def check_push_script_stack(keyword)
-      if ["if", "case", "unless"].include?(keyword)
+      if SCRIPT_STACK_KEYWORDS.include?(keyword)
         # @script_level_stack contents are arrays of form
         # [:keyword, stack_level, other_info]
         @script_level_stack.push([keyword.to_sym, @line.tabs])
@@ -570,7 +582,7 @@ module Haml
     end
 
     def close_silent_script(node)
-      @script_level_stack.pop if ["if", "case", "unless"].include? node.value[:keyword]
+      @script_level_stack.pop if SCRIPT_STACK_KEYWORDS.include? node.value[:keyword]
 
       # Post-process case statements to normalize the nesting of "when" clauses
       return unless node.value[:keyword] == "case"
@@ -703,8 +715,8 @@ module Haml
 
         attributes_hash, rest = balance_tokens(
           text.sub(?{, METHOD_CALL_PREFIX),
-          [:BRACE_LEFT, :LAMBDA_BEGIN, :EMBEXPR_BEGIN],
-          [:BRACE_RIGHT, :EMBEXPR_END],
+          OLD_ATTRIBUTE_OPEN_TOKENS,
+          OLD_ATTRIBUTE_CLOSE_TOKENS,
           count: 1)
         attributes_hash = attributes_hash.sub(METHOD_CALL_PREFIX, ?{)
       rescue SyntaxError => e

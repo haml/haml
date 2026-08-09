@@ -218,7 +218,7 @@ MSG
     end
 
     def contains_interpolation?(str)
-      /#[\{$@]/ === str
+      /#[\{$@]/.match?(str)
     end
 
     def unescape_interpolation(str, escape_html = nil)
