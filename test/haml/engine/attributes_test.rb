@@ -132,8 +132,9 @@ describe Haml::Engine do
   describe 'data attributes' do
     # TODO: assert_haml tests nothing since migration to haml repository. Use assert_render instead.
     it { assert_haml(%q|#foo.bar{ data: { disabled: val } }|, locals: { val: false }) }
-    it { skip; assert_haml(%q|%div{:data => hash}|, locals: { hash: { :a => { :b => 'c' } }.tap { |h| h[:d] = h } }) }
-    it { skip; assert_haml(%q|%div{ hash }|, locals: { hash: { data: { :a => { :b => 'c' } }.tap { |h| h[:d] = h } } }) }
+    # A hash which contains itself.
+    it { assert_render(%Q|<div data-a-b="c"></div>\n|, %q|%div{:data => hash}|, locals: { hash: { :a => { :b => 'c' } }.tap { |h| h[:d] = h } }) }
+    it { assert_render(%Q|<div data-a-b="c"></div>\n|, %q|%div{ hash }|, locals: { hash: { data: { :a => { :b => 'c' } }.tap { |h| h[:d] = h } } }) }
     it { assert_haml(%q|%div{:data => {:foo_bar => 'blip', :baz => 'bang'}}|) }
     it { assert_haml(%q|%div{ data: { raw_src: 'foo' } }|) }
     it { assert_haml(%q|%a{ data: { value: [count: 1] } }|) }
