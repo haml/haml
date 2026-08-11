@@ -1,7 +1,11 @@
 # frozen_string_literal: true
+require 'set'
 require 'haml/object_ref'
 
 module Haml::AttributeBuilder
+  @boolean_attributes = nil
+  @boolean_attributes_size = nil
+
   class << self
     def build(escape_attrs, quote, format, object_ref, *hashes)
       hashes << Haml::ObjectRef.parse(object_ref) if object_ref
@@ -19,10 +23,12 @@ module Haml::AttributeBuilder
           buf << build_data(escape_attrs, quote, format, *hash[key])
         when 'aria'
           buf << build_aria(escape_attrs, quote, format, *hash[key])
-        when *Haml::BOOLEAN_ATTRIBUTES, /\Adata-/, /\Aaria-/
-          build_boolean!(escape_attrs, quote, format, buf, key, hash[key])
         else
-          buf << " #{key}=#{quote}#{escape_html(escape_attrs, hash[key].to_s)}#{quote}"
+          if boolean_attribute?(key)
+            build_boolean!(escape_attrs, quote, format, buf, key, hash[key])
+          else
+            buf << " #{key}=#{quote}#{escape_html(escape_attrs, hash[key].to_s)}#{quote}"
+          end
         end
       end
       buf.join
@@ -71,6 +77,19 @@ module Haml::AttributeBuilder
     end
 
     private
+
+    # BOOLEAN_ATTRIBUTES is mutable public API, so the Set is rebuilt whenever the Array's
+    # size changes. The Set is published before the size, so a concurrent reader either
+    # rebuilds or sees the new Set.
+    def boolean_attribute?(key)
+      attributes = Haml::BOOLEAN_ATTRIBUTES
+      size = attributes.size
+      if @boolean_attributes_size != size
+        @boolean_attributes = Set.new(attributes)
+        @boolean_attributes_size = size
+      end
+      @boolean_attributes.include?(key) || key.start_with?('data-', 'aria-')
+    end
 
     def build_data_attribute(key, escape_attrs, quote, format, *hashes)
       attrs = []
