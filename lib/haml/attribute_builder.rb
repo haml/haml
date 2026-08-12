@@ -4,7 +4,6 @@ require 'haml/object_ref'
 
 module Haml::AttributeBuilder
   @boolean_attributes = nil
-  @boolean_attributes_size = nil
 
   class << self
     def build(escape_attrs, quote, format, object_ref, *hashes)
@@ -78,16 +77,10 @@ module Haml::AttributeBuilder
 
     private
 
-    # BOOLEAN_ATTRIBUTES is mutable public API, so the Set is rebuilt whenever the Array's
-    # size changes. The Set is published before the size, so a concurrent reader either
-    # rebuilds or sees the new Set.
+    # Derived on first use rather than at load, because Haml::BOOLEAN_ATTRIBUTES is defined
+    # by attribute_compiler.rb, which requires this file.
     def boolean_attribute?(key)
-      attributes = Haml::BOOLEAN_ATTRIBUTES
-      size = attributes.size
-      if @boolean_attributes_size != size
-        @boolean_attributes = Set.new(attributes)
-        @boolean_attributes_size = size
-      end
+      @boolean_attributes ||= Set.new(Haml::BOOLEAN_ATTRIBUTES)
       @boolean_attributes.include?(key) || key.start_with?('data-', 'aria-')
     end
 

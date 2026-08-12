@@ -86,9 +86,16 @@ describe 'optimization' do
     def with_custom_attributes(*attributes)
       old_attributes = Haml::BOOLEAN_ATTRIBUTES.dup
       Haml::BOOLEAN_ATTRIBUTES.push(*attributes)
+      reset_boolean_attributes
       yield
     ensure
       Haml::BOOLEAN_ATTRIBUTES.replace(old_attributes)
+      reset_boolean_attributes
+    end
+
+    # The Set is derived once, on first use, so a list changed after that is not picked up.
+    def reset_boolean_attributes
+      Haml::AttributeBuilder.instance_variable_set(:@boolean_attributes, nil)
     end
 
     it 'omits a known boolean attribute whose value is false or nil' do
@@ -113,7 +120,7 @@ describe 'optimization' do
       assert_equal ' x-data-foo="false"', build('x-data-foo' => false)
     end
 
-    it 'picks up attributes added to BOOLEAN_ATTRIBUTES after the first build' do
+    it 'picks up attributes added to BOOLEAN_ATTRIBUTES before the first build' do
       assert_equal ' custom="false"', build('custom' => false)
       with_custom_attributes('custom') do
         assert_equal '', build('custom' => false)
