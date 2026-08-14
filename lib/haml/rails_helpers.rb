@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+# frozen_string_literal: true
 require 'haml/helpers'
 
 # There are only helpers that depend on ActionView internals.
@@ -7,22 +7,10 @@ module Haml
     include Helpers
     extend self
 
-    DEFAULT_PRESERVE_TAGS = %w[textarea pre code].freeze
-
     def find_and_preserve(input = nil, tags = DEFAULT_PRESERVE_TAGS, &block)
       return find_and_preserve(capture_haml(&block), input || tags) if block
 
-      # An empty entry would add an alternative matching `<>`.
-      tags = tags.reject(&:empty?).each_with_object('') do |t, s|
-        s << '|' unless s.empty?
-        s << Regexp.escape(t)
-      end
-
-      re = /<(#{tags})([^>]*)>(.*?)(<\/\1>)/im
-      input.to_s.gsub(re) do |s|
-        s =~ re # Can't rely on $1, etc. existing since Rails' SafeBuffer#gsub is incompatible
-        "<#{$1}#{$2}>#{preserve($3)}</#{$1}>"
-      end
+      Helpers.find_and_preserve(input, tags) { |content| preserve(content) }
     end
 
     def preserve(input = nil, &block)
