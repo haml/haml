@@ -199,14 +199,10 @@ describe Haml::Engine do
       def with_custom_attributes(*attributes, &block)
         begin
           old_attributes = Haml::BOOLEAN_ATTRIBUTES.dup
-          Haml::BOOLEAN_ATTRIBUTES.push(*attributes)
-          # AttributeBuilder derives its Set once, on first use, so a list changed after
-          # that is only picked up by the compile-time path.
-          Haml::AttributeBuilder.instance_variable_set(:@boolean_attributes, nil)
+          Haml::BOOLEAN_ATTRIBUTES.merge(attributes)
           block.call
         ensure
           Haml::BOOLEAN_ATTRIBUTES.replace(old_attributes)
-          Haml::AttributeBuilder.instance_variable_set(:@boolean_attributes, nil)
         end
       end
 
