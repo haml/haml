@@ -1933,6 +1933,17 @@ HTML
 HAML
   end
 
+  def test_binary_source_with_non_ascii_characters # encoding
+    # Rails' ActionView::DependencyTracker compiles template.source as File.binread
+    # returned it, so a BINARY source must compile even when non-ASCII characters
+    # appear both in plain text and in embedded Ruby. See haml/haml#1218.
+    assert_equal(<<HTML, render(<<HAML.b))
+<p title="🍣">🍺</p>
+HTML
+%p{title: '🍣'} 🍺
+HAML
+  end
+
   def test_encoding_error # encoding
     render("foo\nbar\nb\xFEaz".dup.force_encoding("utf-8"))
     assert(false, "Expected exception")

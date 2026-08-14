@@ -115,6 +115,20 @@ describe Haml::AttributeParser do
       it { assert_parse({ 'a b' => '1' }, ':"a b" => 1') }
     end
 
+    # Prism re-tags its slices with the encoding it parsed under (UTF-8 for a BINARY
+    # source), but keys and values must stay in the source encoding: the compiled
+    # template joins them with fragments sliced out of the source itself, and mixed
+    # encodings raise Encoding::CompatibilityError. See haml/haml#1218.
+    describe 'binary source' do
+      it 'keeps keys and values in the source encoding' do
+        hash = Haml::AttributeParser.parse(%q|title: '🍣', '🍺' => beer|.b)
+        assert_equal({ 'title'.b => %q|'🍣'|.b, '🍺'.b => 'beer'.b }, hash)
+        (hash.keys + hash.values).each do |string|
+          assert_equal Encoding::BINARY, string.encoding
+        end
+      end
+    end
+
     # A multi-line hash is deliberately left to the runtime: compiling it statically drops a
     # [:newline] and shifts every __LINE__ after it. See test/haml/line_number_test.rb.
     describe 'multiline' do
