@@ -95,6 +95,24 @@ describe Haml::RailsTemplate do
     HAML
   end
 
+  # The regex is cached per tag list, so lists have to stay apart from each other.
+  specify 'find_and_preserve with custom tags' do
+    assert_equal <<-HTML.unindent, render(<<-'HAML'.unindent)
+      &lt;b&gt;a&amp;#x000A;b&lt;/b&gt;
+      &lt;i&gt;a&amp;#x000A;b&lt;/i&gt;
+      &lt;b&gt;c&amp;#x000A;d&lt;/b&gt;
+      &lt;pre&gt;e&amp;#x000A;f&lt;/pre&gt;
+      &lt;pre&gt;g
+      h&lt;/pre&gt;
+    HTML
+      = find_and_preserve("<b>a\nb</b>", %w[b])
+      = find_and_preserve("<i>a\nb</i>", %w[i])
+      = find_and_preserve("<b>c\nd</b>", %w[b])
+      = find_and_preserve("<pre>e\nf</pre>")
+      = find_and_preserve("<pre>g\nh</pre>", [])
+    HAML
+  end
+
   specify 'capture_haml' do
     assert_equal <<-HTML.unindent, render(<<-'HAML'.unindent)
       <div class="capture"><span>
