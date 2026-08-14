@@ -12,7 +12,8 @@ module Haml
     def find_and_preserve(input = nil, tags = DEFAULT_PRESERVE_TAGS, &block)
       return find_and_preserve(capture_haml(&block), input || tags) if block
 
-      tags = tags.each_with_object('') do |t, s|
+      # An empty entry would add an alternative matching `<>`.
+      tags = tags.reject(&:empty?).each_with_object('') do |t, s|
         s << '|' unless s.empty?
         s << Regexp.escape(t)
       end

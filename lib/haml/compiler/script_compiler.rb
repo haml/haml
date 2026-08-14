@@ -8,7 +8,8 @@ module Haml
   class Compiler
     class ScriptCompiler
       def self.find_and_preserve(input, tags)
-        tags = tags.map { |tag| Regexp.escape(tag) }.join('|')
+        # An empty entry would add an alternative matching `<>`.
+        tags = tags.reject(&:empty?).map { |tag| Regexp.escape(tag) }.join('|')
         re = /<(#{tags})([^>]*)>(.*?)(<\/\1>)/im
         input.to_s.gsub(re) do |s|
           s =~ re # Can't rely on $1, etc. existing since Rails' SafeBuffer#gsub is incompatible

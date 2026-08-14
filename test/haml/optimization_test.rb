@@ -275,6 +275,10 @@ describe 'optimization' do
   end
 
   describe 'preserve regexes' do
+    def find_and_preserve(*args)
+      Haml::Compiler::ScriptCompiler.find_and_preserve(*args)
+    end
+
     it 'renders a preserved value with only haml/engine required' do
       skip 'subprocess test is CRuby-specific' unless RUBY_ENGINE == 'ruby'
       # haml/engine pulls in neither loader of haml/helpers, so this raised NameError.
@@ -288,6 +292,24 @@ describe 'optimization' do
 
       assert_predicate $?, :success?, out
       assert_equal %Q{<pre>a&#x000A;b</pre>\n}, out
+    end
+
+    it 'matches the same tags as before' do
+      default = %w[textarea pre code]
+      assert_equal '<b>a&#x000A;b</b>', find_and_preserve("<b>a\nb</b>", %w[b])
+      assert_equal '<b>a&#x000A;b</b>', find_and_preserve("<b>a\nb</b>", [:b])
+      assert_equal "<b>a\nb</b>",       find_and_preserve("<b>a\nb</b>", default)
+      assert_equal '<PRE>a&#x000A;b</PRE>', find_and_preserve("<PRE>a\nb</PRE>", default)
+      assert_equal '<pre class="x">a&#x000A;b</pre>', find_and_preserve(%Q{<pre class="x">a\nb</pre>}, default)
+      # An empty list still builds a regex, one that needs a </> to close.
+      assert_equal "<pre>a\nb</pre>", find_and_preserve("<pre>a\nb</pre>", [])
+      # An empty entry is dropped wherever it sits.
+      assert_equal "<>a\nb</>", find_and_preserve("<>a\nb</>", ['', 'pre'])
+      assert_equal "<>a\nb</>", find_and_preserve("<>a\nb</>", ['pre', ''])
+      # Regexp.escape still applies to a tag carrying regex syntax.
+      assert_equal '<a.b>a&#x000A;b</a.b>', find_and_preserve("<a.b>a\nb</a.b>", ['a.b'])
+      assert_equal '13', find_and_preserve(13, default)
+      assert_equal '',   find_and_preserve(nil, default)
     end
   end
 end
