@@ -3,7 +3,7 @@ module Haml
   module Helpers
     def self.preserve(input)
       s = input.to_s.chomp("\n")
-      s.gsub!(/\n/, '&#x000A;')
+      s.gsub!("\n", '&#x000A;')
       s.delete!("\r")
       s
     end
