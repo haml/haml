@@ -273,4 +273,21 @@ describe 'optimization' do
       assert_equal "<p>hello &lt;b&gt;</p>\n", out
     end
   end
+
+  describe 'preserve regexes' do
+    it 'renders a preserved value with only haml/engine required' do
+      skip 'subprocess test is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      # haml/engine pulls in neither loader of haml/helpers, so this raised NameError.
+      script = <<~'RUBY'
+        require 'haml/engine'
+        haml = %Q{- x = ["<pre>a\\nb</pre>"].first\n~ x\n}
+        print eval(Haml::Engine.new(escape_html: false).call(haml))
+      RUBY
+      lib = File.expand_path('../../lib', __dir__)
+      out = IO.popen([RbConfig.ruby, '-I', lib, '-e', script], err: [:child, :out], &:read)
+
+      assert_predicate $?, :success?, out
+      assert_equal %Q{<pre>a&#x000A;b</pre>\n}, out
+    end
+  end
 end

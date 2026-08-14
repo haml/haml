@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'temple/static_analyzer'
+require 'haml/helpers'
 require 'haml/ruby_expression'
 require 'haml/string_splitter'
 
