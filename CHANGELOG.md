@@ -1,6 +1,6 @@
 # Haml Changelog
 
-## Unreleased
+## 7.3.1
 
 * Keep Prism-derived fragments in the source encoding, fixing `Encoding::CompatibilityError` on an ASCII-8BIT template source with non-ASCII characters (regression in 7.3.0) https://github.com/haml/haml/issues/1218
 
