@@ -1,10 +1,7 @@
 # frozen_string_literal: true
-require 'set'
 require 'haml/object_ref'
 
 module Haml::AttributeBuilder
-  @boolean_attributes = nil
-
   class << self
     def build(escape_attrs, quote, format, object_ref, *hashes)
       hashes << Haml::ObjectRef.parse(object_ref) if object_ref
@@ -77,11 +74,8 @@ module Haml::AttributeBuilder
 
     private
 
-    # Derived on first use rather than at load, because Haml::BOOLEAN_ATTRIBUTES is defined
-    # by attribute_compiler.rb, which requires this file.
     def boolean_attribute?(key)
-      @boolean_attributes ||= Set.new(Haml::BOOLEAN_ATTRIBUTES)
-      @boolean_attributes.include?(key) || key.start_with?('data-', 'aria-')
+      Haml::BOOLEAN_ATTRIBUTES.include?(key) || key.start_with?('data-', 'aria-')
     end
 
     def build_data_attribute(key, escape_attrs, quote, format, *hashes)

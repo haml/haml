@@ -1,16 +1,17 @@
 # frozen_string_literal: true
+require 'set'
 require 'haml/attribute_builder'
 require 'haml/attribute_parser'
 require 'haml/ruby_expression'
 
 module Haml
-  # The list of boolean attributes. You may add custom attributes to this constant.
-  BOOLEAN_ATTRIBUTES = %w[disabled readonly multiple checked autobuffer
+  # The set of boolean attributes. You may add custom attributes to this constant.
+  BOOLEAN_ATTRIBUTES = Set.new(%w[disabled readonly multiple checked autobuffer
                        autoplay controls loop selected hidden scoped async
                        defer reversed ismap seamless muted required
                        autofocus novalidate formnovalidate open pubdate
                        itemscope allowfullscreen default inert sortable
-                       truespeed typemustmatch download]
+                       truespeed typemustmatch download])
 
   class AttributeCompiler
     def initialize(identity, options)
@@ -55,10 +56,12 @@ module Haml
           compile_class!(temple, key, values)
         when 'data', 'aria'
           compile_data!(temple, key, values)
-        when *BOOLEAN_ATTRIBUTES, /\Adata-/, /\Aaria-/
-          compile_boolean!(temple, key, values)
         else
-          compile_common!(temple, key, values)
+          if BOOLEAN_ATTRIBUTES.include?(key) || key.start_with?('data-', 'aria-')
+            compile_boolean!(temple, key, values)
+          else
+            compile_common!(temple, key, values)
+          end
         end
       end
       temple
