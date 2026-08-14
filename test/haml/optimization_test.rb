@@ -1,12 +1,18 @@
 # frozen_string_literal: true
 
 require_relative '../test_helper'
+# For RailsTemplate.options, since the railtie does not run here.
+require 'haml/rails_template'
 
 describe 'optimization' do
   include RenderHelper
 
-  def compiled_code(haml)
-    Haml::Engine.new.call(haml)
+  def compiled_code(haml, options = {})
+    Haml::Engine.new(options).call(haml)
+  end
+
+  def rails_compiled_code(haml)
+    compiled_code(haml, Haml::RailsTemplate.options)
   end
 
   # "fewer than RUNS objects" in an assertion reads as "no longer one per call".
@@ -278,6 +284,14 @@ describe 'optimization' do
   describe 'preserve regexes' do
     def find_and_preserve(*args)
       Haml::Compiler::ScriptCompiler.find_and_preserve(*args)
+    end
+
+    it 'leaves the tag list out of the emitted call' do
+      # Only `!~` and escape_html: false reach find_and_preserve; plain `~` is escaped.
+      [compiled_code(%Q{- x = 1\n!~ x}), rails_compiled_code(%Q{- x = 1\n!~ x})].each do |code|
+        refute_includes code, '%w(textarea pre code)'
+        assert_match(/ScriptCompiler\.find_and_preserve\([^,)]+\)/, code)
+      end
     end
 
     it 'builds one regex per tag list' do
