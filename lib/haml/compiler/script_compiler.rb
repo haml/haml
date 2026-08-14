@@ -65,7 +65,7 @@ module Haml
         if node.value[:escape_html]
           str = Haml::Util.escape_html(str)
         elsif node.value[:preserve]
-          str = ScriptCompiler.find_and_preserve(str, %w(textarea pre code))
+          str = ScriptCompiler.find_and_preserve(str)
         end
         [:multi, [:static, str], [:newline]]
       end
@@ -100,7 +100,7 @@ module Haml
       end
 
       def find_and_preserve(code)
-        %Q[::Haml::Compiler::ScriptCompiler.find_and_preserve(#{code}, %w(textarea pre code))]
+        %Q[::Haml::Compiler::ScriptCompiler.find_and_preserve(#{code})]
       end
 
       def escape_html(temple)
