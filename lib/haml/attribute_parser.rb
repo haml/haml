@@ -32,7 +32,7 @@ module Haml
         key = static_key(element.key)
         return if key.nil?
 
-        hash[key] = value_source(element.value)
+        hash[in_source_encoding(key, exp)] = in_source_encoding(value_source(element.value), exp)
       end
       hash
     end
@@ -73,6 +73,16 @@ module Haml
       return '' if value.is_a?(Prism::ImplicitNode)
 
       value.slice
+    end
+
+    # Prism tags its slices with the encoding it parsed the source under (UTF-8 for a
+    # BINARY source), while the rest of the compiled template stays in the source
+    # encoding. Mixing the two raises Encoding::CompatibilityError once both sides hold
+    # non-ASCII bytes, so bring everything back to the source encoding.
+    def in_source_encoding(string, source)
+      return string if string.encoding == source.encoding
+
+      string.dup.force_encoding(source.encoding)
     end
   end
 end

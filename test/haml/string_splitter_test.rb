@@ -50,6 +50,24 @@ describe Haml::StringSplitter do
       it { assert_compile([[:static, 'a'], [:dynamic, 'next']], %q|"a#{next}"|) }
     end
 
+    # Prism re-tags what it returns with the encoding it parsed under (UTF-8 for a
+    # BINARY source), but the fragments must stay in the source encoding: the compiled
+    # template joins them with fragments sliced out of the source itself, and mixed
+    # encodings raise Encoding::CompatibilityError. See haml/haml#1218.
+    describe 'binary source' do
+      def assert_binary_compile(expected, code)
+        actual = Haml::StringSplitter.compile(code.b)
+        assert_equal expected.map { |type, content| [type, content.b] }, actual
+        actual.each do |_type, content|
+          assert_equal Encoding::BINARY, content.encoding
+        end
+      end
+
+      it { assert_binary_compile([[:static, '🍣']], %q|"🍣"|) }
+      it { assert_binary_compile([[:static, '🍣'], [:dynamic, 'sushi'], [:static, '🍺']], %q|"🍣#{sushi}🍺"|) }
+      it { assert_binary_compile([[:dynamic, '@sushi']], %q|"#@sushi"|) }
+    end
+
     describe 'invalid argument' do
       def assert_internal_error(code)
         assert_raises Haml::InternalError do

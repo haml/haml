@@ -10,7 +10,7 @@ module Haml
       def compile(code, node: RubyExpression.string_literal_node(code))
         case node
         when Prism::StringNode
-          node.unescaped.empty? ? [] : [[:static, node.unescaped]]
+          node.unescaped.empty? ? [] : [[:static, in_source_encoding(node.unescaped, code)]]
         when Prism::InterpolatedStringNode
           compile_parts(node.parts, code)
         else
@@ -33,12 +33,12 @@ module Haml
             case part
             when Prism::StringNode
               content = part.unescaped
-              exps << [:static, content] unless content.empty?
+              exps << [:static, in_source_encoding(content, code)] unless content.empty?
             when Prism::EmbeddedStatementsNode
               embedded = embedded_source(part, code)
               exps << [:dynamic, embedded] unless embedded.empty?
             when Prism::EmbeddedVariableNode
-              exps << [:dynamic, part.variable.slice]
+              exps << [:dynamic, in_source_encoding(part.variable.slice, code)]
             else
               # Prism allows more part types than a string literal can currently hold. Dropping
               # one would silently lose content, so fail instead of rendering something wrong.
@@ -53,6 +53,17 @@ module Haml
       def embedded_source(part, code)
         from = part.opening_loc.end_offset
         code.byteslice(from, part.closing_loc.start_offset - from)
+      end
+
+      # Prism tags what it returns with the encoding it parsed `code` under (UTF-8 for
+      # a BINARY source), while the fragments Haml slices out of the source itself keep
+      # the source encoding. The compiled template mixes both kinds, so anything taken
+      # from Prism has to come back to the source encoding, or joining the fragments
+      # raises Encoding::CompatibilityError once both sides hold non-ASCII bytes.
+      def in_source_encoding(string, code)
+        return string if string.encoding == code.encoding
+
+        string.dup.force_encoding(code.encoding)
       end
     end
 
