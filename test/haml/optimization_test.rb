@@ -215,4 +215,62 @@ describe 'optimization' do
       assert_operator saved, :>, RUNS / 2
     end
   end
+
+  # test_helper loads rails before haml, so use_html_safe defaults to true here.
+  describe 'html safe escaping' do
+    class ::TosSafeBufferObject
+      def to_s
+        '<hr>'.html_safe
+      end
+    end
+
+    it 'escapes a value which is not html_safe' do
+      assert_equal '&lt;b&gt;', Haml::Util.escape_html_safe('<b>')
+      assert_equal '', Haml::Util.escape_html_safe(nil)
+      assert_equal '1/1', Haml::Util.escape_html_safe(1.to_r)
+    end
+
+    it 'passes an html_safe value through untouched' do
+      safe = '<b>'.html_safe
+      assert_equal '<b>', Haml::Util.escape_html_safe(safe)
+      assert_same safe, Haml::Util.escape_html_safe(safe)
+    end
+
+    it 'asks html_safe? of to_s, not of the object' do
+      # Kaminari-style object: not html_safe itself, but its to_s is.
+      assert_equal '<hr>', Haml::Util.escape_html_safe(::TosSafeBufferObject.new)
+    end
+
+    it 'does not ask respond_to? per value' do
+      skip 'iseq introspection is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      disasm = RubyVM::InstructionSequence.of(Haml::Util.method(:escape_html_safe)).disasm
+      # The guard used to run per value, though the escaper is only compiled in
+      # when use_html_safe is on, and that requires html_safe? to exist.
+      refute_includes disasm, 'respond_to?'
+      assert_includes disasm, 'html_safe?'
+    end
+
+    it 'escapes interpolated tag text with the escaper use_html_safe asks for' do
+      haml = %q|%p hello #{name}|
+      assert_includes Haml::Engine.new(use_html_safe: true).call(haml), 'escape_html_safe'
+      refute_includes Haml::Engine.new(use_html_safe: false).call(haml), 'escape_html_safe'
+    end
+
+    it 'never compiles escape_html_safe in when ActiveSupport is not loaded' do
+      skip 'subprocess test is CRuby-specific' unless RUBY_ENGINE == 'ruby'
+      script = <<~'RUBY'
+        require 'haml'
+        abort 'ActiveSupport leaked into the child' if ''.respond_to?(:html_safe?)
+        code = Haml::Engine.new.call('%p hello #{name}')
+        abort "escape_html_safe was compiled in: #{code}" if code.include?('escape_html_safe')
+        name = '<b>'
+        print eval(code)
+      RUBY
+      lib = File.expand_path('../../lib', __dir__)
+      out = IO.popen([RbConfig.ruby, '-I', lib, '-e', script], &:read)
+
+      assert_predicate $?, :success?
+      assert_equal "<p>hello &lt;b&gt;</p>\n", out
+    end
+  end
 end
