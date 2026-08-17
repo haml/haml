@@ -16,5 +16,5 @@ module Haml
       "extend Haml::Helpers; #{super}"
     end
   end
-  Template.send(:extend, TemplateExtension)
+  Template.extend TemplateExtension
 end
