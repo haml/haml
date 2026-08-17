@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 7.4.1
+
+* Build the preserve regex once per tag list instead of per call https://github.com/haml/haml/pull/1220
+
 ## 7.4.0
 
 * `Haml::BOOLEAN_ATTRIBUTES` is changed from Array to Set https://github.com/haml/haml/pull/1216
