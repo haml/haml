@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'haml/helpers'
+require 'haml/preserver'
 
 # There are only helpers that depend on ActionView internals.
 module Haml
@@ -7,10 +8,12 @@ module Haml
     include Helpers
     extend self
 
+    DEFAULT_PRESERVE_TAGS = Preserver::DEFAULT_TAGS
+
     def find_and_preserve(input = nil, tags = DEFAULT_PRESERVE_TAGS, &block)
       return find_and_preserve(capture_haml(&block), input || tags) if block
 
-      Helpers.find_and_preserve(input, tags) { |content| preserve(content) }
+      Preserver.find_and_preserve(input, tags) { |content| preserve(content) }
     end
 
     def preserve(input = nil, &block)
