@@ -295,23 +295,23 @@ describe 'optimization' do
     end
 
     it 'builds one regex per tag list' do
-      default = Haml::Helpers::DEFAULT_PRESERVE_TAGS
-      assert_same Haml::Helpers.preserve_regex(default), Haml::Helpers.preserve_regex(default)
+      default = Haml::Preserver::DEFAULT_TAGS
+      assert_same Haml::Preserver.regex(default), Haml::Preserver.regex(default)
       # A literal spelled out by a caller is the same list, so it must hit the same entry.
-      assert_same Haml::Helpers.preserve_regex(default), Haml::Helpers.preserve_regex(%w[textarea pre code])
-      assert_same Haml::Helpers.preserve_regex(%w[b]), Haml::Helpers.preserve_regex(%w[b])
-      refute_same Haml::Helpers.preserve_regex(%w[b]), Haml::Helpers.preserve_regex(%w[i])
+      assert_same Haml::Preserver.regex(default), Haml::Preserver.regex(%w[textarea pre code])
+      assert_same Haml::Preserver.regex(%w[b]), Haml::Preserver.regex(%w[b])
+      refute_same Haml::Preserver.regex(%w[b]), Haml::Preserver.regex(%w[i])
     end
 
     it 'allocates nothing to reach a built regex' do
       skip_unless_cruby('allocation counting')
       custom = %w[b]
-      Haml::Helpers.preserve_regex(custom)
+      Haml::Preserver.regex(custom)
 
       # Steady state is 0, with a few objects on the first pass; building costs 13 a call.
-      assert_operator allocations { Haml::Helpers.preserve_regex(Haml::Helpers::DEFAULT_PRESERVE_TAGS) },
+      assert_operator allocations { Haml::Preserver.regex(Haml::Preserver::DEFAULT_TAGS) },
                       :<, RUNS / 100
-      assert_operator allocations { Haml::Helpers.preserve_regex(custom) }, :<, RUNS / 100
+      assert_operator allocations { Haml::Preserver.regex(custom) }, :<, RUNS / 100
     end
 
     it 'renders a preserved value with only haml/engine required' do
@@ -364,19 +364,19 @@ describe 'optimization' do
 
     it 'keeps a cached list reachable after the caller mutates a tag in place' do
       tag = +'em'
-      Haml::Helpers.preserve_regex([tag])
+      Haml::Preserver.regex([tag])
       tag << 'phasis'
-      assert_same Haml::Helpers.preserve_regex(%w[em]), Haml::Helpers.preserve_regex(%w[em])
+      assert_same Haml::Preserver.regex(%w[em]), Haml::Preserver.regex(%w[em])
       assert_equal '<em>a&#x000A;b</em>', find_and_preserve("<em>a\nb</em>", %w[em])
     end
 
     it 'keeps caching once past the cache limit' do
       # Filling it used to switch caching off for every later list.
-      70.times { |i| Haml::Helpers.preserve_regex(["fill#{i}"]) }
+      70.times { |i| Haml::Preserver.regex(["fill#{i}"]) }
 
-      assert_same Haml::Helpers.preserve_regex(%w[kbd]), Haml::Helpers.preserve_regex(%w[kbd])
-      default = Haml::Helpers::DEFAULT_PRESERVE_TAGS
-      assert_same Haml::Helpers.preserve_regex(default), Haml::Helpers.preserve_regex(%w[textarea pre code])
+      assert_same Haml::Preserver.regex(%w[kbd]), Haml::Preserver.regex(%w[kbd])
+      default = Haml::Preserver::DEFAULT_TAGS
+      assert_same Haml::Preserver.regex(default), Haml::Preserver.regex(%w[textarea pre code])
     end
   end
 end

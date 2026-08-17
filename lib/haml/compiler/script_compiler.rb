@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 require 'temple/static_analyzer'
 require 'haml/helpers'
+require 'haml/preserver'
 require 'haml/ruby_expression'
 require 'haml/string_splitter'
 
 module Haml
   class Compiler
     class ScriptCompiler
-      def self.find_and_preserve(input, tags = ::Haml::Helpers::DEFAULT_PRESERVE_TAGS)
-        ::Haml::Helpers.find_and_preserve(input, tags)
+      def self.find_and_preserve(input, tags = ::Haml::Preserver::DEFAULT_TAGS)
+        ::Haml::Preserver.find_and_preserve(input, tags) { |content| ::Haml::Helpers.preserve(content) }
       end
 
       def initialize(identity, options)
