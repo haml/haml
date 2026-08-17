@@ -1944,6 +1944,20 @@ HTML
 HAML
   end
 
+  def test_binary_source_with_interpolation_in_plain_text # encoding
+    # Util.unescape_interpolation rebuilds interpolated text from `str.dump`, which
+    # can re-tag the string literal as UTF-8 for a BINARY source. Its fragments then
+    # mix with plain-text fragments kept in the source encoding and raise
+    # Encoding::CompatibilityError when joined. See haml/haml#1218.
+    assert_equal(<<HTML, render(<<'HAML'.b))
+<h1>🍣</h1>
+<p>🍺1</p>
+HTML
+%h1 🍣
+%p 🍺#{1}
+HAML
+  end
+
   def test_encoding_error # encoding
     render("foo\nbar\nb\xFEaz".dup.force_encoding("utf-8"))
     assert(false, "Expected exception")

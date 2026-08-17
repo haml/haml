@@ -223,7 +223,13 @@ MSG
           res << "\#{#{content}}"
         end
       end
-      res + rest
+      # The result is rebuilt from `str.dump` fragments and eval'd pieces, so it can
+      # come out tagged with an encoding that differs from `str`'s (e.g. UTF-8 for a
+      # BINARY source). The compiled template joins this string literal's fragments
+      # with fragments sliced out of the source itself, and mixed encodings raise
+      # Encoding::CompatibilityError, so bring it back to the source encoding.
+      # See haml/haml#1218.
+      (res + rest).force_encoding(str.encoding)
     end
 
     private
