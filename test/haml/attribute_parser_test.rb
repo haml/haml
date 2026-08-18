@@ -129,11 +129,24 @@ describe Haml::AttributeParser do
       end
     end
 
-    # A multi-line hash is deliberately left to the runtime: compiling it statically drops a
-    # [:newline] and shifts every __LINE__ after it. See test/haml/line_number_test.rb.
     describe 'multiline' do
-      it { assert_parse(nil, "foo: 1,\n  bar: 2") }
-      it { assert_parse(nil, " { foo: 1,\n  bar: 2 } ") }
+      it { assert_parse({ 'foo' => '1', 'bar' => '2' }, "foo: 1,\n  bar: 2") }
+      it { assert_parse({ 'foo' => '1', 'bar' => '2' }, " { foo: 1,\n  bar: 2 } ") }
+      it { assert_parse({ 'foo' => '1', 'bar' => '2' }, "{\n  foo: 1,\n  bar: 2\n}") }
+      it { assert_parse({ 'foo' => "[1,\n  2]", 'bar' => '3' }, "foo: [1,\n  2],\n  bar: 3") }
+      it { assert_parse({ 'foo' => "{ a: 1,\n  b: 2 }" }, "foo: { a: 1,\n  b: 2 }") }
+      it { assert_parse({ 'foo' => "\"a\nb\"" }, "foo: \"a\nb\"") }
+      it { assert_parse({ 'foo' => '1', 'bar' => '2' }, "foo: 1, # first\n  bar: 2") }
+
+      # The body of a heredoc lies outside its node, so its slice would not be the value.
+      describe 'heredoc' do
+        it { assert_parse(nil, "foo: <<~X,\n  hi\n  X\n  bar: 2") }
+        it { assert_parse(nil, "foo: <<-X,\n  hi\n  X\n  bar: 2") }
+        it { assert_parse(nil, "foo: <<X,\nhi\nX\n  bar: 2") }
+        it { assert_parse(nil, "foo: 1,\n  bar: [<<~X].first,\n  hi\n  X\n  baz: 3") }
+        it { assert_parse(nil, "foo: <<~X,\n  \#{hi}\n  X\n  bar: 2") }
+        it { assert_parse(nil, "foo: <<~`X`,\n  ls\n  X\n  bar: 2") }
+      end
     end
   end
 

@@ -3,6 +3,7 @@ require 'set'
 require 'haml/attribute_builder'
 require 'haml/attribute_parser'
 require 'haml/ruby_expression'
+require 'haml/temple_line_counter'
 
 module Haml
   # The set of boolean attributes. You may add custom attributes to this constant.
@@ -24,12 +25,15 @@ module Haml
     def compile(node)
       hashes = []
       return runtime_compile(node) if node.value[:object_ref] != :nil
-      [node.value[:dynamic_attributes].new, node.value[:dynamic_attributes].old].compact.each do |attribute_str|
+      dynamic_attributes = node.value[:dynamic_attributes]
+      [dynamic_attributes.new, dynamic_attributes.old].compact.each do |attribute_str|
         hash = AttributeParser.parse(attribute_str)
         return runtime_compile(node) if hash.nil? || hash.any? { |_key, value| value.empty? }
         hashes << hash
       end
-      static_compile(node.value[:attributes], hashes)
+      temple = static_compile(node.value[:attributes], hashes)
+      restore_newlines!(temple, dynamic_attributes)
+      temple
     end
 
     private
@@ -65,6 +69,13 @@ module Haml
         end
       end
       temple
+    end
+
+    # ChildrenCompiler counts on the tag spanning as many lines as its attribute source does.
+    def restore_newlines!(temple, dynamic_attributes)
+      missing = dynamic_attributes.newline_count
+      missing -= TempleLineCounter.count_lines(temple) if missing > 0
+      missing.times { temple << [:newline] }
     end
 
     def compile_id!(temple, key, values)

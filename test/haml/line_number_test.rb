@@ -65,12 +65,53 @@ describe Haml::Engine do
   end
 
   describe 'old attributes' do
+    # The values of a multi-line hash are evaluated on the tag's line, as in a single-line one.
     it 'renders multi-line old attributes' do
       assert_render(<<-HTML.unindent, <<-HAML.unindent)
-        <span a="1" b="2">2</span>
+        <span a="1" b="1">2</span>
         3
       HTML
         %span{ a: __LINE__,
+          b: __LINE__ }= __LINE__
+        = __LINE__
+      HAML
+    end
+
+    it 'renders multi-line old attributes with children' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <div a="1" b="2">
+        3
+        </div>
+        4
+      HTML
+        %div{ a: 1,
+          b: 2 }
+          = __LINE__
+        = __LINE__
+      HAML
+    end
+
+    it 'keeps the lines of a value which spans lines itself' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <span a="[1, 2]" b="3">3</span>
+        4
+      HTML
+        %span{ a: [1,
+          __LINE__],
+          b: 3 }= __LINE__
+        = __LINE__
+      HAML
+    end
+
+    it 'renders multi-line old attributes with a heredoc' do
+      assert_render(<<-HTML.unindent, <<-HAML.unindent)
+        <span a="hi
+        " b="4">4</span>
+        5
+      HTML
+        %span{ a: <<~X,
+          hi
+          X
           b: __LINE__ }= __LINE__
         = __LINE__
       HAML
