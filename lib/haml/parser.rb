@@ -247,6 +247,12 @@ module Haml
         [new, stripped_old].compact.join(', ')
       end
 
+      # The lines a tag spans beyond its first because of these attributes, which is what
+      # the compiled tag has to span too for the line numbers after it to hold.
+      def newline_count
+        (new ? new.count("\n") : 0) + (old ? old.count("\n") : 0)
+      end
+
       private
 
       # For `%foo{ { foo: 1 }, bar: 2 }`, :old is "{ { foo: 1 }, bar: 2 }" and this method returns " { foo: 1 }, bar: 2 " for last argument.
