@@ -15,15 +15,11 @@ module Haml
     end
 
     # @return [Hash,nil] - keys and values are the attribute source as written, or nil if
-    #   the text is not a Hash literal whose keys are all static.
+    #   the text is not a Hash literal whose keys are all static, or if it holds a heredoc.
     def parse(text)
       exp = wrap_bracket(text)
-      # A multi-line hash is left to the runtime, which keeps the [:newline] bookkeeping of
-      # the compiled code correct. Compiling it statically is a separate optimization.
-      return if exp.include?("\n")
-
       node = hash_node(exp)
-      return if node.nil?
+      return if node.nil? || contains_heredoc?(exp, node)
 
       hash = {}
       node.elements.each do |element|
@@ -56,6 +52,12 @@ module Haml
 
       node = statements.first
       node if node.is_a?(Prism::HashNode)
+    end
+
+    # A heredoc's body lies outside its node, so the value's slice would not be the value.
+    # Its opener always spells `<<`, which spares the tree walk for nearly every hash.
+    def contains_heredoc?(exp, node)
+      exp.include?('<<') && !node.breadth_first_search { |n| n.respond_to?(:heredoc?) && n.heredoc? }.nil?
     end
 
     # The key as written between its delimiters, not unescaped: an escape has to reach the

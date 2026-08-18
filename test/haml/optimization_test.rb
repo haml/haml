@@ -62,6 +62,25 @@ describe 'optimization' do
       haml = %|%span= 1|
       assert_equal true, compiled_code(haml).include?(%|<span>1</span>|)
     end
+
+    it 'compiles a multi-line hash without the runtime builder' do
+      haml = "%div{ class: 'card',\n      id: 'main',\n      title: 'hi' }"
+      code = compiled_code(haml)
+      refute_includes code, 'AttributeBuilder.build('
+      assert_includes code, %q|<div class=\"card\" id=\"main\" title=\"hi\">|
+    end
+
+    it 'renders a multi-line hash like its single-line form' do
+      single = "- href = '/x'\n%a{ href: href, class: 'btn' } x"
+      multi = "- href = '/x'\n%a{ href: href,\n    class: 'btn' } x"
+      assert_equal render_haml(single), render_haml(multi)
+      refute_includes compiled_code(multi), 'AttributeBuilder.build('
+    end
+
+    it 'leaves a multi-line hash holding a heredoc to the runtime builder' do
+      haml = "%div{ a: <<~X,\n  hi\n  X\n  b: 2 }"
+      assert_includes compiled_code(haml), 'AttributeBuilder.build('
+    end
   end
 
   describe 'string interpolation' do

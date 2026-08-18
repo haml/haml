@@ -625,5 +625,109 @@ describe Haml::Engine do
         HAML
       end
     end
+
+    describe 'multi-line hash' do
+      it 'renders a static hash like its single-line form' do
+        assert_equal render_haml(<<-HAML.unindent), render_haml(<<-HAML.unindent)
+          %div{ class: 'card', id: 'main', title: 'hi' } text
+        HAML
+          %div{ class: 'card',
+                id: 'main',
+                title: 'hi' } text
+        HAML
+      end
+
+      it 'renders a hash mixing static and dynamic values' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <a class="btn" href="/users/1" title="&lt;show&gt;">show</a>
+        HTML
+          - url = '/users/1'
+          - title = '<show>'
+          %a{ href: url,
+              class: 'btn',
+              title: title } show
+        HAML
+      end
+
+      it 'renders a nested hash which spans lines' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <div data-action="click-&gt;user#show" data-controller="user" data-user-id="1"></div>
+        HTML
+          - id = 1
+          %div{ data: { controller: 'user',
+                        action: 'click->user#show',
+                        user_id: id } }
+        HAML
+      end
+
+      it 'renders a class array which spans lines' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <div class="a b c"></div>
+        HTML
+          - c = 'c'
+          %div{ class: ['a',
+                        'b',
+                        c] }
+        HAML
+      end
+
+      it 'renders a string literal which spans lines' do
+        assert_render(<<-HTML.unindent, <<-'HAML'.unindent)
+          <div id="1" title="hello
+          world 1"></div>
+        HTML
+          - x = 1
+          %div{ title: "hello
+            world #{x}",
+                id: 1 }
+        HAML
+      end
+
+      it 'renders a boolean attribute' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <input disabled type="text">
+          <input type="text">
+        HTML
+          - on = true
+          %input{ disabled: on,
+                  type: 'text' }
+          %input{ disabled: !on,
+                  type: 'text' }
+        HAML
+      end
+
+      it 'renders a heredoc value' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <div a="hi
+          " b="2"></div>
+        HTML
+          %div{ a: <<~X,
+            hi
+            X
+            b: 2 }
+        HAML
+      end
+
+      it 'renders a double splat and an omitted value' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <div a="1" b="2" c="3"></div>
+        HTML
+          - b = 2
+          - rest = { c: 3 }
+          %div{ a: 1,
+                b:,
+                **rest }
+        HAML
+      end
+
+      it 'escapes attribute values' do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <div id="x" title="&amp;&quot;&#39;&lt;&gt;"></div>
+        HTML
+          %div{ title: '&"\\'<>',
+                id: 'x' }
+        HAML
+      end
+    end
   end
 end
