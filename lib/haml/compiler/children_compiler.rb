@@ -40,9 +40,7 @@ module Haml
         when :script, :silent_script
           @lineno += 1
         when :tag
-          [node.value[:dynamic_attributes].new, node.value[:dynamic_attributes].old].compact.each do |attribute_hash|
-            @lineno += attribute_hash.count("\n")
-          end
+          @lineno += node.value[:dynamic_attributes].newline_count
           @lineno += 1 if node.children.empty? && node.value[:parse]
         end
 
