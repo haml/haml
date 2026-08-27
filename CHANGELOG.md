@@ -1,5 +1,10 @@
 # Haml Changelog
 
+## 7.5.0
+
+* Compile a multi-line attribute hash statically https://github.com/haml/haml/pull/1222
+  * Errors from multi-line attributes will be reported on the tag's line instead of the expression that raised the error.
+
 ## 7.4.1
 
 * Build the preserve regex once per tag list instead of per call https://github.com/haml/haml/pull/1220
