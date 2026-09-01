@@ -1,5 +1,9 @@
 # Haml Changelog
 
+## 7.5.1
+
+* Improve frozen strings management https://github.com/haml/haml/pull/1205
+
 ## 7.5.0
 
 * Compile a multi-line attribute hash statically https://github.com/haml/haml/pull/1222
