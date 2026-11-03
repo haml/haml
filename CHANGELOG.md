@@ -1,6 +1,6 @@
 # Haml Changelog
 
-## Unreleased
+## 7.5.2
 
 * Balance Prism 2's `BRACE_LEFT_HASH` and `BRACE_LEFT_ARGUMENT` tokens in old attribute hashes, fixing `Illegal nesting`
   and syntax errors on nested hash literals such as `data: { ... }` https://github.com/haml/haml/issues/1224
