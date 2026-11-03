@@ -701,7 +701,7 @@ module Haml
 
         attributes_hash, rest = balance_tokens(
           text.sub(?{, METHOD_CALL_PREFIX),
-          [:BRACE_LEFT, :LAMBDA_BEGIN, :EMBEXPR_BEGIN],
+          [:BRACE_LEFT, :BRACE_LEFT_HASH, :BRACE_LEFT_ARGUMENT, :LAMBDA_BEGIN, :EMBEXPR_BEGIN],
           [:BRACE_RIGHT, :EMBEXPR_END],
           count: 1)
         attributes_hash = attributes_hash.sub(METHOD_CALL_PREFIX, ?{)

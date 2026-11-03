@@ -600,6 +600,25 @@ describe Haml::Engine do
         HAML
       end
 
+      it "recognizes a nested Hash literal on a tag with nested content" do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <div data-foo="1">
+          bar
+          </div>
+        HTML
+          %div{ data: { foo: 1 } }
+            bar
+        HAML
+      end
+
+      it "recognizes a block following a parenthesized argument" do
+        assert_render(<<-HTML.unindent, <<-HAML.unindent)
+          <input value="12">
+        HTML
+          %input{ value: (Array.new (2) { |i| i + 1 }).join }
+        HAML
+      end
+
       it "ignores a brace inside a String" do
         assert_render(<<-HTML.unindent, <<-HAML.unindent)
           <input value="}">
